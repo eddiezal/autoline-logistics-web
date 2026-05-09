@@ -1,0 +1,1045 @@
+{
+  "common": {
+    "phone": "714-660-7558",
+    "email": "info@autolinelogistics.com",
+    "address": {
+      "street": "10073 Valley View St, Ste 120",
+      "city": "Cypress, CA 90630"
+    },
+    "promiseEyebrow": {
+      "1": "Promesa 1 de 3",
+      "2": "Promesa 2 de 3",
+      "3": "Promesa 3 de 3"
+    },
+    "ctaQuotePrimary": "Obtenga su precio fijo",
+    "labels": {
+      "whyThisMatters": "Por qué importa",
+      "mostPopular": "Más popular",
+      "covered": "Cubierto",
+      "notCovered": "No cubierto"
+    }
+  },
+  "header": {
+    "tagline": "Transporte confiable de autos, camionetas y motocicletas — En todo el país",
+    "ctaQuote": "Obtenga su cotización al instante",
+    "nav": {
+      "home": "Inicio",
+      "about": "Nosotros",
+      "services": "Servicios",
+      "promises": "Promesas",
+      "contact": "Contacto"
+    }
+  },
+  "footer": {
+    "brandLine": "Auto Line Logistics",
+    "description": "Transporte de autos con precio fijo, hecho para personas. Construido sobre seguimiento real, coordinadores con nombre, y una promesa de protección contra daños.",
+    "sectionTitles": {
+      "services": "Servicios",
+      "promises": "Promesas",
+      "contact": "Contacto"
+    },
+    "services": {
+      "standby": "En Espera (7 días)",
+      "priority": "Prioritario (3–5 días)",
+      "expedited": "Urgente (24–48 horas)"
+    },
+    "promises": {
+      "price": "Promesa de Precio",
+      "damage": "Promesa contra Daños",
+      "people": "Promesa Personal"
+    },
+    "rights": "Todos los derechos reservados.",
+    "credentials": "MC# [pendiente] · DOT# [pendiente] · Fianza BMC-84 registrada"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Auto Line Logistics, LLC",
+      "title": "Transporte de autos con precio fijo.",
+      "titleAccent": "Sin sorpresas.",
+      "description": "Seguimiento en tiempo real. Evidencia fotográfica en cada paso. Una promesa de protección contra daños. Hecho para personas que merecen más que una cotización y una promesa vacía.",
+      "ctaPrimary": "Obtenga su precio fijo",
+      "ctaSecondary": "Vea cómo funciona"
+    },
+    "triplePromise": {
+      "eyebrow": "Nuestra triple promesa",
+      "title": "Tres compromisos. En cada envío.",
+      "cards": {
+        "price": {
+          "eyebrow": "Promesa de Precio",
+          "headline": "Usted elige la velocidad, nosotros fijamos el precio.",
+          "cta": "Ver precios →"
+        },
+        "damage": {
+          "eyebrow": "Promesa contra Daños",
+          "headline": "Su auto está cubierto más allá del seguro del transportista.",
+          "cta": "Ver cobertura →"
+        },
+        "people": {
+          "eyebrow": "Promesa Personal",
+          "headline": "Siempre hablará con una persona real, por su nombre.",
+          "cta": "Conozca al equipo →"
+        }
+      }
+    }
+  },
+  "pricePromise": {
+    "hero": {
+      "title": "Promesa de Precio",
+      "subtitle": "Usted elige la velocidad. Nosotros fijamos el precio. La cotización es el contrato."
+    },
+    "antiPattern": {
+      "title": "El secreto a voces del transporte de autos",
+      "body": {
+        "0": "La mayoría de los corredores le dan una cotización, le cobran un depósito, y dos semanas después lo llaman con un número más alto cuando van realmente a buscar un transportista. La industria tiene un nombre para esto: «la oferta y el aumento» (en inglés, “bid-and-bump”).",
+        "1": "Es la razón por la que las reseñas de transporte de autos en línea están llenas de clientes que se sienten estafados. La cotización original era un anzuelo. El número real siempre iba a ser más alto — el corredor solo necesitaba su depósito primero."
+      },
+      "punchline": "Nosotros no hacemos eso. El precio que reserva es el precio que paga. Punto."
+    },
+    "tiers": {
+      "eyebrow": "Elija su velocidad",
+      "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
+      "intro": "El precio escala con la urgencia. Sea cual sea el nivel que elija, la garantía es idéntica: el precio de reserva es el precio final.",
+      "cards": {
+        "standby": {
+          "tier": "En Espera",
+          "window": "Ventana de recogida de 7 días",
+          "description": "El más flexible. Mejor valor cuando su calendario tiene margen.",
+          "bestFor": "Snowbirds, mudanzas universitarias, reubicaciones planificadas"
+        },
+        "priority": {
+          "tier": "Prioritario",
+          "window": "Ventana de recogida de 3–5 días",
+          "description": "Lo suficientemente justo para planificar, lo suficientemente flexible para ser asequible.",
+          "bestFor": "La mayoría de envíos directos al consumidor"
+        },
+        "expedited": {
+          "tier": "Urgente",
+          "window": "Recogida en 24–48 horas",
+          "description": "Cuando el tiempo importa más que el precio. Nos ponemos en marcha de inmediato.",
+          "bestFor": "Reubicaciones repentinas, recogidas urgentes para compradores"
+        }
+      },
+      "bestForLabel": "Ideal para:"
+    },
+    "commitment": {
+      "eyebrow": "La promesa en sí",
+      "headline": "El número en su confirmación de reserva es el número en su factura final.",
+      "items": {
+        "0": "Sin recargos después de la asignación",
+        "1": "Sin llamadas de “el mercado cambió”",
+        "2": "Sin sobrecargos por costos del transportista",
+        "3": "Sin recargos por combustible",
+        "4": "Cualquier cargo adicional se revela antes de reservar"
+      }
+    },
+    "faq": {
+      "title": "Preguntas sobre precios",
+      "items": {
+        "0": {
+          "q": "¿Qué pasa si un transportista quiere más dinero para llevar mi auto?",
+          "a": "Ese es nuestro problema, no el suyo. El precio que reservó es el precio que paga. Si un transportista quiere cobrar más, o buscamos otro transportista o absorbemos la diferencia. Su factura no cambia después de reservar."
+        },
+        "1": {
+          "q": "¿Qué incluye el precio fijo?",
+          "a": "Transporte puerta a puerta desde su origen hasta el destino, carga y descarga estándar, cobertura básica del seguro del transportista durante el tránsito, acceso a seguimiento en tiempo real, evidencia fotográfica en la recogida y entrega, y un coordinador con nombre desde la cotización hasta la entrega. Los impuestos, cuando aplican, están incluidos."
+        },
+        "2": {
+          "q": "¿Qué NO está incluido en el precio?",
+          "a": "Recargos por vehículo inoperable (cabrestante / equipo pesado), recargos por vehículos sobredimensionados (camionetas elevadas, ejes dobles), actualización a tráiler cerrado, y seguros adicionales más allá de la cobertura estándar de carga. Siempre le avisamos cualquier costo adicional antes de que reserve — nunca después."
+        },
+        "3": {
+          "q": "¿Qué pasa si necesito cancelar o reprogramar?",
+          "a": "Cancelación gratuita hasta la asignación del transportista. Después de la asignación, la cancelación puede tener una pequeña tarifa de despacho, que siempre revelamos antes de aplicarla. Reprogramar dentro de la ventana de su nivel de servicio siempre es gratis."
+        },
+        "4": {
+          "q": "¿Cómo se determina su precio?",
+          "a": "Tres factores: distancia, tipo de vehículo, y la urgencia del nivel (En Espera, Prioritario, o Urgente). Sacamos tarifas en vivo de transportistas de nuestra red verificada y añadimos un margen operativo transparente. Sin precios dinámicos. Sin sobreprecios donde usted compite contra usted mismo."
+        },
+        "5": {
+          "q": "¿Por qué otros corredores no hacen esto?",
+          "a": "La mayoría de los corredores operan con un modelo de subasta: publican su envío en un mercado de transportistas y aceptan la oferta ganadora. La cotización original es solo una suposición — cuando los costos reales salen más altos, usted paga la diferencia o su envío se queda atascado. Nosotros negociamos las tarifas con los transportistas por adelantado y absorbemos la variación de precio nosotros mismos. Es un modelo de negocio diferente, no una industria diferente."
+        }
+      }
+    },
+    "cta": {
+      "title": "Vea su precio fijo en 60 segundos.",
+      "description": "Ingrese su origen, destino y vehículo. Le mostraremos tres precios escalonados al instante. Elija uno, fíjelo, listo.",
+      "primary": "Obtenga su precio fijo",
+      "secondary": "Vea cómo funciona la Promesa Personal →"
+    }
+  },
+  "damagePromise": {
+    "hero": {
+      "title": "Promesa contra Daños",
+      "subtitle": "Su auto está cubierto más allá del seguro del transportista. Nosotros manejamos el reclamo. Usted no persigue a nadie."
+    },
+    "antiPattern": {
+      "title": "Lo que le pasa a la mayoría cuando su auto llega dañado",
+      "body": {
+        "0": "El cliente presenta un reclamo. El corredor dice «contacte directamente al transportista — ellos son los responsables». El cliente llama al transportista. El transportista dice «presente el reclamo con nuestro seguro». El seguro pide fotos que el cliente no tiene. El cliente da vueltas durante semanas. La mayoría se rinde. Los pocos que no, pasan tres meses en espera.",
+        "1": "Este patrón ocurre porque la mayoría de los corredores no quieren que los reclamos por daños sean su problema. Legalmente, el transportista es el responsable. Así que el corredor se hace a un lado."
+      },
+      "punchline": "Nosotros no nos hacemos a un lado. Asumimos el reclamo desde el momento en que lo presenta. Su única tarea: enviarnos las fotos y contarnos qué pasó."
+    },
+    "coverage": {
+      "eyebrow": "Cómo se ve nuestra cobertura",
+      "title": "Protección por capas. Cobertura del transportista + nuestro respaldo.",
+      "stats": {
+        "bond": {
+          "amount": "$75,000",
+          "label": "Fianza del corredor registrada",
+          "description": "Protección requerida por la FMCSA. Respalda los vacíos de cobertura del transportista."
+        },
+        "contingent": {
+          "amount": "$500,000",
+          "label": "Responsabilidad contingente de carga",
+          "description": "Nuestra póliza. Se activa cuando el seguro del transportista no alcanza."
+        },
+        "ack": {
+          "amount": "24 horas",
+          "label": "SLA de acuse de reclamo",
+          "description": "Desde el momento en que presenta el reclamo, nuestro coordinador confirma la recepción e inicia el proceso."
+        },
+        "resolution": {
+          "amount": "14 días",
+          "label": "Meta de resolución",
+          "description": "La mayoría de los reclamos se resuelven antes. 14 días es nuestro compromiso máximo, no nuestro promedio."
+        }
+      }
+    },
+    "scenarios": {
+      "eyebrow": "Escenarios comunes",
+      "title": "Lo que «cubierto» realmente significa en la práctica",
+      "items": {
+        "doorDing": {
+          "title": "Golpe de puerta durante la carga",
+          "covered": true,
+          "detail": "Daño menor en la carrocería durante la recogida o entrega. El seguro del transportista lo maneja; nosotros aceleramos el papeleo."
+        },
+        "theft": {
+          "title": "Robo del transportista en tránsito",
+          "covered": true,
+          "detail": "Ya sea artículos dentro del vehículo (dentro de lo razonable) o el vehículo mismo. Se requiere reporte policial."
+        },
+        "tireDebris": {
+          "title": "Daño de llantas o ruedas por escombros de la carretera",
+          "covered": false,
+          "detail": "Los tráileres abiertos exponen los vehículos a escombros de la carretera. No cubierto — aunque el transporte cerrado elimina el riesgo."
+        },
+        "weather": {
+          "title": "Daño por granizo o clima",
+          "covered": false,
+          "detail": "Los actos de la naturaleza están excluidos en toda la industria. El transporte cerrado es la cobertura recomendada para vehículos sensibles al clima."
+        },
+        "mechanical": {
+          "title": "Problema mecánico a mitad de ruta",
+          "covered": true,
+          "detail": "Si el manejo del transportista causó el daño (ej., se cayó durante la carga). No cubierto si el vehículo tenía problemas preexistentes documentados en la recogida."
+        }
+      }
+    },
+    "steps": {
+      "eyebrow": "Presentar un reclamo",
+      "title": "Tres pasos. Nosotros hacemos el resto.",
+      "items": {
+        "1": {
+          "number": "1",
+          "title": "Anote el daño en la entrega",
+          "detail": "Pídale al conductor que escriba el daño en el BOL antes de irse. Tome fotos de la inspección de entrega."
+        },
+        "2": {
+          "number": "2",
+          "title": "Envíe por el portal",
+          "detail": "En su portal de cliente: haga clic en «Presentar reclamo», suba las fotos y el BOL. Toma unos 3 minutos."
+        },
+        "3": {
+          "number": "3",
+          "title": "Nosotros nos encargamos",
+          "detail": "Dentro de 24 horas, su coordinador confirma. Dentro de 14 días, el reclamo se resuelve. Usted no habla con los transportistas."
+        }
+      }
+    },
+    "faq": {
+      "title": "Preguntas sobre la cobertura",
+      "items": {
+        "0": {
+          "q": "¿Qué pasa si mi auto se daña en tránsito?",
+          "a": "Presente un reclamo con nosotros dentro de las 24 horas posteriores a la entrega. Acusamos recibo dentro de 24 horas y apuntamos a una resolución completa dentro de 14 días. Manejamos al transportista directamente — usted no persigue a nadie, usted no media. Se requieren: fotos de la recogida (nosotros las proporcionamos), fotos de la entrega, y el BOL firmado en la entrega anotando el daño."
+        },
+        "1": {
+          "q": "¿Quién paga por el daño — ustedes o el transportista?",
+          "a": "Los transportistas llevan un seguro de carga obligatorio (típicamente entre $100K y $250K). Para la mayoría de los eventos de daño, el seguro del transportista cubre el reclamo. Si su cobertura no alcanza, se activan nuestra responsabilidad contingente de carga de $500,000 y nuestra fianza de corredor de $75,000. El cliente nunca ve esa complejidad — la manejamos por detrás."
+        },
+        "2": {
+          "q": "¿Qué NO está cubierto?",
+          "a": "Actos de la naturaleza (granizo, viento, inundaciones), daños por escombros de la carretera en tráileres abiertos, daños preexistentes documentados en la recogida, artículos personales dejados en el vehículo, y daños causados por instrucciones de carga incorrectas proporcionadas por el cliente. Para vehículos de alto valor o sensibles al clima, recomendamos nuestra actualización a tráiler cerrado."
+        },
+        "3": {
+          "q": "¿Qué pasa si el transportista se niega a pagar?",
+          "a": "Ahí es donde se activan nuestra fianza de corredor y la cobertura contingente de carga. Perseguimos al transportista en su nombre, pero usted no espera la recuperación. Una vez que aprobamos el reclamo (dentro de 14 días), el pago a usted ocurre sin importar el tiempo de resolución del lado del transportista."
+        },
+        "4": {
+          "q": "¿Requieren transporte cerrado para la protección contra daños?",
+          "a": "No. Tanto el transporte abierto como el cerrado están cubiertos bajo la misma Promesa contra Daños. Los tráileres abiertos llevan una exposición ligeramente mayor al clima y los escombros de la carretera, por eso recomendamos fuertemente el cerrado para vehículos de más de $75,000, clásicos o coleccionables, autos deportivos de baja altura, y vehículos con pintura o vinilos personalizados."
+        },
+        "5": {
+          "q": "¿Qué documentación proporcionan?",
+          "a": "En la recogida: un set de fotos de inspección 360° con marca de tiempo y geolocalización, más el Bill of Lading (BOL) firmado por el conductor. En la entrega: un set de inspección 360° equivalente más el BOL de entrega. Ambos aparecen en su portal de cliente tan pronto como la aplicación del conductor los captura. Esta evidencia es la base de cualquier reclamo."
+        }
+      }
+    },
+    "cta": {
+      "title": "Envíe con el corredor que asume el reclamo.",
+      "description": "Precio fijo. $575K de protección por capas. Meta de resolución de reclamos en 14 días. Coordinadores reales. Obtenga una cotización en 60 segundos.",
+      "primary": "Obtenga su precio fijo",
+      "secondary": "Lea la Promesa Personal →"
+    }
+  },
+  "peoplePromise": {
+    "hero": {
+      "title": "Promesa Personal",
+      "subtitle": "Siempre hablará con una persona real, por su nombre. Empresa familiar. Bilingüe. Responsable."
+    },
+    "antiPattern": {
+      "title": "Cuando nadie da la cara",
+      "body": {
+        "0": "Llama a un número 1-800. Le contesta un vendedor. Reserva su envío, toma su depósito, y luego lo transfiere a despacho. Despacho lo transfiere a un conductor. El conductor no le habla. Algo sale mal, usted llama de vuelta, le contesta un vendedor diferente, que tiene que leer el archivo desde cero.",
+        "1": "Para cuando ha explicado su situación tres veces, su auto está en algún lugar de Texas y nadie en el teléfono sabe dónde."
+      },
+      "punchline": "El transporte de autos se rompió cuando se quedó sin rostro. Estamos reconstruyendo la relación operador-cliente como siempre debió funcionar: una persona con nombre, un número de teléfono, un punto de responsabilidad."
+    },
+    "commitments": {
+      "eyebrow": "Nuestros compromisos",
+      "title": "Cuatro cosas que prometemos. Respaldadas por cómo operamos desde 2014.",
+      "cards": {
+        "named": {
+          "title": "Coordinador con nombre en cada envío",
+          "description": "Cuando reserva, se le asigna un coordinador por nombre. Conoce su envío. Contesta el teléfono. De la cotización a la entrega — la misma persona."
+        },
+        "bilingual": {
+          "title": "Línea frontal bilingüe",
+          "description": "Cobertura nativa en español e inglés en el equipo de cara al cliente. El sitio entero está traducido de principio a fin, no son widgets agregados."
+        },
+        "family": {
+          "title": "Empresa familiar desde 2014",
+          "description": "Nombres reales en la compañía. La autoridad de decisión está con quienes hacen el trabajo. Hemos construido esto sobre la responsabilidad individual."
+        },
+        "noScript": {
+          "title": "Sin guion. Sin laberinto de transferencias.",
+          "description": "Su coordinador es responsable de la respuesta. Si algo sale mal, la misma persona le devuelve la llamada — no un vendedor diferente empezando desde cero."
+        }
+      }
+    },
+    "timeline": {
+      "eyebrow": "Cómo se desarrolla en la práctica",
+      "title": "Un envío típico, de principio a fin",
+      "rows": {
+        "0": {
+          "time": "Día 0 — Reserva",
+          "description": "Recibe una cotización. Elige un nivel. Reserva en línea. Dentro de una hora, su coordinador le envía por correo su línea directa y un resumen rápido de bienvenida."
+        },
+        "1": {
+          "time": "Día 1–3 — Transportista asignado",
+          "description": "Su coordinador encuentra al transportista, valida su estado en la FMCSA, y confirma los detalles de la recogida con el conductor. Usted recibe una notificación con el nombre del conductor y los detalles del camión."
+        },
+        "2": {
+          "time": "Día de recogida",
+          "description": "El conductor llega. Hace una inspección del vehículo con usted. Las fotos van a su portal en tiempo real. Se firma el BOL. Usted y su coordinador tienen copia. El camión arranca."
+        },
+        "3": {
+          "time": "En tránsito",
+          "description": "El seguimiento por GPS y las actualizaciones por hitos aparecen en su portal. Si surge algo inusual — demora por clima, problema mecánico, cambio de ruta — su coordinador lo llama de manera proactiva."
+        },
+        "4": {
+          "time": "Día de entrega",
+          "description": "El conductor coordina la ventana con usted. Inspecciona el vehículo al llegar. Se capturan fotos. Se firma el BOL. Si hay algún daño que reportar, usted lo anota en el BOL en ese momento."
+        },
+        "5": {
+          "time": "Después de la entrega",
+          "description": "El mismo coordinador sigue siendo su punto de contacto para cualquier reclamo, seguimiento, o reservas futuras. No lo reciclamos de vuelta al embudo de entrada."
+        }
+      }
+    },
+    "faq": {
+      "title": "Preguntas sobre cómo trabajamos",
+      "items": {
+        "0": {
+          "q": "¿Quién es mi coordinador y cómo me comunico con él?",
+          "a": "Al reservar, se le asigna un coordinador por nombre. Recibirá su número directo y correo electrónico. Es responsable de su envío desde la reserva hasta la entrega. Si no está disponible, un coordinador de respaldo contesta — nunca un árbol automatizado, nunca un centro de llamadas en el extranjero."
+        },
+        "1": {
+          "q": "¿Su equipo es realmente bilingüe?",
+          "a": "Sí. Hablantes nativos de español manejan las llamadas entrantes y las comunicaciones con el cliente en español desde la reserva hasta la entrega. La capa en español del sitio (que se lanza en Fase A) es una traducción completa, no una capa traducida por máquina. Aproximadamente uno de cada diez clientes de transporte de autos en Estados Unidos prefiere el español — construimos para ellos desde el primer día."
+        },
+        "2": {
+          "q": "¿Qué cambia realmente que sea «empresa familiar»?",
+          "a": "La autoridad para tomar decisiones está con las personas que hacen el trabajo. Cuando algo sale mal, escalar no significa subir por una escalera corporativa — significa caminar por el pasillo. Hemos construido la empresa desde 2014 tratando la reputación individual como la reputación de la empresa."
+        },
+        "3": {
+          "q": "¿Qué pasa si mi coordinador está de vacaciones cuando algo sale mal?",
+          "a": "Cada coordinador tiene un respaldo designado, informado sobre su envío antes de cualquier transferencia. Usted no empieza desde cero. El respaldo conoce su origen, destino, vehículo, calendario, y cualquier asunto pendiente. Su punto de responsabilidad permanece continuo."
+        },
+        "4": {
+          "q": "¿Recibo el número directo de mi coordinador?",
+          "a": "Sí — al reservar. Su línea directa, su correo, y sus horas de trabajo. No nos escondemos detrás de un número 800 general. El punto entero de la Promesa Personal es que hay una persona real responsable ante usted."
+        },
+        "5": {
+          "q": "¿En qué se diferencia esto de los discursos de «agente dedicado» de otros corredores?",
+          "a": "La mayoría de los «agentes dedicados» en esta industria son vendedores que transfieren a despacho después de reservar. Nunca vuelve a hablar con esa persona original. Nuestros coordinadores se quedan con el envío hasta la entrega — incluyendo durante el tránsito, en la entrega, y para cualquier pregunta o reclamo posterior a la entrega."
+        }
+      }
+    },
+    "cta": {
+      "title": "Una persona con nombre. Un número de teléfono. Un punto de contacto responsable.",
+      "description": "Obtenga un precio fijo en 60 segundos. Luego conozca a su coordinador — por nombre, con su línea directa.",
+      "primary": "Obtenga su precio fijo",
+      "secondary": "Conozca al equipo →"
+    }
+  },
+  "about": {
+    "hero": {
+      "eyebrow": "Quiénes somos",
+      "title": "Una empresa familiar de transporte de autos, hecha para personas reales.",
+      "description": "Sin guiones de centro de llamadas, sin cotizaciones engañosas, sin recargos sorpresa en la entrega. Como el transporte de autos debió funcionar desde el principio.",
+      "ctaPrimary": "Obtenga su precio fijo",
+      "ctaSecondary": "Hable con un coordinador"
+    },
+    "buildStatus": "🚧 Estado de construcción: las credenciales, biografías del equipo, y reseñas de clientes en esta página muestran marcadores de posición mientras confirmamos el texto final y reunimos fotos. Operativamente, hemos estado moviendo autos durante años — el sitio web es la parte que aún se está construyendo.",
+    "story": {
+      "eyebrow": "Nuestra historia",
+      "title": "Empezamos Auto Line Logistics porque la industria se había ganado su mala reputación.",
+      "body": {
+        "0": "La mayoría de las empresas de transporte de autos en este país son corredores — toman su depósito, publican su auto en un tablón de cargas, y esperan que alguien lo recoja al precio más bajo. Cuando un transportista finalmente acepta la carga, suben el precio. ¿Y si su auto llega dañado? Está solo con el seguro del transportista.",
+        "1": "Nosotros lo hacemos diferente. Somos una empresa familiar basada en el sur de California. Operamos nuestros propios camiones donde la ruta tiene sentido, y trabajamos con una red verificada de transportistas asociados en todos los demás lugares — cada uno de ellos sometido a los mismos estándares.",
+        "2": "El número en su cotización es el número en su factura. Su coordinador es una persona real cuyo nombre conocerá. Y su auto está cubierto más allá de los mínimos del transportista — porque los autos se dañan, y pretender lo contrario es como los clientes terminan estafados."
+      },
+      "sidebar": {
+        "eyebrow": "En cifras",
+        "stats": {
+          "family": {
+            "amount": "Empresa familiar",
+            "description": "Independiente. No es un centro de llamadas, no es una franquicia."
+          },
+          "coverage": {
+            "amount": "$575K",
+            "description": "Cobertura de carga por capas en cada envío, más allá de la póliza del transportista."
+          },
+          "usBased": {
+            "amount": "Basado en EE. UU.",
+            "description": "Su coordinador trabaja desde nuestra oficina, no desde un servicio de contestación en el extranjero."
+          }
+        },
+        "footnote": "Los años en operación y los conteos de envíos se mostrarán aquí una vez que Ben confirme los números."
+      }
+    },
+    "promiseTieIn": {
+      "eyebrow": "Lo que prometemos",
+      "title": "Tres compromisos. En cada envío.",
+      "description": "Estas no son frases de marketing — cada una es exigible. Lea el desglose completo de qué cubrimos y qué se le debe si fallamos.",
+      "cards": {
+        "price": {
+          "eyebrow": "Promesa de Precio",
+          "headline": "Cotización = factura →",
+          "description": "Usted elige la velocidad, nosotros fijamos el precio. Sin recargos, nunca."
+        },
+        "damage": {
+          "eyebrow": "Promesa contra Daños",
+          "headline": "Cobertura por capas →",
+          "description": "$575K por encima de la póliza del transportista. Nosotros manejamos el reclamo — usted no pelea solo con el seguro."
+        },
+        "people": {
+          "eyebrow": "Promesa Personal",
+          "headline": "Coordinador con nombre →",
+          "description": "Una persona real es responsable de su envío. Tendrá su línea directa."
+        }
+      }
+    },
+    "antiScam": {
+      "eyebrow": "Por qué somos diferentes",
+      "title": "Las trampas del transporte de autos que debe conocer.",
+      "lead": "Si recibió una cotización que parecía demasiado buena para ser verdad, probablemente lo era. Este es el patrón con el que se topa la mayoría de los clientes — y cómo lo estructuramos nosotros de manera diferente.",
+      "industry": {
+        "title": "El patrón de la industria",
+        "items": {
+          "0": "Cotización baja para ganar la reserva",
+          "1": "Publicado en un tablón de cargas e ignorado hasta que un transportista muerde el anzuelo",
+          "2": "El precio sube cuando los transportistas rechazan la tarifa original",
+          "3": "Transferencia en la entrega — el corredor desaparece si algo salió mal",
+          "4": "Daño = su problema con el seguro del transportista, no del corredor"
+        }
+      },
+      "ours": {
+        "title": "Cómo lo estructuramos nosotros",
+        "items": {
+          "0": "Precio fijo al reservar — escrito en el acuerdo",
+          "1": "Red verificada de transportistas con los que hemos trabajado durante años, más nuestros propios camiones",
+          "2": "Sin cláusula de recargo — si los costos cambian, ese es nuestro problema, no el suyo",
+          "3": "Coordinador con nombre desde la cotización hasta la entrega",
+          "4": "Cobertura por capas y nosotros presentamos el reclamo de daños si sucede"
+        }
+      }
+    },
+    "team": {
+      "eyebrow": "Las personas",
+      "title": "Nombres reales. Números de teléfono reales.",
+      "description": "No lo enviamos a una cola de espera. La persona que cotiza su envío es la misma persona que coordina la recogida, monitorea el tránsito, y está disponible si algo cambia a mitad de ruta.",
+      "labels": {
+        "headshot": "Foto de retrato",
+        "photoPending": "Foto pendiente",
+        "tbd": "Por confirmar"
+      },
+      "members": {
+        "ben": {
+          "name": "Ben Baatarjargal",
+          "role": "Propietario y operaciones",
+          "bio": "Fundó Auto Line Logistics y dirige las operaciones diarias. Trayectoria como dueño-operador — sabe lo que ven los camiones porque ha estado en ellos."
+        },
+        "coordinator": {
+          "name": "Por confirmar",
+          "role": "Coordinador de clientes",
+          "bio": "Biografía y foto pendientes. Los coordinadores son los contactos con nombre en cada envío — la Promesa Personal en la práctica."
+        },
+        "dispatch": {
+          "name": "Por confirmar",
+          "role": "Despacho y flota",
+          "bio": "Biografía y foto pendientes. Maneja nuestros camiones propios y la red de transportistas asociados que cubren rutas fuera de nuestra flota directa."
+        }
+      },
+      "footnote": "Confirmaciones de fotos y biografías pendientes — Ben las proporcionará. Preferimos mostrar marcadores antes que llenar la página del equipo con fotos genéricas."
+    },
+    "credentials": {
+      "eyebrow": "Credenciales",
+      "title": "Con licencia, fianza y seguro.",
+      "description": "Verificable a través de la Administración Federal de Seguridad de Autotransportistas (FMCSA) y el Better Business Bureau. Nuestros números se mostrarán abajo en cuanto Ben los confirme en la búsqueda SAFER.",
+      "cards": {
+        "mc": {
+          "label": "Número MC",
+          "value": "MC-XXXXXX",
+          "note": "Autoridad de transportista motorizado FMCSA"
+        },
+        "dot": {
+          "label": "Número USDOT",
+          "value": "DOT-XXXXXXX",
+          "note": "Autoridad operativa USDOT"
+        },
+        "bond": {
+          "label": "Fianza BMC-84",
+          "value": "$75,000",
+          "note": "Fianza presentada ante la FMCSA"
+        },
+        "cargo": {
+          "label": "Cobertura de Carga",
+          "value": "$575K",
+          "note": "Por capas sobre los mínimos del transportista"
+        }
+      },
+      "pendingLabel": "Pendiente de confirmación",
+      "verifyCallout": {
+        "leadIn": "Verifíquenos usted mismo.",
+        "body": "Una vez que nuestros números MC y DOT estén publicados, puede sacar nuestro historial completo de seguridad y autoridad en",
+        "linkText": "FMCSA SAFER",
+        "afterLink": ". Así es como se verifican los transportistas y corredores legítimos. Si una empresa se niega a compartir sus números MC y DOT, aléjese."
+      }
+    },
+    "reviews": {
+      "eyebrow": "Lo que dicen los clientes",
+      "title": "Reseñas de envíos reales.",
+      "description": "No publicamos testimonios fabricados. La sección de reseñas se llenará una vez que hayamos recopilado citas verificables de clientes — con nombres de pila, ruta, y fecha — que podamos atribuir honestamente.",
+      "emptyState": "Reseñas de clientes próximamente. Preferimos dejar este espacio vacío antes que llenarlo con citas falsas.",
+      "footnote": "¿Envió recientemente con nosotros? Escriba a info@autolinelogistics.com — nos encantaría destacar su experiencia."
+    },
+    "faq": {
+      "title": "Preguntas sobre la empresa",
+      "items": {
+        "0": {
+          "q": "¿Son corredores o transportistas?",
+          "a": "Ambos — y somos transparentes al respecto. Operamos nuestros propios camiones en rutas donde tiene sentido operativo, y trabajamos con una red verificada de transportistas asociados en todos los demás lugares. Cada transportista con el que trabajamos cumple con los mismos estándares que nuestra flota propia. La Promesa contra Daños aplica sin importar quién esté manejando."
+        },
+        "1": {
+          "q": "¿Dónde están ubicados?",
+          "a": "El sur de California. Nuestra oficina es el centro operativo de los corredores que cubrimos con más frecuencia — California a Hawái, California a Alaska, y rutas transcontinentales. Publicaremos la dirección completa de la oficina una vez que actualicemos esta página."
+        },
+        "2": {
+          "q": "¿Cuánto tiempo llevan en el negocio?",
+          "a": "Auto Line Logistics ha estado moviendo vehículos de clientes durante años. La fecha exacta de fundación se publicará aquí una vez que Ben la confirme oficialmente — no queremos redondear números en una página que debe ser precisa."
+        },
+        "3": {
+          "q": "¿Por qué el sitio web aún se está construyendo si han estado operando durante años?",
+          "a": "Operativamente siempre nos hemos movido con relaciones directas — referencias, clientes recurrentes, familias militares que comparten nuestro número. El sitio web es la parte nueva: un lugar para fijar un precio sin una llamada telefónica, ver qué cubrimos, y verificar nuestras credenciales usted mismo. La coordinación con el cliente siempre ha sido la fortaleza; estamos poniendo el sitio web al día."
+        },
+        "4": {
+          "q": "¿Cómo verifico que son un transportista legítimo?",
+          "a": "Búsquenos en FMCSA SAFER. Nuestros números MC y DOT se publicarán aquí una vez confirmados. Cualquier empresa de transporte de autos que no comparta esos números — o cuyo registro en SAFER no coincida con lo que le dicen por teléfono — es una empresa de la que debe alejarse."
+        },
+        "5": {
+          "q": "¿Envían fuera de California?",
+          "a": "Sí. California es nuestra base, pero enviamos a todos los estados. Los corredores más solicitados — Hawái, Alaska, Texas, Florida, Nueva York — cada uno tiene su propia página dedicada. ¿No ve su ruta? Obtenga una cotización y su coordinador fijará un precio."
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Listo para fijar un precio?",
+      "description": "Envíenos su origen, destino y vehículo. Su coordinador responderá con un precio fijo dentro de 1 hora hábil. Sin depósito, sin obligación.",
+      "primary": "Obtenga su precio fijo",
+      "secondary": "Hable con un coordinador"
+    }
+  },
+  "quote": {
+    "hero": {
+      "eyebrow": "Obtenga un precio fijo",
+      "titleDefault": "Cuéntenos a dónde, qué y cuándo.",
+      "description": "La cotización es el contrato. Cualquier número que le enviemos es el número en su factura. Sin trampa ni cambio."
+    },
+    "buildStatus": "🚧 Estado de construcción: la herramienta de cotización en vivo se conecta cuando nuestras integraciones con Super Dispatch + Authorize.Net estén listas (aprox. Semana 6 de la Fase A). Hasta entonces, envíe el formulario abajo y su coordinador fijará un precio por correo de respuesta dentro de 1 hora hábil. Sin depósito en esta etapa.",
+    "form": {
+      "requiredMark": " *",
+      "origin": {
+        "legend": "Origen",
+        "zip": { "label": "Código postal de origen", "placeholder": "ej. 90630" },
+        "state": { "label": "Estado", "placeholder": "CA" }
+      },
+      "destination": {
+        "legend": "Destino",
+        "zip": { "label": "Código postal de destino", "placeholder": "ej. 96813" },
+        "state": { "label": "Estado", "placeholder": "HI" }
+      },
+      "vehicle": {
+        "legend": "Vehículo",
+        "year": { "label": "Año", "placeholder": "2022" },
+        "make": { "label": "Marca", "placeholder": "Toyota" },
+        "model": { "label": "Modelo", "placeholder": "Camry" },
+        "type": {
+          "label": "Tipo de vehículo",
+          "options": {
+            "sedan": "Sedán",
+            "suv": "SUV / Crossover",
+            "truckStandard": "Camioneta (estándar)",
+            "truckLifted": "Camioneta (elevada / sobredimensionada)",
+            "van": "Van / Minivan",
+            "motorcycle": "Motocicleta",
+            "classic": "Vehículo clásico / de colección",
+            "other": "Otro"
+          }
+        }
+      },
+      "tier": {
+        "legend": "Nivel de servicio",
+        "description": "Elija el nivel de urgencia que se ajuste a su calendario. Confirmaremos opciones y precios en nuestra respuesta.",
+        "options": {
+          "standby": { "label": "En Espera", "sub": "Ventana de recogida de 7 días. El más flexible. Mejor valor." },
+          "priority": { "label": "Prioritario", "sub": "Ventana de recogida de 3–5 días. El más popular." },
+          "expedited": { "label": "Urgente", "sub": "Recogida en 24–48 horas. Precio premium." }
+        }
+      },
+      "contact": {
+        "legend": "Cómo nos comunicamos con usted",
+        "email": { "label": "Correo electrónico", "placeholder": "tucorreo@ejemplo.com" },
+        "phone": { "label": "Teléfono", "placeholder": "(555) 123-4567" },
+        "notes": {
+          "label": "¿Algo más que debamos saber? (opcional)",
+          "placeholder": "ej. órdenes PCS, modificaciones del vehículo, ventana de recogida estricta"
+        }
+      },
+      "submit": {
+        "button": "Enviar solicitud de cotización",
+        "footnote": "Su coordinador responde con un precio fijo dentro de 1 hora hábil. No se requiere depósito para recibir la cotización."
+      }
+    },
+    "reassurance": {
+      "backedBy": "Respaldado por",
+      "cards": {
+        "contract": {
+          "title": "Cotización = contrato",
+          "detail": "Cualquier número que reciba es el número en su factura. Sin recargos, sin llamadas de sobrecostos del transportista."
+        },
+        "coverage": {
+          "title": "Cobertura de $575K",
+          "detail": "Fianza de $75K + carga contingente de $500K. Presentamos los reclamos directamente con el transportista para que usted no persiga a nadie."
+        },
+        "named": {
+          "title": "Coordinador con nombre",
+          "detail": "Una persona, con nombre, responsable de su envío desde la cotización hasta la entrega. Número de teléfono directo al reservar."
+        }
+      }
+    },
+    "states": {
+      "CA": "California",
+      "HI": "Hawái",
+      "AK": "Alaska",
+      "TX": "Texas",
+      "NY": "Nueva York",
+      "FL": "Florida",
+      "AZ": "Arizona",
+      "NV": "Nevada",
+      "WA": "Washington",
+      "OR": "Oregón",
+      "CO": "Colorado"
+    }
+  },
+  "corridors": {
+    "index": {
+      "metadata": {
+        "title": "Todos los corredores — Auto Line Logistics",
+        "description": "Transporte de autos con precio fijo en cada corredor importante de EE. UU. California a Hawái, Alaska, Texas, Florida, Nueva York, y más. Puerta a puerta, coordinador con nombre, sin sorpresas."
+      },
+      "hero": {
+        "eyebrow": "Corredores",
+        "title": "Cada corredor importante de EE. UU. La misma garantía de precio fijo.",
+        "description": "Sea que su envío cruce un océano o tres husos horarios, la promesa es la misma: la cotización es el contrato.",
+        "cta": "¿No ve su ruta? Obtenga una cotización de todos modos →"
+      },
+      "live": {
+        "eyebrow": "Disponible ahora",
+        "titleTemplate": "{count} corredores con páginas dedicadas.",
+        "description": "Rutas detalladas, sub-destinos, y preguntas frecuentes específicas para cada corredor. Haga clic para ver el desglose completo."
+      },
+      "comingSoon": {
+        "eyebrow": "Próximamente",
+        "titleTemplate": "{count} corredores más con páginas dedicadas en este ciclo de construcción.",
+        "description": "Ya servimos estos corredores operativamente — las páginas dedicadas se lanzan a medida que las construimos. Envíe hoy obteniendo una cotización; la página del corredor solo hace el proceso visible."
+      },
+      "promiseTieIn": {
+        "eyebrow": "La misma promesa, cada corredor",
+        "title": "Cualquier ruta, cualquier distancia.",
+        "cards": {
+          "price": { "eyebrow": "Promesa de Precio", "headline": "Cotización = factura final →" },
+          "damage": { "eyebrow": "Promesa contra Daños", "headline": "Cobertura por capas de $575K →" },
+          "people": { "eyebrow": "Promesa Personal", "headline": "Coordinador con nombre →" }
+        }
+      },
+      "finalCta": {
+        "title": "Encuentre su corredor.",
+        "descriptionTemplate": "{count} corredores en el mapa. Cientos más enviables a pedido. Solo necesitamos su código postal de origen y de destino para fijar un precio.",
+        "primary": "Obtenga su precio fijo"
+      },
+      "card": {
+        "soonBadge": "Pronto",
+        "ctaLive": "Vea la página del corredor →",
+        "ctaComingSoon": "Obtenga una cotización →"
+      }
+    },
+    "catalog": {
+      "californiaHawaii": {
+        "shortDesc": "Puerta a puerta a las cuatro islas principales. Logística portuaria, reserva oceánica, y transporte terrestre bajo un solo precio fijo.",
+        "subDestinations": {
+          "oahu": {
+            "name": "Oahu — Honolulu",
+            "routing": "CA → Puerto de Long Beach/Oakland → Puerto de Honolulu → su dirección",
+            "timeline": "10–14 días puerta a puerta",
+            "note": "Puerto principal entre el continente y Hawái. Más zarpes por semana, el tiempo de respuesta más rápido. Destino por defecto si envía a Oahu.",
+            "customers": "PCS militar a Pearl Harbor / JBPHH, compradores de vehículos del continente, estudiantes universitarios"
+          },
+          "maui": {
+            "name": "Maui — Kahului",
+            "routing": "CA → Long Beach/Oakland → Honolulu → Kahului (inter-isla)",
+            "timeline": "12–18 días puerta a puerta",
+            "note": "Barcaza inter-isla desde Honolulu. Agregue 2–4 días a la base de Oahu para el segundo tramo.",
+            "customers": "Snowbirds, jubilados que se mudan, dueños de segunda vivienda, trabajadores de hostelería"
+          },
+          "bigIsland": {
+            "name": "Isla Grande — Hilo o Kona",
+            "routing": "CA → Long Beach/Oakland → Honolulu → Hilo o Kona (inter-isla)",
+            "timeline": "12–18 días puerta a puerta",
+            "note": "Dos puertos de entrega. Enrutamos a Hilo (lado este) o Kona (lado oeste) según cuál esté más cerca de su dirección de destino.",
+            "customers": "Dueños de fincas de café, operaciones ganaderas, jubilados, personal científico / de observatorios"
+          },
+          "kauai": {
+            "name": "Kauai — Lihue",
+            "routing": "CA → Long Beach/Oakland → Honolulu → Lihue (inter-isla)",
+            "timeline": "12–18 días puerta a puerta",
+            "note": "El puerto hawaiano más pequeño. La barcaza inter-isla desde Honolulu típicamente toma 2–4 días, con menos zarpes por semana que Maui o la Isla Grande.",
+            "customers": "Jubilados, dueños de casas de vacaciones, industria de hostelería, trabajadores de la salud"
+          }
+        }
+      },
+      "californiaAlaska": {
+        "shortDesc": "Dos rutas — terrestre por la Autopista de Alaska o marítima por Tacoma. Elegimos la correcta para su temporada y destino.",
+        "subDestinations": {
+          "anchorage": {
+            "name": "Anchorage / JBER",
+            "routing": "CA → Puerto de Tacoma → Anchorage (marítima, por defecto) O terrestre por la Autopista de Alaska",
+            "timeline": "Marítima: 8–14 días · Terrestre: 7–12 días (solo verano)",
+            "note": "Destino por defecto. Joint Base Elmendorf-Richardson (JBER) es la base militar más grande, destino principal para PCS de Fuerza Aérea / Ejército. La mejor confiabilidad de ruta durante todo el año.",
+            "customers": "PCS militar (JBER, Fuerza Aérea, Ejército), trabajadores que viajan a petróleo y gas, jubilados, trabajadores de la salud"
+          },
+          "fairbanks": {
+            "name": "Fairbanks / Eielson AFB / Fort Wainwright",
+            "routing": "CA → Tacoma → Anchorage → Fairbanks (ruta marítima, +1–2 días terrestres) O terrestre directa",
+            "timeline": "Marítima: 10–16 días · Terrestre: 8–12 días (verano más rápido)",
+            "note": "Interior de Alaska. Eielson AFB y Fort Wainwright son las bases militares principales aquí. La terrestre a menudo es más rápida en verano debido a la ruta directa.",
+            "customers": "PCS militar (Fuerza Aérea en Eielson, Ejército en Wainwright), profesorado universitario, petróleo/gas"
+          },
+          "matSu": {
+            "name": "Valle Mat-Su — Wasilla, Palmer",
+            "routing": "CA → Tacoma → Anchorage → Mat-Su (ruta marítima, +1 día terrestre)",
+            "timeline": "Marítima: 8–14 días puerta a puerta",
+            "note": "Suburbios de Anchorage. La misma ruta principal que Anchorage con un tramo terrestre final corto. Destino común para familias trabajadoras y personas que viajan al trabajo desde Anchorage.",
+            "customers": "Personas que viajan al trabajo desde Anchorage, jubilados, familias trabajadoras, equipos de petróleo y gas"
+          },
+          "southeast": {
+            "name": "Juneau / Ketchikan / Sitka",
+            "routing": "CA → Tacoma → puertos del sureste por el Alaska Marine Highway (basado en transbordador)",
+            "timeline": "14–21 días puerta a puerta (muy variable)",
+            "note": "Los destinos del sureste de Alaska se enrutan a través del Alaska Marine Highway System. Tiempos más largos y menos zarpes — su coordinador confirmará los detalles al cotizar.",
+            "customers": "Trabajadores del gobierno (la capital del estado es Juneau), industria turística, jubilados, pesca"
+          }
+        }
+      },
+      "californiaTexas": { "shortDesc": "California a Houston, Dallas, Austin y San Antonio. Transporte abierto y cerrado." },
+      "californiaFlorida": { "shortDesc": "De costa a costa, el corredor de snowbirds más popular. Alta demanda de tráiler cerrado para vehículos de colección." },
+      "californiaNewYork": { "shortDesc": "De costa a costa. Destinos en el área metropolitana de Nueva York y el norte del estado. Paquetes de reubicación de múltiples vehículos disponibles." },
+      "californiaArizona": { "shortDesc": "Phoenix, Scottsdale, Tucson. Fuerte tráfico de snowbirds y reubicaciones de jubilados." },
+      "californiaNevada": { "shortDesc": "Las Vegas, Reno, Carson City. Tiempo de respuesta rápido, a menudo despacho en la misma semana." },
+      "californiaWashington": { "shortDesc": "Seattle, Tacoma, Spokane. Corredor del noroeste del Pacífico con abundante capacidad de transportistas." },
+      "californiaOregon": { "shortDesc": "Portland, Salem, Eugene. Corredor de la I-5, despachos frecuentes." },
+      "californiaColorado": { "shortDesc": "Denver, Boulder, Colorado Springs. Reubicaciones en estados montañosos y mudanzas estacionales." },
+      "floridaNewYork": { "shortDesc": "El corredor clásico de snowbirds. Fuertes patrones estacionales — hacia el norte en primavera, hacia el sur en otoño." },
+      "texasFlorida": { "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Corredor a través del Golfo." }
+    },
+    "californiaHawaii": {
+      "metadata": {
+        "title": "Envíe un auto de California a Hawái — Logística portuaria, precios fijos",
+        "description": "Transporte de vehículos del continente a Hawái por los puertos de Long Beach u Oakland. Coordinación puerta-puerto-puerta, todas las islas. Cotizaciones con precio fijo. La elección de familias militares PCS y reubicaciones de snowbirds."
+      },
+      "hero": {
+        "eyebrow": "Corredor → California ↔ Hawái",
+        "title": "Envíe un auto a Hawái, de la forma correcta.",
+        "description": "Puerta a puerta, del continente a las cuatro islas principales. Logística portuaria, reserva oceánica, y transporte terrestre — coordinados bajo un solo precio fijo.",
+        "ctaPrimary": "Obtenga mi precio CA → HI",
+        "ctaSecondary": "Cómo funciona ↓"
+      },
+      "whyDifferent": {
+        "eyebrow": "Qué hace diferente a Hawái",
+        "title": "No es transporte de autos. Es logística.",
+        "body": {
+          "0": "La mayoría de los corredores continentales de transporte de autos son un camión, un conductor, un solo trayecto. Hawái es diferente. Su vehículo tiene que pasar dos tramos terrestres, una travesía oceánica, papeleo portuario en ambos extremos, y (para las islas externas) una barcaza inter-isla. Seis transferencias. Seis oportunidades para que algo salga mal si nadie está coordinando.",
+          "1": "La mayoría de los corredores no están preparados para coordinar el envío marítimo. Le dan una cotización, toman un depósito, y le entregan el número de un agente portuario que nunca ha oído de usted. Nosotros no."
+        },
+        "punchline": "Su coordinador es responsable de toda la cadena — desde la recogida en California hasta su entrada en Honolulu, Hilo, Kahului, o Lihue. Un número de teléfono, un punto de contacto responsable."
+      },
+      "route": {
+        "eyebrow": "La ruta",
+        "title": "Seis tramos. Un coordinador. Precio fijo.",
+        "legs": {
+          "1": { "title": "Recogida en el continente", "detail": "Transportista despachado a su dirección en California. El conductor completa fotos de inspección 360° y firma el BOL. Recibe copia de la confirmación de despacho." },
+          "2": { "title": "Tránsito al puerto", "detail": "Vehículo entregado al puerto de Long Beach u Oakland (el que optimice el costo total y el tiempo). Nosotros elegimos; usted no gestiona." },
+          "3": { "title": "Reserva portuaria + transportista oceánico", "detail": "Reserva confirmada con el transportista oceánico (típicamente Matson o Pasha). Fecha de zarpe establecida. Recibe el nombre del barco, fecha de zarpe, y hora estimada de llegada en su portal." },
+          "4": { "title": "Travesía oceánica", "detail": "5–10 días de puerto a puerto hasta Honolulu. El vehículo se asegura bajo cubierta (RoRo) o en servicio en contenedor según el tipo de reserva." },
+          "5": { "title": "Recogida en el puerto de Honolulu", "detail": "Nuestro agente isleño recibe el vehículo. Aquí se reserva la barcaza inter-isla si su destino es Maui, Isla Grande, o Kauai (agrega 2–4 días)." },
+          "6": { "title": "Entrega final", "detail": "Vehículo entregado a su dirección en Hawái. Fotos de inspección en la entrega. Se firma el BOL. Usted y su coordinador tienen la documentación." }
+        }
+      },
+      "subDestinations": {
+        "eyebrow": "Elija su isla",
+        "title": "Las cuatro islas principales. Cada una con su propia ruta.",
+        "description": "Honolulu es el puerto principal continente-Hawái — cada envío pasa por allí. Las entregas a las islas externas agregan un tramo de barcaza inter-isla con su propio tiempo."
+      },
+      "specialty": {
+        "eyebrow": "Vehículos especiales",
+        "title": "Hawái tiene reglas específicas. Las hemos visto todas.",
+        "description": "El tránsito oceánico + las inspecciones del Departamento de Agricultura de Hawái agregan restricciones que no existen en las rutas continentales. Esto es lo que manejamos para las situaciones más comunes.",
+        "cards": {
+          "ev": {
+            "title": "Vehículos eléctricos (EVs)",
+            "summary": "Sí — con estado de carga de batería regulado.",
+            "detail": "Las regulaciones IMDG Clase 9 de materiales peligrosos aplican a las baterías de litio durante el tránsito oceánico. Los transportistas limitan el estado de carga al 30–50% en el puerto. Confirmamos los detalles al reservar. Sin tarifa adicional de nuestra parte por el manejo del cumplimiento."
+          },
+          "classic": {
+            "title": "Autos clásicos / de colección",
+            "summary": "Tráiler cerrado + valuación de seguro más alta altamente recomendado.",
+            "detail": "Para vehículos de más de $75K o con pintura personalizada, vinilos, o carrocería sin restaurar. La inspección en la recogida es más exhaustiva — documentamos la condición con cobertura fotográfica adicional. Los puertos de recogida son los mismos; la mezcla de transportistas difiere."
+          },
+          "motorcycle": {
+            "title": "Motocicletas",
+            "summary": "Contenedor en caja o tráiler con correas — típicamente más barato que los autos.",
+            "detail": "Los transportistas oceánicos requieren combustible drenado a menos de 1/4 de tanque. Estado de la batería revisado en la recogida. Manejamos envíos de una sola moto y de múltiples motos. El casco y el equipo hasta ~30 libras pueden viajar dentro."
+          },
+          "oversized": {
+            "title": "Sobredimensionados / RVs",
+            "summary": "Tráiler especializado requerido, aplica recargo.",
+            "detail": "Los vehículos que exceden la altura estándar del transportista (~7 pies) o la longitud se envían en plataforma o tráiler especializado. El recargo escala con las dimensiones. Cotizado por separado — su coordinador necesitará las medidas exactas."
+          },
+          "personal": {
+            "title": "Artículos personales en el vehículo",
+            "summary": "Hasta ~100 libras en el maletero. Exclusiones estrictas.",
+            "detail": "NO armas de fuego, municiones, alcohol, materiales peligrosos, o plantas vivas (las restricciones agrícolas de Hawái son estrictas). Los artículos deben asegurarse para que no se muevan. El daño a los artículos personales no está cubierto — cargue cualquier cosa que traiga bajo su propio riesgo."
+          },
+          "ag": {
+            "title": "Preparación para cuarentena agrícola",
+            "summary": "Requerida por el Departamento de Agricultura de Hawái. Nosotros coordinamos.",
+            "detail": "Hawái inspecciona los vehículos entrantes en busca de tierra y material vegetal. La parte baja del vehículo debe limpiarse a fondo antes de la recogida. No pasar = vehículo retenido en el puerto (a su costo). Enviamos instrucciones de preparación al reservar."
+          }
+        },
+        "footnote": "¿No ve su situación? Menciónela en el campo de notas de la solicitud de cotización. Su coordinador confirmará el manejo y cualquier costo adicional antes de reservar."
+      },
+      "tiers": {
+        "eyebrow": "Niveles de servicio",
+        "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
+        "description": "Elija el nivel de urgencia que se ajuste a su calendario. El precio en vivo viene a través de la herramienta de cotización — sacado de nuestra red verificada de transportistas en el momento que reserva.",
+        "tiles": {
+          "standby": { "tier": "En Espera", "window": "Fecha de zarpe flexible", "description": "Mejor valor. El vehículo toma el próximo zarpe disponible dentro de ~2 semanas de la recogida." },
+          "priority": { "tier": "Prioritario", "window": "Zarpe reservado dentro de 7 días", "description": "El más común para PCS y reubicaciones planificadas. Zarpe específico reservado al cotizar." },
+          "expedited": { "tier": "Urgente", "window": "Próximo zarpe disponible", "description": "Cuando el tiempo es crítico. Empujamos al zarpe más pronto viable y aceptamos el premium." }
+        },
+        "footnote": "El precio varía por temporada (pico mayo–septiembre), tipo de vehículo, y isla de destino. Obtenga una cotización para su envío específico."
+      },
+      "triplePromise": {
+        "eyebrow": "La Triple Promesa aplica de la misma manera",
+        "title": "A través de seis tramos y un océano.",
+        "cards": {
+          "price": { "eyebrow": "Promesa de Precio", "headline": "Cotización = factura final →" },
+          "damage": { "eyebrow": "Promesa contra Daños", "headline": "Cobertura en cada tramo →" },
+          "people": { "eyebrow": "Promesa Personal", "headline": "El mismo coordinador en todo momento →" }
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes — California ↔ Hawái",
+        "items": {
+          "0": { "q": "¿Cuánto tarda enviar un auto de California a Hawái?", "a": "Cuente con 10–18 días puerta a puerta en la mayoría de los casos. El tramo oceánico típicamente toma 5–10 días de puerto a puerto (Long Beach u Oakland a Honolulu), más 2–5 días para la recogida en el continente y el transporte terrestre en cada extremo. Las islas externas (Maui, Kauai, Isla Grande) agregan otros 2–4 días por la barcaza inter-isla." },
+          "1": { "q": "¿Qué puerto usan — Long Beach u Oakland?", "a": "Ambos son opciones. Long Beach tiene más zarpes por semana y tarifas base ligeramente más bajas desde recogidas en el sur de California. Oakland es más rápido para recogidas en el Área de la Bahía y el norte de California. Elegimos el que ofrezca mejor costo total + tiempo para su origen específico. La elección es invisible para usted en la cotización." },
+          "2": { "q": "¿Tengo que dejar mi auto en el puerto yo mismo?", "a": "No. El servicio estándar es puerta a puerta: enviamos un transportista a su dirección de recogida en California, lo transportamos al puerto, gestionamos la reserva oceánica y el papeleo del muelle, y recibimos el vehículo en el lado de Hawái para la entrega final a su dirección. También puede elegir puerto a puerto por un precio más bajo si quiere manejar los tramos terrestres usted mismo." },
+          "3": { "q": "¿Y mi seguro del auto durante la travesía oceánica?", "a": "La cobertura de carga del transportista permanece en efecto durante todo el tránsito. Nuestra Promesa contra Daños (fianza de corredor + carga contingente de $500K) respalda al transportista oceánico de la misma manera que respalda a los transportistas continentales. Usted presenta un reclamo con nosotros — manejamos toda la complejidad del lado del transportista." },
+          "4": { "q": "¿Puedo dejar artículos personales en mi auto para el envío marítimo?", "a": "Hasta 100 libras de artículos personales en el maletero generalmente está bien. NO armas de fuego, municiones, alcohol, materiales peligrosos, o plantas vivas (las restricciones agrícolas de Hawái son estrictas). Los artículos que se muevan durante el tránsito no están cubiertos por daños — asegure cualquier cosa que cargue. Si hay duda, su coordinador marcará artículos específicos antes de reservar." },
+          "5": { "q": "¿Envían a las cuatro islas principales?", "a": "Sí — Oahu (Honolulu), Maui (Kahului), Isla Grande (Hilo o Kona), y Kauai (Lihue). Honolulu es el puerto principal continente-a-Hawái, con la barcaza inter-isla a las islas externas como segundo tramo. El tiempo inter-isla típicamente es 2–4 días adicionales." },
+          "6": { "q": "¿Cómo funciona el precio para envíos militares PCS?", "a": "El personal militar en servicio activo con órdenes PCS califica para nuestra tarifa militar (típicamente 5–10% por debajo del estándar). Trabajamos con todas las ramas — Ejército, Marina, Fuerza Aérea, Marines, Guardia Costera. Traiga sus órdenes al reservar; su coordinador aplica el descuento automáticamente. El reembolso del envío POV se procesa a través de su TMO — proporcionamos la documentación necesaria." }
+        }
+      },
+      "finalCta": {
+        "title": "Vea su precio fijo a Hawái en 60 segundos.",
+        "description": "Código postal de recogida, isla de destino, tipo de vehículo. Le mostraremos tres precios escalonados. Elija uno, fíjelo, y su coordinador toma el control desde ahí.",
+        "primary": "Obtenga mi precio CA → HI",
+        "secondary": "Vea California ↔ Alaska →"
+      }
+    },
+    "californiaAlaska": {
+      "metadata": {
+        "title": "Envíe un auto de California a Alaska — PCS, petróleo/gas, reubicaciones de jubilados",
+        "description": "Transporte de vehículos de California a Alaska por tierra (Autopista de Alaska) o por mar (Tacoma a Anchorage). Cotizaciones con precio fijo. La elección de PCS militar a JBER, Eielson, y Fort Wainwright."
+      },
+      "hero": {
+        "eyebrow": "Corredor → California ↔ Alaska",
+        "title": "Envíe un auto a Alaska. Dos rutas. Un coordinador.",
+        "description": "Terrestre por la Autopista de Alaska o marítima por Tacoma. Optimizado por temporada, destino, y tiempo. Precio fijo en cualquier caso.",
+        "ctaPrimary": "Obtenga mi precio CA → AK",
+        "ctaSecondary": "Compare rutas ↓"
+      },
+      "whyDifferent": {
+        "eyebrow": "Por qué este corredor es diferente",
+        "title": "Alaska son dos corredores pretendiendo ser uno.",
+        "body": {
+          "0": "La mayoría de los envíos California-Alaska son para uno de tres tipos de clientes: familias militares PCS rumbo a JBER, Eielson, o Fort Wainwright; trabajadores de petróleo y gas que rotan por el North Slope; jubilados que se mudan permanentemente. Cada grupo tiene diferente tolerancia de tiempo, preferencias de ruta, y tipos de vehículos — y la respuesta correcta para uno no siempre es la respuesta correcta para otro.",
+          "1": "Luego está la estacionalidad. Invierno en la Autopista de Alaska significa cierres por clima, deformaciones por helada, y recargos de transporte. La ruta marítima desde Tacoma se mantiene confiable durante todo el año. El verano voltea las cuentas — la terrestre se vuelve más rápida y barata para destinos del interior."
+        },
+        "punchline": "Su coordinador elige la ruta según su origen, destino, temporada, y tiempo específicos. Usted ve un precio fijo para la ruta que recomienden."
+      },
+      "routes": {
+        "eyebrow": "Las dos rutas",
+        "title": "Marítima vs. terrestre — el mismo coordinador, diferente logística.",
+        "ocean": {
+          "title": "🚢 Marítima (Tacoma → Anchorage)",
+          "bestFor": "Anchorage, Valle Mat-Su, confiabilidad durante todo el año",
+          "points": {
+            "0": "8–14 días puerta a puerta incluyendo tramos terrestres",
+            "1": "Tiempos predecibles, sin cierres por clima",
+            "2": "Menor desgaste del vehículo (sin carretera de 3,500 millas)",
+            "3": "Recomendación por defecto para la mayoría de los envíos",
+            "4": "Servicio durante todo el año desde Tacoma"
+          }
+        },
+        "overland": {
+          "title": "🛣️ Terrestre (Autopista de Alaska)",
+          "bestFor": "Fairbanks, interior, práctica solo en verano",
+          "points": {
+            "0": "7–12 días puerta a puerta (verano)",
+            "1": "Más rápida para destinos del interior en verano",
+            "2": "Sensible al clima — riesgosa octubre–abril",
+            "3": "Mayor kilometraje en el vehículo",
+            "4": "A menudo emparejada con permisos para cruzar Canadá"
+          }
+        },
+        "bestForLabel": "Ideal para:"
+      },
+      "subDestinations": {
+        "eyebrow": "¿Dónde en Alaska?",
+        "title": "Cuatro regiones de destino. Diferente ruta para cada una.",
+        "description": "Anchorage y Mat-Su usan envío marítimo por defecto. Fairbanks puede cambiar entre rutas estacionalmente. El sureste de Alaska se enruta por el Marine Highway System con tiempos más largos."
+      },
+      "specialty": {
+        "eyebrow": "Vehículos especiales",
+        "title": "Los clientes de Alaska envían diferentes vehículos que los clientes del continente.",
+        "description": "Camionetas elevadas, SUVs sobredimensionadas, ATVs emparejadas con el vehículo principal — pedidos comunes aquí, no tanto en otros lugares. Esto es lo que manejamos para las situaciones que surgen.",
+        "cards": {
+          "lifted": {
+            "title": "Camionetas elevadas",
+            "summary": "Sí — comunes para clientes de AK. El recargo escala con la altura.",
+            "detail": "Las elevaciones de menos de ~6\" típicamente caben en transportistas estándar. Las elevaciones de 6–10\" requieren transportistas especializados y un recargo por altura. Las elevaciones de más de 10\" o con llantas sobredimensionadas pueden necesitar transporte en plataforma. Confirmado al cotizar según las especificaciones reales."
+          },
+          "oversizedSuv": {
+            "title": "SUVs sobredimensionadas / eje doble",
+            "summary": "Estándar para la base de clientes de AK. El premium escala con las dimensiones.",
+            "detail": "Excursions, Suburbans, camionetas duales — todos rutinarios. Los vehículos que exceden el espacio estándar del transportista (longitud, peso, o altura) cambian al nivel de precio sobredimensionado. Las dimensiones se confirman al reservar; el precio queda fijo una vez confirmado."
+          },
+          "atv": {
+            "title": "ATVs / motos de nieve emparejadas",
+            "summary": "Emparéjelas con el vehículo principal en el mismo despacho — ahorra una segunda reserva completa.",
+            "detail": "Común para clientes de AK que envían su vehículo principal más un ATV o moto de nieve. Ambos pueden viajar en el mismo transportista con la moto de nieve/ATV típicamente asegurada en un tráiler o sujeta con correas a una plataforma junto al vehículo principal. Ahorra ~30–40% comparado con despachos separados."
+          },
+          "rv": {
+            "title": "RVs / casas rodantes",
+            "summary": "Red de transportistas especializados. La cotización requiere VIN + clase + dimensiones.",
+            "detail": "Las casas rodantes Clase A, B, y C se envían a través de un grupo separado de transportistas, distinto al de los vehículos de pasajeros. Los RVs de remolque (5ª rueda, tráileres de viaje) se envían más como autos. En cualquier caso, su coordinador confirma la ruta + el transportista antes de cotizar."
+          },
+          "rooftop": {
+            "title": "Vehículos con accesorios en el techo",
+            "summary": "Declárelos al reservar. Algunos afectan la altura del espacio del transportista.",
+            "detail": "Cajas de carga, portaesquíes, barras de luz, y carpas de techo agregan altura. Unas pocas pulgadas usualmente caben en los espacios estándar; configuraciones agresivas pueden requerir transportistas especializados. Siempre declare al cotizar — preferimos ajustar el precio por adelantado antes que sorprenderlo en la recogida."
+          },
+          "coldPrep": {
+            "title": "Preparación para clima frío",
+            "summary": "Requerida para cualquier tránsito de invierno. Enviada al reservar.",
+            "detail": "Drenar o añadir anticongelante al líquido limpiaparabrisas (se rompe al congelarse). Combustible por debajo de 1/2 tanque (requerido por el transportista). Batería en buen estado de carga — el almacenamiento en frío puede agotar baterías débiles. Presión de las llantas ajustada para el clima del destino. Enviamos una lista al reservar."
+          }
+        },
+        "footnote": "¿No ve su situación? Menciónela en el campo de notas de la solicitud de cotización. Su coordinador confirmará el manejo y cualquier costo adicional antes de reservar."
+      },
+      "tiers": {
+        "eyebrow": "Niveles de servicio",
+        "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
+        "description": "Elija el nivel de urgencia que se ajuste a su calendario. El precio en vivo viene a través de la herramienta de cotización — sacado de nuestra red verificada de transportistas en el momento que reserva.",
+        "tiles": {
+          "standby": { "tier": "En Espera", "window": "Despacho flexible", "description": "Mejor valor. Toma el próximo transportista o zarpe disponible dentro de ~10 días de la recogida." },
+          "priority": { "tier": "Prioritario", "window": "Despacho reservado dentro de 5 días", "description": "El más común para PCS y reubicaciones planificadas. Despacho específico programado al cotizar." },
+          "expedited": { "tier": "Urgente", "window": "Próximo despacho disponible", "description": "Cuando el tiempo gana al precio. Tomamos el transportista o zarpe más pronto viable." }
+        },
+        "footnote": "El precio varía por temporada (la marítima es preferible en invierno), tamaño del vehículo, y destino. Las tarifas militares PCS de servicio activo aplican automáticamente con órdenes."
+      },
+      "triplePromise": {
+        "eyebrow": "La Triple Promesa aplica de la misma manera",
+        "title": "A través de 3,500 millas o una travesía oceánica.",
+        "cards": {
+          "price": { "eyebrow": "Promesa de Precio", "headline": "Cotización = factura final →" },
+          "damage": { "eyebrow": "Promesa contra Daños", "headline": "Cobertura en cada tramo →" },
+          "people": { "eyebrow": "Promesa Personal", "headline": "El mismo coordinador en todo momento →" }
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes — California ↔ Alaska",
+        "items": {
+          "0": { "q": "¿Cuánto tarda enviar un auto de California a Alaska?", "a": "Dos opciones de ruta. La ruta marítima (Tacoma → Anchorage) toma aproximadamente 8–14 días puerta a puerta incluyendo los tramos terrestres. La ruta terrestre por la Autopista de Alaska toma 7–12 días puerta a puerta. Los retrasos de invierno son reales (especialmente noviembre–marzo) y ajustamos los tiempos en consecuencia. Su coordinador recomendará la ruta correcta según la temporada + el destino final." },
+          "1": { "q": "Marítima vs. terrestre — ¿cuál debería elegir?", "a": "La marítima es la opción por defecto para destinos en Anchorage y el Valle Mat-Su. Tiempos predecibles, sin cierres por clima, menor desgaste del vehículo. La terrestre puede ser más rápida en verano para Fairbanks y destinos del interior, pero la Autopista de Alaska tiene sensibilidad climática (tormentas de nieve, cierres viales, deformaciones por helada). Para la mayoría de los clientes la mayor parte del año, la marítima es la mejor opción. Cotizaremos ambas y recomendaremos según su situación específica." },
+          "2": { "q": "¿Envían a bases militares — JBER, Eielson, Fort Wainwright?", "a": "Sí. Las bases militares son un caso de uso principal para este corredor. Joint Base Elmendorf-Richardson (JBER) en Anchorage, Eielson AFB y Fort Wainwright cerca de Fairbanks, Coast Guard Base Kodiak — enviamos a todas regularmente. Traiga sus órdenes PCS al reservar y su coordinador aplica la tarifa militar (típicamente 5–10% por debajo del estándar)." },
+          "3": { "q": "¿Y en invierno? ¿La carretera está cerrada?", "a": "La Autopista de Alaska técnicamente está abierta durante todo el año, pero las condiciones de invierno (octubre–abril) hacen el transporte arriesgado y lento. Recomendamos fuertemente el envío marítimo para cualquier envío de invierno para evitar retrasos por clima, deformaciones por helada, y los cierres ocasionales por avalancha. Los transportistas oceánicos operan confiablemente durante todo el año desde Tacoma. El precio es similar de cualquier manera — el premium de invierno es pequeño." },
+          "4": { "q": "¿Puedo dejar artículos personales en el vehículo?", "a": "Hasta 100 libras en el maletero generalmente está bien. Las mismas restricciones que la mayoría de los corredores: nada de armas de fuego, municiones, alcohol, o materiales peligrosos. Nota de clima frío: los líquidos que pueden congelarse (botellas de agua, líquido limpiaparabrisas, bebidas enlatadas) pueden romperse en tránsito sin calefacción. Drene o retire antes de la recogida." },
+          "5": { "q": "¿Y mi seguro del auto durante el tránsito terrestre o marítimo?", "a": "La cobertura de carga del transportista permanece en efecto durante todo el tránsito en cualquier ruta. Nuestra Promesa contra Daños (fianza de corredor + carga contingente de $500K) respalda el vacío de cobertura del transportista. Un solo reclamo presentado con nosotros — coordinamos la resolución del lado del transportista." },
+          "6": { "q": "¿Manejan vehículos sobredimensionados o elevados?", "a": "Sí — comunes en Alaska debido a la base de clientes con preferencia por camionetas. Camionetas elevadas, SUVs sobredimensionadas, y camionetas con accesorios en el techo se envían regularmente. El premium del precio escala con el tamaño: los vehículos elevados agregan $150–$400 sobre el estándar, los sobredimensionados pueden requerir actualización a tráiler cerrado. Su coordinador confirma el precio exacto al cotizar." }
+        }
+      },
+      "finalCta": {
+        "title": "Vea su precio fijo a Alaska en 60 segundos.",
+        "description": "Código postal de recogida, destino, tipo de vehículo. Cotizaremos ambas rutas y recomendaremos la correcta. Elija un nivel, fije el precio, y su coordinador toma el control desde ahí.",
+        "primary": "Obtenga mi precio CA → AK",
+        "secondary": "Vea California ↔ Hawái →"
+      }
+    }
+  }
+}
