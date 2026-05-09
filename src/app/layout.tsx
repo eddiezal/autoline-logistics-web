@@ -32,8 +32,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Auto Line Logistics",
   },
+  // Block search-engine indexing on Vercel preview URLs (autoline-logistics-web.vercel.app)
+  // and any non-production deploy. Only the real production domain should be indexed.
+  // Flip this once `autolinelogistics.com` is connected to Vercel as the production domain.
   robots: {
-    index: true,
+    index:
+      process.env.VERCEL_ENV === "production" &&
+      process.env.NEXT_PUBLIC_SITE_URL === "https://autolinelogistics.com",
     follow: true,
   },
   icons: {

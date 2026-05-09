@@ -74,17 +74,20 @@ export default function Home() {
           </Container>
         </section>
 
-        {/* Bootstrap status banner — REMOVE once homepage is fleshed out */}
+        {/* Build status banner — REMOVE once homepage is fleshed out and we go live on autolinelogistics.com */}
         <section className="py-12 bg-orange-tint border-t border-orange/20">
           <Container>
             <p className="text-charcoal font-semibold mb-1">
-              🚧 Build status — Phase A bootstrap (May 8, 2026)
+              🚧 Build status — Phase A bootstrap (updated May 8, 2026)
             </p>
             <p className="text-gray-700 text-sm">
-              Codebase initialized. Brand colors applied. Triple Promise pages
-              scaffolded. Next up: Hawaii + Alaska corridor pages, server
-              hardening, Spanish translation prep. Staging review target: May
-              13.
+              Live: Triple Promise pages, California ↔ Hawaii corridor,
+              California ↔ Alaska corridor, corridor index, About page,
+              quote intake form. Next up: Super Dispatch + Authorize.Net
+              integrations, server hardening (Sentry, hCaptcha), Spanish
+              translation pass. Production cutover to{" "}
+              <span className="font-semibold">autolinelogistics.com</span>{" "}
+              target: end of Phase A.
             </p>
           </Container>
         </section>
