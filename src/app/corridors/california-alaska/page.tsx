@@ -239,6 +239,62 @@ export default function CaliforniaAlaskaCorridor() {
           </Container>
         </section>
 
+        {/* Specialty vehicles — Alaska-specific guidance */}
+        <section className="py-16 bg-gray-100">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              Specialty vehicles
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-charcoal max-w-2xl mb-3">
+              Alaska customers ship different vehicles than mainland customers.
+            </h2>
+            <p className="text-gray-700 max-w-2xl mb-10">
+              Lifted trucks, oversized SUVs, ATVs paired with the main
+              vehicle — common asks here, not so much elsewhere.
+              Here&apos;s what we navigate for the situations that come up.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <SpecialtyCard
+                title="Lifted trucks"
+                summary="Yes — common for AK customers. Surcharge scales with height."
+                detail="Lifts under ~6&quot; typically fit standard carriers. Lifts of 6–10&quot; require specialized carriers and a height surcharge. Lifts over 10&quot; or with oversized tires may need flatbed transport. Confirmed at quote time based on actual specs."
+              />
+              <SpecialtyCard
+                title="Oversized SUVs / dual-axle"
+                summary="Standard for the AK customer base. Premium scales with dimensions."
+                detail="Excursions, Suburbans, dually trucks all routine. Vehicles exceeding standard carrier slot (length, weight, or height) shift into the oversized pricing tier. Dimensions confirmed at booking; price stays locked once confirmed."
+              />
+              <SpecialtyCard
+                title="ATVs / snowmobiles paired"
+                summary="Pair with main vehicle on the same dispatch — saves a full second booking."
+                detail="Common for AK customers shipping their primary vehicle plus an ATV or snowmobile. Both can ride on the same carrier with the snowmobile/ATV typically secured in a trailer or strapped to a flatbed alongside the main vehicle. Saves ~30–40% vs separate dispatches."
+              />
+              <SpecialtyCard
+                title="RVs / motorhomes"
+                summary="Specialized carrier network. Quote requires VIN + class + dimensions."
+                detail="Class A, B, and C motorhomes ship through a separate carrier pool from passenger vehicles. Tow-behind RVs (5th wheels, travel trailers) ship more like cars. Either way, your coordinator confirms route + carrier match before quoting."
+              />
+              <SpecialtyCard
+                title="Vehicles with rooftop accessories"
+                summary="Disclose at booking. Some affect carrier slot height."
+                detail="Cargo boxes, ski racks, light bars, and roof tents add height. A few inches usually fits standard slots; aggressive setups may require specialized carriers. Always disclose at quote — we'd rather adjust pricing up front than surprise you at pickup."
+              />
+              <SpecialtyCard
+                title="Cold-weather prep"
+                summary="Required for any winter transit. Sent at booking."
+                detail="Drain or add antifreeze to washer fluid (it ruptures when frozen). Fuel below 1/2 tank (carrier requirement). Battery in good charge state — cold storage can drain weak batteries. Tire pressure adjusted for the destination climate. We send a checklist at booking."
+              />
+            </div>
+
+            <p className="text-gray-500 text-sm mt-8 italic max-w-2xl">
+              Don&apos;t see your situation? Mention it in the quote-request
+              notes field. Your coordinator will confirm handling and any
+              additional cost before booking.
+            </p>
+          </Container>
+        </section>
+
         {/* Service tiers — TODO: bring back specific pricing once SD/CD APIs are wired and we can pull live numbers */}
         <section className="py-16 bg-white">
           <Container>
@@ -370,6 +426,34 @@ export default function CaliforniaAlaskaCorridor() {
 
       <Footer />
     </>
+  );
+}
+
+function SpecialtyCard({
+  title,
+  summary,
+  detail,
+}: {
+  title: string;
+  summary: string;
+  detail: string;
+}) {
+  return (
+    <details className="group bg-white border border-gray-200 rounded-2xl hover:border-orange transition">
+      <summary className="cursor-pointer p-5 flex items-start justify-between gap-4 list-none">
+        <div className="flex-1">
+          <p className="font-bold text-charcoal">{title}</p>
+          <p className="text-orange font-semibold text-sm mt-1">{summary}</p>
+        </div>
+        <span
+          aria-hidden
+          className="text-orange text-2xl leading-none flex-shrink-0 transition group-open:rotate-45"
+        >
+          +
+        </span>
+      </summary>
+      <p className="px-5 pb-5 text-gray-700 text-sm leading-relaxed">{detail}</p>
+    </details>
   );
 }
 

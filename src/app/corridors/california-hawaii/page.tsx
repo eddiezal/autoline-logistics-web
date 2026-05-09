@@ -183,7 +183,7 @@ export default function CaliforniaHawaiiCorridor() {
               Six legs. One coordinator. Locked price.
             </h2>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <RouteLeg
                 num="1"
                 title="Mainland pickup"
@@ -237,6 +237,62 @@ export default function CaliforniaHawaiiCorridor() {
               fromCode="CA"
               toCode="HI"
             />
+          </Container>
+        </section>
+
+        {/* Specialty vehicles — corridor-specific guidance */}
+        <section className="py-16 bg-gray-100">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              Specialty vehicles
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-charcoal max-w-2xl mb-3">
+              Hawaii has specific rules. We&apos;ve seen them all.
+            </h2>
+            <p className="text-gray-700 max-w-2xl mb-10">
+              Ocean transit + Hawaii Department of Agriculture inspections add
+              constraints that don&apos;t exist on mainland routes. Here&apos;s
+              what we navigate for the most common situations.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <SpecialtyCard
+                title="Electric vehicles (EVs)"
+                summary="Yes — with regulated battery state-of-charge."
+                detail="IMDG Class 9 hazmat regulations apply for lithium-ion batteries during ocean transit. Carriers cap charge state at 30–50% at port. We confirm specifics at booking. No extra fee from us for compliance handling."
+              />
+              <SpecialtyCard
+                title="Classic / collector cars"
+                summary="Enclosed-trailer + higher insurance valuation strongly recommended."
+                detail="For vehicles over $75K or with custom paint, wraps, or unrestored bodywork. Inspection at pickup is more thorough — we document condition with extra photo coverage. Pickup ports are the same; carrier mix differs."
+              />
+              <SpecialtyCard
+                title="Motorcycles"
+                summary="Crated container or strapped trailer — typically lower cost than cars."
+                detail="Ocean carriers require fuel drained below 1/4 tank. Battery state checked at pickup. Both single bikes and multi-bike shipments handled. Helmet and gear up to ~30 lbs can ride along inside."
+              />
+              <SpecialtyCard
+                title="Oversized / RVs"
+                summary="Specialized trailer required, surcharge applies."
+                detail="Vehicles exceeding standard carrier height (~7') or length ship on flatbed or specialized trailer. Surcharge scales with dimensions. Quoted separately — your coordinator will need exact measurements."
+              />
+              <SpecialtyCard
+                title="Personal items in vehicle"
+                summary="Up to ~100 lbs in trunk. Strict exclusions."
+                detail="NO firearms, ammunition, alcohol, hazmat, or live plants (Hawaii ag restrictions are strict). Items must be secured against shifting. Damage to personal items isn't covered — load anything you do bring at your own risk."
+              />
+              <SpecialtyCard
+                title="Agricultural quarantine prep"
+                summary="Required by Hawaii Department of Ag. We coordinate."
+                detail="Hawaii inspects incoming vehicles for soil and plant material. Undercarriage must be cleaned thoroughly before pickup. Failure to pass = vehicle held at port (your cost). We send prep instructions at booking."
+              />
+            </div>
+
+            <p className="text-gray-500 text-sm mt-8 italic max-w-2xl">
+              Don&apos;t see your situation? Mention it in the quote-request
+              notes field. Your coordinator will confirm handling and any
+              additional cost before booking.
+            </p>
           </Container>
         </section>
 
@@ -370,6 +426,34 @@ export default function CaliforniaHawaiiCorridor() {
 
       <Footer />
     </>
+  );
+}
+
+function SpecialtyCard({
+  title,
+  summary,
+  detail,
+}: {
+  title: string;
+  summary: string;
+  detail: string;
+}) {
+  return (
+    <details className="group bg-white border border-gray-200 rounded-2xl hover:border-orange transition">
+      <summary className="cursor-pointer p-5 flex items-start justify-between gap-4 list-none">
+        <div className="flex-1">
+          <p className="font-bold text-charcoal">{title}</p>
+          <p className="text-orange font-semibold text-sm mt-1">{summary}</p>
+        </div>
+        <span
+          aria-hidden
+          className="text-orange text-2xl leading-none flex-shrink-0 transition group-open:rotate-45"
+        >
+          +
+        </span>
+      </summary>
+      <p className="px-5 pb-5 text-gray-700 text-sm leading-relaxed">{detail}</p>
+    </details>
   );
 }
 
