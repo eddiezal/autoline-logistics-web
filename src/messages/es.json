@@ -16,7 +16,12 @@
       "whyThisMatters": "Por qué importa",
       "mostPopular": "Más popular",
       "covered": "Cubierto",
-      "notCovered": "No cubierto"
+      "notCovered": "No cubierto",
+      "otherPromises": "Las otras dos promesas",
+      "routing": "Ruta",
+      "notes": "Notas",
+      "commonCustomers": "Clientes comunes",
+      "getQuoteFor": "Obtenga una cotización para"
     }
   },
   "header": {

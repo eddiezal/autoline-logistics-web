@@ -16,7 +16,12 @@
       "whyThisMatters": "Why this matters",
       "mostPopular": "Most popular",
       "covered": "Covered",
-      "notCovered": "Not covered"
+      "notCovered": "Not covered",
+      "otherPromises": "The other two promises",
+      "routing": "Routing",
+      "notes": "Notes",
+      "commonCustomers": "Common customers",
+      "getQuoteFor": "Get a quote for"
     }
   },
   "header": {

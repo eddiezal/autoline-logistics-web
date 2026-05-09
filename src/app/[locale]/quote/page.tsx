@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
@@ -10,14 +11,16 @@ export const metadata: Metadata = {
     "Tell us your origin, destination, and vehicle. Your coordinator will lock in a price within 1 business hour. No bait-and-switch. The quote is the contract.",
 };
 
-const STATE_LABELS: Record<string, string> = {
-  CA: "California",
-  HI: "Hawaii",
-  AK: "Alaska",
-  TX: "Texas",
-  NY: "New York",
-  FL: "Florida",
-};
+const VEHICLE_TYPE_KEYS = [
+  "sedan",
+  "suv",
+  "truckStandard",
+  "truckLifted",
+  "van",
+  "motorcycle",
+  "classic",
+  "other",
+] as const;
 
 // Next 15+/16 pattern: searchParams is a Promise that must be awaited
 export default async function QuotePage({
@@ -28,8 +31,14 @@ export default async function QuotePage({
   const params = await searchParams;
   const fromCode = (params.from ?? "").toUpperCase();
   const toCode = (params.to ?? "").toUpperCase();
-  const fromLabel = STATE_LABELS[fromCode] ?? "";
-  const toLabel = STATE_LABELS[toCode] ?? "";
+  return <QuoteContent fromCode={fromCode} toCode={toCode} />;
+}
+
+function QuoteContent({ fromCode, toCode }: { fromCode: string; toCode: string }) {
+  const t = useTranslations();
+  const fromLabel = fromCode ? safeT(t, `quote.states.${fromCode}`) : "";
+  const toLabel = toCode ? safeT(t, `quote.states.${toCode}`) : "";
+  const required = t("quote.form.requiredMark");
 
   return (
     <>
@@ -40,16 +49,15 @@ export default async function QuotePage({
         <section className="bg-charcoal text-white py-16 md:py-20">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
-              Get a locked price
+              {t("quote.hero.eyebrow")}
             </p>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
               {fromLabel && toLabel
                 ? `${fromLabel} → ${toLabel}`
-                : "Tell us where, what, and when."}
+                : t("quote.hero.titleDefault")}
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mt-4 max-w-2xl leading-relaxed">
-              The quote is the contract. Whatever number we send back is the
-              number on your invoice. No bait-and-switch.
+              {t("quote.hero.description")}
             </p>
           </Container>
         </section>
@@ -57,13 +65,7 @@ export default async function QuotePage({
         {/* Build status callout */}
         <section className="py-6 bg-orange-tint border-b border-orange/30">
           <Container>
-            <p className="text-charcoal text-sm">
-              <strong>🚧 Build status:</strong> the live quote tool wires up
-              when our Super Dispatch + Authorize.Net integrations land
-              (~Week 6 of Phase A). Until then, submit the form below and
-              your coordinator will lock in a price by reply email within 1
-              business hour. No deposit at this stage.
-            </p>
+            <p className="text-charcoal text-sm">{t("quote.buildStatus")}</p>
           </Container>
         </section>
 
@@ -80,21 +82,23 @@ export default async function QuotePage({
                 {/* Origin */}
                 <fieldset className="space-y-3">
                   <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
-                    Where from
+                    {t("quote.form.origin.legend")}
                   </legend>
                   <div className="grid grid-cols-1 sm:grid-cols-[1fr_180px] gap-3">
                     <Field
-                      label="Origin ZIP code"
+                      label={t("quote.form.origin.zip.label")}
+                      requiredMark={required}
                       name="origin_zip"
                       required
-                      placeholder="e.g. 90630"
+                      placeholder={t("quote.form.origin.zip.placeholder")}
                     />
                     <Field
-                      label="State"
+                      label={t("quote.form.origin.state.label")}
+                      requiredMark={required}
                       name="origin_state"
                       required
                       defaultValue={fromCode}
-                      placeholder="CA"
+                      placeholder={t("quote.form.origin.state.placeholder")}
                     />
                   </div>
                 </fieldset>
@@ -102,21 +106,23 @@ export default async function QuotePage({
                 {/* Destination */}
                 <fieldset className="space-y-3">
                   <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
-                    Where to
+                    {t("quote.form.destination.legend")}
                   </legend>
                   <div className="grid grid-cols-1 sm:grid-cols-[1fr_180px] gap-3">
                     <Field
-                      label="Destination ZIP code"
+                      label={t("quote.form.destination.zip.label")}
+                      requiredMark={required}
                       name="destination_zip"
                       required
-                      placeholder="e.g. 96813"
+                      placeholder={t("quote.form.destination.zip.placeholder")}
                     />
                     <Field
-                      label="State"
+                      label={t("quote.form.destination.state.label")}
+                      requiredMark={required}
                       name="destination_state"
                       required
                       defaultValue={toCode}
-                      placeholder="HI"
+                      placeholder={t("quote.form.destination.state.placeholder")}
                     />
                   </div>
                 </fieldset>
@@ -124,72 +130,67 @@ export default async function QuotePage({
                 {/* Vehicle */}
                 <fieldset className="space-y-3">
                   <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
-                    Vehicle
+                    {t("quote.form.vehicle.legend")}
                   </legend>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <Field
-                      label="Year"
+                      label={t("quote.form.vehicle.year.label")}
+                      requiredMark={required}
                       name="vehicle_year"
                       required
-                      placeholder="2022"
+                      placeholder={t("quote.form.vehicle.year.placeholder")}
                     />
                     <Field
-                      label="Make"
+                      label={t("quote.form.vehicle.make.label")}
+                      requiredMark={required}
                       name="vehicle_make"
                       required
-                      placeholder="Toyota"
+                      placeholder={t("quote.form.vehicle.make.placeholder")}
                     />
                     <Field
-                      label="Model"
+                      label={t("quote.form.vehicle.model.label")}
+                      requiredMark={required}
                       name="vehicle_model"
                       required
-                      placeholder="Camry"
+                      placeholder={t("quote.form.vehicle.model.placeholder")}
                     />
                   </div>
                   <Select
-                    label="Vehicle type"
+                    label={t("quote.form.vehicle.type.label")}
                     name="vehicle_type"
-                    options={[
-                      "Sedan",
-                      "SUV / crossover",
-                      "Truck (standard)",
-                      "Truck (lifted / oversized)",
-                      "Van / minivan",
-                      "Motorcycle",
-                      "Classic / collector vehicle",
-                      "Other",
-                    ]}
+                    options={VEHICLE_TYPE_KEYS.map((k) =>
+                      t(`quote.form.vehicle.type.options.${k}`)
+                    )}
                   />
                 </fieldset>
 
                 {/* Tier */}
                 <fieldset className="space-y-3">
                   <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
-                    Service tier
+                    {t("quote.form.tier.legend")}
                   </legend>
                   <p className="text-gray-600 text-sm">
-                    Pick the urgency level that fits your timeline. We&apos;ll
-                    confirm options and pricing in your reply.
+                    {t("quote.form.tier.description")}
                   </p>
                   <div className="space-y-2">
                     <Radio
                       name="tier"
                       value="standby"
-                      label="Standby"
-                      sub="7-day pickup window. Most flexible. Best value."
+                      label={t("quote.form.tier.options.standby.label")}
+                      sub={t("quote.form.tier.options.standby.sub")}
                     />
                     <Radio
                       name="tier"
                       value="priority"
-                      label="Priority"
-                      sub="3–5 day pickup window. Most popular."
+                      label={t("quote.form.tier.options.priority.label")}
+                      sub={t("quote.form.tier.options.priority.sub")}
                       defaultChecked
                     />
                     <Radio
                       name="tier"
                       value="expedited"
-                      label="Expedited"
-                      sub="24–48 hour pickup. Premium pricing."
+                      label={t("quote.form.tier.options.expedited.label")}
+                      sub={t("quote.form.tier.options.expedited.sub")}
                     />
                   </div>
                 </fieldset>
@@ -197,28 +198,31 @@ export default async function QuotePage({
                 {/* Contact */}
                 <fieldset className="space-y-3">
                   <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
-                    How we reach you
+                    {t("quote.form.contact.legend")}
                   </legend>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <Field
-                      label="Email"
+                      label={t("quote.form.contact.email.label")}
+                      requiredMark={required}
                       name="email"
                       type="email"
                       required
-                      placeholder="you@example.com"
+                      placeholder={t("quote.form.contact.email.placeholder")}
                     />
                     <Field
-                      label="Phone"
+                      label={t("quote.form.contact.phone.label")}
+                      requiredMark={required}
                       name="phone"
                       type="tel"
                       required
-                      placeholder="(555) 123-4567"
+                      placeholder={t("quote.form.contact.phone.placeholder")}
                     />
                   </div>
                   <Field
-                    label="Anything else we should know? (optional)"
+                    label={t("quote.form.contact.notes.label")}
+                    requiredMark={required}
                     name="notes"
-                    placeholder="e.g. PCS orders, vehicle modifications, hard pickup window"
+                    placeholder={t("quote.form.contact.notes.placeholder")}
                     multiline
                   />
                 </fieldset>
@@ -229,11 +233,10 @@ export default async function QuotePage({
                     type="submit"
                     className="bg-orange hover:bg-orange-dark text-white font-semibold px-8 py-3 rounded-full transition"
                   >
-                    Submit quote request
+                    {t("quote.form.submit.button")}
                   </button>
                   <p className="text-gray-500 text-xs mt-3">
-                    Your coordinator replies with a locked price within 1
-                    business hour. No deposit required to receive the quote.
+                    {t("quote.form.submit.footnote")}
                   </p>
                 </div>
               </form>
@@ -246,19 +249,22 @@ export default async function QuotePage({
           <Container>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Reassure
-                title="Quote = contract"
+                title={t("quote.reassurance.cards.contract.title")}
                 href="/price-promise"
-                detail="Whatever number you receive is the number on your invoice. No surcharges, no carrier-cost-overage calls."
+                detail={t("quote.reassurance.cards.contract.detail")}
+                backedBy={t("quote.reassurance.backedBy")}
               />
               <Reassure
-                title="$575K coverage"
+                title={t("quote.reassurance.cards.coverage.title")}
                 href="/damage-promise"
-                detail="$75K bond + $500K contingent cargo. We file claims directly with the carrier so you don't chase."
+                detail={t("quote.reassurance.cards.coverage.detail")}
+                backedBy={t("quote.reassurance.backedBy")}
               />
               <Reassure
-                title="Named coordinator"
+                title={t("quote.reassurance.cards.named.title")}
                 href="/people-promise"
-                detail="One person, by name, owning your shipment from quote through delivery. Direct phone number at booking."
+                detail={t("quote.reassurance.cards.named.detail")}
+                backedBy={t("quote.reassurance.backedBy")}
               />
             </div>
           </Container>
@@ -270,8 +276,18 @@ export default async function QuotePage({
   );
 }
 
+// safeT — try to read a key, fall back to empty string if missing.
+function safeT(t: ReturnType<typeof useTranslations>, key: string): string {
+  try {
+    return t(key);
+  } catch {
+    return "";
+  }
+}
+
 function Field({
   label,
+  requiredMark,
   name,
   type = "text",
   required = false,
@@ -280,6 +296,7 @@ function Field({
   multiline = false,
 }: {
   label: string;
+  requiredMark: string;
   name: string;
   type?: string;
   required?: boolean;
@@ -293,7 +310,7 @@ function Field({
     <label className="block">
       <span className="block text-sm font-medium text-gray-700 mb-1.5">
         {label}
-        {required && <span className="text-orange"> *</span>}
+        {required && <span className="text-orange">{requiredMark}</span>}
       </span>
       {multiline ? (
         <textarea
@@ -380,10 +397,12 @@ function Reassure({
   title,
   href,
   detail,
+  backedBy,
 }: {
   title: string;
-  href: string;
+  href: "/price-promise" | "/damage-promise" | "/people-promise";
   detail: string;
+  backedBy: string;
 }) {
   return (
     <Link
@@ -391,7 +410,7 @@ function Reassure({
       className="block bg-white border border-gray-200 hover:border-orange rounded-2xl p-5 transition group"
     >
       <p className="text-orange text-xs font-semibold uppercase tracking-wider mb-2">
-        Backed by
+        {backedBy}
       </p>
       <p className="font-bold text-charcoal text-lg group-hover:text-orange transition">
         {title} →
