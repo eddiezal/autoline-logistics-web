@@ -4,6 +4,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
+import { SubDestinationGrid } from "@/components/SubDestinationGrid";
+import { getCorridor } from "@/lib/corridors";
 
 export const metadata: Metadata = {
   title: "Ship a car California to Hawaii — Port logistics, locked pricing",
@@ -99,6 +101,7 @@ const faqs: FAQItem[] = [
 ];
 
 export default function CaliforniaHawaiiCorridor() {
+  const corridor = getCorridor("california-hawaii")!;
   return (
     <>
       <Header />
@@ -212,6 +215,28 @@ export default function CaliforniaHawaiiCorridor() {
                 detail="Vehicle delivered to your Hawaii address. Walkaround photos at delivery. BOL signed. You and your coordinator both have the documentation."
               />
             </div>
+          </Container>
+        </section>
+
+        {/* Sub-destinations — all four major Hawaiian islands */}
+        <section className="py-16 bg-white">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              Pick your island
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-charcoal max-w-2xl mb-3">
+              All four major islands. Each with its own routing.
+            </h2>
+            <p className="text-gray-700 max-w-2xl mb-10">
+              Honolulu is the primary mainland-Hawaii port — every shipment
+              passes through it. Outer-island deliveries add an inter-island
+              barge leg with its own timeline.
+            </p>
+            <SubDestinationGrid
+              destinations={corridor.subDestinations ?? []}
+              fromCode="CA"
+              toCode="HI"
+            />
           </Container>
         </section>
 

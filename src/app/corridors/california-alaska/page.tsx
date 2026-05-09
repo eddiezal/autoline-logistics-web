@@ -4,6 +4,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
+import { SubDestinationGrid } from "@/components/SubDestinationGrid";
+import { getCorridor } from "@/lib/corridors";
 
 export const metadata: Metadata = {
   title: "Ship a car California to Alaska — PCS, oil/gas, retiree relocations",
@@ -104,6 +106,7 @@ const faqs: FAQItem[] = [
 ];
 
 export default function CaliforniaAlaskaCorridor() {
+  const corridor = getCorridor("california-alaska")!;
   return (
     <>
       <Header />
@@ -211,6 +214,28 @@ export default function CaliforniaAlaskaCorridor() {
                 ]}
               />
             </div>
+          </Container>
+        </section>
+
+        {/* Sub-destinations — major Alaska delivery areas */}
+        <section className="py-16 bg-white">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              Where in Alaska?
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-charcoal max-w-2xl mb-3">
+              Four destination regions. Different routing for each.
+            </h2>
+            <p className="text-gray-700 max-w-2xl mb-10">
+              Anchorage and Mat-Su use ocean shipping by default. Fairbanks
+              can shift between routes seasonally. Southeast Alaska routes
+              through the Marine Highway System with longer timelines.
+            </p>
+            <SubDestinationGrid
+              destinations={corridor.subDestinations ?? []}
+              fromCode="CA"
+              toCode="AK"
+            />
           </Container>
         </section>
 
