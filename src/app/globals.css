@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* ============================================================
+ * Auto Line Logistics — Brand Design Tokens
+ *
+ * Brand spec confirmed May 6, 2026 from Ben's vector logo.
+ * Primary color: #FF6600 (Orange Gloss).
+ * No blue tones anywhere — neutral grays + warm charcoals only.
+ * ============================================================ */
+
+:root {
+  /* Brand */
+  --color-orange: #ff6600;
+  --color-orange-dark: #e55c00;
+  --color-orange-light: #ffb380;
+  --color-orange-tint: #ffe4cc;
+
+  /* Charcoal / dark surfaces */
+  --color-charcoal: #2d2d2d;
+  --color-charcoal-alt: #1f1f1f;
+
+  /* Neutral grays (no blue undertone) */
+  --color-gray-900: #1a1a1a;
+  --color-gray-700: #404040;
+  --color-gray-500: #6b6b6b;
+  --color-gray-300: #b0b0b0;
+  --color-gray-200: #e5e5e5;
+  --color-gray-100: #f5f5f5;
+  --color-white: #ffffff;
+
+  /* Semantic accents (used sparingly — for status/state, not brand) */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Aliases for default theming */
+  --background: var(--color-white);
+  --foreground: var(--color-gray-900);
+}
+
+@theme inline {
+  /* Tailwind utility classes pull from these */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-orange: var(--color-orange);
+  --color-orange-dark: var(--color-orange-dark);
+  --color-orange-light: var(--color-orange-light);
+  --color-orange-tint: var(--color-orange-tint);
+
+  --color-charcoal: var(--color-charcoal);
+  --color-charcoal-alt: var(--color-charcoal-alt);
+
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+
+  /* Fonts (loaded via next/font in layout.tsx) */
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-newsreader);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings use serif for editorial-trust feel */
+h1, h2, h3 {
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.01em;
+}
