@@ -27,10 +27,16 @@ export const metadata: Metadata = {
   description:
     "Locked-price auto transport with real-time tracking, photo evidence, and a coordinator who picks up the phone. Built for individual customers who deserve more than a quote and a hope.",
   metadataBase: new URL("https://autolinelogistics.com"),
+  // Tell search engines the real domain is canonical, regardless of which URL
+  // they crawl (staging, preview, etc.). Per-page metadata can override this.
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "Auto Line Logistics",
+    url: "https://autolinelogistics.com",
   },
   // Block search-engine indexing on Vercel preview URLs (autoline-logistics-web.vercel.app)
   // and any non-production deploy. Only the real production domain should be indexed.
