@@ -1,14 +1,14 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import type { SubDestination } from "@/lib/corridors";
+import { subDestCatalogKey, type SubDestination } from "@/lib/corridors";
 
 /**
  * Grid of sub-destination cards for a corridor page.
  *
- * The corridors.ts catalog still holds inline EN strings for sub-destination
- * fields (name, routing, timeline, note, customers). This component looks up
- * a translated version from the i18n catalog using `corridorKey + dest.slug`,
- * and falls back to the inline EN if the key is missing.
+ * All copy comes from the i18n catalog. The corridor data file only holds
+ * structural slugs; the readable text (name, routing, timeline, note,
+ * customers) lives in `messages/{en,es}.json` under
+ * `corridors.catalog.{corridorKey}.subDestinations.{subKey}.{field}`.
  *
  * `corridorKey` examples: "californiaHawaii", "californiaAlaska"
  */
@@ -21,29 +21,21 @@ export function SubDestinationGrid({
   destinations: SubDestination[];
   fromCode: string;
   toCode: string;
-  corridorKey?: string;
+  corridorKey: string;
 }) {
   const t = useTranslations();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {destinations.map((dest) => {
-        const subKey = slugToCatalogKey(dest.slug);
-        const base = corridorKey
-          ? `corridors.catalog.${corridorKey}.subDestinations.${subKey}`
-          : null;
+        const subKey = subDestCatalogKey(dest.slug);
+        const base = `corridors.catalog.${corridorKey}.subDestinations.${subKey}`;
 
-        const name = base ? safeT(t, `${base}.name`) || dest.name : dest.name;
-        const timeline = base
-          ? safeT(t, `${base}.timeline`) || dest.timeline
-          : dest.timeline;
-        const routing = base
-          ? safeT(t, `${base}.routing`) || dest.routing
-          : dest.routing;
-        const note = base ? safeT(t, `${base}.note`) || dest.note : dest.note;
-        const customers = base
-          ? safeT(t, `${base}.customers`) || dest.customers
-          : dest.customers;
+        const name = t(`${base}.name`);
+        const timeline = t(`${base}.timeline`);
+        const routing = t(`${base}.routing`);
+        const note = t(`${base}.note`);
+        const customers = t(`${base}.customers`);
 
         return (
           <article
@@ -88,25 +80,4 @@ export function SubDestinationGrid({
       })}
     </div>
   );
-}
-
-// Convert sub-destination slug ("big-island", "mat-su-valley", "southeast-alaska")
-// to catalog camelCase key. The catalog uses shorter forms for some entries.
-function slugToCatalogKey(slug: string): string {
-  const SHORT_FORMS: Record<string, string> = {
-    "big-island": "bigIsland",
-    "mat-su-valley": "matSu",
-    "southeast-alaska": "southeast",
-  };
-  if (SHORT_FORMS[slug]) return SHORT_FORMS[slug];
-  return slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-}
-
-// safeT — try to read a key, fall back to empty string if missing.
-function safeT(t: ReturnType<typeof useTranslations>, key: string): string {
-  try {
-    return t(key);
-  } catch {
-    return "";
-  }
 }

@@ -12,6 +12,14 @@
       "3": "Promise 3 of 3"
     },
     "ctaQuotePrimary": "Get my locked price",
+    "notFound": {
+      "eyebrow": "404 — Page not found",
+      "title": "We can't find that route.",
+      "description": "The page you're looking for doesn't exist, or moved. Try one of the corridors below, or get a locked price quote for any US route.",
+      "ctaPrimary": "Get a quote",
+      "ctaSecondary": "See all corridors",
+      "ctaHome": "Go home"
+    },
     "labels": {
       "whyThisMatters": "Why this matters",
       "mostPopular": "Most popular",

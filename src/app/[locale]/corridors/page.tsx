@@ -8,6 +8,7 @@ import {
   CORRIDORS,
   getLiveCorridors,
   getComingSoonCorridors,
+  corridorCatalogKey,
   type Corridor,
 } from "@/lib/corridors";
 
@@ -179,12 +180,10 @@ function CorridorCard({ corridor, live }: { corridor: Corridor; live: boolean })
     ? "bg-white border border-gray-200 hover:border-orange hover:shadow-md rounded-2xl p-6 transition group"
     : "bg-white border border-gray-200 rounded-2xl p-6 opacity-75 hover:opacity-100 transition group";
 
-  // The catalog still holds inline EN strings (Phase 3 refactor); fall back to
-  // those when a corresponding catalog message key isn't defined yet.
-  const catalogKey = slugToCamel(corridor.slug);
-  const fromName = safeT(t, `quote.states.${corridor.fromState}`) || corridor.fromName;
-  const toName = safeT(t, `quote.states.${corridor.toState}`) || corridor.toName;
-  const shortDesc = safeT(t, `corridors.catalog.${catalogKey}.shortDesc`) || corridor.shortDesc;
+  const catalogKey = corridorCatalogKey(corridor.slug);
+  const fromName = t(`quote.states.${corridor.fromState}`);
+  const toName = t(`quote.states.${corridor.toState}`);
+  const shortDesc = t(`corridors.catalog.${catalogKey}.shortDesc`);
 
   const content = (
     <>
@@ -235,16 +234,3 @@ function CorridorCard({ corridor, live }: { corridor: Corridor; live: boolean })
   return <div className={className}>{content}</div>;
 }
 
-// Convert "california-hawaii" → "californiaHawaii" to match catalog message keys.
-function slugToCamel(slug: string): string {
-  return slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-}
-
-// safeT — try to read a key, fall back to empty string if missing.
-function safeT(t: ReturnType<typeof useTranslations>, key: string): string {
-  try {
-    return t(key);
-  } catch {
-    return "";
-  }
-}

@@ -12,6 +12,14 @@
       "3": "Promesa 3 de 3"
     },
     "ctaQuotePrimary": "Obtenga su precio fijo",
+    "notFound": {
+      "eyebrow": "404 — Página no encontrada",
+      "title": "No encontramos esa ruta.",
+      "description": "La página que busca no existe o se movió. Pruebe con uno de los corredores abajo, u obtenga una cotización con precio fijo para cualquier ruta en EE. UU.",
+      "ctaPrimary": "Obtenga una cotización",
+      "ctaSecondary": "Vea todos los corredores",
+      "ctaHome": "Ir al inicio"
+    },
     "labels": {
       "whyThisMatters": "Por qué importa",
       "mostPopular": "Más popular",
