@@ -7,6 +7,8 @@
  * Reference: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation
  */
 
+import * as Sentry from "@sentry/nextjs";
+
 export async function register() {
   if (!process.env.SENTRY_DSN) return;
 
@@ -19,4 +21,7 @@ export async function register() {
   }
 }
 
-export { onRequestError } from "@sentry/nextjs";
+// Sentry v10 renamed the convenience export from `onRequestError` to
+// `captureRequestError`. Next.js will call this hook when a request
+// throws an unhandled error (Next 15+).
+export const onRequestError = Sentry.captureRequestError;
