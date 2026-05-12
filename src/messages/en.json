@@ -656,6 +656,10 @@
       "submit": {
         "button": "Submit quote request",
         "footnote": "Your coordinator replies with a locked price within 1 business hour. No deposit required to receive the quote."
+      },
+      "verification": {
+        "legend": "Verification",
+        "testModeNote": "Test mode — using hCaptcha's public test key."
       }
     },
     "reassurance": {

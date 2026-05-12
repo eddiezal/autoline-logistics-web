@@ -656,6 +656,10 @@
       "submit": {
         "button": "Enviar solicitud de cotización",
         "footnote": "Su coordinador responde con un precio fijo dentro de 1 hora hábil. No se requiere depósito para recibir la cotización."
+      },
+      "verification": {
+        "legend": "Verificación",
+        "testModeNote": "Modo de prueba — usando la clave pública de hCaptcha."
       }
     },
     "reassurance": {

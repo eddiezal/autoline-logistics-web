@@ -204,7 +204,10 @@ export function QuoteForm({
       </fieldset>
 
       {/* hCaptcha */}
-      <div className="pt-2" id={captchaId}>
+      <fieldset className="space-y-3" id={captchaId}>
+        <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
+          {t("quote.form.verification.legend")}
+        </legend>
         <HCaptcha
           ref={captchaRef}
           sitekey={siteKey}
@@ -213,12 +216,11 @@ export function QuoteForm({
           onError={() => setCaptchaToken(null)}
         />
         {usingTestKey && (
-          <p className="text-gray-500 text-xs mt-2 italic">
-            ⚠️ Using hCaptcha test key — auto-passes. Set
-            NEXT_PUBLIC_HCAPTCHA_SITE_KEY in Vercel for real protection.
+          <p className="text-gray-500 text-xs italic">
+            {t("quote.form.verification.testModeNote")}
           </p>
         )}
-      </div>
+      </fieldset>
 
       {/* Submit */}
       <div className="pt-4">
