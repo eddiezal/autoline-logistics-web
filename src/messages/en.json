@@ -106,6 +106,12 @@
         }
       }
     },
+    "services": {
+      "eyebrow": "Our services",
+      "title": "How we ship.",
+      "lead": "Three ways to move your vehicle. Run by our own fleet plus a vetted partner network — never resold to the lowest bidder on a load board.",
+      "seeAllLink": "See all service details →"
+    },
     "howItWorks": {
       "eyebrow": "Getting started",
       "title": "How it works.",
@@ -1544,6 +1550,74 @@
       "title": "Use the checklist on us first.",
       "lead": "We answer all 3 questions honestly. If we don't, you have our word that we'll point you to someone who will.",
       "button": "Get my locked price"
+    }
+  },
+  "services": {
+    "metadata": {
+      "title": "Services — Auto Line Logistics",
+      "description": "Three ways to move your vehicle: Open Transport, Enclosed Premium, and Ocean Routes for Hawaii + Alaska. All backed by our Damage Promise."
+    },
+    "hero": {
+      "eyebrow": "Our services",
+      "title": "Three ways to move",
+      "titleAccent": "your vehicle.",
+      "lead": "Run by our own fleet plus a vetted partner network — never resold to the lowest bidder on a load board. Whichever tier you pick, the Damage Promise and Price Promise apply equally."
+    },
+    "compare": {
+      "eyebrow": "Side by side",
+      "title": "How the three compare.",
+      "colService": "Service",
+      "colTrailer": "Trailer",
+      "colTimeline": "Typical timeline",
+      "colBestFor": "Best for",
+      "openTrailer": "Open",
+      "openTimeline": "3–5 day pickup",
+      "openBestFor": "Daily drivers, family cars",
+      "enclosedTrailer": "Enclosed",
+      "enclosedTimeline": "3–5 day pickup",
+      "enclosedBestFor": "Luxury, exotics, classics",
+      "oceanTrailer": "Inland + RoRo vessel",
+      "oceanTimeline": "10–14 days",
+      "oceanBestFor": "Hawaii + Alaska routes"
+    },
+    "cta": {
+      "eyebrow": "Ready to ship?",
+      "title": "Get a locked price in 1 business hour.",
+      "lead": "No deposit to get a quote. The number we send is the number you pay — same Price Promise on all three tiers.",
+      "button": "Get my locked price"
+    },
+    "tiers": {
+      "open": {
+        "name": "Open Transport",
+        "badge": "Most-chosen tier",
+        "headline": "The standard for daily drivers — sedans, SUVs, trucks.",
+        "description": "Fastest pickup availability, most carriers in network, lowest-priced of the three tiers. Same Damage Promise coverage as enclosed.",
+        "feature1": "Fully insured carrier network",
+        "feature2": "Industry-standard open trailer",
+        "feature3": "3–5 day pickup window typical",
+        "feature4": "Best-value pricing across all routes",
+        "feature5": "Same Damage Promise coverage as enclosed",
+        "ctaButton": "Get a quote for Open",
+        "helper": "Default for daily drivers"
+      },
+      "enclosed": {
+        "name": "Enclosed Premium",
+        "headline": "Climate-controlled, fully covered.",
+        "description": "For luxury, exotics, and classics that deserve the white-glove treatment. Approximately 1.5x the Open Transport price.",
+        "feature1": "Climate-controlled trailer",
+        "feature2": "Premium handling protocols",
+        "feature3": "Same Damage Promise coverage",
+        "ctaButton": "Get a quote for Enclosed"
+      },
+      "ocean": {
+        "name": "Ocean Routes (HI & AK)",
+        "headline": "Hawaii and Alaska, coordinated as one booking.",
+        "description": "Mainland inland leg + ocean transit + island/Anchorage delivery — all coordinated by your named coordinator. Most brokers don't quote ocean routes. We do.",
+        "feature1": "10–14 day typical transit",
+        "feature2": "RoRo vessel (Matson / Pasha)",
+        "feature3": "Inland-to-port-to-island handoff",
+        "ctaButton": "See HI / AK corridors"
+      }
     }
   }
 }

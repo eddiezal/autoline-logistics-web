@@ -106,6 +106,12 @@
         }
       }
     },
+    "services": {
+      "eyebrow": "Nuestros servicios",
+      "title": "Cómo enviamos.",
+      "lead": "Tres formas de mover su vehículo. Operadas por nuestra propia flota más una red de socios verificados — nunca revendidas al postor más bajo en un tablón de cargas.",
+      "seeAllLink": "Ver todos los detalles del servicio →"
+    },
     "howItWorks": {
       "eyebrow": "Cómo empezar",
       "title": "Cómo funciona.",
@@ -1544,6 +1550,74 @@
       "title": "Use la lista con nosotros primero.",
       "lead": "Respondemos las 3 preguntas honestamente. Si no, le damos nuestra palabra de que lo dirigiremos a alguien que sí.",
       "button": "Obtenga su precio fijo"
+    }
+  },
+  "services": {
+    "metadata": {
+      "title": "Servicios — Auto Line Logistics",
+      "description": "Tres formas de mover su vehículo: Transporte Abierto, Cerrado Premium, y Rutas Marítimas para Hawái + Alaska. Todas respaldadas por nuestra Promesa contra Daños."
+    },
+    "hero": {
+      "eyebrow": "Nuestros servicios",
+      "title": "Tres formas de mover",
+      "titleAccent": "su vehículo.",
+      "lead": "Operadas por nuestra propia flota más una red de socios verificados — nunca revendidas al postor más bajo. Cualquiera que elija, la Promesa contra Daños y la Promesa de Precio aplican por igual."
+    },
+    "compare": {
+      "eyebrow": "Lado a lado",
+      "title": "Cómo se comparan los tres.",
+      "colService": "Servicio",
+      "colTrailer": "Tráiler",
+      "colTimeline": "Tiempo típico",
+      "colBestFor": "Mejor para",
+      "openTrailer": "Abierto",
+      "openTimeline": "Recogida 3–5 días",
+      "openBestFor": "Autos de uso diario, familia",
+      "enclosedTrailer": "Cerrado",
+      "enclosedTimeline": "Recogida 3–5 días",
+      "enclosedBestFor": "Lujo, exóticos, clásicos",
+      "oceanTrailer": "Terrestre + buque RoRo",
+      "oceanTimeline": "10–14 días",
+      "oceanBestFor": "Rutas Hawái + Alaska"
+    },
+    "cta": {
+      "eyebrow": "¿Listo para enviar?",
+      "title": "Obtenga un precio fijo en 1 hora hábil.",
+      "lead": "Sin depósito para cotizar. El número que enviamos es el que paga — misma Promesa de Precio en los tres niveles.",
+      "button": "Obtenga su precio fijo"
+    },
+    "tiers": {
+      "open": {
+        "name": "Transporte Abierto",
+        "badge": "Nivel más elegido",
+        "headline": "El estándar para autos de uso diario — sedanes, SUVs, camionetas.",
+        "description": "Disponibilidad de recogida más rápida, mayor red de transportistas, el precio más bajo de los tres niveles. Misma cobertura de la Promesa contra Daños que el cerrado.",
+        "feature1": "Red de transportistas totalmente asegurada",
+        "feature2": "Tráiler abierto estándar de la industria",
+        "feature3": "Ventana de recogida típica de 3–5 días",
+        "feature4": "Mejor precio en todas las rutas",
+        "feature5": "Misma Promesa contra Daños que el cerrado",
+        "ctaButton": "Cotizar transporte Abierto",
+        "helper": "Predeterminado para uso diario"
+      },
+      "enclosed": {
+        "name": "Cerrado Premium",
+        "headline": "Climatizado, totalmente cubierto.",
+        "description": "Para autos de lujo, exóticos, y clásicos que merecen trato premium. Aproximadamente 1.5x el precio del transporte Abierto.",
+        "feature1": "Tráiler climatizado",
+        "feature2": "Protocolos de manejo premium",
+        "feature3": "Misma cobertura de la Promesa contra Daños",
+        "ctaButton": "Cotizar transporte Cerrado"
+      },
+      "ocean": {
+        "name": "Rutas Marítimas (HI y AK)",
+        "headline": "Hawái y Alaska, coordinados como una sola reserva.",
+        "description": "Tramo terrestre continental + tránsito marítimo + entrega en isla/Anchorage — todo coordinado por su coordinador asignado. La mayoría de los corredores no cotizan rutas marítimas. Nosotros sí.",
+        "feature1": "Tránsito típico de 10–14 días",
+        "feature2": "Buque RoRo (Matson / Pasha)",
+        "feature3": "Traspaso terrestre-portuario-isla",
+        "ctaButton": "Ver corredores HI / AK"
+      }
     }
   }
 }

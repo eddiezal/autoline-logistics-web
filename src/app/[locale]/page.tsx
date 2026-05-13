@@ -120,10 +120,76 @@ export default function Home() {
           </Container>
         </section>
 
-                {/* How It Works — 3-step explainer between promise and tools. Card-grid
-            visual matches Triple Promise rhythm. Background gray-100 to break
-            the white-white-gray stack of card grids. */}
+                        {/* Services — V1A (orange-tinted featured + 2 supporting). Answers
+            "will you ship MY car?" between Triple Promise (what we promise)
+            and How It Works (the process). Mirror page at /services with
+            more depth. Featured = Open Transport, supporting = Enclosed +
+            Ocean Routes (HI/AK). Gray bg to break the white→white that
+            would happen otherwise. */}
         <section className="py-20 bg-gray-100">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              {t("home.services.eyebrow")}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-charcoal max-w-2xl">
+              {t("home.services.title")}
+            </h2>
+            <p className="text-gray-700 text-lg mt-4 max-w-2xl leading-relaxed">
+              {t("home.services.lead")}
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-5 mt-12">
+              {/* Featured: Open Transport */}
+              <ServiceFeaturedCard
+                badge={t("services.tiers.open.badge")}
+                name={t("services.tiers.open.name")}
+                headline={t("services.tiers.open.headline")}
+                description={t("services.tiers.open.description")}
+                features={[
+                  t("services.tiers.open.feature1"),
+                  t("services.tiers.open.feature2"),
+                  t("services.tiers.open.feature3"),
+                  t("services.tiers.open.feature4"),
+                  t("services.tiers.open.feature5"),
+                ]}
+                ctaButton={t("services.tiers.open.ctaButton")}
+                helper={t("services.tiers.open.helper")}
+                ctaHref="/quote"
+              />
+              {/* Side stack: Enclosed + Ocean */}
+              <div className="grid grid-rows-2 gap-5">
+                <ServiceSideCard
+                  iconKind="enclosed"
+                  name={t("services.tiers.enclosed.name")}
+                  description={t("services.tiers.enclosed.description")}
+                  ctaButton={t("services.tiers.enclosed.ctaButton")}
+                  ctaHref="/quote"
+                />
+                <ServiceSideCard
+                  iconKind="ocean"
+                  name={t("services.tiers.ocean.name")}
+                  description={t("services.tiers.ocean.description")}
+                  ctaButton={t("services.tiers.ocean.ctaButton")}
+                  ctaHref="/corridors"
+                />
+              </div>
+            </div>
+
+            <div className="text-center mt-10">
+              <Link
+                href="/services"
+                className="text-orange-dark font-semibold hover:underline"
+              >
+                {t("home.services.seeAllLink")}
+              </Link>
+            </div>
+          </Container>
+        </section>
+
+        {/* How It Works — 3-step explainer. Now on WHITE bg after the Services
+            section insertion cascade-flipped the rhythm (white→gray→white→
+            gray→white→gray→orange). */}
+        <section className="py-20 bg-white">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
               {t("home.howItWorks.eyebrow")}
@@ -165,7 +231,7 @@ export default function Home() {
         </section>
 
         {/* Helpful Tools section — surfaces the customer-facing utilities (§1 scoped). Drives ad traffic + adds visual depth. */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-gray-100">
           <Container>
             <div className="max-w-2xl mb-10">
               <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
@@ -223,15 +289,13 @@ export default function Home() {
         </section>
 
                 {/* Behind the Promise — operational proof. Stat-led cards, each
-            wholly clickable, linked to the relevant Promise page. Gray bg
-            so we alternate cleanly with white Helpful Tools above and
-            orange-tint build banner below.
+            wholly clickable, linked to the relevant Promise page.
             TODO (before production cutover): verify stat claims with Ben:
               - "35-truck family fleet" — confirm number + add vetted-partner caveat
               - "45,000 vehicles in 2025" — confirm number
               - "$575K layered coverage" — duplicate of Triple Promise, must match
               - "Native bilingual" — confirm + decide whether to name Renee */}
-        <section className="py-20 bg-gray-100">
+        <section className="py-20 bg-white">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
               {t("home.behindThePromise.eyebrow")}
@@ -283,9 +347,8 @@ export default function Home() {
                 {/* Anti-Scam Educator — V1b question-led. Each card is a question
             the consumer should ask any broker, plus the "Why ask it"
             (the scam this exposes) and "Honest answer sounds like" (what
-            we'd say). Voice D / anti-scam. White bg keeps the alternating
-            rhythm with Behind the Promise (gray) above. */}
-        <section className="py-20 bg-white">
+            we'd say). Voice D / anti-scam. */}
+        <section className="py-20 bg-gray-100">
           <Container>
             <span className="inline-flex items-center gap-2 text-amber-700 text-xs font-bold uppercase tracking-wider bg-amber-100 px-3 py-1.5 rounded-full mb-3">
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -509,6 +572,116 @@ function ProofPill({ children }: { children: React.ReactNode }) {
       </span>
       {children}
     </span>
+  );
+}
+
+function ServiceFeaturedCard({
+  badge,
+  name,
+  headline,
+  description,
+  features,
+  ctaButton,
+  helper,
+  ctaHref,
+}: {
+  badge: string;
+  name: string;
+  headline: string;
+  description: string;
+  features: string[];
+  ctaButton: string;
+  helper: string;
+  ctaHref: string;
+}) {
+  return (
+    <div className="relative bg-gradient-to-b from-orange-tint via-white to-white border-2 border-orange rounded-2xl p-7 md:p-8 shadow-[0_12px_32px_rgba(255,102,0,0.08)] flex flex-col gap-4">
+      <span className="absolute -top-3 left-7 inline-block bg-orange text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
+        {badge}
+      </span>
+      <div className="flex items-center gap-3 mt-1">
+        <div className="w-12 h-12 rounded-xl bg-orange text-white flex items-center justify-center flex-shrink-0">
+          <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M3 17h2v-1h12v1h2v-7l-2.5-5.5h-11L3 10v7zm14-9h-1.5L17 11h-3v-3h2.5L18 5.5h-3V3H5.5L4 6.5V8h3v3H4v6h1v-1h14v1h.5z" />
+          </svg>
+        </div>
+        <h3 className="text-2xl md:text-3xl font-bold text-charcoal leading-tight">
+          {name}
+        </h3>
+      </div>
+      <p className="text-charcoal font-semibold text-base md:text-lg leading-snug">
+        {headline}
+      </p>
+      <p className="text-gray-700 text-sm md:text-base leading-relaxed">
+        {description}
+      </p>
+      <ul className="flex flex-col gap-2 mt-1">
+        {features.map((f) => (
+          <li key={f} className="flex items-start gap-2.5 text-sm text-charcoal">
+            <span className="inline-flex items-center justify-center w-[18px] h-[18px] bg-orange text-white rounded-full text-[10px] font-bold flex-shrink-0 mt-0.5">
+              ✓
+            </span>
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="flex items-center justify-between gap-3 flex-wrap mt-3">
+        <Link
+          href={ctaHref}
+          className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition"
+        >
+          {ctaButton} →
+        </Link>
+        <span className="text-sm text-gray-500 italic">{helper}</span>
+      </div>
+    </div>
+  );
+}
+
+function ServiceSideCard({
+  iconKind,
+  name,
+  description,
+  ctaButton,
+  ctaHref,
+}: {
+  iconKind: "enclosed" | "ocean";
+  name: string;
+  description: string;
+  ctaButton: string;
+  ctaHref: string;
+}) {
+  const icon =
+    iconKind === "enclosed" ? (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20 8h-3V4H3v13h2v-2h2v2h12V8z" />
+      </svg>
+    ) : (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20 21c-1.4 0-2.7-.7-3.5-1.7C15.7 20.3 14.4 21 13 21s-2.7-.7-3.5-1.7C8.7 20.3 7.4 21 6 21H2v-2h4c1.4 0 2.7-.6 3.5-1.5C10.3 18.4 11.6 19 13 19s2.7-.6 3.5-1.5C17.3 18.4 18.6 19 20 19h2v2h-2z" />
+      </svg>
+    );
+
+  return (
+    <Link
+      href={ctaHref}
+      className="group bg-white border border-gray-200 rounded-2xl p-5 md:p-6 flex flex-col gap-2.5 transition hover:border-orange hover:shadow-lg hover:-translate-y-0.5"
+    >
+      <div className="flex items-center gap-2.5">
+        <div className="w-9 h-9 rounded-lg bg-orange-tint text-orange-dark flex items-center justify-center flex-shrink-0">
+          {icon}
+        </div>
+        <h4 className="text-base md:text-lg font-bold text-charcoal leading-snug">
+          {name}
+        </h4>
+      </div>
+      <p className="text-gray-700 text-sm leading-relaxed flex-1">
+        {description}
+      </p>
+      <span className="text-sm text-orange-dark font-semibold mt-1">
+        {ctaButton} →
+      </span>
+    </Link>
   );
 }
 
