@@ -104,8 +104,52 @@ export default function Home() {
           </Container>
         </section>
 
-        {/* Helpful Tools section — surfaces the customer-facing utilities (§1 scoped). Drives ad traffic + adds visual depth. */}
+                {/* How It Works — 3-step explainer between promise and tools. Card-grid
+            visual matches Triple Promise rhythm. Background gray-100 to break
+            the white-white-gray stack of card grids. */}
         <section className="py-20 bg-gray-100">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              {t("home.howItWorks.eyebrow")}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-charcoal max-w-2xl">
+              {t("home.howItWorks.title")}
+            </h2>
+            <p className="text-gray-700 text-lg mt-4 max-w-2xl leading-relaxed">
+              {t("home.howItWorks.lead")}
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              <HowItWorksCard
+                num={1}
+                label={t("home.howItWorks.steps.lock.label")}
+                title={t("home.howItWorks.steps.lock.title")}
+                description={t("home.howItWorks.steps.lock.description")}
+                proof1={t("home.howItWorks.steps.lock.proof1")}
+                proof2={t("home.howItWorks.steps.lock.proof2")}
+              />
+              <HowItWorksCard
+                num={2}
+                label={t("home.howItWorks.steps.pickup.label")}
+                title={t("home.howItWorks.steps.pickup.title")}
+                description={t("home.howItWorks.steps.pickup.description")}
+                proof1={t("home.howItWorks.steps.pickup.proof1")}
+                proof2={t("home.howItWorks.steps.pickup.proof2")}
+              />
+              <HowItWorksCard
+                num={3}
+                label={t("home.howItWorks.steps.track.label")}
+                title={t("home.howItWorks.steps.track.title")}
+                description={t("home.howItWorks.steps.track.description")}
+                proof1={t("home.howItWorks.steps.track.proof1")}
+                proof2={t("home.howItWorks.steps.track.proof2")}
+              />
+            </div>
+          </Container>
+        </section>
+
+        {/* Helpful Tools section — surfaces the customer-facing utilities (§1 scoped). Drives ad traffic + adds visual depth. */}
+        <section className="py-20 bg-white">
           <Container>
             <div className="max-w-2xl mb-10">
               <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
@@ -185,6 +229,56 @@ export default function Home() {
 
       <Footer />
     </>
+  );
+}
+
+function HowItWorksCard({
+  num,
+  label,
+  title,
+  description,
+  proof1,
+  proof2,
+}: {
+  num: 1 | 2 | 3;
+  label: string;
+  title: string;
+  description: string;
+  proof1: string;
+  proof2: string;
+}) {
+  return (
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-7 transition hover:border-orange hover:shadow-lg flex flex-col">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-9 h-9 rounded-full bg-orange-tint text-orange-dark font-bold flex items-center justify-center">
+          {num}
+        </div>
+        <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
+          {label}
+        </span>
+      </div>
+      <h3 className="text-xl font-bold text-charcoal mb-3 leading-snug">
+        {title}
+      </h3>
+      <p className="text-gray-700 text-sm md:text-base leading-relaxed flex-1">
+        {description}
+      </p>
+      <div className="flex flex-wrap gap-1.5 mt-4 pt-4 border-t border-dashed border-gray-200">
+        <ProofPill>{proof1}</ProofPill>
+        <ProofPill>{proof2}</ProofPill>
+      </div>
+    </div>
+  );
+}
+
+function ProofPill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 bg-white border border-gray-200 rounded-full px-2.5 py-1 text-xs font-medium text-charcoal">
+      <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-orange text-white rounded-full text-[9px] font-bold">
+        ✓
+      </span>
+      {children}
+    </span>
   );
 }
 

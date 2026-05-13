@@ -93,6 +93,34 @@
           "cta": "Conozca al equipo →"
         }
       }
+    },
+    "howItWorks": {
+      "eyebrow": "Cómo empezar",
+      "title": "Cómo funciona.",
+      "lead": "Tres pasos. Sin llamadas sorpresa. Sin ir y venir con corredores misteriosos.",
+      "steps": {
+        "lock": {
+          "label": "Paso 1",
+          "title": "Fije su precio.",
+          "description": "Díganos de dónde sale, a dónde va, y qué está enviando. Verá su precio fijo todo incluido en menos de un minuto — sin recargos sorpresa después.",
+          "proof1": "Cotización en 1 hora hábil",
+          "proof2": "Cotización = factura final"
+        },
+        "pickup": {
+          "label": "Paso 2",
+          "title": "Lo recogemos.",
+          "description": "Su coordinador agenda la recogida, le envía una lista de preparación, y asigna un conductor verificado. Doce fotos de inspección al recoger — sincronizadas automáticamente con su portal.",
+          "proof1": "Coordinador asignado",
+          "proof2": "12 fotos de inspección"
+        },
+        "track": {
+          "label": "Paso 3",
+          "title": "Sígalo a casa.",
+          "description": "GPS en vivo, ETA, y actualizaciones de hitos durante todo el camino. Al llegar, doce fotos más documentan la entrega. Luego su coordinador le da seguimiento para asegurarse de que todo esté bien.",
+          "proof1": "Seguimiento GPS en vivo",
+          "proof2": "12 fotos de entrega"
+        }
+      }
     }
   },
   "pricePromise": {
@@ -608,19 +636,40 @@
       "requiredMark": " *",
       "origin": {
         "legend": "Origen",
-        "zip": { "label": "Código postal de origen", "placeholder": "ej. 90630" },
-        "state": { "label": "Estado", "placeholder": "CA" }
+        "zip": {
+          "label": "Código postal de origen",
+          "placeholder": "ej. 90630"
+        },
+        "state": {
+          "label": "Estado",
+          "placeholder": "CA"
+        }
       },
       "destination": {
         "legend": "Destino",
-        "zip": { "label": "Código postal de destino", "placeholder": "ej. 96813" },
-        "state": { "label": "Estado", "placeholder": "HI" }
+        "zip": {
+          "label": "Código postal de destino",
+          "placeholder": "ej. 96813"
+        },
+        "state": {
+          "label": "Estado",
+          "placeholder": "HI"
+        }
       },
       "vehicle": {
         "legend": "Vehículo",
-        "year": { "label": "Año", "placeholder": "2022" },
-        "make": { "label": "Marca", "placeholder": "Toyota" },
-        "model": { "label": "Modelo", "placeholder": "Camry" },
+        "year": {
+          "label": "Año",
+          "placeholder": "2022"
+        },
+        "make": {
+          "label": "Marca",
+          "placeholder": "Toyota"
+        },
+        "model": {
+          "label": "Modelo",
+          "placeholder": "Camry"
+        },
         "type": {
           "label": "Tipo de vehículo",
           "options": {
@@ -639,15 +688,30 @@
         "legend": "Nivel de servicio",
         "description": "Elija el nivel de urgencia que se ajuste a su calendario. Confirmaremos opciones y precios en nuestra respuesta.",
         "options": {
-          "standby": { "label": "En Espera", "sub": "Ventana de recogida de 7 días. El más flexible. Mejor valor." },
-          "priority": { "label": "Prioritario", "sub": "Ventana de recogida de 3–5 días. El más popular." },
-          "expedited": { "label": "Urgente", "sub": "Recogida en 24–48 horas. Precio premium." }
+          "standby": {
+            "label": "En Espera",
+            "sub": "Ventana de recogida de 7 días. El más flexible. Mejor valor."
+          },
+          "priority": {
+            "label": "Prioritario",
+            "sub": "Ventana de recogida de 3–5 días. El más popular."
+          },
+          "expedited": {
+            "label": "Urgente",
+            "sub": "Recogida en 24–48 horas. Precio premium."
+          }
         }
       },
       "contact": {
         "legend": "Cómo nos comunicamos con usted",
-        "email": { "label": "Correo electrónico", "placeholder": "tucorreo@ejemplo.com" },
-        "phone": { "label": "Teléfono", "placeholder": "(555) 123-4567" },
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "tucorreo@ejemplo.com"
+        },
+        "phone": {
+          "label": "Teléfono",
+          "placeholder": "(555) 123-4567"
+        },
         "notes": {
           "label": "¿Algo más que debamos saber? (opcional)",
           "placeholder": "ej. órdenes PCS, modificaciones del vehículo, ventana de recogida estricta"
@@ -750,8 +814,14 @@
     },
     "inputs": {
       "legend": "Su viaje",
-      "fromZip": { "label": "Código postal origen", "placeholder": "90210" },
-      "toZip": { "label": "Código postal destino", "placeholder": "78701" },
+      "fromZip": {
+        "label": "Código postal origen",
+        "placeholder": "90210"
+      },
+      "toZip": {
+        "label": "Código postal destino",
+        "placeholder": "78701"
+      },
       "zipError": "No es un código postal de EE. UU. válido",
       "zipUnknown": "Código postal fuera de nuestra tabla v1 — pida cotización",
       "vehicleType": {
@@ -883,9 +953,18 @@
         "eyebrow": "La misma promesa, cada corredor",
         "title": "Cualquier ruta, cualquier distancia.",
         "cards": {
-          "price": { "eyebrow": "Promesa de Precio", "headline": "Cotización = factura final →" },
-          "damage": { "eyebrow": "Promesa contra Daños", "headline": "Cobertura por capas de $575K →" },
-          "people": { "eyebrow": "Promesa Personal", "headline": "Coordinador con nombre →" }
+          "price": {
+            "eyebrow": "Promesa de Precio",
+            "headline": "Cotización = factura final →"
+          },
+          "damage": {
+            "eyebrow": "Promesa contra Daños",
+            "headline": "Cobertura por capas de $575K →"
+          },
+          "people": {
+            "eyebrow": "Promesa Personal",
+            "headline": "Coordinador con nombre →"
+          }
         }
       },
       "finalCta": {
@@ -966,16 +1045,36 @@
           }
         }
       },
-      "californiaTexas": { "shortDesc": "California a Houston, Dallas, Austin y San Antonio. Transporte abierto y cerrado." },
-      "californiaFlorida": { "shortDesc": "De costa a costa, el corredor de snowbirds más popular. Alta demanda de tráiler cerrado para vehículos de colección." },
-      "californiaNewYork": { "shortDesc": "De costa a costa. Destinos en el área metropolitana de Nueva York y el norte del estado. Paquetes de reubicación de múltiples vehículos disponibles." },
-      "californiaArizona": { "shortDesc": "Phoenix, Scottsdale, Tucson. Fuerte tráfico de snowbirds y reubicaciones de jubilados." },
-      "californiaNevada": { "shortDesc": "Las Vegas, Reno, Carson City. Tiempo de respuesta rápido, a menudo despacho en la misma semana." },
-      "californiaWashington": { "shortDesc": "Seattle, Tacoma, Spokane. Corredor del noroeste del Pacífico con abundante capacidad de transportistas." },
-      "californiaOregon": { "shortDesc": "Portland, Salem, Eugene. Corredor de la I-5, despachos frecuentes." },
-      "californiaColorado": { "shortDesc": "Denver, Boulder, Colorado Springs. Reubicaciones en estados montañosos y mudanzas estacionales." },
-      "floridaNewYork": { "shortDesc": "El corredor clásico de snowbirds. Fuertes patrones estacionales — hacia el norte en primavera, hacia el sur en otoño." },
-      "texasFlorida": { "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Corredor a través del Golfo." }
+      "californiaTexas": {
+        "shortDesc": "California a Houston, Dallas, Austin y San Antonio. Transporte abierto y cerrado."
+      },
+      "californiaFlorida": {
+        "shortDesc": "De costa a costa, el corredor de snowbirds más popular. Alta demanda de tráiler cerrado para vehículos de colección."
+      },
+      "californiaNewYork": {
+        "shortDesc": "De costa a costa. Destinos en el área metropolitana de Nueva York y el norte del estado. Paquetes de reubicación de múltiples vehículos disponibles."
+      },
+      "californiaArizona": {
+        "shortDesc": "Phoenix, Scottsdale, Tucson. Fuerte tráfico de snowbirds y reubicaciones de jubilados."
+      },
+      "californiaNevada": {
+        "shortDesc": "Las Vegas, Reno, Carson City. Tiempo de respuesta rápido, a menudo despacho en la misma semana."
+      },
+      "californiaWashington": {
+        "shortDesc": "Seattle, Tacoma, Spokane. Corredor del noroeste del Pacífico con abundante capacidad de transportistas."
+      },
+      "californiaOregon": {
+        "shortDesc": "Portland, Salem, Eugene. Corredor de la I-5, despachos frecuentes."
+      },
+      "californiaColorado": {
+        "shortDesc": "Denver, Boulder, Colorado Springs. Reubicaciones en estados montañosos y mudanzas estacionales."
+      },
+      "floridaNewYork": {
+        "shortDesc": "El corredor clásico de snowbirds. Fuertes patrones estacionales — hacia el norte en primavera, hacia el sur en otoño."
+      },
+      "texasFlorida": {
+        "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Corredor a través del Golfo."
+      }
     },
     "californiaHawaii": {
       "metadata": {
@@ -1002,12 +1101,30 @@
         "eyebrow": "La ruta",
         "title": "Seis tramos. Un coordinador. Precio fijo.",
         "legs": {
-          "1": { "title": "Recogida en el continente", "detail": "Transportista despachado a su dirección en California. El conductor completa fotos de inspección 360° y firma el BOL. Recibe copia de la confirmación de despacho." },
-          "2": { "title": "Tránsito al puerto", "detail": "Vehículo entregado al puerto de Long Beach u Oakland (el que optimice el costo total y el tiempo). Nosotros elegimos; usted no gestiona." },
-          "3": { "title": "Reserva portuaria + transportista oceánico", "detail": "Reserva confirmada con el transportista oceánico (típicamente Matson o Pasha). Fecha de zarpe establecida. Recibe el nombre del barco, fecha de zarpe, y hora estimada de llegada en su portal." },
-          "4": { "title": "Travesía oceánica", "detail": "5–10 días de puerto a puerto hasta Honolulu. El vehículo se asegura bajo cubierta (RoRo) o en servicio en contenedor según el tipo de reserva." },
-          "5": { "title": "Recogida en el puerto de Honolulu", "detail": "Nuestro agente isleño recibe el vehículo. Aquí se reserva la barcaza inter-isla si su destino es Maui, Isla Grande, o Kauai (agrega 2–4 días)." },
-          "6": { "title": "Entrega final", "detail": "Vehículo entregado a su dirección en Hawái. Fotos de inspección en la entrega. Se firma el BOL. Usted y su coordinador tienen la documentación." }
+          "1": {
+            "title": "Recogida en el continente",
+            "detail": "Transportista despachado a su dirección en California. El conductor completa fotos de inspección 360° y firma el BOL. Recibe copia de la confirmación de despacho."
+          },
+          "2": {
+            "title": "Tránsito al puerto",
+            "detail": "Vehículo entregado al puerto de Long Beach u Oakland (el que optimice el costo total y el tiempo). Nosotros elegimos; usted no gestiona."
+          },
+          "3": {
+            "title": "Reserva portuaria + transportista oceánico",
+            "detail": "Reserva confirmada con el transportista oceánico (típicamente Matson o Pasha). Fecha de zarpe establecida. Recibe el nombre del barco, fecha de zarpe, y hora estimada de llegada en su portal."
+          },
+          "4": {
+            "title": "Travesía oceánica",
+            "detail": "5–10 días de puerto a puerto hasta Honolulu. El vehículo se asegura bajo cubierta (RoRo) o en servicio en contenedor según el tipo de reserva."
+          },
+          "5": {
+            "title": "Recogida en el puerto de Honolulu",
+            "detail": "Nuestro agente isleño recibe el vehículo. Aquí se reserva la barcaza inter-isla si su destino es Maui, Isla Grande, o Kauai (agrega 2–4 días)."
+          },
+          "6": {
+            "title": "Entrega final",
+            "detail": "Vehículo entregado a su dirección en Hawái. Fotos de inspección en la entrega. Se firma el BOL. Usted y su coordinador tienen la documentación."
+          }
         }
       },
       "subDestinations": {
@@ -1058,9 +1175,21 @@
         "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
         "description": "Elija el nivel de urgencia que se ajuste a su calendario. El precio en vivo viene a través de la herramienta de cotización — sacado de nuestra red verificada de transportistas en el momento que reserva.",
         "tiles": {
-          "standby": { "tier": "En Espera", "window": "Fecha de zarpe flexible", "description": "Mejor valor. El vehículo toma el próximo zarpe disponible dentro de ~2 semanas de la recogida." },
-          "priority": { "tier": "Prioritario", "window": "Zarpe reservado dentro de 7 días", "description": "El más común para PCS y reubicaciones planificadas. Zarpe específico reservado al cotizar." },
-          "expedited": { "tier": "Urgente", "window": "Próximo zarpe disponible", "description": "Cuando el tiempo es crítico. Empujamos al zarpe más pronto viable y aceptamos el premium." }
+          "standby": {
+            "tier": "En Espera",
+            "window": "Fecha de zarpe flexible",
+            "description": "Mejor valor. El vehículo toma el próximo zarpe disponible dentro de ~2 semanas de la recogida."
+          },
+          "priority": {
+            "tier": "Prioritario",
+            "window": "Zarpe reservado dentro de 7 días",
+            "description": "El más común para PCS y reubicaciones planificadas. Zarpe específico reservado al cotizar."
+          },
+          "expedited": {
+            "tier": "Urgente",
+            "window": "Próximo zarpe disponible",
+            "description": "Cuando el tiempo es crítico. Empujamos al zarpe más pronto viable y aceptamos el premium."
+          }
         },
         "footnote": "El precio varía por temporada (pico mayo–septiembre), tipo de vehículo, y isla de destino. Obtenga una cotización para su envío específico."
       },
@@ -1068,21 +1197,51 @@
         "eyebrow": "La Triple Promesa aplica de la misma manera",
         "title": "A través de seis tramos y un océano.",
         "cards": {
-          "price": { "eyebrow": "Promesa de Precio", "headline": "Cotización = factura final →" },
-          "damage": { "eyebrow": "Promesa contra Daños", "headline": "Cobertura en cada tramo →" },
-          "people": { "eyebrow": "Promesa Personal", "headline": "El mismo coordinador en todo momento →" }
+          "price": {
+            "eyebrow": "Promesa de Precio",
+            "headline": "Cotización = factura final →"
+          },
+          "damage": {
+            "eyebrow": "Promesa contra Daños",
+            "headline": "Cobertura en cada tramo →"
+          },
+          "people": {
+            "eyebrow": "Promesa Personal",
+            "headline": "El mismo coordinador en todo momento →"
+          }
         }
       },
       "faq": {
         "title": "Preguntas frecuentes — California ↔ Hawái",
         "items": {
-          "0": { "q": "¿Cuánto tarda enviar un auto de California a Hawái?", "a": "Cuente con 10–18 días puerta a puerta en la mayoría de los casos. El tramo oceánico típicamente toma 5–10 días de puerto a puerto (Long Beach u Oakland a Honolulu), más 2–5 días para la recogida en el continente y el transporte terrestre en cada extremo. Las islas externas (Maui, Kauai, Isla Grande) agregan otros 2–4 días por la barcaza inter-isla." },
-          "1": { "q": "¿Qué puerto usan — Long Beach u Oakland?", "a": "Ambos son opciones. Long Beach tiene más zarpes por semana y tarifas base ligeramente más bajas desde recogidas en el sur de California. Oakland es más rápido para recogidas en el Área de la Bahía y el norte de California. Elegimos el que ofrezca mejor costo total + tiempo para su origen específico. La elección es invisible para usted en la cotización." },
-          "2": { "q": "¿Tengo que dejar mi auto en el puerto yo mismo?", "a": "No. El servicio estándar es puerta a puerta: enviamos un transportista a su dirección de recogida en California, lo transportamos al puerto, gestionamos la reserva oceánica y el papeleo del muelle, y recibimos el vehículo en el lado de Hawái para la entrega final a su dirección. También puede elegir puerto a puerto por un precio más bajo si quiere manejar los tramos terrestres usted mismo." },
-          "3": { "q": "¿Y mi seguro del auto durante la travesía oceánica?", "a": "La cobertura de carga del transportista permanece en efecto durante todo el tránsito. Nuestra Promesa contra Daños (fianza de corredor + carga contingente de $500K) respalda al transportista oceánico de la misma manera que respalda a los transportistas continentales. Usted presenta un reclamo con nosotros — manejamos toda la complejidad del lado del transportista." },
-          "4": { "q": "¿Puedo dejar artículos personales en mi auto para el envío marítimo?", "a": "Hasta 100 libras de artículos personales en el maletero generalmente está bien. NO armas de fuego, municiones, alcohol, materiales peligrosos, o plantas vivas (las restricciones agrícolas de Hawái son estrictas). Los artículos que se muevan durante el tránsito no están cubiertos por daños — asegure cualquier cosa que cargue. Si hay duda, su coordinador marcará artículos específicos antes de reservar." },
-          "5": { "q": "¿Envían a las cuatro islas principales?", "a": "Sí — Oahu (Honolulu), Maui (Kahului), Isla Grande (Hilo o Kona), y Kauai (Lihue). Honolulu es el puerto principal continente-a-Hawái, con la barcaza inter-isla a las islas externas como segundo tramo. El tiempo inter-isla típicamente es 2–4 días adicionales." },
-          "6": { "q": "¿Cómo funciona el precio para envíos militares PCS?", "a": "El personal militar en servicio activo con órdenes PCS califica para nuestra tarifa militar (típicamente 5–10% por debajo del estándar). Trabajamos con todas las ramas — Ejército, Marina, Fuerza Aérea, Marines, Guardia Costera. Traiga sus órdenes al reservar; su coordinador aplica el descuento automáticamente. El reembolso del envío POV se procesa a través de su TMO — proporcionamos la documentación necesaria." }
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de California a Hawái?",
+            "a": "Cuente con 10–18 días puerta a puerta en la mayoría de los casos. El tramo oceánico típicamente toma 5–10 días de puerto a puerto (Long Beach u Oakland a Honolulu), más 2–5 días para la recogida en el continente y el transporte terrestre en cada extremo. Las islas externas (Maui, Kauai, Isla Grande) agregan otros 2–4 días por la barcaza inter-isla."
+          },
+          "1": {
+            "q": "¿Qué puerto usan — Long Beach u Oakland?",
+            "a": "Ambos son opciones. Long Beach tiene más zarpes por semana y tarifas base ligeramente más bajas desde recogidas en el sur de California. Oakland es más rápido para recogidas en el Área de la Bahía y el norte de California. Elegimos el que ofrezca mejor costo total + tiempo para su origen específico. La elección es invisible para usted en la cotización."
+          },
+          "2": {
+            "q": "¿Tengo que dejar mi auto en el puerto yo mismo?",
+            "a": "No. El servicio estándar es puerta a puerta: enviamos un transportista a su dirección de recogida en California, lo transportamos al puerto, gestionamos la reserva oceánica y el papeleo del muelle, y recibimos el vehículo en el lado de Hawái para la entrega final a su dirección. También puede elegir puerto a puerto por un precio más bajo si quiere manejar los tramos terrestres usted mismo."
+          },
+          "3": {
+            "q": "¿Y mi seguro del auto durante la travesía oceánica?",
+            "a": "La cobertura de carga del transportista permanece en efecto durante todo el tránsito. Nuestra Promesa contra Daños (fianza de corredor + carga contingente de $500K) respalda al transportista oceánico de la misma manera que respalda a los transportistas continentales. Usted presenta un reclamo con nosotros — manejamos toda la complejidad del lado del transportista."
+          },
+          "4": {
+            "q": "¿Puedo dejar artículos personales en mi auto para el envío marítimo?",
+            "a": "Hasta 100 libras de artículos personales en el maletero generalmente está bien. NO armas de fuego, municiones, alcohol, materiales peligrosos, o plantas vivas (las restricciones agrícolas de Hawái son estrictas). Los artículos que se muevan durante el tránsito no están cubiertos por daños — asegure cualquier cosa que cargue. Si hay duda, su coordinador marcará artículos específicos antes de reservar."
+          },
+          "5": {
+            "q": "¿Envían a las cuatro islas principales?",
+            "a": "Sí — Oahu (Honolulu), Maui (Kahului), Isla Grande (Hilo o Kona), y Kauai (Lihue). Honolulu es el puerto principal continente-a-Hawái, con la barcaza inter-isla a las islas externas como segundo tramo. El tiempo inter-isla típicamente es 2–4 días adicionales."
+          },
+          "6": {
+            "q": "¿Cómo funciona el precio para envíos militares PCS?",
+            "a": "El personal militar en servicio activo con órdenes PCS califica para nuestra tarifa militar (típicamente 5–10% por debajo del estándar). Trabajamos con todas las ramas — Ejército, Marina, Fuerza Aérea, Marines, Guardia Costera. Traiga sus órdenes al reservar; su coordinador aplica el descuento automáticamente. El reembolso del envío POV se procesa a través de su TMO — proporcionamos la documentación necesaria."
+          }
         }
       },
       "finalCta": {
@@ -1188,9 +1347,21 @@
         "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
         "description": "Elija el nivel de urgencia que se ajuste a su calendario. El precio en vivo viene a través de la herramienta de cotización — sacado de nuestra red verificada de transportistas en el momento que reserva.",
         "tiles": {
-          "standby": { "tier": "En Espera", "window": "Despacho flexible", "description": "Mejor valor. Toma el próximo transportista o zarpe disponible dentro de ~10 días de la recogida." },
-          "priority": { "tier": "Prioritario", "window": "Despacho reservado dentro de 5 días", "description": "El más común para PCS y reubicaciones planificadas. Despacho específico programado al cotizar." },
-          "expedited": { "tier": "Urgente", "window": "Próximo despacho disponible", "description": "Cuando el tiempo gana al precio. Tomamos el transportista o zarpe más pronto viable." }
+          "standby": {
+            "tier": "En Espera",
+            "window": "Despacho flexible",
+            "description": "Mejor valor. Toma el próximo transportista o zarpe disponible dentro de ~10 días de la recogida."
+          },
+          "priority": {
+            "tier": "Prioritario",
+            "window": "Despacho reservado dentro de 5 días",
+            "description": "El más común para PCS y reubicaciones planificadas. Despacho específico programado al cotizar."
+          },
+          "expedited": {
+            "tier": "Urgente",
+            "window": "Próximo despacho disponible",
+            "description": "Cuando el tiempo gana al precio. Tomamos el transportista o zarpe más pronto viable."
+          }
         },
         "footnote": "El precio varía por temporada (la marítima es preferible en invierno), tamaño del vehículo, y destino. Las tarifas militares PCS de servicio activo aplican automáticamente con órdenes."
       },
@@ -1198,21 +1369,51 @@
         "eyebrow": "La Triple Promesa aplica de la misma manera",
         "title": "A través de 3,500 millas o una travesía oceánica.",
         "cards": {
-          "price": { "eyebrow": "Promesa de Precio", "headline": "Cotización = factura final →" },
-          "damage": { "eyebrow": "Promesa contra Daños", "headline": "Cobertura en cada tramo →" },
-          "people": { "eyebrow": "Promesa Personal", "headline": "El mismo coordinador en todo momento →" }
+          "price": {
+            "eyebrow": "Promesa de Precio",
+            "headline": "Cotización = factura final →"
+          },
+          "damage": {
+            "eyebrow": "Promesa contra Daños",
+            "headline": "Cobertura en cada tramo →"
+          },
+          "people": {
+            "eyebrow": "Promesa Personal",
+            "headline": "El mismo coordinador en todo momento →"
+          }
         }
       },
       "faq": {
         "title": "Preguntas frecuentes — California ↔ Alaska",
         "items": {
-          "0": { "q": "¿Cuánto tarda enviar un auto de California a Alaska?", "a": "Dos opciones de ruta. La ruta marítima (Tacoma → Anchorage) toma aproximadamente 8–14 días puerta a puerta incluyendo los tramos terrestres. La ruta terrestre por la Autopista de Alaska toma 7–12 días puerta a puerta. Los retrasos de invierno son reales (especialmente noviembre–marzo) y ajustamos los tiempos en consecuencia. Su coordinador recomendará la ruta correcta según la temporada + el destino final." },
-          "1": { "q": "Marítima vs. terrestre — ¿cuál debería elegir?", "a": "La marítima es la opción por defecto para destinos en Anchorage y el Valle Mat-Su. Tiempos predecibles, sin cierres por clima, menor desgaste del vehículo. La terrestre puede ser más rápida en verano para Fairbanks y destinos del interior, pero la Autopista de Alaska tiene sensibilidad climática (tormentas de nieve, cierres viales, deformaciones por helada). Para la mayoría de los clientes la mayor parte del año, la marítima es la mejor opción. Cotizaremos ambas y recomendaremos según su situación específica." },
-          "2": { "q": "¿Envían a bases militares — JBER, Eielson, Fort Wainwright?", "a": "Sí. Las bases militares son un caso de uso principal para este corredor. Joint Base Elmendorf-Richardson (JBER) en Anchorage, Eielson AFB y Fort Wainwright cerca de Fairbanks, Coast Guard Base Kodiak — enviamos a todas regularmente. Traiga sus órdenes PCS al reservar y su coordinador aplica la tarifa militar (típicamente 5–10% por debajo del estándar)." },
-          "3": { "q": "¿Y en invierno? ¿La carretera está cerrada?", "a": "La Autopista de Alaska técnicamente está abierta durante todo el año, pero las condiciones de invierno (octubre–abril) hacen el transporte arriesgado y lento. Recomendamos fuertemente el envío marítimo para cualquier envío de invierno para evitar retrasos por clima, deformaciones por helada, y los cierres ocasionales por avalancha. Los transportistas oceánicos operan confiablemente durante todo el año desde Tacoma. El precio es similar de cualquier manera — el premium de invierno es pequeño." },
-          "4": { "q": "¿Puedo dejar artículos personales en el vehículo?", "a": "Hasta 100 libras en el maletero generalmente está bien. Las mismas restricciones que la mayoría de los corredores: nada de armas de fuego, municiones, alcohol, o materiales peligrosos. Nota de clima frío: los líquidos que pueden congelarse (botellas de agua, líquido limpiaparabrisas, bebidas enlatadas) pueden romperse en tránsito sin calefacción. Drene o retire antes de la recogida." },
-          "5": { "q": "¿Y mi seguro del auto durante el tránsito terrestre o marítimo?", "a": "La cobertura de carga del transportista permanece en efecto durante todo el tránsito en cualquier ruta. Nuestra Promesa contra Daños (fianza de corredor + carga contingente de $500K) respalda el vacío de cobertura del transportista. Un solo reclamo presentado con nosotros — coordinamos la resolución del lado del transportista." },
-          "6": { "q": "¿Manejan vehículos sobredimensionados o elevados?", "a": "Sí — comunes en Alaska debido a la base de clientes con preferencia por camionetas. Camionetas elevadas, SUVs sobredimensionadas, y camionetas con accesorios en el techo se envían regularmente. El premium del precio escala con el tamaño: los vehículos elevados agregan $150–$400 sobre el estándar, los sobredimensionados pueden requerir actualización a tráiler cerrado. Su coordinador confirma el precio exacto al cotizar." }
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de California a Alaska?",
+            "a": "Dos opciones de ruta. La ruta marítima (Tacoma → Anchorage) toma aproximadamente 8–14 días puerta a puerta incluyendo los tramos terrestres. La ruta terrestre por la Autopista de Alaska toma 7–12 días puerta a puerta. Los retrasos de invierno son reales (especialmente noviembre–marzo) y ajustamos los tiempos en consecuencia. Su coordinador recomendará la ruta correcta según la temporada + el destino final."
+          },
+          "1": {
+            "q": "Marítima vs. terrestre — ¿cuál debería elegir?",
+            "a": "La marítima es la opción por defecto para destinos en Anchorage y el Valle Mat-Su. Tiempos predecibles, sin cierres por clima, menor desgaste del vehículo. La terrestre puede ser más rápida en verano para Fairbanks y destinos del interior, pero la Autopista de Alaska tiene sensibilidad climática (tormentas de nieve, cierres viales, deformaciones por helada). Para la mayoría de los clientes la mayor parte del año, la marítima es la mejor opción. Cotizaremos ambas y recomendaremos según su situación específica."
+          },
+          "2": {
+            "q": "¿Envían a bases militares — JBER, Eielson, Fort Wainwright?",
+            "a": "Sí. Las bases militares son un caso de uso principal para este corredor. Joint Base Elmendorf-Richardson (JBER) en Anchorage, Eielson AFB y Fort Wainwright cerca de Fairbanks, Coast Guard Base Kodiak — enviamos a todas regularmente. Traiga sus órdenes PCS al reservar y su coordinador aplica la tarifa militar (típicamente 5–10% por debajo del estándar)."
+          },
+          "3": {
+            "q": "¿Y en invierno? ¿La carretera está cerrada?",
+            "a": "La Autopista de Alaska técnicamente está abierta durante todo el año, pero las condiciones de invierno (octubre–abril) hacen el transporte arriesgado y lento. Recomendamos fuertemente el envío marítimo para cualquier envío de invierno para evitar retrasos por clima, deformaciones por helada, y los cierres ocasionales por avalancha. Los transportistas oceánicos operan confiablemente durante todo el año desde Tacoma. El precio es similar de cualquier manera — el premium de invierno es pequeño."
+          },
+          "4": {
+            "q": "¿Puedo dejar artículos personales en el vehículo?",
+            "a": "Hasta 100 libras en el maletero generalmente está bien. Las mismas restricciones que la mayoría de los corredores: nada de armas de fuego, municiones, alcohol, o materiales peligrosos. Nota de clima frío: los líquidos que pueden congelarse (botellas de agua, líquido limpiaparabrisas, bebidas enlatadas) pueden romperse en tránsito sin calefacción. Drene o retire antes de la recogida."
+          },
+          "5": {
+            "q": "¿Y mi seguro del auto durante el tránsito terrestre o marítimo?",
+            "a": "La cobertura de carga del transportista permanece en efecto durante todo el tránsito en cualquier ruta. Nuestra Promesa contra Daños (fianza de corredor + carga contingente de $500K) respalda el vacío de cobertura del transportista. Un solo reclamo presentado con nosotros — coordinamos la resolución del lado del transportista."
+          },
+          "6": {
+            "q": "¿Manejan vehículos sobredimensionados o elevados?",
+            "a": "Sí — comunes en Alaska debido a la base de clientes con preferencia por camionetas. Camionetas elevadas, SUVs sobredimensionadas, y camionetas con accesorios en el techo se envían regularmente. El premium del precio escala con el tamaño: los vehículos elevados agregan $150–$400 sobre el estándar, los sobredimensionados pueden requerir actualización a tráiler cerrado. Su coordinador confirma el precio exacto al cotizar."
+          }
         }
       },
       "finalCta": {

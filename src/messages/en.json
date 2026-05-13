@@ -93,6 +93,34 @@
           "cta": "Meet the team →"
         }
       }
+    },
+    "howItWorks": {
+      "eyebrow": "Getting started",
+      "title": "How it works.",
+      "lead": "Three steps. No surprise calls. No back-and-forth with mystery brokers.",
+      "steps": {
+        "lock": {
+          "label": "Step 1",
+          "title": "Lock your price.",
+          "description": "Tell us where it's coming from, where it's going, and what you're shipping. You'll see your locked, all-in price in under a minute — no surprise upcharges later.",
+          "proof1": "Quote in 1 business hour",
+          "proof2": "Price = final invoice"
+        },
+        "pickup": {
+          "label": "Step 2",
+          "title": "We pick it up.",
+          "description": "Your coordinator schedules pickup, sends a checklist, and assigns a vetted driver. Twelve inspection photos at pickup — automatically synced to your portal.",
+          "proof1": "Named coordinator",
+          "proof2": "12 inspection photos"
+        },
+        "track": {
+          "label": "Step 3",
+          "title": "Track it home.",
+          "description": "Live GPS, ETA, and milestone updates the whole way. When it arrives, twelve more photos document delivery. Then your coordinator follows up to make sure everything's good.",
+          "proof1": "Live GPS tracking",
+          "proof2": "12 delivery photos"
+        }
+      }
     }
   },
   "pricePromise": {
@@ -608,19 +636,40 @@
       "requiredMark": " *",
       "origin": {
         "legend": "Where from",
-        "zip": { "label": "Origin ZIP code", "placeholder": "e.g. 90630" },
-        "state": { "label": "State", "placeholder": "CA" }
+        "zip": {
+          "label": "Origin ZIP code",
+          "placeholder": "e.g. 90630"
+        },
+        "state": {
+          "label": "State",
+          "placeholder": "CA"
+        }
       },
       "destination": {
         "legend": "Where to",
-        "zip": { "label": "Destination ZIP code", "placeholder": "e.g. 96813" },
-        "state": { "label": "State", "placeholder": "HI" }
+        "zip": {
+          "label": "Destination ZIP code",
+          "placeholder": "e.g. 96813"
+        },
+        "state": {
+          "label": "State",
+          "placeholder": "HI"
+        }
       },
       "vehicle": {
         "legend": "Vehicle",
-        "year": { "label": "Year", "placeholder": "2022" },
-        "make": { "label": "Make", "placeholder": "Toyota" },
-        "model": { "label": "Model", "placeholder": "Camry" },
+        "year": {
+          "label": "Year",
+          "placeholder": "2022"
+        },
+        "make": {
+          "label": "Make",
+          "placeholder": "Toyota"
+        },
+        "model": {
+          "label": "Model",
+          "placeholder": "Camry"
+        },
         "type": {
           "label": "Vehicle type",
           "options": {
@@ -639,15 +688,30 @@
         "legend": "Service tier",
         "description": "Pick the urgency level that fits your timeline. We'll confirm options and pricing in your reply.",
         "options": {
-          "standby": { "label": "Standby", "sub": "7-day pickup window. Most flexible. Best value." },
-          "priority": { "label": "Priority", "sub": "3–5 day pickup window. Most popular." },
-          "expedited": { "label": "Expedited", "sub": "24–48 hour pickup. Premium pricing." }
+          "standby": {
+            "label": "Standby",
+            "sub": "7-day pickup window. Most flexible. Best value."
+          },
+          "priority": {
+            "label": "Priority",
+            "sub": "3–5 day pickup window. Most popular."
+          },
+          "expedited": {
+            "label": "Expedited",
+            "sub": "24–48 hour pickup. Premium pricing."
+          }
         }
       },
       "contact": {
         "legend": "How we reach you",
-        "email": { "label": "Email", "placeholder": "you@example.com" },
-        "phone": { "label": "Phone", "placeholder": "(555) 123-4567" },
+        "email": {
+          "label": "Email",
+          "placeholder": "you@example.com"
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "(555) 123-4567"
+        },
         "notes": {
           "label": "Anything else we should know? (optional)",
           "placeholder": "e.g. PCS orders, vehicle modifications, hard pickup window"
@@ -750,8 +814,14 @@
     },
     "inputs": {
       "legend": "Your trip",
-      "fromZip": { "label": "From ZIP", "placeholder": "90210" },
-      "toZip": { "label": "To ZIP", "placeholder": "78701" },
+      "fromZip": {
+        "label": "From ZIP",
+        "placeholder": "90210"
+      },
+      "toZip": {
+        "label": "To ZIP",
+        "placeholder": "78701"
+      },
       "zipError": "Not a recognized US ZIP",
       "zipUnknown": "ZIP not in our v1 table — get a real quote",
       "vehicleType": {
@@ -883,9 +953,18 @@
         "eyebrow": "Same promise, every corridor",
         "title": "Whatever route, whatever distance.",
         "cards": {
-          "price": { "eyebrow": "Price Promise", "headline": "Quote = final invoice →" },
-          "damage": { "eyebrow": "Damage Promise", "headline": "$575K layered coverage →" },
-          "people": { "eyebrow": "People Promise", "headline": "Named coordinator →" }
+          "price": {
+            "eyebrow": "Price Promise",
+            "headline": "Quote = final invoice →"
+          },
+          "damage": {
+            "eyebrow": "Damage Promise",
+            "headline": "$575K layered coverage →"
+          },
+          "people": {
+            "eyebrow": "People Promise",
+            "headline": "Named coordinator →"
+          }
         }
       },
       "finalCta": {
@@ -966,16 +1045,36 @@
           }
         }
       },
-      "californiaTexas": { "shortDesc": "California to Houston, Dallas, Austin, and San Antonio. Open and enclosed transport." },
-      "californiaFlorida": { "shortDesc": "Coast-to-coast, most popular snowbird corridor. Heavy enclosed-trailer demand for collector vehicles." },
-      "californiaNewYork": { "shortDesc": "Coast-to-coast. NYC metro and upstate destinations. Multi-vehicle relocation packages available." },
-      "californiaArizona": { "shortDesc": "Phoenix, Scottsdale, Tucson. Strong snowbird and retiree relocation traffic." },
-      "californiaNevada": { "shortDesc": "Las Vegas, Reno, Carson City. Quick turnaround, often same-week dispatch." },
-      "californiaWashington": { "shortDesc": "Seattle, Tacoma, Spokane. Pacific Northwest corridor with abundant carrier capacity." },
-      "californiaOregon": { "shortDesc": "Portland, Salem, Eugene. I-5 corridor, frequent sailings." },
-      "californiaColorado": { "shortDesc": "Denver, Boulder, Colorado Springs. Mountain-state relocations and seasonal moves." },
-      "floridaNewYork": { "shortDesc": "The classic snowbird corridor. Heavy seasonal patterns — northbound spring, southbound fall." },
-      "texasFlorida": { "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Cross-Gulf corridor." }
+      "californiaTexas": {
+        "shortDesc": "California to Houston, Dallas, Austin, and San Antonio. Open and enclosed transport."
+      },
+      "californiaFlorida": {
+        "shortDesc": "Coast-to-coast, most popular snowbird corridor. Heavy enclosed-trailer demand for collector vehicles."
+      },
+      "californiaNewYork": {
+        "shortDesc": "Coast-to-coast. NYC metro and upstate destinations. Multi-vehicle relocation packages available."
+      },
+      "californiaArizona": {
+        "shortDesc": "Phoenix, Scottsdale, Tucson. Strong snowbird and retiree relocation traffic."
+      },
+      "californiaNevada": {
+        "shortDesc": "Las Vegas, Reno, Carson City. Quick turnaround, often same-week dispatch."
+      },
+      "californiaWashington": {
+        "shortDesc": "Seattle, Tacoma, Spokane. Pacific Northwest corridor with abundant carrier capacity."
+      },
+      "californiaOregon": {
+        "shortDesc": "Portland, Salem, Eugene. I-5 corridor, frequent sailings."
+      },
+      "californiaColorado": {
+        "shortDesc": "Denver, Boulder, Colorado Springs. Mountain-state relocations and seasonal moves."
+      },
+      "floridaNewYork": {
+        "shortDesc": "The classic snowbird corridor. Heavy seasonal patterns — northbound spring, southbound fall."
+      },
+      "texasFlorida": {
+        "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Cross-Gulf corridor."
+      }
     },
     "californiaHawaii": {
       "metadata": {
@@ -1002,12 +1101,30 @@
         "eyebrow": "The route",
         "title": "Six legs. One coordinator. Locked price.",
         "legs": {
-          "1": { "title": "Mainland pickup", "detail": "Carrier dispatched to your California address. Driver completes 360° walkaround photos and signed BOL. You're CC'd on the dispatch confirmation." },
-          "2": { "title": "Port transit", "detail": "Vehicle delivered to either Long Beach or Oakland port (whichever optimizes total cost + timeline). We choose; you don't manage." },
-          "3": { "title": "Port booking + ocean carrier", "detail": "Booking confirmed with the ocean carrier (Matson or Pasha typically). Sail date set. You get the vessel name, sail date, and ETA in your portal." },
-          "4": { "title": "Ocean voyage", "detail": "5–10 days port-to-port to Honolulu. Vehicle is secured below deck (RoRo) or in containerized service depending on booking type." },
-          "5": { "title": "Honolulu port retrieval", "detail": "Our island agent receives the vehicle. Inter-island barge booked here if your destination is Maui, Big Island, or Kauai (adds 2–4 days)." },
-          "6": { "title": "Final delivery", "detail": "Vehicle delivered to your Hawaii address. Walkaround photos at delivery. BOL signed. You and your coordinator both have the documentation." }
+          "1": {
+            "title": "Mainland pickup",
+            "detail": "Carrier dispatched to your California address. Driver completes 360° walkaround photos and signed BOL. You're CC'd on the dispatch confirmation."
+          },
+          "2": {
+            "title": "Port transit",
+            "detail": "Vehicle delivered to either Long Beach or Oakland port (whichever optimizes total cost + timeline). We choose; you don't manage."
+          },
+          "3": {
+            "title": "Port booking + ocean carrier",
+            "detail": "Booking confirmed with the ocean carrier (Matson or Pasha typically). Sail date set. You get the vessel name, sail date, and ETA in your portal."
+          },
+          "4": {
+            "title": "Ocean voyage",
+            "detail": "5–10 days port-to-port to Honolulu. Vehicle is secured below deck (RoRo) or in containerized service depending on booking type."
+          },
+          "5": {
+            "title": "Honolulu port retrieval",
+            "detail": "Our island agent receives the vehicle. Inter-island barge booked here if your destination is Maui, Big Island, or Kauai (adds 2–4 days)."
+          },
+          "6": {
+            "title": "Final delivery",
+            "detail": "Vehicle delivered to your Hawaii address. Walkaround photos at delivery. BOL signed. You and your coordinator both have the documentation."
+          }
         }
       },
       "subDestinations": {
@@ -1058,9 +1175,21 @@
         "title": "Three tiers. Same locked-price guarantee on all three.",
         "description": "Pick the urgency level that fits your timeline. Live pricing comes through the quote tool — pulled from our verified carrier network at the moment you book.",
         "tiles": {
-          "standby": { "tier": "Standby", "window": "Flexible sail date", "description": "Best value. Vehicle catches the next available sailing within ~2 weeks of pickup." },
-          "priority": { "tier": "Priority", "window": "Booked sail within 7 days", "description": "Most common for PCS and planned relocations. Specific sail booked at quote time." },
-          "expedited": { "tier": "Expedited", "window": "Next available sail", "description": "When the timeline is tight. We push to the soonest viable sail and accept the premium." }
+          "standby": {
+            "tier": "Standby",
+            "window": "Flexible sail date",
+            "description": "Best value. Vehicle catches the next available sailing within ~2 weeks of pickup."
+          },
+          "priority": {
+            "tier": "Priority",
+            "window": "Booked sail within 7 days",
+            "description": "Most common for PCS and planned relocations. Specific sail booked at quote time."
+          },
+          "expedited": {
+            "tier": "Expedited",
+            "window": "Next available sail",
+            "description": "When the timeline is tight. We push to the soonest viable sail and accept the premium."
+          }
         },
         "footnote": "Pricing varies by season (peak May–Sept), vehicle type, and destination island. Get a quote for your specific shipment."
       },
@@ -1068,21 +1197,51 @@
         "eyebrow": "The Triple Promise applies the same way",
         "title": "Across six legs and an ocean.",
         "cards": {
-          "price": { "eyebrow": "Price Promise", "headline": "Quote = final invoice →" },
-          "damage": { "eyebrow": "Damage Promise", "headline": "Coverage on every leg →" },
-          "people": { "eyebrow": "People Promise", "headline": "Same coordinator throughout →" }
+          "price": {
+            "eyebrow": "Price Promise",
+            "headline": "Quote = final invoice →"
+          },
+          "damage": {
+            "eyebrow": "Damage Promise",
+            "headline": "Coverage on every leg →"
+          },
+          "people": {
+            "eyebrow": "People Promise",
+            "headline": "Same coordinator throughout →"
+          }
         }
       },
       "faq": {
         "title": "Frequently asked — California ↔ Hawaii",
         "items": {
-          "0": { "q": "How long does shipping a car from California to Hawaii take?", "a": "Plan on 10–18 days door-to-door in most cases. The ocean leg is typically 5–10 days port-to-port (Long Beach or Oakland to Honolulu), plus 2–5 days for mainland pickup and inland trucking on each end. Outer islands (Maui, Kauai, Big Island) add another 2–4 days for inter-island barge." },
-          "1": { "q": "Which port do you use — Long Beach or Oakland?", "a": "Both are options. Long Beach has more sailings per week and slightly lower base rates from Southern California pickups. Oakland is faster for Bay Area and Northern California pickups. We pick whichever lands a better total cost + timeline for your specific origin. The choice is invisible to you in the quote." },
-          "2": { "q": "Do I have to drop my car at the port myself?", "a": "No. Standard service is door-to-door: we send a carrier to your California pickup address, transport to the port, manage the ocean booking and dock paperwork, and receive the vehicle on the Hawaii side for final delivery to your address. You can also choose port-to-port for a lower price if you want to handle the inland legs yourself." },
-          "3": { "q": "What about my car insurance during the ocean voyage?", "a": "Carrier cargo coverage stays in effect for the full transit. Our Damage Promise (broker bond + $500K contingent cargo) backstops the ocean carrier the same way it backstops mainland carriers. You file one claim with us — we handle all the carrier-side complexity." },
-          "4": { "q": "Can I leave personal items in my car for the ocean shipment?", "a": "Up to 100 lbs of personal items in the trunk is generally fine. NO firearms, ammunition, alcohol, hazmat, or live plants (Hawaii agricultural restrictions are strict). Items shifting during transit aren't covered for damage — secure anything you do load. When in doubt, your coordinator will flag specific items before booking." },
-          "5": { "q": "Do you ship to all four major islands?", "a": "Yes — Oahu (Honolulu), Maui (Kahului), Big Island (Hilo or Kona), and Kauai (Lihue). Honolulu is the primary mainland-to-Hawaii port, with inter-island barge to outer islands as the second leg. Inter-island timing is typically 2–4 additional days." },
-          "6": { "q": "How does pricing work for military PCS shipments?", "a": "Active-duty military with PCS orders qualify for our military rate (typically 5–10% below standard). We work with all branches — Army, Navy, Air Force, Marines, Coast Guard. Bring your orders to booking; your coordinator applies the discount automatically. POV shipment reimbursement processes through your TMO — we provide the documentation needed." }
+          "0": {
+            "q": "How long does shipping a car from California to Hawaii take?",
+            "a": "Plan on 10–18 days door-to-door in most cases. The ocean leg is typically 5–10 days port-to-port (Long Beach or Oakland to Honolulu), plus 2–5 days for mainland pickup and inland trucking on each end. Outer islands (Maui, Kauai, Big Island) add another 2–4 days for inter-island barge."
+          },
+          "1": {
+            "q": "Which port do you use — Long Beach or Oakland?",
+            "a": "Both are options. Long Beach has more sailings per week and slightly lower base rates from Southern California pickups. Oakland is faster for Bay Area and Northern California pickups. We pick whichever lands a better total cost + timeline for your specific origin. The choice is invisible to you in the quote."
+          },
+          "2": {
+            "q": "Do I have to drop my car at the port myself?",
+            "a": "No. Standard service is door-to-door: we send a carrier to your California pickup address, transport to the port, manage the ocean booking and dock paperwork, and receive the vehicle on the Hawaii side for final delivery to your address. You can also choose port-to-port for a lower price if you want to handle the inland legs yourself."
+          },
+          "3": {
+            "q": "What about my car insurance during the ocean voyage?",
+            "a": "Carrier cargo coverage stays in effect for the full transit. Our Damage Promise (broker bond + $500K contingent cargo) backstops the ocean carrier the same way it backstops mainland carriers. You file one claim with us — we handle all the carrier-side complexity."
+          },
+          "4": {
+            "q": "Can I leave personal items in my car for the ocean shipment?",
+            "a": "Up to 100 lbs of personal items in the trunk is generally fine. NO firearms, ammunition, alcohol, hazmat, or live plants (Hawaii agricultural restrictions are strict). Items shifting during transit aren't covered for damage — secure anything you do load. When in doubt, your coordinator will flag specific items before booking."
+          },
+          "5": {
+            "q": "Do you ship to all four major islands?",
+            "a": "Yes — Oahu (Honolulu), Maui (Kahului), Big Island (Hilo or Kona), and Kauai (Lihue). Honolulu is the primary mainland-to-Hawaii port, with inter-island barge to outer islands as the second leg. Inter-island timing is typically 2–4 additional days."
+          },
+          "6": {
+            "q": "How does pricing work for military PCS shipments?",
+            "a": "Active-duty military with PCS orders qualify for our military rate (typically 5–10% below standard). We work with all branches — Army, Navy, Air Force, Marines, Coast Guard. Bring your orders to booking; your coordinator applies the discount automatically. POV shipment reimbursement processes through your TMO — we provide the documentation needed."
+          }
         }
       },
       "finalCta": {
@@ -1188,9 +1347,21 @@
         "title": "Three tiers. Same locked-price guarantee on all three.",
         "description": "Pick the urgency level that fits your timeline. Live pricing comes through the quote tool — pulled from our verified carrier network at the moment you book.",
         "tiles": {
-          "standby": { "tier": "Standby", "window": "Flexible dispatch", "description": "Best value. Catches the next available carrier or sailing within ~10 days of pickup." },
-          "priority": { "tier": "Priority", "window": "Booked dispatch within 5 days", "description": "Most common for PCS and planned relocations. Specific dispatch scheduled at quote time." },
-          "expedited": { "tier": "Expedited", "window": "Next available dispatch", "description": "When timing trumps price. We get on the soonest viable carrier or sailing." }
+          "standby": {
+            "tier": "Standby",
+            "window": "Flexible dispatch",
+            "description": "Best value. Catches the next available carrier or sailing within ~10 days of pickup."
+          },
+          "priority": {
+            "tier": "Priority",
+            "window": "Booked dispatch within 5 days",
+            "description": "Most common for PCS and planned relocations. Specific dispatch scheduled at quote time."
+          },
+          "expedited": {
+            "tier": "Expedited",
+            "window": "Next available dispatch",
+            "description": "When timing trumps price. We get on the soonest viable carrier or sailing."
+          }
         },
         "footnote": "Pricing varies by season (winter ocean preferred), vehicle size, and destination. Active-duty military PCS rates apply automatically with orders."
       },
@@ -1198,21 +1369,51 @@
         "eyebrow": "The Triple Promise applies the same way",
         "title": "Across 3,500 miles or an ocean voyage.",
         "cards": {
-          "price": { "eyebrow": "Price Promise", "headline": "Quote = final invoice →" },
-          "damage": { "eyebrow": "Damage Promise", "headline": "Coverage on every leg →" },
-          "people": { "eyebrow": "People Promise", "headline": "Same coordinator throughout →" }
+          "price": {
+            "eyebrow": "Price Promise",
+            "headline": "Quote = final invoice →"
+          },
+          "damage": {
+            "eyebrow": "Damage Promise",
+            "headline": "Coverage on every leg →"
+          },
+          "people": {
+            "eyebrow": "People Promise",
+            "headline": "Same coordinator throughout →"
+          }
         }
       },
       "faq": {
         "title": "Frequently asked — California ↔ Alaska",
         "items": {
-          "0": { "q": "How long does shipping a car from California to Alaska take?", "a": "Two route options. Ocean route (Tacoma → Anchorage) runs about 8–14 days door-to-door including the inland legs. Overland route via the Alaska Highway runs 7–12 days door-to-door. Winter delays are real (especially Nov–Mar) and we pad timelines accordingly. Your coordinator will recommend the right route based on season + final destination." },
-          "1": { "q": "Ocean vs. overland — which should I pick?", "a": "Ocean is the default for Anchorage and Mat-Su Valley destinations. Predictable timing, no weather closures, lower carrier wear-and-tear on the vehicle. Overland can be faster in summer for Fairbanks and interior destinations, but the Alaska Highway has weather sensitivity (snowstorms, road closures, frost heaves). For most customers most of the year, ocean is the better choice. We'll quote both and recommend based on your specific situation." },
-          "2": { "q": "Do you ship to military bases — JBER, Eielson, Fort Wainwright?", "a": "Yes. Military bases are a primary use case for this corridor. Joint Base Elmendorf-Richardson (JBER) in Anchorage, Eielson AFB and Fort Wainwright near Fairbanks, Coast Guard Base Kodiak — we ship to all of them regularly. Bring your PCS orders to booking and your coordinator applies the military rate (typically 5–10% below standard)." },
-          "3": { "q": "What about winter? Is the road closed?", "a": "The Alaska Highway is technically open year-round, but winter conditions (Oct–Apr) make trucking risky and slow. We strongly recommend ocean shipping for any winter shipment to avoid weather delays, frost heaves, and the occasional avalanche closure. Ocean carriers run reliably year-round from Tacoma. Pricing is similar either way — winter premium is small." },
-          "4": { "q": "Can I leave personal items in the vehicle?", "a": "Up to 100 lbs in the trunk is generally fine. Same restrictions as most corridors: no firearms, ammunition, alcohol, or hazmat. Cold-weather note: liquids that can freeze (water bottles, washer fluid, canned beverages) can rupture in unheated transit. Drain or remove before pickup." },
-          "5": { "q": "What about my car insurance during overland or ocean transit?", "a": "Carrier cargo coverage stays in effect for the full transit either route. Our Damage Promise (broker bond + $500K contingent cargo) backstops the carrier's coverage gap. Single claim filed with us — we coordinate the carrier-side resolution." },
-          "6": { "q": "Do you handle oversized or lifted vehicles?", "a": "Yes — common in Alaska due to the truck-heavy customer base. Lifted trucks, oversized SUVs, and trucks with rooftop accessories ship regularly. Pricing premium scales with size: lifted vehicles add $150–$400 over standard, oversized may require enclosed trailer upgrade. Your coordinator confirms exact pricing at quote time." }
+          "0": {
+            "q": "How long does shipping a car from California to Alaska take?",
+            "a": "Two route options. Ocean route (Tacoma → Anchorage) runs about 8–14 days door-to-door including the inland legs. Overland route via the Alaska Highway runs 7–12 days door-to-door. Winter delays are real (especially Nov–Mar) and we pad timelines accordingly. Your coordinator will recommend the right route based on season + final destination."
+          },
+          "1": {
+            "q": "Ocean vs. overland — which should I pick?",
+            "a": "Ocean is the default for Anchorage and Mat-Su Valley destinations. Predictable timing, no weather closures, lower carrier wear-and-tear on the vehicle. Overland can be faster in summer for Fairbanks and interior destinations, but the Alaska Highway has weather sensitivity (snowstorms, road closures, frost heaves). For most customers most of the year, ocean is the better choice. We'll quote both and recommend based on your specific situation."
+          },
+          "2": {
+            "q": "Do you ship to military bases — JBER, Eielson, Fort Wainwright?",
+            "a": "Yes. Military bases are a primary use case for this corridor. Joint Base Elmendorf-Richardson (JBER) in Anchorage, Eielson AFB and Fort Wainwright near Fairbanks, Coast Guard Base Kodiak — we ship to all of them regularly. Bring your PCS orders to booking and your coordinator applies the military rate (typically 5–10% below standard)."
+          },
+          "3": {
+            "q": "What about winter? Is the road closed?",
+            "a": "The Alaska Highway is technically open year-round, but winter conditions (Oct–Apr) make trucking risky and slow. We strongly recommend ocean shipping for any winter shipment to avoid weather delays, frost heaves, and the occasional avalanche closure. Ocean carriers run reliably year-round from Tacoma. Pricing is similar either way — winter premium is small."
+          },
+          "4": {
+            "q": "Can I leave personal items in the vehicle?",
+            "a": "Up to 100 lbs in the trunk is generally fine. Same restrictions as most corridors: no firearms, ammunition, alcohol, or hazmat. Cold-weather note: liquids that can freeze (water bottles, washer fluid, canned beverages) can rupture in unheated transit. Drain or remove before pickup."
+          },
+          "5": {
+            "q": "What about my car insurance during overland or ocean transit?",
+            "a": "Carrier cargo coverage stays in effect for the full transit either route. Our Damage Promise (broker bond + $500K contingent cargo) backstops the carrier's coverage gap. Single claim filed with us — we coordinate the carrier-side resolution."
+          },
+          "6": {
+            "q": "Do you handle oversized or lifted vehicles?",
+            "a": "Yes — common in Alaska due to the truck-heavy customer base. Lifted trucks, oversized SUVs, and trucks with rooftop accessories ship regularly. Pricing premium scales with size: lifted vehicles add $150–$400 over standard, oversized may require enclosed trailer upgrade. Your coordinator confirms exact pricing at quote time."
+          }
         }
       },
       "finalCta": {
