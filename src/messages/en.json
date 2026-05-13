@@ -207,6 +207,53 @@
       "lead": "Send us your origin, destination, and vehicle. Your coordinator replies with a locked, all-in price. No deposit to get a quote. No obligation if you don't book.",
       "button": "Get my locked price",
       "trustLine": "Quote in 1 business hour · Price = final invoice · No deposit to quote"
+    },
+    "heroRouteFinder": {
+      "title": "Start with your route.",
+      "subtitle": "We'll show you the route + recommended tier. Locked price comes after a 1-hour coordinator reply.",
+      "fromZip": {
+        "label": "From ZIP",
+        "placeholder": "e.g. 90210"
+      },
+      "toZip": {
+        "label": "To ZIP",
+        "placeholder": "e.g. 78701"
+      },
+      "vehicleType": {
+        "label": "Vehicle type",
+        "options": {
+          "sedan": "Sedan",
+          "suv": "SUV / Crossover",
+          "truckStandard": "Truck (standard)",
+          "truckLifted": "Truck (lifted)",
+          "van": "Van / Minivan",
+          "motorcycle": "Motorcycle",
+          "classic": "Classic / Collector",
+          "exotic": "Exotic / Luxury"
+        }
+      },
+      "ctaLock": "Get my locked price",
+      "ctaInvalidZip": "Submit a quote anyway",
+      "statePrompt": "Type both ZIPs to see your route.",
+      "stateInvalid": "We don't recognize one of those ZIPs. Submit a quote and your coordinator will check it.",
+      "stateUnknown": "Route check available after you submit a quote — typically 1 business hour.",
+      "stateOk": {
+        "milesLabel": "mi",
+        "pickupWindow": "3–5 day pickup window typical",
+        "tierOpen": "Open Transport recommended for daily drivers like yours.",
+        "tierEnclosed": "Enclosed Premium recommended for classics + exotics.",
+        "tierSpecialty": "Specialty handling required — your coordinator will size it."
+      },
+      "stateHawaii": {
+        "tag": "Hawaii corridor",
+        "note": "Ocean route via mainland inland leg + RoRo vessel + island delivery.",
+        "timeline": "10–14 days door-to-port-to-door"
+      },
+      "stateAlaska": {
+        "tag": "Alaska corridor",
+        "note": "Inland to Tacoma + ocean to Anchorage + final delivery.",
+        "timeline": "10–14 days door-to-port-to-door"
+      }
     }
   },
   "pricePromise": {

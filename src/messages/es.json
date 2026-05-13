@@ -207,6 +207,53 @@
       "lead": "Envíenos su origen, destino, y vehículo. Su coordinador responde con un precio fijo todo incluido. Sin depósito para cotizar. Sin obligación si no reserva.",
       "button": "Obtenga su precio fijo",
       "trustLine": "Cotización en 1 hora hábil · Cotización = factura final · Sin depósito para cotizar"
+    },
+    "heroRouteFinder": {
+      "title": "Empiece con su ruta.",
+      "subtitle": "Le mostramos la ruta + nivel recomendado. El precio fijo viene después de una respuesta del coordinador en 1 hora hábil.",
+      "fromZip": {
+        "label": "Código postal origen",
+        "placeholder": "ej. 90210"
+      },
+      "toZip": {
+        "label": "Código postal destino",
+        "placeholder": "ej. 78701"
+      },
+      "vehicleType": {
+        "label": "Tipo de vehículo",
+        "options": {
+          "sedan": "Sedán",
+          "suv": "SUV / Crossover",
+          "truckStandard": "Camioneta (estándar)",
+          "truckLifted": "Camioneta (elevada)",
+          "van": "Van / Minivan",
+          "motorcycle": "Motocicleta",
+          "classic": "Clásico / Coleccionable",
+          "exotic": "Exótico / Lujo"
+        }
+      },
+      "ctaLock": "Obtenga su precio fijo",
+      "ctaInvalidZip": "Cotizar de todos modos",
+      "statePrompt": "Escriba ambos códigos postales para ver su ruta.",
+      "stateInvalid": "No reconocemos uno de esos códigos postales. Envíe una cotización y su coordinador lo verificará.",
+      "stateUnknown": "Verificación de ruta disponible después de enviar una cotización — típicamente 1 hora hábil.",
+      "stateOk": {
+        "milesLabel": "mi",
+        "pickupWindow": "Ventana de recogida típica 3–5 días",
+        "tierOpen": "Transporte Abierto recomendado para autos de uso diario como el suyo.",
+        "tierEnclosed": "Cerrado Premium recomendado para clásicos y exóticos.",
+        "tierSpecialty": "Manejo especializado requerido — su coordinador lo dimensionará."
+      },
+      "stateHawaii": {
+        "tag": "Corredor Hawái",
+        "note": "Ruta marítima: tramo terrestre continental + buque RoRo + entrega en isla.",
+        "timeline": "10–14 días puerta-a-puerto-a-puerta"
+      },
+      "stateAlaska": {
+        "tag": "Corredor Alaska",
+        "note": "Terrestre hasta Tacoma + marítimo hasta Anchorage + entrega final.",
+        "timeline": "10–14 días puerta-a-puerto-a-puerta"
+      }
     }
   },
   "pricePromise": {

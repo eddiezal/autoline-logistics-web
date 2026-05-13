@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
+import { HeroRouteFinder } from "@/components/HeroRouteFinder";
 
 export default function Home() {
   const t = useTranslations();
@@ -27,7 +28,7 @@ export default function Home() {
           - Right edge fades into `to-black/15` (slightly cooler than charcoal)
             to neutralize the amber bleed from the warm streetlights
         */}
-        <section className="relative bg-charcoal text-white py-20 md:py-28 min-h-[500px] md:min-h-[640px] overflow-hidden">
+        <section className="relative bg-charcoal text-white py-16 md:py-20 pb-12 md:pb-16 overflow-hidden">
           {/* Background image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -56,18 +57,20 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
               <Link
-                href="/quote"
-                className="bg-orange hover:bg-orange-dark text-white font-semibold px-6 py-3 rounded-full transition"
-              >
-                {t("home.hero.ctaPrimary")}
-              </Link>
-              <Link
                 href="/price-promise"
                 className="border border-white/60 hover:border-white text-white font-semibold px-6 py-3 rounded-full transition"
               >
                 {t("home.hero.ctaSecondary")}
               </Link>
             </div>
+
+            {/* Hero Route Finder — type ZIPs + vehicle, see route context,
+                then forward to /quote with everything pre-filled. This is
+                now the hero's primary CTA path (the "Get my locked price"
+                button used to live up here as a button; it now lives in
+                the result panel inside this card, so the user sees route
+                context BEFORE clicking through). */}
+            <HeroRouteFinder />
           </Container>
         </section>
 
