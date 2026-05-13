@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
@@ -12,9 +13,23 @@ export default function Home() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero */}
-        <section className="bg-charcoal text-white py-20 md:py-28">
-          <Container>
+        {/* Hero — full-bleed photo background with dark gradient overlay for text legibility */}
+        <section className="relative bg-charcoal text-white py-20 md:py-28 overflow-hidden">
+          {/* Background image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/photography/hero-home.webp"
+              alt="Auto Line car-hauler trucks on a snowy night"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover opacity-60"
+            />
+            {/* Gradient overlay — dark on the left where text sits, fades to mid-tone on the right where the truck imagery shows through */}
+            <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/85 to-charcoal/30" />
+          </div>
+
+          <Container className="relative z-10">
             <p className="text-orange-light text-sm font-semibold uppercase tracking-wider mb-4">
               {t("home.hero.eyebrow")}
             </p>

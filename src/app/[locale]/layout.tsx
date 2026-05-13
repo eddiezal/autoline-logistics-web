@@ -45,6 +45,19 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName: "Auto Line Logistics",
     url: "https://autolinelogistics.com",
+    images: [
+      {
+        url: "/photography/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Auto Line car-hauler trucks loaded with vehicles, mountain backdrop",
+        type: "image/webp",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/photography/og-image.webp"],
   },
   // Block search-engine indexing on Vercel preview URLs (autoline-logistics-web.vercel.app)
   // and any non-production deploy. Only the real production domain should be indexed.

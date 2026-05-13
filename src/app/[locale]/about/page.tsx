@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
@@ -105,7 +106,17 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <aside className="bg-gray-100 border border-gray-200 rounded-2xl p-6">
+              <aside className="bg-gray-100 border border-gray-200 rounded-2xl p-6 overflow-hidden">
+                {/* Contextual photo — negative margin makes it extend to the rounded edges of the card */}
+                <div className="relative -mx-6 -mt-6 mb-6 aspect-[4/3]">
+                  <Image
+                    src="/photography/about-sidebar.webp"
+                    alt="Auto Line car-hauler trucks loaded with vehicles, mountain backdrop"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 360px"
+                    className="object-cover"
+                  />
+                </div>
                 <p className="text-orange text-xs font-semibold uppercase tracking-wider mb-4">
                   {t("about.story.sidebar.eyebrow")}
                 </p>
