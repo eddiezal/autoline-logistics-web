@@ -232,6 +232,9 @@
           "exotic": "Exótico / Lujo"
         }
       },
+      "estimateLabel": "Precio estimado",
+      "estimateFootnote": "Estimado basado en ruta y vehículo. Su precio fijo viene de /quote — típicamente dentro de 1 hora hábil.",
+      "rangeSeparator": "–",
       "ctaLock": "Obtenga su precio fijo",
       "ctaInvalidZip": "Cotizar de todos modos",
       "statePrompt": "Escriba ambos códigos postales para ver su ruta.",

@@ -232,6 +232,9 @@
           "exotic": "Exotic / Luxury"
         }
       },
+      "estimateLabel": "Estimated price",
+      "estimateFootnote": "Estimate based on route and vehicle. Your locked price comes from /quote — typically within 1 business hour.",
+      "rangeSeparator": "–",
       "ctaLock": "Get my locked price",
       "ctaInvalidZip": "Submit a quote anyway",
       "statePrompt": "Type both ZIPs to see your route.",

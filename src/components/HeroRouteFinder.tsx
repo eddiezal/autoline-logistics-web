@@ -11,18 +11,19 @@ import {
 } from "@/data/zip-metros";
 
 /**
- * Hero Route Finder — Approach A2 (route context, not $).
+ * Hero Route Finder — Approach A (route + estimated price range).
  *
  * Renders a form (From ZIP / To ZIP / Vehicle type) inside the hero of /.
- * On valid input, shows a route panel with: route name, distance, corridor
- * tag (HI/AK detected), pickup window, recommended tier — and a button
- * forwarding to /quote with the user's inputs pre-filled.
+ * On valid input, shows: route name, distance, corridor tag (HI/AK
+ * auto-detected), an ESTIMATED price range (±10% rounded to $50),
+ * pickup window, recommended tier — and a button forwarding to /quote
+ * with the user's inputs pre-filled.
  *
- * Brand decision: this section deliberately does NOT quote a dollar
- * figure. The locked price comes only from /quote. Showing an estimate
- * here would create dissonance with the "the locked price = the final
- * invoice" promise. See hero-mini-calculator-mockup.html for design
- * rationale.
+ * Brand-tension management:
+ *   The price is labeled "Estimated" with a footnote noting the locked
+ *   price comes from /quote. Same pattern as the Ship vs Drive Calculator.
+ *   Showing a RANGE (not a "starting from \$X") communicates honest
+ *   uncertainty and matches what SD API will return later in Phase A.
  */
 
 type VehicleKey =
@@ -49,6 +50,47 @@ const VEHICLE_OPTIONS: ReadonlyArray<{
   { key: "exotic", category: "premium" },
 ];
 
+// ── Pricing math (mirrors ShipVsDriveCalculator constants) ─────────────
+const PRICE_PER_MILE = 0.7;
+const SHORT_HAUL_FLOOR = 350;
+const HAWAII_BASE = 2800;
+const ALASKA_BASE = 2200;
+
+// Vehicle multipliers fold in tier recommendation:
+// premium types (classic/exotic) bake in the ~1.5x Enclosed premium
+const VEHICLE_MULT: Record<VehicleKey, number> = {
+  sedan: 1.0,
+  suv: 1.05,
+  truckStandard: 1.1,
+  truckLifted: 1.3,
+  van: 1.05,
+  motorcycle: 0.75,
+  classic: 1.5, // Enclosed-tier baseline
+  exotic: 1.5, // Enclosed-tier baseline
+};
+
+interface PriceRange {
+  low: number;
+  high: number;
+}
+
+function computePriceRange(
+  distance: number,
+  vehicleKey: VehicleKey,
+  kind: "ground" | "hawaii" | "alaska",
+): PriceRange {
+  const mult = VEHICLE_MULT[vehicleKey];
+  let center: number;
+  if (kind === "hawaii") center = HAWAII_BASE * mult;
+  else if (kind === "alaska") center = ALASKA_BASE * mult;
+  else center = Math.max(SHORT_HAUL_FLOOR, distance * PRICE_PER_MILE * mult);
+
+  // +/-10%, rounded to nearest $50 for clean display
+  const low = Math.max(SHORT_HAUL_FLOOR, Math.round((center * 0.9) / 50) * 50);
+  const high = Math.round((center * 1.1) / 50) * 50;
+  return { low, high };
+}
+
 type RouteState =
   | { kind: "empty" }
   | {
@@ -56,16 +98,22 @@ type RouteState =
       from: MetroZip;
       to: MetroZip;
       distance: number;
+      price: PriceRange;
     }
   | {
       kind: "hawaii" | "alaska";
       from: MetroZip | null;
       to: MetroZip | null;
+      price: PriceRange;
     }
   | { kind: "unknown" }
   | { kind: "invalid" };
 
-function computeRoute(fromZip: string, toZip: string): RouteState {
+function computeRoute(
+  fromZip: string,
+  toZip: string,
+  vehicleKey: VehicleKey,
+): RouteState {
   if (fromZip.length === 0 && toZip.length === 0) return { kind: "empty" };
   if (fromZip.length !== 5 || toZip.length !== 5) return { kind: "empty" };
   if (!/^\d{5}$/.test(fromZip) || !/^\d{5}$/.test(toZip)) {
@@ -93,6 +141,7 @@ function computeRoute(fromZip: string, toZip: string): RouteState {
       kind: "hawaii",
       from: fromMatch?.entry ?? null,
       to: toMatch?.entry ?? null,
+      price: computePriceRange(0, vehicleKey, "hawaii"),
     };
   }
   if (isAlaska) {
@@ -100,12 +149,25 @@ function computeRoute(fromZip: string, toZip: string): RouteState {
       kind: "alaska",
       from: fromMatch?.entry ?? null,
       to: toMatch?.entry ?? null,
+      price: computePriceRange(0, vehicleKey, "alaska"),
     };
   }
   if (!fromMatch || !toMatch) return { kind: "unknown" };
 
-  const distance = Math.round(roadDistanceMiles(fromMatch.entry, toMatch.entry));
-  return { kind: "ok", from: fromMatch.entry, to: toMatch.entry, distance };
+  const distance = Math.round(
+    roadDistanceMiles(fromMatch.entry, toMatch.entry),
+  );
+  return {
+    kind: "ok",
+    from: fromMatch.entry,
+    to: toMatch.entry,
+    distance,
+    price: computePriceRange(distance, vehicleKey, "ground"),
+  };
+}
+
+function formatMoney(n: number): string {
+  return n.toLocaleString("en-US");
 }
 
 export function HeroRouteFinder() {
@@ -115,8 +177,8 @@ export function HeroRouteFinder() {
   const [vehicleKey, setVehicleKey] = useState<VehicleKey>("sedan");
 
   const route = useMemo(
-    () => computeRoute(fromZip, toZip),
-    [fromZip, toZip],
+    () => computeRoute(fromZip, toZip, vehicleKey),
+    [fromZip, toZip, vehicleKey],
   );
 
   const vehicleCategory = useMemo(
@@ -221,6 +283,19 @@ function ZipField({
   );
 }
 
+function PriceLine({ price, label, sep }: { price: PriceRange; label: string; sep: string }) {
+  return (
+    <div className="mb-3">
+      <p className="text-[10px] font-bold uppercase tracking-wider text-orange-dark mb-1">
+        {label}
+      </p>
+      <p className="text-2xl md:text-3xl font-extrabold text-charcoal tracking-tight leading-none">
+        ${formatMoney(price.low)} {sep} ${formatMoney(price.high)}
+      </p>
+    </div>
+  );
+}
+
 function ResultPanel({
   state,
   vehicleCategory,
@@ -282,7 +357,7 @@ function ResultPanel({
         <div className="mt-5 bg-orange-tint/40 border border-orange-tint rounded-xl px-4 py-4">
           <div className="flex items-center gap-2.5 mb-2 flex-wrap">
             {fromEntry && toEntry ? (
-              <span className="text-lg font-bold text-charcoal">
+              <span className="text-base md:text-lg font-bold text-charcoal">
                 {fromEntry.city}, {fromEntry.state}{" "}
                 <span className="text-orange">→</span> {toEntry.city},{" "}
                 {toEntry.state}
@@ -298,6 +373,17 @@ function ResultPanel({
           <p className="text-sm text-gray-700 leading-relaxed mb-3 italic">
             {t(`${namespace}.timeline`)}
           </p>
+
+          <PriceLine
+            price={state.price}
+            label={t("home.heroRouteFinder.estimateLabel")}
+            sep={t("home.heroRouteFinder.rangeSeparator")}
+          />
+
+          <p className="text-xs text-gray-500 italic mb-3 leading-snug">
+            {t("home.heroRouteFinder.estimateFootnote")}
+          </p>
+
           <Link
             href={quoteHref}
             className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition"
@@ -319,7 +405,7 @@ function ResultPanel({
       return (
         <div className="mt-5 bg-orange-tint/40 border border-orange-tint rounded-xl px-4 py-4">
           <div className="flex items-center gap-2.5 mb-2 flex-wrap">
-            <span className="text-lg md:text-xl font-bold text-charcoal">
+            <span className="text-base md:text-lg font-bold text-charcoal">
               {state.from.city}, {state.from.state}{" "}
               <span className="text-orange">→</span> {state.to.city},{" "}
               {state.to.state}
@@ -333,9 +419,20 @@ function ResultPanel({
             <span className="text-gray-400">·</span>
             <span>{t("home.heroRouteFinder.stateOk.pickupWindow")}</span>
           </div>
-          <p className="text-sm text-charcoal leading-relaxed mb-3">
+
+          <PriceLine
+            price={state.price}
+            label={t("home.heroRouteFinder.estimateLabel")}
+            sep={t("home.heroRouteFinder.rangeSeparator")}
+          />
+
+          <p className="text-sm text-charcoal leading-relaxed mb-2">
             {t(tierLabelKey)}
           </p>
+          <p className="text-xs text-gray-500 italic mb-3 leading-snug">
+            {t("home.heroRouteFinder.estimateFootnote")}
+          </p>
+
           <Link
             href={quoteHref}
             className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition shadow-md shadow-orange/20"
