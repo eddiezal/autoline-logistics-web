@@ -13,8 +13,21 @@ export default function Home() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero — full-bleed photo background with dark gradient overlay for text legibility */}
-        <section className="relative bg-charcoal text-white py-20 md:py-28 overflow-hidden">
+        {/*
+          Hero — full-bleed photo background with a diagonal gradient overlay.
+          - `min-h-[...]` enforces a consistent aspect ratio across viewports
+            so object-cover doesn't crop the image inconsistently
+          - Image rendered at full opacity; the overlay alone handles darkening
+            (gives more control over where the photo "shows through")
+          - `object-position` biased slightly right to keep the dominant truck +
+            tree composition in the visible area when cropped
+          - Gradient goes top-left → bottom-right (`to-br`) so the upper-left
+            quadrant where the headline + description sit stays darkest, while
+            the bottom-right (truck-cab area) breathes
+          - Right edge fades into `to-black/15` (slightly cooler than charcoal)
+            to neutralize the amber bleed from the warm streetlights
+        */}
+        <section className="relative bg-charcoal text-white py-20 md:py-28 min-h-[500px] md:min-h-[640px] overflow-hidden">
           {/* Background image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -23,10 +36,11 @@ export default function Home() {
               fill
               priority
               sizes="100vw"
-              className="object-cover opacity-60"
+              style={{ objectPosition: "65% center" }}
+              className="object-cover"
             />
-            {/* Gradient overlay — dark on the left where text sits, fades to mid-tone on the right where the truck imagery shows through */}
-            <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/85 to-charcoal/30" />
+            {/* Diagonal gradient — heavy top-left for text legibility, light bottom-right so the image breathes */}
+            <div className="absolute inset-0 bg-gradient-to-br from-charcoal/95 via-charcoal/55 to-black/15" />
           </div>
 
           <Container className="relative z-10">
@@ -37,7 +51,7 @@ export default function Home() {
               {t("home.hero.title")}{" "}
               <span className="text-orange">{t("home.hero.titleAccent")}</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-300 mt-6 max-w-2xl">
+            <p className="text-lg md:text-xl text-gray-100 mt-6 max-w-2xl">
               {t("home.hero.description")}
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
