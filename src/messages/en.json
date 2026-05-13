@@ -693,6 +693,123 @@
       "CO": "Colorado"
     }
   },
+  "tools": {
+    "metadata": {
+      "title": "Helpful tools — Auto Line Logistics",
+      "description": "Ship vs drive cost calculator, route price checker, price drop alerts, and a printable shipping checklist. Use what helps. No signup required."
+    },
+    "hero": {
+      "eyebrow": "Helpful tools",
+      "title": "Use what helps. No signup required.",
+      "description": "Tools we built so you can make an informed decision about shipping your car — even if you don't ship with us."
+    },
+    "cardsHeading": "Our toolkit",
+    "cards": {
+      "shipVsDrive": {
+        "title": "Ship vs Drive Calculator",
+        "summary": "Side-by-side cost comparison. Fuel, hotels, food, vehicle wear, and your time.",
+        "ctaLive": "Compare costs →",
+        "ctaSoon": "Coming soon"
+      },
+      "routePriceChecker": {
+        "title": "Route Price Checker",
+        "summary": "Historical pricing trends for your corridor. See how prices move by season and vehicle type."
+      },
+      "priceDropAlerts": {
+        "title": "Price Drop Alerts",
+        "summary": "Watching a route? We'll email you when our locked price drops below your target."
+      },
+      "shippingChecklist": {
+        "title": "Shipping Checklist",
+        "summary": "Pre-shipment prep. Photos, fluids, fuel level, valuables — what to do before pickup day."
+      }
+    },
+    "comingSoonLabel": "Coming soon",
+    "liveLabel": "Live",
+    "finalCta": {
+      "title": "Ready to lock a price?",
+      "description": "Tools above help you decide. When you're ready, your coordinator replies in 1 business hour.",
+      "primary": "Get my locked price"
+    }
+  },
+  "helpfulTools": {
+    "eyebrow": "Helpful tools",
+    "title": "Use what helps.",
+    "description": "Tools we built so you can make an informed decision about your shipment — even if you don't ship with us.",
+    "ctaAll": "See all tools →"
+  },
+  "shipVsDrive": {
+    "metadata": {
+      "title": "Ship vs Drive Calculator — Auto Line Logistics",
+      "description": "Compare the real cost of shipping your car vs driving it yourself. Fuel, hotels, food, vehicle wear, and your time — side by side."
+    },
+    "hero": {
+      "eyebrow": "Helpful tools · Ship vs Drive",
+      "title": "Should you ship it or drive it?",
+      "description": "The honest answer is usually 'it depends.' This calculator shows you the math — fuel, hotels, food, wear on your car, and your time — side by side."
+    },
+    "inputs": {
+      "legend": "Your trip",
+      "distance": { "label": "Distance (miles)", "helper": "Use Google Maps for an exact number" },
+      "vehicleType": {
+        "label": "Vehicle type",
+        "options": {
+          "sedan": "Sedan",
+          "suv": "SUV / crossover",
+          "truckStandard": "Truck (standard)",
+          "truckLifted": "Truck (lifted / oversized)",
+          "van": "Van / minivan",
+          "motorcycle": "Motorcycle",
+          "classic": "Classic / collector",
+          "other": "Other"
+        }
+      },
+      "fuelPrice": { "label": "Fuel price ($/gal)", "helper": "Current US average ~$4.50" },
+      "drivers": {
+        "label": "Drivers",
+        "options": { "one": "1 driver", "two": "2 drivers" }
+      },
+      "hourlyRate": { "label": "Your hourly rate (optional)", "helper": "Time off work, if you'd be driving on a workday" }
+    },
+    "drive": {
+      "title": "If you drive it",
+      "fuel": "Fuel",
+      "hotels": "Hotels",
+      "hotelsCount": "{count} night",
+      "hotelsCountPlural": "{count} nights",
+      "food": "Food",
+      "wear": "Vehicle wear",
+      "wearHelper": "IRS standard mileage rate, $0.67/mi",
+      "time": "Your time",
+      "timeHelper": "{days} days × 8 hours",
+      "totalLabel": "Total to drive",
+      "daysLabel": "About {days} days on the road"
+    },
+    "ship": {
+      "title": "If you ship it",
+      "tierStandby": "Standby (7-day window)",
+      "tierPriority": "Priority (3–5 day window)",
+      "tierExpedited": "Expedited (24–48 hour)",
+      "totalLabel": "Range across tiers",
+      "daysLabel": "Door-to-door, you stay home",
+      "noWearLabel": "No miles added to your odometer",
+      "footnote": "Estimate based on industry averages. Lock a real price below."
+    },
+    "comparison": {
+      "title": "The bottom line",
+      "savings": "Shipping saves you about ${amount}",
+      "savingsNegative": "Driving is cheaper by about ${amount}",
+      "timeSaved": "+ {days} days back in your life",
+      "savingsTie": "Cost is about a wash",
+      "thinkAlso": "Things shipping doesn't put a dollar on: wear on your car, fatigue, weather risk, and the day you'd lose to a breakdown."
+    },
+    "footnote": "Drive cost assumptions: $150/night hotels, $50/person/day food, $0.67/mi IRS wear rate. Hotel nights assumed at one per 500 driving miles. Ship cost is an industry-average estimate; lock a real price below.",
+    "cta": {
+      "title": "Get a locked price.",
+      "description": "Your coordinator replies with a real number within 1 business hour. No deposit, no obligation.",
+      "primary": "Get my locked price"
+    }
+  },
   "corridors": {
     "index": {
       "metadata": {

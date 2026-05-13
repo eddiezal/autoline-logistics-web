@@ -104,6 +104,64 @@ export default function Home() {
           </Container>
         </section>
 
+        {/* Helpful Tools section — surfaces the customer-facing utilities (§1 scoped). Drives ad traffic + adds visual depth. */}
+        <section className="py-20 bg-gray-100">
+          <Container>
+            <div className="max-w-2xl mb-10">
+              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                {t("helpfulTools.eyebrow")}
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-charcoal leading-tight">
+                {t("helpfulTools.title")}
+              </h2>
+              <p className="text-gray-700 text-lg mt-4 leading-relaxed">
+                {t("helpfulTools.description")}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <ToolTeaser
+                title={t("tools.cards.shipVsDrive.title")}
+                summary={t("tools.cards.shipVsDrive.summary")}
+                href="/tools/ship-vs-drive"
+                live
+                liveLabel={t("tools.liveLabel")}
+                soonLabel={t("tools.comingSoonLabel")}
+              />
+              <ToolTeaser
+                title={t("tools.cards.routePriceChecker.title")}
+                summary={t("tools.cards.routePriceChecker.summary")}
+                live={false}
+                liveLabel={t("tools.liveLabel")}
+                soonLabel={t("tools.comingSoonLabel")}
+              />
+              <ToolTeaser
+                title={t("tools.cards.priceDropAlerts.title")}
+                summary={t("tools.cards.priceDropAlerts.summary")}
+                live={false}
+                liveLabel={t("tools.liveLabel")}
+                soonLabel={t("tools.comingSoonLabel")}
+              />
+              <ToolTeaser
+                title={t("tools.cards.shippingChecklist.title")}
+                summary={t("tools.cards.shippingChecklist.summary")}
+                live={false}
+                liveLabel={t("tools.liveLabel")}
+                soonLabel={t("tools.comingSoonLabel")}
+              />
+            </div>
+
+            <div className="mt-10">
+              <Link
+                href="/tools"
+                className="inline-block text-orange font-semibold hover:text-orange-dark transition"
+              >
+                {t("helpfulTools.ctaAll")}
+              </Link>
+            </div>
+          </Container>
+        </section>
+
         {/* Build status banner — REMOVE once homepage is fleshed out and we go live on autolinelogistics.com */}
         <section className="py-12 bg-orange-tint border-t border-orange/20">
           <Container>
@@ -157,4 +215,56 @@ function PromiseCard({
       </p>
     </Link>
   );
+}
+
+function ToolTeaser({
+  title,
+  summary,
+  href,
+  live,
+  liveLabel,
+  soonLabel,
+}: {
+  title: string;
+  summary: string;
+  href?: "/tools/ship-vs-drive";
+  live: boolean;
+  liveLabel: string;
+  soonLabel: string;
+}) {
+  const baseClass = live
+    ? "bg-white border border-gray-200 hover:border-orange hover:shadow-md rounded-2xl p-5 transition group cursor-pointer block"
+    : "bg-white border border-dashed border-gray-300 rounded-2xl p-5 opacity-80 block";
+
+  const content = (
+    <>
+      <span
+        className={`inline-block text-[0.65rem] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full mb-3 ${
+          live ? "bg-orange-tint text-orange" : "bg-gray-100 text-gray-600"
+        }`}
+      >
+        {live ? liveLabel : soonLabel}
+      </span>
+      <p
+        className={`font-bold text-base leading-snug mb-2 ${
+          live
+            ? "text-charcoal group-hover:text-orange transition"
+            : "text-gray-500"
+        }`}
+      >
+        {title}
+      </p>
+      <p className="text-gray-700 text-sm leading-relaxed">{summary}</p>
+    </>
+  );
+
+  if (live && href) {
+    return (
+      <Link href={href} className={baseClass}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={baseClass}>{content}</div>;
 }

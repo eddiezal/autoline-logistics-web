@@ -693,6 +693,123 @@
       "CO": "Colorado"
     }
   },
+  "tools": {
+    "metadata": {
+      "title": "Herramientas útiles — Auto Line Logistics",
+      "description": "Calculadora envío vs manejar, verificador de precios por ruta, alertas de baja de precio, y lista de preparación imprimible. Use lo que le ayude. Sin registro."
+    },
+    "hero": {
+      "eyebrow": "Herramientas útiles",
+      "title": "Use lo que le ayude. Sin registro.",
+      "description": "Herramientas que construimos para que tome una decisión informada sobre el envío de su auto — incluso si no envía con nosotros."
+    },
+    "cardsHeading": "Nuestras herramientas",
+    "cards": {
+      "shipVsDrive": {
+        "title": "Calculadora Envío vs Manejar",
+        "summary": "Comparación de costo lado a lado. Combustible, hoteles, comida, desgaste del vehículo, y su tiempo.",
+        "ctaLive": "Comparar costos →",
+        "ctaSoon": "Próximamente"
+      },
+      "routePriceChecker": {
+        "title": "Verificador de Precios por Ruta",
+        "summary": "Tendencias históricas de precios para su corredor. Vea cómo cambian los precios por temporada y tipo de vehículo."
+      },
+      "priceDropAlerts": {
+        "title": "Alertas de Baja de Precio",
+        "summary": "¿Mirando una ruta? Le enviaremos un correo cuando nuestro precio fijo baje del nivel que indique."
+      },
+      "shippingChecklist": {
+        "title": "Lista de Preparación",
+        "summary": "Preparación antes del envío. Fotos, líquidos, nivel de combustible, objetos de valor — qué hacer antes del día de recogida."
+      }
+    },
+    "comingSoonLabel": "Próximamente",
+    "liveLabel": "Disponible",
+    "finalCta": {
+      "title": "¿Listo para fijar un precio?",
+      "description": "Las herramientas de arriba le ayudan a decidir. Cuando esté listo, su coordinador responde en 1 hora hábil.",
+      "primary": "Obtenga su precio fijo"
+    }
+  },
+  "helpfulTools": {
+    "eyebrow": "Herramientas útiles",
+    "title": "Use lo que le ayude.",
+    "description": "Herramientas que construimos para que tome una decisión informada sobre su envío — incluso si no envía con nosotros.",
+    "ctaAll": "Vea todas las herramientas →"
+  },
+  "shipVsDrive": {
+    "metadata": {
+      "title": "Calculadora Envío vs Manejar — Auto Line Logistics",
+      "description": "Compare el costo real de enviar su auto con el de manejarlo usted mismo. Combustible, hoteles, comida, desgaste del vehículo, y su tiempo — lado a lado."
+    },
+    "hero": {
+      "eyebrow": "Herramientas útiles · Envío vs Manejar",
+      "title": "¿Lo envía o lo maneja?",
+      "description": "La respuesta honesta usualmente es \"depende\". Esta calculadora le muestra los números — combustible, hoteles, comida, desgaste del auto, y su tiempo — lado a lado."
+    },
+    "inputs": {
+      "legend": "Su viaje",
+      "distance": { "label": "Distancia (millas)", "helper": "Use Google Maps para un número exacto" },
+      "vehicleType": {
+        "label": "Tipo de vehículo",
+        "options": {
+          "sedan": "Sedán",
+          "suv": "SUV / Crossover",
+          "truckStandard": "Camioneta (estándar)",
+          "truckLifted": "Camioneta (elevada / sobredimensionada)",
+          "van": "Van / Minivan",
+          "motorcycle": "Motocicleta",
+          "classic": "Vehículo clásico / de colección",
+          "other": "Otro"
+        }
+      },
+      "fuelPrice": { "label": "Precio del combustible ($/galón)", "helper": "Promedio EE. UU. actual ~$4.50" },
+      "drivers": {
+        "label": "Conductores",
+        "options": { "one": "1 conductor", "two": "2 conductores" }
+      },
+      "hourlyRate": { "label": "Su tarifa por hora (opcional)", "helper": "Tiempo fuera del trabajo, si manejaría en un día laboral" }
+    },
+    "drive": {
+      "title": "Si lo maneja",
+      "fuel": "Combustible",
+      "hotels": "Hoteles",
+      "hotelsCount": "{count} noche",
+      "hotelsCountPlural": "{count} noches",
+      "food": "Comida",
+      "wear": "Desgaste del vehículo",
+      "wearHelper": "Tarifa estándar del IRS, $0.67/milla",
+      "time": "Su tiempo",
+      "timeHelper": "{days} días × 8 horas",
+      "totalLabel": "Total al manejar",
+      "daysLabel": "Aproximadamente {days} días en la carretera"
+    },
+    "ship": {
+      "title": "Si lo envía",
+      "tierStandby": "En Espera (ventana de 7 días)",
+      "tierPriority": "Prioritario (ventana de 3–5 días)",
+      "tierExpedited": "Urgente (24–48 horas)",
+      "totalLabel": "Rango entre niveles",
+      "daysLabel": "Puerta a puerta, usted se queda en casa",
+      "noWearLabel": "Sin millas agregadas a su vehículo",
+      "footnote": "Estimación basada en promedios de la industria. Fije un precio real abajo."
+    },
+    "comparison": {
+      "title": "La conclusión",
+      "savings": "Enviar le ahorra alrededor de ${amount}",
+      "savingsNegative": "Manejar es más barato por aproximadamente ${amount}",
+      "timeSaved": "+ {days} días de vuelta en su vida",
+      "savingsTie": "El costo es prácticamente similar",
+      "thinkAlso": "Lo que enviar no tiene un valor en dólares: desgaste de su auto, fatiga, riesgo de clima, y el día que perdería con una avería."
+    },
+    "footnote": "Suposiciones de costo al manejar: $150/noche hoteles, $50/persona/día comida, tarifa de desgaste IRS de $0.67/milla. Noches de hotel se asumen una por cada 500 millas. El costo de envío es una estimación de promedios de la industria; fije un precio real abajo.",
+    "cta": {
+      "title": "Obtenga un precio fijo.",
+      "description": "Su coordinador responde con un número real dentro de 1 hora hábil. Sin depósito, sin obligación.",
+      "primary": "Obtenga su precio fijo"
+    }
+  },
   "corridors": {
     "index": {
       "metadata": {
