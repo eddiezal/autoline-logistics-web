@@ -1496,5 +1496,54 @@
         "secondary": "See California ↔ Hawaii →"
       }
     }
+  },
+  "antiScamHub": {
+    "metadata": {
+      "title": "Anti-scam guide — Auto Line Logistics",
+      "description": "Three questions every customer should ask any broker before booking — plus monthly articles on the games brokers play."
+    },
+    "hero": {
+      "eyebrow": "Anti-scam guide",
+      "title": "What every customer should ask",
+      "titleAccent": "before booking.",
+      "lead": "We wrote this hub so you can spot a bad broker — even if it's not us you're comparing to. Three featured questions below, and a new article on the 1st of every month."
+    },
+    "featured": {
+      "eyebrow": "Featured questions",
+      "title": "Three questions that expose 95% of broker scams.",
+      "lead": "These are the questions to ask any broker before you book. Use them on us. Use them on anyone."
+    },
+    "coming": {
+      "eyebrow": "Coming next",
+      "title": "A new article every month.",
+      "lead": "We publish on the 1st of each month. Three already on the calendar:",
+      "comingSoonLabel": "Coming",
+      "articles": {
+        "1": {
+          "month": "June 2026",
+          "tag": "Anchor article",
+          "title": "How to spot a bad broker in 60 seconds",
+          "summary": "The 8-question checklist, the website tells, and the call red flags. The cheat sheet we wish someone had given us our first time."
+        },
+        "2": {
+          "month": "July 2026",
+          "tag": "Deep dive",
+          "title": "Bait-and-switch — anatomy of the scam",
+          "summary": "How the cheapest quote you'll ever see becomes the most expensive shipment you'll ever pay for. Step-by-step, with real examples."
+        },
+        "3": {
+          "month": "August 2026",
+          "tag": "Reality check",
+          "title": "What a good broker call actually sounds like",
+          "summary": "A real conversation breakdown — what to expect, what to push back on, and the language that signals you're talking to an honest broker."
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "Ready for a real quote?",
+      "title": "Use the checklist on us first.",
+      "lead": "We answer all 3 questions honestly. If we don't, you have our word that we'll point you to someone who will.",
+      "button": "Get my locked price"
+    }
   }
 }

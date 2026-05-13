@@ -330,7 +330,15 @@ export default function Home() {
               />
             </div>
 
-            {/* TODO: build /anti-scam hub before linking from here. Hidden until ready. */}
+            {/* Link to the full hub */}
+            <div className="text-center mt-10">
+              <Link
+                href="/anti-scam"
+                className="text-orange-dark font-semibold hover:underline"
+              >
+                {t("home.antiScam.hubLink")}
+              </Link>
+            </div>
           </Container>
         </section>
 

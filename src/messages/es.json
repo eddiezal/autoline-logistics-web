@@ -1496,5 +1496,54 @@
         "secondary": "Vea California ↔ Hawái →"
       }
     }
+  },
+  "antiScamHub": {
+    "metadata": {
+      "title": "Guía anti-estafas — Auto Line Logistics",
+      "description": "Tres preguntas que todo cliente debe hacer a cualquier corredor antes de reservar — más artículos mensuales sobre los juegos que juegan los corredores."
+    },
+    "hero": {
+      "eyebrow": "Guía anti-estafas",
+      "title": "Lo que todo cliente debe preguntar",
+      "titleAccent": "antes de reservar.",
+      "lead": "Escribimos esta guía para que pueda detectar a un mal corredor — incluso si no nos compara con nosotros. Tres preguntas destacadas abajo, y un nuevo artículo el día 1 de cada mes."
+    },
+    "featured": {
+      "eyebrow": "Preguntas destacadas",
+      "title": "Tres preguntas que exponen el 95% de las estafas de corredores.",
+      "lead": "Estas son las preguntas para hacer a cualquier corredor antes de reservar. Úselas con nosotros. Úselas con cualquiera."
+    },
+    "coming": {
+      "eyebrow": "Próximamente",
+      "title": "Un nuevo artículo cada mes.",
+      "lead": "Publicamos el día 1 de cada mes. Tres ya en el calendario:",
+      "comingSoonLabel": "Próximamente",
+      "articles": {
+        "1": {
+          "month": "Junio 2026",
+          "tag": "Artículo principal",
+          "title": "Cómo detectar a un mal corredor en 60 segundos",
+          "summary": "La lista de 8 preguntas, las señales del sitio web, y las banderas rojas en la llamada. La hoja de trampas que ojalá alguien nos hubiera dado la primera vez."
+        },
+        "2": {
+          "month": "Julio 2026",
+          "tag": "Análisis profundo",
+          "title": "Cebo y cambio — anatomía de la estafa",
+          "summary": "Cómo la cotización más barata que jamás verá se convierte en el envío más caro que jamás pagará. Paso a paso, con ejemplos reales."
+        },
+        "3": {
+          "month": "Agosto 2026",
+          "tag": "Realidad",
+          "title": "Cómo suena realmente una buena llamada de corredor",
+          "summary": "Un desglose de conversación real — qué esperar, qué cuestionar, y el lenguaje que indica que está hablando con un corredor honesto."
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "¿Listo para una cotización real?",
+      "title": "Use la lista con nosotros primero.",
+      "lead": "Respondemos las 3 preguntas honestamente. Si no, le damos nuestra palabra de que lo dirigiremos a alguien que sí.",
+      "button": "Obtenga su precio fijo"
+    }
   }
 }
