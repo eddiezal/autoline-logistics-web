@@ -1687,35 +1687,35 @@
       "items": {
         "openVsEnclosed": {
           "q": "Abierto vs Cerrado — ¿cuándo vale la pena pagar más por cerrado?",
-          "a": "Para la mayoría de autos de uso diario, Abierto es la opción correcta. Cerrado vale el ~1.5x del precio cuando su auto es clásico, exótico, o coleccionable de más de $50K — básicamente algo que le dolería en el alma si recibiera una piedra. Un Tesla no es automáticamente \"exótico\"; Abierto suele ser suficiente. Un Mustang del '67 sí. Nunca empujaremos cerrado cuando Abierto es lo que necesita."
+          "a": "Regla rápida: elija Cerrado si su auto es clásico, exótico, o coleccionable — generalmente de 25+ años o raro como para que una piedra le arruine la semana. Todo lo demás: Abierto. Misma cobertura de la Promesa contra Daños, ~1.5x más barato, y los tráileres Abiertos colocan los autos en la cubierta superior por encima de la mayoría de los escombros de la carretera. Un Tesla no es automáticamente \"exótico\"; Abierto está bien. Un Mustang del '67 sí lo es. Nunca empujaremos Cerrado cuando Abierto es lo que necesita."
         },
         "motorcycle": {
           "q": "¿Pueden enviar mi motocicleta?",
-          "a": "Sí. Las motocicletas viajan en caja o con un kit de sujeción especial — manejo distinto al de los autos. Usamos conductores con experiencia en motos. Pida cotización con la marca y modelo de su moto y dimensionamos la configuración correcta."
+          "a": "Sí — de todo tipo: deportiva, cruiser, vintage, motocross. Las motos viajan en caja especial o con correas de sujeción según tamaño y ruta. Usamos conductores con experiencia en motos que saben cómo sujetarlas sin pellizcar cables ni rayar tanques. Pida cotización con marca + modelo + año. Artículos personales pequeños en las alforjas están bien; equipaje más grande agrega un cargo pequeño."
         },
         "inoperable": {
           "q": "¿Y si mi auto no arranca?",
-          "a": "Manejamos vehículos inoperables. Usamos cabrestante para cargar y descargar — hay un recargo por cabrestante que varía según peso y accesibilidad. Avísenos al reservar para enviar el equipo correcto."
+          "a": "\"Inoperable\" para nosotros significa que el vehículo dirige, rueda, y frena — incluso si no arranca. Lo cargamos con cabrestante; el recargo varía según peso y accesibilidad. Lo que no podemos cargar: ruedas bloqueadas, llantas faltantes, transmisión trabada, o vehículos en piezas. Si no está seguro, envíenos una foto antes de reservar — le diremos la verdad."
         },
         "hawaiiAlaskaTimeline": {
           "q": "¿Cuánto tarda realmente el envío a Hawái / Alaska?",
-          "a": "10–14 días puerta-a-puerto-a-puerta es lo típico. Para Hawái: tramo terrestre continental → Long Beach u Oakland → tránsito marítimo RoRo → entrega en la isla. Para Alaska: terrestre hasta Tacoma → marítimo hasta Anchorage → entrega final. Un coordinador maneja toda la cadena."
+          "a": "10–14 días puerta-a-puerto-a-puerta es lo típico para ambas rutas, con variación según el horario de salida del buque. Hawái: tramo terrestre continental → Long Beach u Oakland → tránsito marítimo RoRo → entrega en la isla. Alaska: terrestre hasta Tacoma → marítimo hasta Anchorage → entrega final. Un coordinador maneja toda la cadena — no lo pasan a un agente portuario como hacen la mayoría de los corredores. Las páginas de corredores de Hawái y Alaska tienen detalles específicos por ruta."
         },
         "multiVehicle": {
           "q": "¿Puedo enviar 2+ vehículos a la vez?",
-          "a": "Sí — y 3+ vehículos obtienen un descuento por múltiples autos. Mismo coordinador, una sola reserva, a menudo el mismo transportista. Útil para parejas que migran estacionalmente, recogidas de concesionario, mudanzas familiares."
+          "a": "Sí. Dos vehículos: precio estándar por vehículo. Tres o más: aplica descuento por múltiples autos. Mismo coordinador, una sola reserva, a menudo el mismo transportista. Útil para parejas que migran estacionalmente (casa de invierno + casa de verano), recogidas de concesionario, mudanzas familiares. Las direcciones de recogida pueden ser iguales o diferentes — coordinamos la ruta de cualquier forma."
         },
         "oversizedCommercial": {
           "q": "¿Envían vehículos sobredimensionados o comerciales?",
-          "a": "Algunos sí, otros no. Camionetas elevadas y pickups de 1 tonelada tamaño completo: sí, posiblemente con recargo. Comercial de doble eje, RV, botes, equipo de construcción: no — lo referimos honestamente a transportistas especializados. No fingimos alcance."
+          "a": "Algunos sí, algunos no. Lo que manejamos: camionetas elevadas (puede aplicar recargo por sobredimensión sobre 7' de altura), pickups de 1 tonelada tamaño completo, duallys para uso personal. Lo que no manejamos: tráileres comerciales de doble eje, RV y casas rodantes Clase A, botes, equipo de construcción. Si su vehículo está en zona gris, envíenos fotos y dimensiones — lo reservamos o lo referimos a un transportista especializado de confianza. Sin fingir."
         },
         "doorToDoor": {
           "q": "¿Está siempre disponible la entrega puerta a puerta?",
-          "a": "En la mayoría de las metrópolis, sí. En calles residenciales angostas, comunidades cerradas con restricciones de camiones, o áreas controladas por HOA, podríamos necesitar reunirnos en un estacionamiento cercano. Siempre lo avisaremos antes de la recogida — nunca el día mismo."
+          "a": "Sí en la mayoría de las metrópolis. Cuando no es posible — calles residenciales angostas, comunidades cerradas con restricciones de camiones, HOA con políticas de solo-estacionamiento — nos reunimos en un estacionamiento cercano, usualmente un supermercado o centro comercial cerca de su dirección. Lo avisamos antes de la recogida, nunca el día mismo. La Promesa de Precio sigue vigente; sin cargo adicional por el punto de recogida alternativo."
         },
         "damagePromiseAllTiers": {
           "q": "¿Aplica la Promesa contra Daños en los tres niveles?",
-          "a": "Sí. $75K en fianza + $500K en carga contingente aplica por igual a Transporte Abierto, Cerrado Premium, y Rutas Marítimas. Misma cobertura, cada nivel. Las diferencias son el tipo de tráiler y manejo — no la protección de seguro."
+          "a": "Sí. $75K en fianza + $500K en carga contingente aplica por igual a Transporte Abierto, Cerrado Premium, y Rutas Marítimas. Las diferencias entre niveles son el tipo de tráiler y los protocolos de manejo — no la cobertura de seguro. Si está enviando un auto de uso diario en Abierto y un clásico en Cerrado en la misma reserva, ambos están protegidos al mismo nivel. Detalles completos de la Promesa contra Daños en la página dedicada."
         }
       }
     },

@@ -1687,35 +1687,35 @@
       "items": {
         "openVsEnclosed": {
           "q": "Open vs Enclosed — when is enclosed actually worth the premium?",
-          "a": "For most daily drivers, Open is the right call. Enclosed is worth the ~1.5x price when your car is a classic, exotic, or collector over $50K — basically anything you'd be heartsick over if it got a stone chip. A Tesla isn't automatically \"exotic\"; Open is usually fine. A '67 Mustang is. We'll never push enclosed when Open is what you need."
+          "a": "Quick rule: pick Enclosed if your car is a classic, exotic, or collector — generally 25+ years old or rare enough that a stone chip would ruin your week. Everything else: Open. Same Damage Promise coverage, ~1.5x cheaper, and Open trailers route cars on the top deck above most road debris. A Tesla isn't automatically \"exotic\"; Open is fine. A '67 Mustang is. We'll never push Enclosed when Open is what you need."
         },
         "motorcycle": {
           "q": "Can you ship my motorcycle?",
-          "a": "Yes. Motorcycles ride in a crate or with a specialty restraint kit — different handling than cars. We use experienced bike-trained drivers. Get a quote with your bike's make + model and we'll size the right setup."
+          "a": "Yes — every type: sportbike, cruiser, vintage, dirt bike. Bikes ride in a specialty crate or with restraint straps depending on size and route. We use bike-trained drivers who know how to tie down without pinching cables or scratching tanks. Get a quote with your make + model + year. Small personal items in saddlebags are fine; larger luggage adds a small fee."
         },
         "inoperable": {
           "q": "What if my car isn't running?",
-          "a": "Inoperable vehicles are handled. We use winching to load and unload — there's a winching surcharge that varies by vehicle weight and accessibility. Tell us at booking so we send the right equipment."
+          "a": "\"Inoperable\" for us means the vehicle steers, rolls, and brakes — even if it won't start. We winch it on; surcharge varies by weight and accessibility. What we can't load: locked wheels, missing tires, transmission seized, or vehicles in pieces. If you're unsure, send us a photo before booking — we'll tell you straight."
         },
         "hawaiiAlaskaTimeline": {
           "q": "How long does Hawaii / Alaska shipping really take?",
-          "a": "10–14 days door-to-port-to-door is typical. For Hawaii: mainland inland leg → Long Beach or Oakland → RoRo ocean transit → island delivery. For Alaska: inland to Tacoma → ocean to Anchorage → final delivery. One coordinator handles the full chain."
+          "a": "10–14 days door-to-port-to-door is typical for both routes, with variance based on the vessel sailing schedule. Hawaii: mainland inland leg → Long Beach or Oakland → RoRo ocean transit → island delivery. Alaska: inland to Tacoma → ocean to Anchorage → final delivery. One coordinator handles the full chain — you don't get handed off to a port agent the way most brokers do. The Hawaii and Alaska corridor pages have route-specific details."
         },
         "multiVehicle": {
           "q": "Can I ship 2+ vehicles at once?",
-          "a": "Yes — and 3+ vehicles get a multi-car discount. Same coordinator, one booking, often the same carrier. Useful for snowbird couples, dealer pickups, family moves."
+          "a": "Yes. Two vehicles: standard pricing per vehicle. Three or more: multi-car discount applies. Same coordinator, one booking, often the same carrier. Useful for snowbird couples (winter home + summer home), dealer pickups, family moves. Pickup addresses can be the same or different — we coordinate the routing either way."
         },
         "oversizedCommercial": {
           "q": "Do you ship oversized or commercial vehicles?",
-          "a": "Some yes, some no. Lifted trucks and full-size 1-ton pickups: yes, possibly with oversized surcharge. Dual-axle commercial, RVs, boats, construction equipment: no — we'll refer you to specialty carriers honestly. We don't fake scope."
+          "a": "Some yes, some no. We handle: lifted trucks (oversized fee may apply over 7' tall), full-size 1-ton pickups, duallys for personal use. We don't handle: dual-axle commercial trailers, RVs and Class A motorhomes, boats, construction equipment. If your vehicle is in the gray area, send us photos and dimensions — we'll either book it or refer you to a specialty carrier we trust. No pretending."
         },
         "doorToDoor": {
           "q": "Is door-to-door always available?",
-          "a": "In most metros, yes. In narrow residential streets, gated communities with truck restrictions, or HOA-controlled areas, we may need to meet at a nearby parking lot or open spot. We'll always flag this before pickup — never the day of."
+          "a": "Yes in most metros. When it isn't possible — narrow residential streets, gated communities with truck restrictions, HOAs with parking-lot-only policies — we meet at a nearby parking lot, usually a grocery store or shopping center close to your address. We flag this before pickup, never the day of. The Price Promise still holds; no added fee for the alternate pickup spot."
         },
         "damagePromiseAllTiers": {
           "q": "Does the Damage Promise apply on all three tiers?",
-          "a": "Yes. $75K bond + $500K contingent cargo applies equally to Open Transport, Enclosed Premium, and Ocean Routes. Same coverage, every tier. The differences are trailer type and handling — not insurance protection."
+          "a": "Yes. $75K bond + $500K contingent cargo applies equally to Open Transport, Enclosed Premium, and Ocean Routes. The differences between tiers are trailer type and handling protocols — not insurance coverage. If you're shipping a daily driver Open and a classic Enclosed in the same booking, both are protected to the same level. Full Damage Promise details on the dedicated page."
         }
       }
     },
