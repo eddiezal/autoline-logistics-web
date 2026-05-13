@@ -39,12 +39,12 @@ export default function Home() {
               style={{ objectPosition: "65% center" }}
               className="object-cover"
             />
-            {/* Diagonal gradient — heavy top-left for text legibility, light bottom-right so the image breathes */}
-            <div className="absolute inset-0 bg-gradient-to-br from-charcoal/95 via-charcoal/55 to-black/15" />
+            {/* Diagonal gradient — heavy top-left for text legibility, light bottom-right so the image breathes. Right-edge bumped to `to-black/25` to calm the brightest streetlight clusters from competing with the orange CTA */}
+            <div className="absolute inset-0 bg-gradient-to-br from-charcoal/95 via-charcoal/55 to-black/25" />
           </div>
 
           <Container className="relative z-10">
-            <p className="text-orange-light text-sm font-semibold uppercase tracking-wider mb-4">
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-4">
               {t("home.hero.eyebrow")}
             </p>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-3xl">
@@ -63,7 +63,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/price-promise"
-                className="border border-white/30 hover:border-white text-white font-semibold px-6 py-3 rounded-full transition"
+                className="border border-white/60 hover:border-white text-white font-semibold px-6 py-3 rounded-full transition"
               >
                 {t("home.hero.ctaSecondary")}
               </Link>
