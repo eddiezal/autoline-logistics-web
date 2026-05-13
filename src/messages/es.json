@@ -750,7 +750,10 @@
     },
     "inputs": {
       "legend": "Su viaje",
-      "distance": { "label": "Distancia (millas)", "helper": "Use Google Maps para un número exacto" },
+      "fromZip": { "label": "Código postal origen", "placeholder": "90210" },
+      "toZip": { "label": "Código postal destino", "placeholder": "78701" },
+      "zipError": "No es un código postal de EE. UU. válido",
+      "zipUnknown": "Código postal fuera de nuestra tabla v1 — pida cotización",
       "vehicleType": {
         "label": "Tipo de vehículo",
         "options": {
@@ -764,51 +767,95 @@
           "other": "Otro"
         }
       },
-      "fuelPrice": { "label": "Precio del combustible ($/galón)", "helper": "Promedio EE. UU. actual ~$4.50" },
-      "drivers": {
-        "label": "Conductores",
-        "options": { "one": "1 conductor", "two": "2 conductores" }
-      },
-      "hourlyRate": { "label": "Su tarifa por hora (opcional)", "helper": "Tiempo fuera del trabajo, si manejaría en un día laboral" }
-    },
-    "drive": {
-      "title": "Si lo maneja",
-      "fuel": "Combustible",
-      "hotels": "Hoteles",
-      "hotelsCount": "{count} noche",
-      "hotelsCountPlural": "{count} noches",
-      "food": "Comida",
-      "wear": "Desgaste del vehículo",
-      "wearHelper": "Tarifa estándar del IRS, $0.67/milla",
-      "time": "Su tiempo",
-      "timeHelper": "{days} días × 8 horas",
-      "totalLabel": "Total al manejar",
-      "daysLabel": "Aproximadamente {days} días en la carretera"
+      "hourlyRate": {
+        "label": "Su tiempo vale",
+        "options": {
+          "rate25": "$25 / hr",
+          "rate50": "$50 / hr",
+          "rate100": "$100 / hr",
+          "dontCount": "No contar"
+        }
+      }
     },
     "ship": {
-      "title": "Si lo envía",
-      "tierStandby": "En Espera (ventana de 7 días)",
-      "tierPriority": "Prioritario (ventana de 3–5 días)",
-      "tierExpedited": "Urgente (24–48 horas)",
-      "totalLabel": "Rango entre niveles",
-      "daysLabel": "Puerta a puerta, usted se queda en casa",
-      "noWearLabel": "Sin millas agregadas a su vehículo",
-      "footnote": "Estimación basada en promedios de la industria. Fije un precio real abajo."
+      "label": "Envíelo con Auto Line Logistics",
+      "title": "Puerta a puerta, precio fijo al reservar",
+      "titleHawaii": "Continente → Long Beach → Honolulu",
+      "titleAlaska": "Terrestre a Tacoma, RoRo a Anchorage",
+      "tierPriority": "Nivel Prioritario · ventana de recogida 3–5 días",
+      "tierHawaii": "Ruta inter-islas · tránsito 10–14 días",
+      "tierAlaska": "Corredor Alaska · tránsito 8–14 días",
+      "tierLinkAll": "Ver los 3 niveles de servicio →",
+      "tierLinkHawaii": "Ver corredor de Hawái →",
+      "tierLinkAlaska": "Ver rutas de Alaska →",
+      "timeline": "{days} días · 0 horas al volante",
+      "timelinePort": "Puerta a puerto a puerta",
+      "breakdown": {
+        "estimatedPrice": "Precio estimado",
+        "yourTime": "Su tiempo",
+        "wear": "Desgaste",
+        "fuelHotelTolls": "Combustible · hotel · peajes",
+        "oceanTransit": "Tránsito marítimo",
+        "portFees": "Tarifas portuarias",
+        "islandDelivery": "Entrega en isla",
+        "inlandLeg": "Tramo terrestre",
+        "oceanFromTacoma": "Marítimo desde Tacoma",
+        "anchorageDelivery": "Entrega en Anchorage",
+        "included": "Incluido"
+      },
+      "invalidTitle": "Se necesita un código postal real",
+      "invalidTimeline": "Cotización de su coordinador en 1 hora hábil.",
+      "invalidMsg": "En v1 sacamos precios de una tabla de corredores — códigos postales raros o internacionales requieren precio humano."
     },
-    "comparison": {
-      "title": "La conclusión",
-      "savings": "Enviar le ahorra alrededor de ${amount}",
-      "savingsNegative": "Manejar es más barato por aproximadamente ${amount}",
-      "timeSaved": "+ {days} días de vuelta en su vida",
-      "savingsTie": "El costo es prácticamente similar",
-      "thinkAlso": "Lo que enviar no tiene un valor en dólares: desgaste de su auto, fatiga, riesgo de clima, y el día que perdería con una avería."
+    "drive": {
+      "label": "Manéjelo usted mismo",
+      "titleShort": "~{hours} horas, sin hotel",
+      "titleLong": "{hours}+ horas detrás del volante",
+      "titleAlaska": "{days}+ días por Canadá",
+      "titleOcean": "Hay un océano en el camino.",
+      "subtitleOcean": "No es opción para rutas de Hawái.",
+      "timelineSameDay": "Mismo día · {hours} horas manejando",
+      "timelineMulti": "{days} días · {hours} horas manejando",
+      "timelineAlaska": "{days}+ días · {miles}+ millas · cruces fronterizos",
+      "breakdown": {
+        "fuel": "Combustible ({miles} mi)",
+        "hotelOne": "Hotel (1 noche)",
+        "hotelMany": "Hotel ({nights} noches)",
+        "hotelNone": "Hotel",
+        "tollsFood": "Peajes + comida",
+        "wear": "Desgaste @ $0.20/mi",
+        "timeRated": "Su tiempo ({hours}h × ${rate})",
+        "timeNotCounted": "Su tiempo",
+        "notCounted": "No contado",
+        "risk": "Riesgo",
+        "riskLow": "Bajo",
+        "riskHigh": "Clima, fauna, frontera",
+        "variable": "Variable"
+      },
+      "oceanMsg": "Los autos viajan por buque RoRo (Matson o Pasha) desde Long Beach u Oakland. Coordinamos el tramo terrestre, el manejo portuario, y la entrega en la isla como una sola reserva.",
+      "invalidTitle": "Faltan datos de distancia",
+      "invalidTimeline": "No podemos calcular sin destino.",
+      "invalidMsg": "Verifique el código postal destino, o use la búsqueda por nombre de ciudad (próximamente en v2)."
     },
-    "footnote": "Suposiciones de costo al manejar: $150/noche hoteles, $50/persona/día comida, tarifa de desgaste IRS de $0.67/milla. Noches de hotel se asumen una por cada 500 millas. El costo de envío es una estimación de promedios de la industria; fije un precio real abajo.",
-    "cta": {
-      "title": "Obtenga un precio fijo.",
-      "description": "Su coordinador responde con un número real dentro de 1 hora hábil. Sin depósito, sin obligación.",
-      "primary": "Obtenga su precio fijo"
-    }
+    "verdict": {
+      "shipWins": "Enviar le ahorra ~${savings} y {hours} horas de manejar.",
+      "shipWinsSub": "Más se ahorra el hotel, las paradas de camión, y la posibilidad de una piedra en el parabrisas en alguna parte del camino.",
+      "driveWins": "Para este viaje, manejar le ahorra ~${savings}.",
+      "driveWinsSub": "Bajo 200 millas, usualmente vence al camión — y esa es la respuesta honesta. Estamos aquí cuando necesite el lado de envío.",
+      "wash": "El costo es prácticamente similar.",
+      "washSub": "Dentro de $50 en cualquier dirección. Elija la experiencia que quiera — maneje si es una historia de carretera, envíelo si prefiere ahorrarse el tiempo al volante.",
+      "hawaii": "Hawái significa enviar — es pura geografía.",
+      "hawaiiSub": "Hemos hecho el traspaso terrestre-marítimo lo más sencillo posible. Usted ve un precio y un cronograma.",
+      "alaska": "SE PUEDE manejar la Autopista de Alaska. La mayoría no lo hace.",
+      "alaskaSub": "Una semana por Canadá en territorio de osos, dos cruces fronterizos, y usualmente paga más que la ruta de envío.",
+      "invalid": "No reconocimos ese código postal — pero aún podemos darle un precio real.",
+      "invalidSub": "Envíe una cotización con su destino y un coordinador responde en 1 hora hábil con un precio fijo y la comparación de manejar."
+    },
+    "ctas": {
+      "primary": "Obtenga su precio fijo →",
+      "secondary": "Active alerta de bajada de precio (próximamente)"
+    },
+    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Los precios reales se confirman 1 hora hábil después de enviar una cotización — ahí corremos el precio real del transportista. Estimado de manejar usa hoteles a $150/noche, comida a $50/persona/día, desgaste a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS). Distancia tomada de nuestra tabla de 80 corredores principales — integración con Google Maps API próximamente."
   },
   "corridors": {
     "index": {

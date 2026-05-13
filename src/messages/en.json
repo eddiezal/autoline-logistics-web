@@ -750,7 +750,10 @@
     },
     "inputs": {
       "legend": "Your trip",
-      "distance": { "label": "Distance (miles)", "helper": "Use Google Maps for an exact number" },
+      "fromZip": { "label": "From ZIP", "placeholder": "90210" },
+      "toZip": { "label": "To ZIP", "placeholder": "78701" },
+      "zipError": "Not a recognized US ZIP",
+      "zipUnknown": "ZIP not in our v1 table — get a real quote",
       "vehicleType": {
         "label": "Vehicle type",
         "options": {
@@ -764,51 +767,95 @@
           "other": "Other"
         }
       },
-      "fuelPrice": { "label": "Fuel price ($/gal)", "helper": "Current US average ~$4.50" },
-      "drivers": {
-        "label": "Drivers",
-        "options": { "one": "1 driver", "two": "2 drivers" }
-      },
-      "hourlyRate": { "label": "Your hourly rate (optional)", "helper": "Time off work, if you'd be driving on a workday" }
-    },
-    "drive": {
-      "title": "If you drive it",
-      "fuel": "Fuel",
-      "hotels": "Hotels",
-      "hotelsCount": "{count} night",
-      "hotelsCountPlural": "{count} nights",
-      "food": "Food",
-      "wear": "Vehicle wear",
-      "wearHelper": "IRS standard mileage rate, $0.67/mi",
-      "time": "Your time",
-      "timeHelper": "{days} days × 8 hours",
-      "totalLabel": "Total to drive",
-      "daysLabel": "About {days} days on the road"
+      "hourlyRate": {
+        "label": "Your time is worth",
+        "options": {
+          "rate25": "$25 / hr",
+          "rate50": "$50 / hr",
+          "rate100": "$100 / hr",
+          "dontCount": "Don't count"
+        }
+      }
     },
     "ship": {
-      "title": "If you ship it",
-      "tierStandby": "Standby (7-day window)",
-      "tierPriority": "Priority (3–5 day window)",
-      "tierExpedited": "Expedited (24–48 hour)",
-      "totalLabel": "Range across tiers",
-      "daysLabel": "Door-to-door, you stay home",
-      "noWearLabel": "No miles added to your odometer",
-      "footnote": "Estimate based on industry averages. Lock a real price below."
+      "label": "Ship with Auto Line Logistics",
+      "title": "Door-to-door, locked when you book",
+      "titleHawaii": "Mainland → Long Beach → Honolulu",
+      "titleAlaska": "Inland to Tacoma, RoRo to Anchorage",
+      "tierPriority": "Priority tier · 3–5 day pickup window",
+      "tierHawaii": "Inter-island route · 10–14 day transit",
+      "tierAlaska": "Alaska corridor · 8–14 day transit",
+      "tierLinkAll": "See all 3 service tiers →",
+      "tierLinkHawaii": "See Hawaii corridor →",
+      "tierLinkAlaska": "See Alaska routes →",
+      "timeline": "{days} days · 0 hours behind the wheel",
+      "timelinePort": "Door-to-port-to-door",
+      "breakdown": {
+        "estimatedPrice": "Estimated price",
+        "yourTime": "Your time",
+        "wear": "Wear & tear",
+        "fuelHotelTolls": "Fuel · hotel · tolls",
+        "oceanTransit": "Ocean transit",
+        "portFees": "Port fees",
+        "islandDelivery": "Island delivery",
+        "inlandLeg": "Inland leg",
+        "oceanFromTacoma": "Ocean from Tacoma",
+        "anchorageDelivery": "Anchorage delivery",
+        "included": "Included"
+      },
+      "invalidTitle": "Need a real ZIP to estimate",
+      "invalidTimeline": "Get a coordinator quote in 1 business hour.",
+      "invalidMsg": "We pull pricing from a corridor table for v1 — odd or international ZIPs need a human price."
     },
-    "comparison": {
-      "title": "The bottom line",
-      "savings": "Shipping saves you about ${amount}",
-      "savingsNegative": "Driving is cheaper by about ${amount}",
-      "timeSaved": "+ {days} days back in your life",
-      "savingsTie": "Cost is about a wash",
-      "thinkAlso": "Things shipping doesn't put a dollar on: wear on your car, fatigue, weather risk, and the day you'd lose to a breakdown."
+    "drive": {
+      "label": "Drive it yourself",
+      "titleShort": "~{hours} hours, no hotel needed",
+      "titleLong": "{hours}+ hours of windshield time",
+      "titleAlaska": "{days}+ days through Canada",
+      "titleOcean": "There's an ocean in the way.",
+      "subtitleOcean": "Not on the table for Hawaii routes.",
+      "timelineSameDay": "Same day · {hours} hours driving",
+      "timelineMulti": "{days} days · {hours} hours driving",
+      "timelineAlaska": "{days}+ days · {miles}+ mi · border crossings",
+      "breakdown": {
+        "fuel": "Fuel ({miles} mi)",
+        "hotelOne": "Hotel (1 night)",
+        "hotelMany": "Hotel ({nights} nights)",
+        "hotelNone": "Hotel",
+        "tollsFood": "Tolls + food",
+        "wear": "Wear @ $0.20/mi",
+        "timeRated": "Your time ({hours}h × ${rate})",
+        "timeNotCounted": "Your time",
+        "notCounted": "Not counted",
+        "risk": "Risk",
+        "riskLow": "Low",
+        "riskHigh": "Weather, wildlife, border",
+        "variable": "Variable"
+      },
+      "oceanMsg": "Cars travel by RoRo vessel (Matson or Pasha) from Long Beach or Oakland. We coordinate the inland leg, port handoff, and island delivery as one booking.",
+      "invalidTitle": "Need distance data",
+      "invalidTimeline": "Can't math without a destination.",
+      "invalidMsg": "Check the destination ZIP, or use the city-name fallback (v2 upgrade)."
     },
-    "footnote": "Drive cost assumptions: $150/night hotels, $50/person/day food, $0.67/mi IRS wear rate. Hotel nights assumed at one per 500 driving miles. Ship cost is an industry-average estimate; lock a real price below.",
-    "cta": {
-      "title": "Get a locked price.",
-      "description": "Your coordinator replies with a real number within 1 business hour. No deposit, no obligation.",
-      "primary": "Get my locked price"
-    }
+    "verdict": {
+      "shipWins": "Shipping saves you ~${savings} and {hours} hours of driving.",
+      "shipWinsSub": "Plus you skip the hotel, the truck stops, and the chance of a rock chip on your windshield somewhere along the way.",
+      "driveWins": "For this trip, driving saves you ~${savings}.",
+      "driveWinsSub": "Under 200 miles, you'll usually beat the truck — and that's the honest answer. We're here when you need the ship side.",
+      "wash": "Cost is about a wash.",
+      "washSub": "Within $50 either way. Pick the experience you want — drive if it's a road-trip story, ship if you'd rather skip the windshield time.",
+      "hawaii": "Hawaii means shipping — that's just geography.",
+      "hawaiiSub": "We've made the inland-to-ocean handoff as turnkey as possible. You see one price and one timeline.",
+      "alaska": "You CAN drive the Alaska Highway. Most customers don't.",
+      "alaskaSub": "A week through Canada in bear country, two border crossings, and you usually pay more than the ship route.",
+      "invalid": "We couldn't recognize that ZIP — but we can still get you a real price.",
+      "invalidSub": "Submit a quote with your destination and a coordinator replies in 1 business hour with a locked price and the drive comparison."
+    },
+    "ctas": {
+      "primary": "Get my locked price →",
+      "secondary": "Set a price-drop alert (coming soon)"
+    },
+    "footnote": "The estimated ship price is our best guess, not your locked price. Real prices clear in 1 business hour after you submit a quote — that's when we run actual carrier pricing. Drive-side estimate uses $150/night hotels, $50/person/day food, $0.20/mi for vehicle wear (real marginal cost, not the IRS depreciation rate). Distance pulled from our top-80 corridor table — Google Maps API integration coming next."
   },
   "corridors": {
     "index": {
