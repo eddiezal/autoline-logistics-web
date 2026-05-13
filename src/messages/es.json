@@ -200,6 +200,13 @@
           "honestAnswer": "\"Es nuestra comisión, y es reembolsable si realmente no reservamos su envío.\""
         }
       }
+    },
+    "finalCta": {
+      "eyebrow": "¿Listo para enviar?",
+      "title": "Fije su precio en 1 hora hábil.",
+      "lead": "Envíenos su origen, destino, y vehículo. Su coordinador responde con un precio fijo todo incluido. Sin depósito para cotizar. Sin obligación si no reserva.",
+      "button": "Obtenga su precio fijo",
+      "trustLine": "Cotización en 1 hora hábil · Cotización = factura final · Sin depósito para cotizar"
     }
   },
   "pricePromise": {

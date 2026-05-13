@@ -200,6 +200,13 @@
           "honestAnswer": "\"It's our commission, and it's refundable if we don't actually book your shipment.\""
         }
       }
+    },
+    "finalCta": {
+      "eyebrow": "Ready to ship?",
+      "title": "Lock your price in 1 business hour.",
+      "lead": "Send us your origin, destination, and vehicle. Your coordinator replies with a locked, all-in price. No deposit to get a quote. No obligation if you don't book.",
+      "button": "Get my locked price",
+      "trustLine": "Quote in 1 business hour · Price = final invoice · No deposit to quote"
     }
   },
   "pricePromise": {

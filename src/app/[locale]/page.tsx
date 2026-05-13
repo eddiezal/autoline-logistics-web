@@ -405,6 +405,36 @@ export default function Home() {
           </Container>
         </section>
 
+                {/* Final CTA — closes the page with a strong "Ready to lock a price?"
+            beat. Charcoal hero card centered in a white section. The closer
+            between Anti-Scam Educator (gray) and the Build banner (orange-tint).
+            This fixes the "page ends with a construction notice and no closing
+            pitch" issue identified in the homepage flow audit. */}
+        <section className="py-16 md:py-20 bg-white">
+          <Container>
+            <div className="bg-charcoal text-white rounded-3xl p-8 md:p-14 text-center">
+              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                {t("home.finalCta.eyebrow")}
+              </p>
+              <h2 className="text-3xl md:text-5xl font-bold leading-tight max-w-3xl mx-auto">
+                {t("home.finalCta.title")}
+              </h2>
+              <p className="text-lg text-gray-100 mt-5 max-w-2xl mx-auto leading-relaxed">
+                {t("home.finalCta.lead")}
+              </p>
+              <Link
+                href="/quote"
+                className="inline-block mt-8 bg-orange hover:bg-orange-dark text-white font-bold text-base px-8 py-4 rounded-full transition shadow-lg shadow-orange/20"
+              >
+                {t("home.finalCta.button")} →
+              </Link>
+              <p className="text-sm text-gray-400 mt-6">
+                {t("home.finalCta.trustLine")}
+              </p>
+            </div>
+          </Container>
+        </section>
+
         {/* Build status banner — REMOVE once homepage is fleshed out and we go live on autolinelogistics.com */}
         <section className="py-12 bg-orange-tint border-t border-orange/20">
           <Container>
