@@ -1580,6 +1580,145 @@
       "oceanTimeline": "10–14 días",
       "oceanBestFor": "Rutas Hawái + Alaska"
     },
+    "vehicleMatrix": {
+      "eyebrow": "¿Enviaremos su auto?",
+      "title": "Tipos de vehículos que movemos (y los que no).",
+      "lead": "Si su vehículo no está aquí, pregúntenos de todos modos — pero este es el alcance estándar. Siempre le diremos cuándo no somos la opción correcta.",
+      "colVehicle": "Tipo de vehículo",
+      "colTier": "Nivel recomendado",
+      "colNotes": "Notas",
+      "colStatus": "Estado",
+      "rows": {
+        "sedan": {
+          "vehicle": "Sedán",
+          "tier": "Transporte Abierto",
+          "notes": "Auto de uso diario estándar.",
+          "status": "Sí"
+        },
+        "suv": {
+          "vehicle": "SUV / Crossover",
+          "tier": "Transporte Abierto",
+          "notes": "Manejo igual al sedán.",
+          "status": "Sí"
+        },
+        "truckStandard": {
+          "vehicle": "Camioneta (estándar)",
+          "tier": "Transporte Abierto",
+          "notes": "Pickup tamaño completo, cabina estándar.",
+          "status": "Sí"
+        },
+        "truckLifted": {
+          "vehicle": "Camioneta (elevada/sobredimensionada)",
+          "tier": "Transporte Abierto",
+          "notes": "Puede aplicar recargo por sobredimensión sobre 7' de altura.",
+          "status": "Con recargo"
+        },
+        "van": {
+          "vehicle": "Van / Minivan",
+          "tier": "Transporte Abierto",
+          "notes": "Manejo estándar.",
+          "status": "Sí"
+        },
+        "motorcycle": {
+          "vehicle": "Motocicleta",
+          "tier": "Especialidad",
+          "notes": "Caja o kit de sujeción — manejo distinto al de autos.",
+          "status": "Sí"
+        },
+        "classic": {
+          "vehicle": "Clásico / Coleccionable",
+          "tier": "Cerrado Premium",
+          "notes": "Recomendamos cerrado para vehículos de 25+ años o raros.",
+          "status": "Sí"
+        },
+        "exotic": {
+          "vehicle": "Exótico / Lujo (alto valor)",
+          "tier": "Cerrado Premium",
+          "notes": "Manejo premium. Tráiler climatizado.",
+          "status": "Sí"
+        },
+        "inoperable": {
+          "vehicle": "Inoperable / no funcional",
+          "tier": "Abierto o Cerrado + cabrestante",
+          "notes": "Avísenos al reservar. Aplica recargo por cabrestante.",
+          "status": "Con recargo"
+        },
+        "multiCar": {
+          "vehicle": "Múltiples autos (3+)",
+          "tier": "Abierto (carga múltiple)",
+          "notes": "Descuento por volumen disponible. Un coordinador, una reserva.",
+          "status": "Descuento"
+        },
+        "hawaiiAlaska": {
+          "vehicle": "Rutas Hawái / Alaska",
+          "tier": "Rutas Marítimas",
+          "notes": "Buque RoRo + tramo terrestre coordinados como una reserva.",
+          "status": "Sí"
+        },
+        "oversizedCommercial": {
+          "vehicle": "Comercial sobredimensionado (doble eje)",
+          "tier": "Cotización personalizada",
+          "notes": "Llámenos para cotizar — a veces lo manejamos, a veces referimos.",
+          "status": "Cotización"
+        },
+        "rv": {
+          "vehicle": "RV / Casa rodante Clase A",
+          "tier": "—",
+          "notes": "Fuera de alcance. Lo referimos a un transportista especializado en RV.",
+          "status": "Fuera de alcance"
+        },
+        "boat": {
+          "vehicle": "Bote / Remolque de bote",
+          "tier": "—",
+          "notes": "Fuera de alcance. Transportistas marítimos manejan estos.",
+          "status": "Fuera de alcance"
+        },
+        "heavyEquipment": {
+          "vehicle": "Construcción / equipo pesado",
+          "tier": "—",
+          "notes": "Fuera de alcance. Se requieren transportistas de carga pesada.",
+          "status": "Fuera de alcance"
+        }
+      }
+    },
+    "faq": {
+      "eyebrow": "Preguntas frecuentes",
+      "title": "FAQ",
+      "items": {
+        "openVsEnclosed": {
+          "q": "Abierto vs Cerrado — ¿cuándo vale la pena pagar más por cerrado?",
+          "a": "Para la mayoría de autos de uso diario, Abierto es la opción correcta. Cerrado vale el ~1.5x del precio cuando su auto es clásico, exótico, o coleccionable de más de $50K — básicamente algo que le dolería en el alma si recibiera una piedra. Un Tesla no es automáticamente \"exótico\"; Abierto suele ser suficiente. Un Mustang del '67 sí. Nunca empujaremos cerrado cuando Abierto es lo que necesita."
+        },
+        "motorcycle": {
+          "q": "¿Pueden enviar mi motocicleta?",
+          "a": "Sí. Las motocicletas viajan en caja o con un kit de sujeción especial — manejo distinto al de los autos. Usamos conductores con experiencia en motos. Pida cotización con la marca y modelo de su moto y dimensionamos la configuración correcta."
+        },
+        "inoperable": {
+          "q": "¿Y si mi auto no arranca?",
+          "a": "Manejamos vehículos inoperables. Usamos cabrestante para cargar y descargar — hay un recargo por cabrestante que varía según peso y accesibilidad. Avísenos al reservar para enviar el equipo correcto."
+        },
+        "hawaiiAlaskaTimeline": {
+          "q": "¿Cuánto tarda realmente el envío a Hawái / Alaska?",
+          "a": "10–14 días puerta-a-puerto-a-puerta es lo típico. Para Hawái: tramo terrestre continental → Long Beach u Oakland → tránsito marítimo RoRo → entrega en la isla. Para Alaska: terrestre hasta Tacoma → marítimo hasta Anchorage → entrega final. Un coordinador maneja toda la cadena."
+        },
+        "multiVehicle": {
+          "q": "¿Puedo enviar 2+ vehículos a la vez?",
+          "a": "Sí — y 3+ vehículos obtienen un descuento por múltiples autos. Mismo coordinador, una sola reserva, a menudo el mismo transportista. Útil para parejas que migran estacionalmente, recogidas de concesionario, mudanzas familiares."
+        },
+        "oversizedCommercial": {
+          "q": "¿Envían vehículos sobredimensionados o comerciales?",
+          "a": "Algunos sí, otros no. Camionetas elevadas y pickups de 1 tonelada tamaño completo: sí, posiblemente con recargo. Comercial de doble eje, RV, botes, equipo de construcción: no — lo referimos honestamente a transportistas especializados. No fingimos alcance."
+        },
+        "doorToDoor": {
+          "q": "¿Está siempre disponible la entrega puerta a puerta?",
+          "a": "En la mayoría de las metrópolis, sí. En calles residenciales angostas, comunidades cerradas con restricciones de camiones, o áreas controladas por HOA, podríamos necesitar reunirnos en un estacionamiento cercano. Siempre lo avisaremos antes de la recogida — nunca el día mismo."
+        },
+        "damagePromiseAllTiers": {
+          "q": "¿Aplica la Promesa contra Daños en los tres niveles?",
+          "a": "Sí. $75K en fianza + $500K en carga contingente aplica por igual a Transporte Abierto, Cerrado Premium, y Rutas Marítimas. Misma cobertura, cada nivel. Las diferencias son el tipo de tráiler y manejo — no la protección de seguro."
+        }
+      }
+    },
     "cta": {
       "eyebrow": "¿Listo para enviar?",
       "title": "Obtenga un precio fijo en 1 hora hábil.",

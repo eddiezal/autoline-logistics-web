@@ -20,6 +20,41 @@ export const metadata: Metadata = {
     "Three ways to move your vehicle: Open Transport, Enclosed Premium, and Ocean Routes for Hawaii + Alaska. All backed by our Damage Promise.",
 };
 
+// Vehicle matrix structure — keys map into i18n services.vehicleMatrix.rows.*
+// statusType controls visual styling (green/amber/gray)
+const VEHICLE_ROWS: ReadonlyArray<{
+  key: string;
+  statusType: "ok" | "warn" | "scope";
+}> = [
+  { key: "sedan", statusType: "ok" },
+  { key: "suv", statusType: "ok" },
+  { key: "truckStandard", statusType: "ok" },
+  { key: "truckLifted", statusType: "warn" },
+  { key: "van", statusType: "ok" },
+  { key: "motorcycle", statusType: "ok" },
+  { key: "classic", statusType: "ok" },
+  { key: "exotic", statusType: "ok" },
+  { key: "inoperable", statusType: "warn" },
+  { key: "multiCar", statusType: "ok" },
+  { key: "hawaiiAlaska", statusType: "ok" },
+  { key: "oversizedCommercial", statusType: "warn" },
+  { key: "rv", statusType: "scope" },
+  { key: "boat", statusType: "scope" },
+  { key: "heavyEquipment", statusType: "scope" },
+];
+
+// FAQ keys map into i18n services.faq.items.*
+const FAQ_KEYS = [
+  "openVsEnclosed",
+  "motorcycle",
+  "inoperable",
+  "hawaiiAlaskaTimeline",
+  "multiVehicle",
+  "oversizedCommercial",
+  "doorToDoor",
+  "damagePromiseAllTiers",
+] as const;
+
 export default function ServicesPage() {
   const t = useTranslations();
 
@@ -224,6 +259,118 @@ export default function ServicesPage() {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </Container>
+        </section>
+
+                {/* ── Vehicle Matrix — V1 table style ────────────────────────── */}
+        <section className="py-16 md:py-20 bg-white">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              {t("services.vehicleMatrix.eyebrow")}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-3 max-w-3xl leading-tight">
+              {t("services.vehicleMatrix.title")}
+            </h2>
+            <p className="text-gray-700 text-base md:text-lg mb-8 max-w-2xl leading-relaxed">
+              {t("services.vehicleMatrix.lead")}
+            </p>
+
+            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-charcoal text-white">
+                    <tr>
+                      <th className="px-4 md:px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">
+                        {t("services.vehicleMatrix.colVehicle")}
+                      </th>
+                      <th className="px-4 md:px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">
+                        {t("services.vehicleMatrix.colTier")}
+                      </th>
+                      <th className="px-4 md:px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">
+                        {t("services.vehicleMatrix.colNotes")}
+                      </th>
+                      <th className="px-4 md:px-5 py-3.5 font-semibold text-xs uppercase tracking-wider whitespace-nowrap">
+                        {t("services.vehicleMatrix.colStatus")}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {VEHICLE_ROWS.map((r, i) => {
+                      const isScope = r.statusType === "scope";
+                      const statusClass =
+                        r.statusType === "ok"
+                          ? "text-green-700"
+                          : r.statusType === "warn"
+                            ? "text-amber-700"
+                            : "text-gray-500";
+                      const statusPrefix =
+                        r.statusType === "ok" ? "✓ " : r.statusType === "warn" ? "✓ " : "— ";
+                      const rowClass = isScope
+                        ? "bg-gray-50 text-gray-500"
+                        : i % 2 === 1
+                          ? "bg-gray-50"
+                          : "";
+                      return (
+                        <tr
+                          key={r.key}
+                          className={`border-t border-gray-200 ${rowClass}`}
+                        >
+                          <td className="px-4 md:px-5 py-3.5 font-semibold align-top whitespace-nowrap">
+                            {t(`services.vehicleMatrix.rows.${r.key}.vehicle`)}
+                          </td>
+                          <td className="px-4 md:px-5 py-3.5 align-top">
+                            {t(`services.vehicleMatrix.rows.${r.key}.tier`)}
+                          </td>
+                          <td className="px-4 md:px-5 py-3.5 align-top text-gray-700">
+                            {t(`services.vehicleMatrix.rows.${r.key}.notes`)}
+                          </td>
+                          <td
+                            className={`px-4 md:px-5 py-3.5 align-top font-bold whitespace-nowrap ${statusClass}`}
+                          >
+                            {statusPrefix}
+                            {t(`services.vehicleMatrix.rows.${r.key}.status`)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        {/* ── FAQ — accordion (V1 style) ───────────────────────────────── */}
+        <section className="py-16 md:py-20 bg-gray-100">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              {t("services.faq.eyebrow")}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-8 max-w-2xl">
+              {t("services.faq.title")}
+            </h2>
+
+            <div className="flex flex-col gap-2.5">
+              {FAQ_KEYS.map((k) => (
+                <details
+                  key={k}
+                  className="group bg-white border border-gray-200 rounded-xl overflow-hidden open:border-orange open:shadow-md transition"
+                >
+                  <summary className="cursor-pointer px-5 py-4 flex justify-between items-center gap-3 font-semibold text-charcoal list-none [&::-webkit-details-marker]:hidden">
+                    <span className="text-base">
+                      {t(`services.faq.items.${k}.q`)}
+                    </span>
+                    <span className="flex-shrink-0 w-7 h-7 rounded-full bg-orange-tint text-orange-dark group-open:bg-orange group-open:text-white flex items-center justify-center font-bold text-lg transition leading-none">
+                      <span className="group-open:hidden">+</span>
+                      <span className="hidden group-open:inline">−</span>
+                    </span>
+                  </summary>
+                  <div className="px-5 pb-5 text-gray-700 text-sm md:text-base leading-relaxed">
+                    {t(`services.faq.items.${k}.a`)}
+                  </div>
+                </details>
+              ))}
             </div>
           </Container>
         </section>
