@@ -75,21 +75,33 @@
     },
     "triplePromise": {
       "eyebrow": "Our triple promise",
-      "title": "Three commitments. Built into every shipment.",
+      "title": "Three commitments. Each with a guarantee attached.",
       "cards": {
         "price": {
+          "stat": "$0",
+          "statLabel": "Surprise upcharges, ever",
           "eyebrow": "Price Promise",
-          "headline": "You pick the speed, we lock the price.",
-          "cta": "See pricing →"
+          "headline": "You pick the speed. We lock the price.",
+          "conditionLine": "If a carrier wants more after booking…",
+          "consequenceLine": "We eat the difference. Your invoice never moves.",
+          "cta": "See the Price Promise →"
         },
         "damage": {
+          "stat": "$575K",
+          "statLabel": "Layered protection",
           "eyebrow": "Damage Promise",
-          "headline": "Your car is covered beyond the carrier's insurance.",
-          "cta": "See coverage →"
+          "headline": "Covered beyond the carrier's insurance.",
+          "conditionLine": "If damage exceeds the carrier's policy…",
+          "consequenceLine": "Our $500K layered coverage kicks in. You file with us, not them.",
+          "cta": "See the Damage Promise →"
         },
         "people": {
+          "stat": "1",
+          "statLabel": "Coordinator, by name",
           "eyebrow": "People Promise",
-          "headline": "You'll always talk to a real person, by name.",
+          "headline": "You'll always talk to a real person.",
+          "conditionLine": "If you call about your shipment…",
+          "consequenceLine": "Your named coordinator picks up. No call queue, no handoffs.",
           "cta": "Meet the team →"
         }
       }
@@ -119,6 +131,41 @@
           "description": "Live GPS, ETA, and milestone updates the whole way. When it arrives, twelve more photos document delivery. Then your coordinator follows up to make sure everything's good.",
           "proof1": "Live GPS tracking",
           "proof2": "12 delivery photos"
+        }
+      }
+    },
+    "behindThePromise": {
+      "eyebrow": "Operational proof",
+      "title": "Behind the promise.",
+      "lead": "Every stat ties to one of our three promises. Click through to see how.",
+      "stats": {
+        "fleet": {
+          "tag": "People Promise",
+          "stat": "35",
+          "title": "Family-owned fleet",
+          "description": "Started as a single driver. Scaled to 35 trucks under one family operation, plus a vetted partner network.",
+          "linkText": "See the People Promise"
+        },
+        "volume": {
+          "tag": "Volume credibility",
+          "stat": "45,000",
+          "title": "Vehicles moved last year",
+          "description": "Forty-five thousand families and dealers trusted us in 2025 alone. Repeat business builds the operation.",
+          "linkText": "See our story"
+        },
+        "coverage": {
+          "tag": "Damage Promise",
+          "stat": "$575K",
+          "title": "Layered insurance + bond",
+          "description": "$75K bond plus $500K contingent cargo. Most brokers carry only the bond minimum.",
+          "linkText": "See the Damage Promise"
+        },
+        "bilingual": {
+          "tag": "People Promise",
+          "stat": "2",
+          "title": "Native bilingual front line",
+          "description": "English and Spanish handled natively — no translation service, no call routing.",
+          "linkText": "Meet the team"
         }
       }
     }

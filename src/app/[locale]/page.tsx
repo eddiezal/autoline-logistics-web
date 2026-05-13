@@ -71,7 +71,11 @@ export default function Home() {
           </Container>
         </section>
 
-        {/* Triple Promise teaser */}
+        {/* Triple Promise — V3d redesign with stat anchors + receipt panels.
+            TODO (before production cutover): verify stat claims with Ben:
+              - "$0 surprise upcharges, ever" — strongest claim, needs the strongest defense
+              - "$575K layered protection" — confirm $75K bond + $500K contingent cargo
+              - "1 named coordinator" — confirm operational reality */}
         <section className="py-20 bg-white">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
@@ -84,20 +88,32 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
               <PromiseCard
                 href="/price-promise"
+                stat={t("home.triplePromise.cards.price.stat")}
+                statLabel={t("home.triplePromise.cards.price.statLabel")}
                 eyebrow={t("home.triplePromise.cards.price.eyebrow")}
                 headline={t("home.triplePromise.cards.price.headline")}
+                conditionLine={t("home.triplePromise.cards.price.conditionLine")}
+                consequenceLine={t("home.triplePromise.cards.price.consequenceLine")}
                 cta={t("home.triplePromise.cards.price.cta")}
               />
               <PromiseCard
                 href="/damage-promise"
+                stat={t("home.triplePromise.cards.damage.stat")}
+                statLabel={t("home.triplePromise.cards.damage.statLabel")}
                 eyebrow={t("home.triplePromise.cards.damage.eyebrow")}
                 headline={t("home.triplePromise.cards.damage.headline")}
+                conditionLine={t("home.triplePromise.cards.damage.conditionLine")}
+                consequenceLine={t("home.triplePromise.cards.damage.consequenceLine")}
                 cta={t("home.triplePromise.cards.damage.cta")}
               />
               <PromiseCard
                 href="/people-promise"
+                stat={t("home.triplePromise.cards.people.stat")}
+                statLabel={t("home.triplePromise.cards.people.statLabel")}
                 eyebrow={t("home.triplePromise.cards.people.eyebrow")}
                 headline={t("home.triplePromise.cards.people.headline")}
+                conditionLine={t("home.triplePromise.cards.people.conditionLine")}
+                consequenceLine={t("home.triplePromise.cards.people.consequenceLine")}
                 cta={t("home.triplePromise.cards.people.cta")}
               />
             </div>
@@ -206,19 +222,83 @@ export default function Home() {
           </Container>
         </section>
 
+                {/* Behind the Promise — operational proof. Stat-led cards, each
+            wholly clickable, linked to the relevant Promise page. Gray bg
+            so we alternate cleanly with white Helpful Tools above and
+            orange-tint build banner below.
+            TODO (before production cutover): verify stat claims with Ben:
+              - "35-truck family fleet" — confirm number + add vetted-partner caveat
+              - "45,000 vehicles in 2025" — confirm number
+              - "$575K layered coverage" — duplicate of Triple Promise, must match
+              - "Native bilingual" — confirm + decide whether to name Renee */}
+        <section className="py-20 bg-gray-100">
+          <Container>
+            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+              {t("home.behindThePromise.eyebrow")}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-charcoal max-w-2xl">
+              {t("home.behindThePromise.title")}
+            </h2>
+            <p className="text-gray-700 text-lg mt-4 max-w-2xl leading-relaxed">
+              {t("home.behindThePromise.lead")}
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mt-12">
+              <BehindCard
+                tag={t("home.behindThePromise.stats.fleet.tag")}
+                stat={t("home.behindThePromise.stats.fleet.stat")}
+                title={t("home.behindThePromise.stats.fleet.title")}
+                description={t("home.behindThePromise.stats.fleet.description")}
+                linkText={t("home.behindThePromise.stats.fleet.linkText")}
+                href="/people-promise"
+              />
+              <BehindCard
+                tag={t("home.behindThePromise.stats.volume.tag")}
+                stat={t("home.behindThePromise.stats.volume.stat")}
+                title={t("home.behindThePromise.stats.volume.title")}
+                description={t("home.behindThePromise.stats.volume.description")}
+                linkText={t("home.behindThePromise.stats.volume.linkText")}
+                href="/about"
+              />
+              <BehindCard
+                tag={t("home.behindThePromise.stats.coverage.tag")}
+                stat={t("home.behindThePromise.stats.coverage.stat")}
+                title={t("home.behindThePromise.stats.coverage.title")}
+                description={t("home.behindThePromise.stats.coverage.description")}
+                linkText={t("home.behindThePromise.stats.coverage.linkText")}
+                href="/damage-promise"
+              />
+              <BehindCard
+                tag={t("home.behindThePromise.stats.bilingual.tag")}
+                stat={t("home.behindThePromise.stats.bilingual.stat")}
+                title={t("home.behindThePromise.stats.bilingual.title")}
+                description={t("home.behindThePromise.stats.bilingual.description")}
+                linkText={t("home.behindThePromise.stats.bilingual.linkText")}
+                href="/people-promise"
+              />
+            </div>
+          </Container>
+        </section>
+
         {/* Build status banner — REMOVE once homepage is fleshed out and we go live on autolinelogistics.com */}
         <section className="py-12 bg-orange-tint border-t border-orange/20">
           <Container>
             <p className="text-charcoal font-semibold mb-1">
-              🚧 Build status — Phase A bootstrap (updated May 9, 2026)
+              🚧 Build status — Phase A bootstrap (updated May 12, 2026)
             </p>
             <p className="text-gray-700 text-sm">
-              Live: Triple Promise pages, California ↔ Hawaii corridor,
-              California ↔ Alaska corridor, corridor index, About page,
-              quote intake form, EN/ES locale infrastructure (home page
-              wired — other pages migrating in Phase 2). Next up: Super
-              Dispatch + Authorize.Net integrations, server hardening
-              (Sentry, hCaptcha), remaining page wire-ups for ES.
+              Live: Triple Promise (V3d redesign with receipt panels), How It
+              Works, Behind the Promise, Helpful Tools, Ship vs Drive Calculator
+              (Phase A scope), California ↔ Hawaii and California ↔ Alaska
+              corridors. Next up: Super Dispatch + Authorize.Net integrations,
+              Anti-Scam Educator section, Tracking demo, remaining page
+              wire-ups for ES.
+            </p>
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="font-semibold text-orange-dark">⚠ Pending owner verification before launch:</span>{" "}
+              Triple Promise stats ($0 surprise upcharges · $575K layered
+              coverage · 1 named coordinator); Behind the Promise stats
+              (35-truck fleet · 45,000 vehicles in 2025 · native bilingual).
               Production cutover to{" "}
               <span className="font-semibold">autolinelogistics.com</span>{" "}
               target: end of Phase A.
@@ -229,6 +309,50 @@ export default function Home() {
 
       <Footer />
     </>
+  );
+}
+
+function BehindCard({
+  tag,
+  stat,
+  title,
+  description,
+  linkText,
+  href,
+}: {
+  tag: string;
+  stat: string;
+  title: string;
+  description: string;
+  linkText: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group bg-white border border-gray-200 border-l-4 border-l-gray-300 rounded-2xl p-6 md:p-7 flex flex-col gap-2 transition hover:border-l-orange hover:shadow-lg hover:-translate-y-0.5"
+    >
+      <span className="text-[11px] font-bold uppercase tracking-wider text-orange-dark">
+        {tag}
+      </span>
+      <div className="text-3xl md:text-4xl font-extrabold text-charcoal leading-none tracking-tight my-1">
+        {stat}
+      </div>
+      <h4 className="text-lg font-bold text-charcoal leading-snug">
+        {title}
+      </h4>
+      <p className="text-gray-700 text-sm leading-relaxed flex-1">
+        {description}
+      </p>
+      <div className="flex items-center justify-between mt-3">
+        <span className="text-sm text-orange-dark font-semibold">
+          {linkText}
+        </span>
+        <span className="w-7 h-7 rounded-full bg-gray-100 group-hover:bg-orange flex items-center justify-center text-gray-500 group-hover:text-white text-sm font-bold transition-all group-hover:translate-x-0.5">
+          →
+        </span>
+      </div>
+    </Link>
   );
 }
 
@@ -284,29 +408,60 @@ function ProofPill({ children }: { children: React.ReactNode }) {
 
 function PromiseCard({
   href,
+  stat,
+  statLabel,
   eyebrow,
   headline,
+  conditionLine,
+  consequenceLine,
   cta,
 }: {
   href: string;
+  stat: string;
+  statLabel: string;
   eyebrow: string;
   headline: string;
+  conditionLine: string;
+  consequenceLine: string;
   cta: string;
 }) {
   return (
     <Link
       href={href}
-      className="group block border border-gray-200 rounded-2xl p-6 hover:border-orange hover:shadow-lg transition"
+      className="group bg-white border border-gray-200 rounded-2xl p-6 md:p-7 flex flex-col transition hover:border-orange hover:shadow-lg hover:-translate-y-0.5"
     >
-      <p className="text-orange text-xs font-semibold uppercase tracking-wider mb-2">
+      {/* Stat anchor: huge number + label, divided from the rest */}
+      <div className="flex items-end gap-3.5 pb-4 mb-4 border-b border-gray-200">
+        <span className="text-4xl md:text-5xl font-extrabold text-orange-dark leading-none tracking-tight">
+          {stat}
+        </span>
+        <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 pb-1 flex-1">
+          {statLabel}
+        </span>
+      </div>
+
+      {/* Promise name + headline */}
+      <p className="text-orange text-[11px] font-bold uppercase tracking-wider mb-1.5">
         {eyebrow}
       </p>
-      <h3 className="text-xl font-bold text-charcoal mb-4 leading-snug">
+      <h3 className="text-lg font-bold text-charcoal mb-3 leading-snug">
         {headline}
       </h3>
-      <p className="text-orange font-semibold text-sm group-hover:text-orange-dark">
+
+      {/* The receipt: If X… → Then Y */}
+      <div className="border border-orange-tint rounded-xl p-3.5 mb-4">
+        <p className="text-sm text-gray-700 italic mb-1.5 leading-snug">
+          {conditionLine}
+        </p>
+        <p className="text-sm font-semibold text-orange-dark bg-orange-tint border-l-[3px] border-orange rounded px-3 py-1.5 leading-snug">
+          → {consequenceLine}
+        </p>
+      </div>
+
+      {/* CTA link */}
+      <span className="text-sm text-orange-dark font-semibold mt-auto">
         {cta}
-      </p>
+      </span>
     </Link>
   );
 }

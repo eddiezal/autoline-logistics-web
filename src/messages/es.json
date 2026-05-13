@@ -75,21 +75,33 @@
     },
     "triplePromise": {
       "eyebrow": "Nuestra triple promesa",
-      "title": "Tres compromisos. En cada envío.",
+      "title": "Tres compromisos. Cada uno con una garantía detrás.",
       "cards": {
         "price": {
+          "stat": "$0",
+          "statLabel": "Recargos sorpresa, jamás",
           "eyebrow": "Promesa de Precio",
-          "headline": "Usted elige la velocidad, nosotros fijamos el precio.",
-          "cta": "Ver precios →"
+          "headline": "Usted elige la velocidad. Nosotros fijamos el precio.",
+          "conditionLine": "Si un transportista pide más después de reservar…",
+          "consequenceLine": "Nosotros cubrimos la diferencia. Su factura no se mueve.",
+          "cta": "Ver la Promesa de Precio →"
         },
         "damage": {
+          "stat": "$575K",
+          "statLabel": "Protección por capas",
           "eyebrow": "Promesa contra Daños",
-          "headline": "Su auto está cubierto más allá del seguro del transportista.",
-          "cta": "Ver cobertura →"
+          "headline": "Cobertura más allá del seguro del transportista.",
+          "conditionLine": "Si el daño excede la póliza del transportista…",
+          "consequenceLine": "Entra nuestra cobertura por capas de $500K. Usted reclama con nosotros, no con ellos.",
+          "cta": "Ver la Promesa contra Daños →"
         },
         "people": {
+          "stat": "1",
+          "statLabel": "Coordinador, con nombre",
           "eyebrow": "Promesa Personal",
-          "headline": "Siempre hablará con una persona real, por su nombre.",
+          "headline": "Siempre hablará con una persona real.",
+          "conditionLine": "Si llama sobre su envío…",
+          "consequenceLine": "Su coordinador asignado responde. Sin cola de llamadas, sin transferencias.",
           "cta": "Conozca al equipo →"
         }
       }
@@ -119,6 +131,41 @@
           "description": "GPS en vivo, ETA, y actualizaciones de hitos durante todo el camino. Al llegar, doce fotos más documentan la entrega. Luego su coordinador le da seguimiento para asegurarse de que todo esté bien.",
           "proof1": "Seguimiento GPS en vivo",
           "proof2": "12 fotos de entrega"
+        }
+      }
+    },
+    "behindThePromise": {
+      "eyebrow": "Prueba operativa",
+      "title": "Detrás de la promesa.",
+      "lead": "Cada cifra está respaldada por una de nuestras tres promesas. Haga clic para ver cómo.",
+      "stats": {
+        "fleet": {
+          "tag": "Promesa Personal",
+          "stat": "35",
+          "title": "Flota familiar",
+          "description": "Comenzamos con un solo conductor. Crecimos a 35 camiones bajo una operación familiar, además de una red de socios verificados.",
+          "linkText": "Ver la Promesa Personal"
+        },
+        "volume": {
+          "tag": "Credibilidad por volumen",
+          "stat": "45,000",
+          "title": "Vehículos transportados el año pasado",
+          "description": "Cuarenta y cinco mil familias y concesionarios confiaron en nosotros en 2025. El negocio recurrente construye la operación.",
+          "linkText": "Ver nuestra historia"
+        },
+        "coverage": {
+          "tag": "Promesa contra Daños",
+          "stat": "$575K",
+          "title": "Seguro y fianza por capas",
+          "description": "$75K en fianza más $500K en carga contingente. La mayoría de los corredores solo llevan el mínimo de fianza.",
+          "linkText": "Ver la Promesa contra Daños"
+        },
+        "bilingual": {
+          "tag": "Promesa Personal",
+          "stat": "2",
+          "title": "Equipo bilingüe nativo",
+          "description": "Inglés y español manejados nativamente — sin servicio de traducción, sin enrutamiento de llamadas.",
+          "linkText": "Conozca al equipo"
         }
       }
     }
