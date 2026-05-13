@@ -280,6 +280,60 @@ export default function Home() {
           </Container>
         </section>
 
+                {/* Anti-Scam Educator — V1b question-led. Each card is a question
+            the consumer should ask any broker, plus the "Why ask it"
+            (the scam this exposes) and "Honest answer sounds like" (what
+            we'd say). Voice D / anti-scam. White bg keeps the alternating
+            rhythm with Behind the Promise (gray) above. */}
+        <section className="py-20 bg-white">
+          <Container>
+            <span className="inline-flex items-center gap-2 text-amber-700 text-xs font-bold uppercase tracking-wider bg-amber-100 px-3 py-1.5 rounded-full mb-3">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+              </svg>
+              {t("home.antiScam.eyebrow")}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-charcoal leading-tight max-w-3xl mt-2">
+              {t("home.antiScam.title")}{" "}
+              <span className="text-orange-dark">
+                {t("home.antiScam.titleAccent")}
+              </span>
+            </h2>
+            <p className="text-gray-700 text-lg mt-4 max-w-2xl leading-relaxed">
+              {t("home.antiScam.lead")}
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              <AntiScamCard
+                num={1}
+                question={t("home.antiScam.questions.leadGen.question")}
+                whyAskLabel={t("home.antiScam.whyAskLabel")}
+                whyAsk={t("home.antiScam.questions.leadGen.whyAsk")}
+                honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
+                honestAnswer={t("home.antiScam.questions.leadGen.honestAnswer")}
+              />
+              <AntiScamCard
+                num={2}
+                question={t("home.antiScam.questions.reviews.question")}
+                whyAskLabel={t("home.antiScam.whyAskLabel")}
+                whyAsk={t("home.antiScam.questions.reviews.whyAsk")}
+                honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
+                honestAnswer={t("home.antiScam.questions.reviews.honestAnswer")}
+              />
+              <AntiScamCard
+                num={3}
+                question={t("home.antiScam.questions.deposit.question")}
+                whyAskLabel={t("home.antiScam.whyAskLabel")}
+                whyAsk={t("home.antiScam.questions.deposit.whyAsk")}
+                honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
+                honestAnswer={t("home.antiScam.questions.deposit.honestAnswer")}
+              />
+            </div>
+
+            {/* TODO: build /anti-scam hub before linking from here. Hidden until ready. */}
+          </Container>
+        </section>
+
         {/* Build status banner — REMOVE once homepage is fleshed out and we go live on autolinelogistics.com */}
         <section className="py-12 bg-orange-tint border-t border-orange/20">
           <Container>
@@ -309,6 +363,50 @@ export default function Home() {
 
       <Footer />
     </>
+  );
+}
+
+function AntiScamCard({
+  num,
+  question,
+  whyAskLabel,
+  whyAsk,
+  honestAnswerLabel,
+  honestAnswer,
+}: {
+  num: 1 | 2 | 3;
+  question: string;
+  whyAskLabel: string;
+  whyAsk: string;
+  honestAnswerLabel: string;
+  honestAnswer: string;
+}) {
+  return (
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col">
+      <div className="w-8 h-8 rounded-full bg-orange text-white text-sm font-bold flex items-center justify-center mb-4">
+        {num}
+      </div>
+      <p className="text-charcoal font-bold text-base md:text-lg leading-snug mb-4">
+        {question}
+      </p>
+      <div className="border-t border-dashed border-gray-300 my-1" />
+      <div className="mt-3 mb-3">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-1">
+          {whyAskLabel}
+        </p>
+        <p className="text-sm text-gray-700 leading-relaxed">
+          {whyAsk}
+        </p>
+      </div>
+      <div className="bg-emerald-50 border-l-[3px] border-emerald-700 rounded-r-lg px-3 py-2.5 mt-auto">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 mb-1">
+          {honestAnswerLabel}
+        </p>
+        <p className="text-sm text-charcoal font-semibold leading-relaxed">
+          {honestAnswer}
+        </p>
+      </div>
+    </div>
   );
 }
 

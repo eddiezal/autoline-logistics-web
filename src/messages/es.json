@@ -168,6 +168,32 @@
           "linkText": "Conozca al equipo"
         }
       }
+    },
+    "antiScam": {
+      "eyebrow": "Guía anti-estafas",
+      "title": "Tres preguntas que",
+      "titleAccent": "exponen el 95% de las estafas de corredores.",
+      "lead": "Le diremos qué preguntar — y cómo suena una respuesta honesta. Úselo con nosotros. Úselo con cualquiera.",
+      "whyAskLabel": "Por qué preguntarlo",
+      "honestAnswerLabel": "Una respuesta honesta suena así",
+      "hubLink": "Ver la guía anti-estafas completa →",
+      "questions": {
+        "leadGen": {
+          "question": "\"¿Es usted el corredor que realmente arreglará mi envío, o compró mi información de un servicio de leads?\"",
+          "whyAsk": "Los sitios de lead-gen se hacen pasar por corredores, luego revenden su número a más de 8 corredores reales en segundos. La \"cotización\" que vio nunca fue suya para honrar.",
+          "honestAnswer": "\"Somos el corredor. Nosotros mismos arreglamos cada envío. Sin reventa.\""
+        },
+        "reviews": {
+          "question": "\"¿Cuál es el patrón de fechas de sus reseñas? ¿Puedo verlas ordenadas por fecha?\"",
+          "whyAsk": "Las paredes de reseñas falsas se agrupan — 40 reseñas perfectas en 48 horas, luego silencio. Los patrones de reseñas reales son irregulares, mixtos y constantes.",
+          "honestAnswer": "\"Ordene por fecha en cualquiera de nuestras fuentes — Google, BBB, Transport Reviews. No estamos ocultando la línea de tiempo.\""
+        },
+        "deposit": {
+          "question": "\"¿Su depósito se aplica al transportista, o es su comisión?\"",
+          "whyAsk": "Si el \"depósito\" es la comisión del corredor y no encuentran un transportista, su dinero puede desaparecer sin nadie responsable por su envío.",
+          "honestAnswer": "\"Es nuestra comisión, y es reembolsable si realmente no reservamos su envío.\""
+        }
+      }
     }
   },
   "pricePromise": {

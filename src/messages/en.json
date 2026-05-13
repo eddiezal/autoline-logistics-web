@@ -168,6 +168,32 @@
           "linkText": "Meet the team"
         }
       }
+    },
+    "antiScam": {
+      "eyebrow": "Anti-scam guide",
+      "title": "Three questions that",
+      "titleAccent": "expose 95% of broker scams.",
+      "lead": "We'll tell you what to ask — and what an honest answer sounds like. Use it on us. Use it on anyone.",
+      "whyAskLabel": "Why ask it",
+      "honestAnswerLabel": "Honest answer sounds like",
+      "hubLink": "See the full anti-scam hub →",
+      "questions": {
+        "leadGen": {
+          "question": "\"Are you the broker who'll actually arrange my shipment, or did you buy my info from a lead service?\"",
+          "whyAsk": "Lead-gen sites mask as brokers, then resell your number to 8+ real brokers in seconds. The \"quote\" you saw was never theirs to honor.",
+          "honestAnswer": "\"We are the broker. We arrange every shipment ourselves. No reselling.\""
+        },
+        "reviews": {
+          "question": "\"What's the date pattern of your reviews? Can I see them sorted by date?\"",
+          "whyAsk": "Fake review walls cluster — 40 perfect reviews in 48 hours, then silence. Real review patterns are bumpy, mixed, and steady.",
+          "honestAnswer": "\"Sort by date on any of our review sources — Google, BBB, Transport Reviews. We're not hiding the timeline.\""
+        },
+        "deposit": {
+          "question": "\"Is your deposit applied to the carrier, or is it your commission?\"",
+          "whyAsk": "If the \"deposit\" is the broker's commission and they can't find a carrier, your money may be gone with no one accountable for your shipment.",
+          "honestAnswer": "\"It's our commission, and it's refundable if we don't actually book your shipment.\""
+        }
+      }
     }
   },
   "pricePromise": {
