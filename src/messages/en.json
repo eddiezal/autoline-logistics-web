@@ -62,11 +62,11 @@
       "people": "People Promise"
     },
     "rights": "All rights reserved.",
-    "credentials": "MC# [pending] · DOT# [pending] · BMC-84 Bond on file"
+    "credentials": "USDOT 3961864 · MC 1477788 · BMC-84 Bond on file"
   },
   "home": {
     "hero": {
-      "eyebrow": "Auto Line Logistics, LLC",
+      "eyebrow": "Auto Line Logistics, Inc.",
       "title": "Locked-price auto transport.",
       "titleAccent": "No surprises.",
       "description": "Real-time tracking. Photo evidence at every step. A damage protection promise. Built for individual customers who deserve more than a quote and a hope.",
@@ -87,12 +87,12 @@
           "cta": "See the Price Promise →"
         },
         "damage": {
-          "stat": "$575K",
-          "statLabel": "Layered protection",
+          "stat": "$500K",
+          "statLabel": "Cargo coverage",
           "eyebrow": "Damage Promise",
           "headline": "Covered beyond the carrier's insurance.",
           "conditionLine": "If damage exceeds the carrier's policy…",
-          "consequenceLine": "Our $500K layered coverage kicks in. You file with us, not them.",
+          "consequenceLine": "Our $500K contingent cargo coverage kicks in. You file with us, not them.",
           "cta": "See the Damage Promise →"
         },
         "people": {
@@ -109,7 +109,7 @@
     "services": {
       "eyebrow": "Our services",
       "title": "How we ship.",
-      "lead": "Three ways to move your vehicle. Run by our own fleet plus a vetted partner network — never resold to the lowest bidder on a load board.",
+      "lead": "Three ways to move your vehicle. Run through our family-operated fleet at Auto Line Express plus a vetted partner network — never resold to the lowest bidder on a load board.",
       "seeAllLink": "See all service details →"
     },
     "howItWorks": {
@@ -149,7 +149,7 @@
           "tag": "People Promise",
           "stat": "35",
           "title": "Family-owned fleet",
-          "description": "Started as a single driver. Scaled to 35 trucks under one family operation, plus a vetted partner network.",
+          "description": "Started as a single truck. Scaled to 35 trucks under one family operation at Auto Line Express, plus a vetted partner network.",
           "linkText": "See the People Promise"
         },
         "volume": {
@@ -161,9 +161,9 @@
         },
         "coverage": {
           "tag": "Damage Promise",
-          "stat": "$575K",
-          "title": "Layered insurance + bond",
-          "description": "$75K bond plus $500K contingent cargo. Most brokers carry only the bond minimum.",
+          "stat": "$500K",
+          "title": "Contingent cargo coverage",
+          "description": "$500K above the carrier's policy. Most brokers carry only the bond minimum.",
           "linkText": "See the Damage Promise"
         },
         "bilingual": {
@@ -445,7 +445,7 @@
         },
         "1": {
           "q": "Who pays for the damage — you or the carrier?",
-          "a": "Carriers carry mandatory cargo insurance (typically $100K–$250K). For most damage events, the carrier's insurance covers the claim. If their coverage falls short, our $500,000 contingent cargo liability and $75,000 broker bond kick in. The customer never sees that complexity — we handle it on the back end."
+          "a": "Carriers carry mandatory cargo insurance (typically $100K–$250K). For most damage events, the carrier's insurance covers the claim. If their coverage falls short, our $500,000 contingent cargo liability kicks in. The customer never sees that complexity — we handle it on the back end."
         },
         "2": {
           "q": "What's NOT covered?",
@@ -467,7 +467,7 @@
     },
     "cta": {
       "title": "Ship with the broker that owns the claim.",
-      "description": "Locked price. $575K of layered protection. A 14-day claim resolution target. Real coordinators. Get a quote in 60 seconds.",
+      "description": "Locked price. $500K of contingent cargo coverage. A 14-day claim resolution target. Real coordinators. Get a quote in 60 seconds.",
       "primary": "Get my locked price",
       "secondary": "Read the People Promise →"
     }
@@ -487,7 +487,7 @@
     },
     "commitments": {
       "eyebrow": "Our commitments",
-      "title": "Four things we promise. Backed by how we've operated since 2014.",
+      "title": "Four things we promise. Backed by how we've operated since 2011.",
       "cards": {
         "named": {
           "title": "Named coordinator on every shipment",
@@ -498,7 +498,7 @@
           "description": "Native Spanish and English coverage on the customer-facing team. The whole site is translated end-to-end, not just bolt-on widgets."
         },
         "family": {
-          "title": "Family-owned and operated since 2014",
+          "title": "Family-owned and operated since 2011",
           "description": "Real names on the company. Decision authority sits with the people doing the work. We've built this on individual accountability."
         },
         "noScript": {
@@ -550,7 +550,7 @@
         },
         "2": {
           "q": "What does “family-owned and operated” actually change?",
-          "a": "Decision authority sits with the people doing the work. When something goes wrong, escalation doesn't mean climbing a corporate ladder — it means walking down the hall. We've built the company since 2014 by treating individual reputation as the company's reputation."
+          "a": "Decision authority sits with the people doing the work. When something goes wrong, escalation doesn't mean climbing a corporate ladder — it means walking down the hall. We've built the company since 2011 by treating individual reputation as the company's reputation."
         },
         "3": {
           "q": "What if my coordinator is on vacation when something goes wrong?",
@@ -587,7 +587,7 @@
       "title": "We started Auto Line Logistics because the industry had earned its bad reputation.",
       "body": {
         "0": "Most auto transport companies in this country are brokers — they take your deposit, post your car to a load board, and hope someone picks it up at the lowest bid. When a carrier finally accepts the load, they raise the price. And if your car shows up damaged? You're on your own with the carrier's insurance.",
-        "1": "We do this differently. We're a family-owned company based in Southern California. We operate our own trucks where the route makes sense, and we contract with a vetted network of partner carriers everywhere else — every one of them held to the same standards.",
+        "1": "We do this differently. We're a family operation based in Southern California. Our sister carrier company, Auto Line Express, runs a 35-truck fleet that handles routes where it makes operational sense. For everywhere else, we contract with a vetted network of partner carriers — every one of them held to the same standards.",
         "2": "The number on your quote is the number on your invoice. Your coordinator is a real person whose name you'll know. And your car is covered above and beyond the carrier's minimums — because cars get damaged, and pretending otherwise is how customers get burned."
       },
       "sidebar": {
@@ -598,8 +598,8 @@
             "description": "Independent. Not a call-center, not a franchise."
           },
           "coverage": {
-            "amount": "$575K",
-            "description": "Layered cargo coverage on every shipment, beyond the carrier's policy."
+            "amount": "$500K",
+            "description": "Contingent cargo coverage on every shipment, above the carrier's policy."
           },
           "usBased": {
             "amount": "US-based",
@@ -622,7 +622,7 @@
         "damage": {
           "eyebrow": "Damage Promise",
           "headline": "Layered coverage →",
-          "description": "$575K above the carrier's policy. We handle the claim — you don't fight insurance alone."
+          "description": "$500K above the carrier's policy. We handle the claim — you don't fight insurance alone."
         },
         "people": {
           "eyebrow": "People Promise",
@@ -678,8 +678,8 @@
         },
         "dispatch": {
           "name": "TBD",
-          "role": "Dispatch & fleet",
-          "bio": "Bio + photo pending. Manages our owned trucks and the carrier-partner network that handles routes outside our direct fleet."
+          "role": "Dispatch & operations",
+          "bio": "Bio + photo pending. Manages the family-operated fleet at Auto Line Express plus the vetted partner network."
         }
       },
       "footnote": "Photo and bio confirmations pending — Ben to provide. We'd rather show placeholders than stock-photo a team page."
@@ -691,12 +691,12 @@
       "cards": {
         "mc": {
           "label": "MC Number",
-          "value": "MC-XXXXXX",
+          "value": "MC 1477788",
           "note": "FMCSA motor-carrier authority"
         },
         "dot": {
           "label": "USDOT Number",
-          "value": "DOT-XXXXXXX",
+          "value": "USDOT 3961864",
           "note": "USDOT operating authority"
         },
         "bond": {
@@ -706,8 +706,8 @@
         },
         "cargo": {
           "label": "Cargo Coverage",
-          "value": "$575K",
-          "note": "Layered above carrier minimums"
+          "value": "$500K",
+          "note": "Contingent — above the carrier's policy"
         }
       },
       "pendingLabel": "Pending confirmation",
@@ -730,7 +730,7 @@
       "items": {
         "0": {
           "q": "Are you a broker or a carrier?",
-          "a": "Both — and we're upfront about it. We operate our own trucks on routes where it makes operational sense, and we contract with a vetted network of partner carriers everywhere else. Every carrier we work with is held to the same standards as our own fleet. The Damage Promise applies regardless of who's driving."
+          "a": "Auto Line Logistics is a licensed broker. Our sister carrier company, Auto Line Express, operates a 35-truck fleet that we route loads to where it makes operational sense — and we contract with a vetted network of partner carriers everywhere else. Every carrier we work with is held to the same standards. The Damage Promise applies regardless of who's driving."
         },
         "1": {
           "q": "Where are you based?",
@@ -870,8 +870,8 @@
           "detail": "Whatever number you receive is the number on your invoice. No surcharges, no carrier-cost-overage calls."
         },
         "coverage": {
-          "title": "$575K coverage",
-          "detail": "$75K bond + $500K contingent cargo. We file claims directly with the carrier so you don't chase."
+          "title": "$500K coverage",
+          "detail": "$500K contingent cargo coverage. We file claims directly with the carrier so you don't chase."
         },
         "named": {
           "title": "Named coordinator",
@@ -1095,7 +1095,7 @@
           },
           "damage": {
             "eyebrow": "Damage Promise",
-            "headline": "$575K layered coverage →"
+            "headline": "$500K cargo coverage →"
           },
           "people": {
             "eyebrow": "People Promise",
@@ -1618,7 +1618,7 @@
       "eyebrow": "Our services",
       "title": "Three ways to move",
       "titleAccent": "your vehicle.",
-      "lead": "Run by our own fleet plus a vetted partner network — never resold to the lowest bidder on a load board. Whichever tier you pick, the Damage Promise and Price Promise apply equally."
+      "lead": "Run through our family-operated fleet at Auto Line Express plus a vetted partner network — never resold to the lowest bidder on a load board. Whichever tier you pick, the Damage Promise and Price Promise apply equally."
     },
     "compare": {
       "eyebrow": "Side by side",

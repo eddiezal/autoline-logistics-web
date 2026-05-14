@@ -62,11 +62,11 @@
       "people": "Promesa Personal"
     },
     "rights": "Todos los derechos reservados.",
-    "credentials": "MC# [pendiente] · DOT# [pendiente] · Fianza BMC-84 registrada"
+    "credentials": "USDOT 3961864 · MC 1477788 · Fianza BMC-84 registrada"
   },
   "home": {
     "hero": {
-      "eyebrow": "Auto Line Logistics, LLC",
+      "eyebrow": "Auto Line Logistics, Inc.",
       "title": "Transporte de autos con precio fijo.",
       "titleAccent": "Sin sorpresas.",
       "description": "Seguimiento en tiempo real. Evidencia fotográfica en cada paso. Una promesa de protección contra daños. Hecho para personas que merecen más que una cotización y una promesa vacía.",
@@ -87,7 +87,7 @@
           "cta": "Ver la Promesa de Precio →"
         },
         "damage": {
-          "stat": "$575K",
+          "stat": "$500K",
           "statLabel": "Protección por capas",
           "eyebrow": "Promesa contra Daños",
           "headline": "Cobertura más allá del seguro del transportista.",
@@ -109,7 +109,7 @@
     "services": {
       "eyebrow": "Nuestros servicios",
       "title": "Cómo enviamos.",
-      "lead": "Tres formas de mover su vehículo. Operadas por nuestra propia flota más una red de socios verificados — nunca revendidas al postor más bajo en un tablón de cargas.",
+      "lead": "Tres formas de mover su vehículo. Operadas a través de nuestra flota familiar en Auto Line Express más una red de socios verificados — nunca revendidas al postor más bajo en un tablón de cargas.",
       "seeAllLink": "Ver todos los detalles del servicio →"
     },
     "howItWorks": {
@@ -149,7 +149,7 @@
           "tag": "Promesa Personal",
           "stat": "35",
           "title": "Flota familiar",
-          "description": "Comenzamos con un solo conductor. Crecimos a 35 camiones bajo una operación familiar, además de una red de socios verificados.",
+          "description": "Comenzamos con un solo camión. Crecimos a 35 camiones bajo una operación familiar en Auto Line Express, además de una red de socios verificados.",
           "linkText": "Ver la Promesa Personal"
         },
         "volume": {
@@ -161,7 +161,7 @@
         },
         "coverage": {
           "tag": "Promesa contra Daños",
-          "stat": "$575K",
+          "stat": "$500K",
           "title": "Seguro y fianza por capas",
           "description": "$75K en fianza más $500K en carga contingente. La mayoría de los corredores solo llevan el mínimo de fianza.",
           "linkText": "Ver la Promesa contra Daños"
@@ -467,7 +467,7 @@
     },
     "cta": {
       "title": "Envíe con el corredor que asume el reclamo.",
-      "description": "Precio fijo. $575K de protección por capas. Meta de resolución de reclamos en 14 días. Coordinadores reales. Obtenga una cotización en 60 segundos.",
+      "description": "Precio fijo. $500K de cobertura de carga contingente. Meta de resolución de reclamos en 14 días. Coordinadores reales. Obtenga una cotización en 60 segundos.",
       "primary": "Obtenga su precio fijo",
       "secondary": "Lea la Promesa Personal →"
     }
@@ -487,7 +487,7 @@
     },
     "commitments": {
       "eyebrow": "Nuestros compromisos",
-      "title": "Cuatro cosas que prometemos. Respaldadas por cómo operamos desde 2014.",
+      "title": "Cuatro cosas que prometemos. Respaldadas por cómo operamos desde 2011.",
       "cards": {
         "named": {
           "title": "Coordinador con nombre en cada envío",
@@ -498,7 +498,7 @@
           "description": "Cobertura nativa en español e inglés en el equipo de cara al cliente. El sitio entero está traducido de principio a fin, no son widgets agregados."
         },
         "family": {
-          "title": "Empresa familiar desde 2014",
+          "title": "Empresa familiar desde 2011",
           "description": "Nombres reales en la compañía. La autoridad de decisión está con quienes hacen el trabajo. Hemos construido esto sobre la responsabilidad individual."
         },
         "noScript": {
@@ -550,7 +550,7 @@
         },
         "2": {
           "q": "¿Qué cambia realmente que sea «empresa familiar»?",
-          "a": "La autoridad para tomar decisiones está con las personas que hacen el trabajo. Cuando algo sale mal, escalar no significa subir por una escalera corporativa — significa caminar por el pasillo. Hemos construido la empresa desde 2014 tratando la reputación individual como la reputación de la empresa."
+          "a": "La autoridad para tomar decisiones está con las personas que hacen el trabajo. Cuando algo sale mal, escalar no significa subir por una escalera corporativa — significa caminar por el pasillo. Hemos construido la empresa desde 2011 tratando la reputación individual como la reputación de la empresa."
         },
         "3": {
           "q": "¿Qué pasa si mi coordinador está de vacaciones cuando algo sale mal?",
@@ -587,7 +587,7 @@
       "title": "Empezamos Auto Line Logistics porque la industria se había ganado su mala reputación.",
       "body": {
         "0": "La mayoría de las empresas de transporte de autos en este país son corredores — toman su depósito, publican su auto en un tablón de cargas, y esperan que alguien lo recoja al precio más bajo. Cuando un transportista finalmente acepta la carga, suben el precio. ¿Y si su auto llega dañado? Está solo con el seguro del transportista.",
-        "1": "Nosotros lo hacemos diferente. Somos una empresa familiar basada en el sur de California. Operamos nuestros propios camiones donde la ruta tiene sentido, y trabajamos con una red verificada de transportistas asociados en todos los demás lugares — cada uno de ellos sometido a los mismos estándares.",
+        "1": "Nosotros lo hacemos diferente. Somos una operación familiar basada en el sur de California. Nuestra compañía hermana, Auto Line Express, opera una flota de 35 camiones que cubre las rutas donde tiene sentido operativo. Para el resto, trabajamos con una red verificada de transportistas asociados — cada uno de ellos sometido a los mismos estándares.",
         "2": "El número en su cotización es el número en su factura. Su coordinador es una persona real cuyo nombre conocerá. Y su auto está cubierto más allá de los mínimos del transportista — porque los autos se dañan, y pretender lo contrario es como los clientes terminan estafados."
       },
       "sidebar": {
@@ -598,8 +598,8 @@
             "description": "Independiente. No es un centro de llamadas, no es una franquicia."
           },
           "coverage": {
-            "amount": "$575K",
-            "description": "Cobertura de carga por capas en cada envío, más allá de la póliza del transportista."
+            "amount": "$500K",
+            "description": "Cobertura de carga contingente en cada envío, por encima de la póliza del transportista."
           },
           "usBased": {
             "amount": "Basado en EE. UU.",
@@ -622,7 +622,7 @@
         "damage": {
           "eyebrow": "Promesa contra Daños",
           "headline": "Cobertura por capas →",
-          "description": "$575K por encima de la póliza del transportista. Nosotros manejamos el reclamo — usted no pelea solo con el seguro."
+          "description": "$500K por encima de la póliza del transportista. Nosotros manejamos el reclamo — usted no pelea solo con el seguro."
         },
         "people": {
           "eyebrow": "Promesa Personal",
@@ -649,7 +649,7 @@
         "title": "Cómo lo estructuramos nosotros",
         "items": {
           "0": "Precio fijo al reservar — escrito en el acuerdo",
-          "1": "Red verificada de transportistas con los que hemos trabajado durante años, más nuestros propios camiones",
+          "1": "Red verificada de transportistas con los que hemos trabajado durante años, más la flota familiar en Auto Line Express",
           "2": "Sin cláusula de recargo — si los costos cambian, ese es nuestro problema, no el suyo",
           "3": "Coordinador con nombre desde la cotización hasta la entrega",
           "4": "Cobertura por capas y nosotros presentamos el reclamo de daños si sucede"
@@ -678,8 +678,8 @@
         },
         "dispatch": {
           "name": "Por confirmar",
-          "role": "Despacho y flota",
-          "bio": "Biografía y foto pendientes. Maneja nuestros camiones propios y la red de transportistas asociados que cubren rutas fuera de nuestra flota directa."
+          "role": "Despacho y operaciones",
+          "bio": "Biografía y foto pendientes. Maneja la flota familiar en Auto Line Express más la red de transportistas asociados."
         }
       },
       "footnote": "Confirmaciones de fotos y biografías pendientes — Ben las proporcionará. Preferimos mostrar marcadores antes que llenar la página del equipo con fotos genéricas."
@@ -691,12 +691,12 @@
       "cards": {
         "mc": {
           "label": "Número MC",
-          "value": "MC-XXXXXX",
+          "value": "MC 1477788",
           "note": "Autoridad de transportista motorizado FMCSA"
         },
         "dot": {
           "label": "Número USDOT",
-          "value": "DOT-XXXXXXX",
+          "value": "USDOT 3961864",
           "note": "Autoridad operativa USDOT"
         },
         "bond": {
@@ -706,8 +706,8 @@
         },
         "cargo": {
           "label": "Cobertura de Carga",
-          "value": "$575K",
-          "note": "Por capas sobre los mínimos del transportista"
+          "value": "$500K",
+          "note": "Contingente — por encima de la póliza del transportista"
         }
       },
       "pendingLabel": "Pendiente de confirmación",
@@ -730,7 +730,7 @@
       "items": {
         "0": {
           "q": "¿Son corredores o transportistas?",
-          "a": "Ambos — y somos transparentes al respecto. Operamos nuestros propios camiones en rutas donde tiene sentido operativo, y trabajamos con una red verificada de transportistas asociados en todos los demás lugares. Cada transportista con el que trabajamos cumple con los mismos estándares que nuestra flota propia. La Promesa contra Daños aplica sin importar quién esté manejando."
+          "a": "Auto Line Logistics es un agente con licencia. Nuestra compañía hermana, Auto Line Express, opera una flota de 35 camiones a la que enrutamos las cargas donde tiene sentido operativo — y trabajamos con una red verificada de transportistas asociados en todos los demás lugares. Cada transportista con el que trabajamos cumple con los mismos estándares. La Promesa contra Daños aplica sin importar quién esté manejando."
         },
         "1": {
           "q": "¿Dónde están ubicados?",
@@ -870,7 +870,7 @@
           "detail": "Cualquier número que reciba es el número en su factura. Sin recargos, sin llamadas de sobrecostos del transportista."
         },
         "coverage": {
-          "title": "Cobertura de $575K",
+          "title": "Cobertura de $500K",
           "detail": "Fianza de $75K + carga contingente de $500K. Presentamos los reclamos directamente con el transportista para que usted no persiga a nadie."
         },
         "named": {
@@ -1095,7 +1095,7 @@
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
-            "headline": "Cobertura por capas de $575K →"
+            "headline": "Cobertura de carga de $500K →"
           },
           "people": {
             "eyebrow": "Promesa Personal",
@@ -1618,7 +1618,7 @@
       "eyebrow": "Nuestros servicios",
       "title": "Tres formas de mover",
       "titleAccent": "su vehículo.",
-      "lead": "Operadas por nuestra propia flota más una red de socios verificados — nunca revendidas al postor más bajo. Cualquiera que elija, la Promesa contra Daños y la Promesa de Precio aplican por igual."
+      "lead": "Operadas a través de nuestra flota familiar en Auto Line Express más una red de socios verificados — nunca revendidas al postor más bajo. Cualquiera que elija, la Promesa contra Daños y la Promesa de Precio aplican por igual."
     },
     "compare": {
       "eyebrow": "Lado a lado",

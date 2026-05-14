@@ -10,7 +10,7 @@ import { PromiseFooterNav } from "@/components/PromiseFooterNav";
 export const metadata: Metadata = {
   title: "People Promise — Real people, by name",
   description:
-    "Family-owned and operated since 2014. Bilingual coverage in English and Spanish. Named coordinator on every shipment. Real names on the company.",
+    "Family-owned and operated since 2011. Bilingual coverage in English and Spanish. Named coordinator on every shipment. Real names on the company.",
 };
 
 const COMMITMENT_KEYS = ["named", "bilingual", "family", "noScript"] as const;

@@ -77,7 +77,7 @@ export default function Home() {
         {/* Triple Promise — V3d redesign with stat anchors + receipt panels.
             TODO (before production cutover): verify stat claims with Ben:
               - "$0 surprise upcharges, ever" — strongest claim, needs the strongest defense
-              - "$575K layered protection" — confirm $75K bond + $500K contingent cargo
+              - "$500K cargo coverage" — confirmed by Ben May 13 (bond dropped, cargo only)
               - "1 named coordinator" — confirm operational reality */}
         <section className="py-20 bg-white">
           <Container>
@@ -296,7 +296,7 @@ export default function Home() {
             TODO (before production cutover): verify stat claims with Ben:
               - "35-truck family fleet" — confirm number + add vetted-partner caveat
               - "45,000 vehicles in 2025" — confirm number
-              - "$575K layered coverage" — duplicate of Triple Promise, must match
+              - "$500K cargo coverage" — duplicate of Triple Promise, must match
               - "Native bilingual" — confirm + decide whether to name Renee */}
         <section className="py-20 bg-white">
           <Container>
@@ -454,7 +454,7 @@ export default function Home() {
             </p>
             <p className="text-gray-700 text-sm mt-2">
               <span className="font-semibold text-orange-dark">⚠ Pending owner verification before launch:</span>{" "}
-              Triple Promise stats ($0 surprise upcharges · $575K layered
+              Triple Promise stats ($0 surprise upcharges · $500K cargo
               coverage · 1 named coordinator); Behind the Promise stats
               (35-truck fleet · 45,000 vehicles in 2025 · native bilingual).
               Production cutover to{" "}

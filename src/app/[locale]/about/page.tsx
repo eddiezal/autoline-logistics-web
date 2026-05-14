@@ -11,7 +11,7 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
  * About page — voice C+D (Modern Trust Operator + Anti-Scam Educator).
  *
  * TODO — placeholders awaiting confirmation from Ben:
- *   - Founding year ("since 2014" used below — confirm with Ben before launch)
+ *   - Founding year — confirmed 2011 May 13 staging review
  *   - MC#, DOT#, BMC-84 bond number + holder name
  *   - Team member names, titles, bios, headshots beyond Ben
  *   - Real customer testimonials (none reproduced — placeholder only)
@@ -32,8 +32,8 @@ const TEAM_PLACEHOLDER: Record<(typeof TEAM_KEYS)[number], boolean> = {
 };
 const CRED_KEYS = ["mc", "dot", "bond", "cargo"] as const;
 const CRED_PENDING: Record<(typeof CRED_KEYS)[number], boolean> = {
-  mc: true,
-  dot: true,
+  mc: false,
+  dot: false,
   bond: true,
   cargo: false,
 };

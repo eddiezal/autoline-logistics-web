@@ -101,7 +101,7 @@ export function Footer() {
 
         <div className="border-t border-gray-700 mt-12 pt-6 flex flex-col md:flex-row justify-between gap-3 text-xs text-gray-500">
           <span>
-            © {year} Auto Line Logistics, LLC. {t("footer.rights")}
+            © {year} Auto Line Logistics, Inc. {t("footer.rights")}
           </span>
           <span>{t("footer.credentials")}</span>
         </div>
