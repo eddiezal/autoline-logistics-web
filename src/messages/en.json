@@ -94,6 +94,10 @@
       "promises": "Promises",
       "resources": "Resources",
       "about": "About"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu"
     }
   },
   "footer": {
