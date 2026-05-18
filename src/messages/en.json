@@ -67,49 +67,118 @@
   "home": {
     "hero": {
       "eyebrow": "Auto Line Logistics, Inc.",
-      "title": "Locked-price auto transport.",
+      "title": "Ship your car without the <nobreak>bait-and-switch</nobreak>.",
       "titleAccent": "No surprises.",
-      "description": "Real-time tracking. Photo evidence at every step. A damage protection promise. Built for individual customers who deserve more than a quote and a hope.",
+      "description": "Tracked. Photographed. Covered. From pickup to delivery, you'll see every step, talk to one named coordinator, and never have to chase a claim.",
       "ctaPrimary": "Get my locked price",
       "ctaSecondary": "See how it works"
     },
+    "trustStrip": {
+      "ariaLabel": "Compliance and credentials",
+      "items": {
+        "dot": "USDOT 3961864",
+        "mc": "MC 1477788",
+        "bond": "BMC-84 Bond",
+        "fleet": "Family-operated fleet"
+      },
+      "dotUrl": "https://safer.fmcsa.dot.gov/CompanySnapshot.aspx?USDOTNumber=3961864",
+      "dotTitle": "Verify on FMCSA SAFER (opens in new tab)"
+    },
     "triplePromise": {
       "eyebrow": "Our triple promise",
-      "title": "Three commitments. Each with a guarantee attached.",
+      "title": "<nobreak>Three promises.</nobreak> <nobreak>Three guarantees.</nobreak> <nobreak>Zero asterisks.</nobreak>",
       "cards": {
         "price": {
           "stat": "$0",
           "statLabel": "Surprise upcharges, ever",
           "eyebrow": "Price Promise",
           "headline": "You pick the speed. We lock the price.",
-          "conditionLine": "If a carrier wants more after booking…",
-          "consequenceLine": "We eat the difference. Your invoice never moves.",
+          "conditionLine": "If our cost goes up after we quote you…",
+          "consequenceLine": "That's our problem. Your invoice doesn't change.",
+          "clarifier": "Locked once your route, vehicle, pickup access, and timeline are confirmed.",
           "cta": "See the Price Promise →"
         },
         "damage": {
           "stat": "$500K",
           "statLabel": "Cargo coverage",
           "eyebrow": "Damage Promise",
-          "headline": "Covered beyond the carrier's insurance.",
-          "conditionLine": "If damage exceeds the carrier's policy…",
-          "consequenceLine": "Our $500K contingent cargo coverage kicks in. You file with us, not them.",
+          "headline": "If the carrier's policy runs out, <nobreak>we don't</nobreak>.",
+          "conditionLine": "If the carrier's insurance doesn't cover it…",
+          "consequenceLine": "Our $500K backstop does. And we file the claim — not you.",
           "cta": "See the Damage Promise →"
         },
         "people": {
-          "stat": "1",
+          "stat": "ONE",
           "statLabel": "Coordinator, by name",
           "eyebrow": "People Promise",
-          "headline": "You'll always talk to a real person.",
-          "conditionLine": "If you call about your shipment…",
-          "consequenceLine": "Your named coordinator picks up. No call queue, no handoffs.",
-          "cta": "Meet the team →"
+          "headline": "Same coordinator. Quote to delivery. By name.",
+          "conditionLine": "When you call…",
+          "consequenceLine": "The same coordinator who booked you picks up. Every time.",
+          "cta": "See the People Promise →"
         }
+      }
+    },
+    "antiScamTeaser": {
+      "eyebrow": "Anti-scam check",
+      "title": "Not all auto transport quotes are real.",
+      "lead": "Before you book with anyone, ask these 3 questions:",
+      "featuredTag": "Most common scam",
+      "questions": {
+        "1": {
+          "text": "\"Are you the broker who'll actually arrange my shipment?\"",
+          "scamText": "Lead-gen sites mask as brokers, then resell your number to 8+ real brokers in seconds. The \"quote\" you saw was never theirs to honor — and now 8 strangers have your phone number."
+        },
+        "2": {
+          "text": "\"Will you tell me which carrier is moving my car?\"",
+          "scamText": "Shady brokers hide the carrier so you can't verify the trucker."
+        },
+        "3": {
+          "text": "\"What happens if I don't hear from anyone for 3 days during transit?\"",
+          "scamText": "Brokers who vanish after booking. No updates, no contact, no tracking."
+        }
+      },
+      "ctaText": "See the full guide with honest answers →"
+    },
+    "portalPreview": {
+      "eyebrow": "After you book",
+      "title": "You're never in the dark.",
+      "lead": "Three days of silence isn't our thing. Open your shipment dashboard anytime — location, photos, and your coordinator one tap away.",
+      "callouts": {
+        "1": {
+          "title": "Live tracking",
+          "text": "See where your car is, in real time. No \"we'll get back to you.\""
+        },
+        "2": {
+          "title": "Photo evidence",
+          "text": "Photos at pickup, transit, and delivery — uploaded as they happen, not after."
+        },
+        "3": {
+          "title": "Named coordinator",
+          "text": "One person on the line, from booking through delivery. By name. English or Spanish."
+        }
+      },
+      "cta": "Get my locked price",
+      "mockup": {
+        "brand": "AUTO LINE",
+        "shipmentId": "#ALL-2026-04831",
+        "status": "In transit",
+        "pickupLabel": "Pickup · Los Angeles",
+        "destLabel": "Austin, TX",
+        "etaLabel": "Estimated arrival",
+        "etaTime": "Thu, May 22 · 3:30pm",
+        "etaSub": "Currently in Amarillo, TX",
+        "confidence": "78% confidence",
+        "photosLabel": "Shipment photos",
+        "photosCount": "12 · pickup + transit",
+        "coordName": "Danielle Martinez",
+        "coordRole": "Your coordinator · EN / ES",
+        "messageBtn": "Message"
       }
     },
     "services": {
       "eyebrow": "Our services",
       "title": "How we ship.",
-      "lead": "Three ways to move your vehicle. Run through our family-operated fleet at Auto Line Express plus a vetted partner network — never resold to the lowest bidder on a load board.",
+      "lead": "Three ways to move your vehicle. All backed by the same Triple Promise — never resold to the lowest bidder on a load board.",
       "seeAllLink": "See all service details →"
     },
     "howItWorks": {
@@ -121,7 +190,7 @@
           "label": "Step 1",
           "title": "Lock your price.",
           "description": "Tell us where it's coming from, where it's going, and what you're shipping. You'll see your locked, all-in price in under a minute — no surprise upcharges later.",
-          "proof1": "Quote in 1 business hour",
+          "proof1": "Instant quote",
           "proof2": "Price = final invoice"
         },
         "pickup": {
@@ -189,28 +258,28 @@
           "whyAsk": "Lead-gen sites mask as brokers, then resell your number to 8+ real brokers in seconds. The \"quote\" you saw was never theirs to honor.",
           "honestAnswer": "\"We are the broker. We arrange every shipment ourselves. No reselling.\""
         },
-        "reviews": {
-          "question": "\"What's the date pattern of your reviews? Can I see them sorted by date?\"",
-          "whyAsk": "Fake review walls cluster — 40 perfect reviews in 48 hours, then silence. Real review patterns are bumpy, mixed, and steady.",
-          "honestAnswer": "\"Sort by date on any of our review sources — Google, BBB, Transport Reviews. We're not hiding the timeline.\""
+        "carrier": {
+          "question": "\"Will you tell me the carrier's name, USDOT, and driver contact — before pickup, in writing?\"",
+          "whyAsk": "Shady brokers hide the actual carrier so customers can't verify the trucker, their insurance, or their DOT history. The broker collects the markup, then disappears if anything goes wrong.",
+          "honestAnswer": "\"Yes — we send the carrier name, USDOT number, and driver contact as soon as we assign the load. Verifiable on the FMCSA SAFER database.\""
         },
-        "deposit": {
-          "question": "\"Is your deposit applied to the carrier, or is it your commission?\"",
-          "whyAsk": "If the \"deposit\" is the broker's commission and they can't find a carrier, your money may be gone with no one accountable for your shipment.",
-          "honestAnswer": "\"It's our commission, and it's refundable if we don't actually book your shipment.\""
+        "transit": {
+          "question": "\"What happens if I don't hear from anyone for 3 days during transit?\"",
+          "whyAsk": "Many brokers vanish after booking. No proactive updates, no point of contact, no tracking. By the time you realize something's off, your car is somewhere in Texas and nobody knows where.",
+          "honestAnswer": "\"You'd never go 3 days without hearing from us — proactive milestone updates at pickup, en route, and pre-delivery, plus your coordinator answers if you call between them.\""
         }
       }
     },
     "finalCta": {
       "eyebrow": "Ready to ship?",
-      "title": "Lock your price in 1 business hour.",
-      "lead": "Send us your origin, destination, and vehicle. Your coordinator replies with a locked, all-in price. No deposit to get a quote. No obligation if you don't book.",
+      "title": "Lock your price instantly.",
+      "lead": "Type your origin, destination, and vehicle. Get your locked all-in price instantly. Your named coordinator takes over from booking — no deposit to lock the price, no obligation until you book.",
       "button": "Get my locked price",
-      "trustLine": "Quote in 1 business hour · Price = final invoice · No deposit to quote"
+      "trustLine": "Instant quote · Price = final invoice · No deposit to quote"
     },
     "heroRouteFinder": {
-      "title": "Start with your route.",
-      "subtitle": "We'll show you the route + recommended tier. Locked price comes after a 1-hour coordinator reply.",
+      "title": "Get your locked price.",
+      "subtitle": "Instant pricing from our carrier network. No deposit required to hold your number.",
       "fromZip": {
         "label": "From ZIP",
         "placeholder": "e.g. 90210"
@@ -232,20 +301,44 @@
           "exotic": "Exotic / Luxury"
         }
       },
-      "estimateLabel": "Estimated price",
-      "estimateFootnote": "Estimate based on route and vehicle. Your locked price comes from /quote — typically within 1 business hour.",
+      "condition": {
+        "label": "Vehicle condition",
+        "options": {
+          "drivable": "Drivable",
+          "nonDrivable": "Non-drivable"
+        }
+      },
+      "transport": {
+        "label": "Transport type",
+        "options": {
+          "open": "Open carrier",
+          "enclosed": "Enclosed (premium)"
+        }
+      },
+      "timing": {
+        "label": "When do you need pickup?",
+        "options": {
+          "flexible": "Flexible — best price",
+          "withinWeek": "Within a week",
+          "asap": "ASAP — priority"
+        }
+      },
+      "lockedLabel": "Your locked price",
+      "validityBadge": "Locked for 7 days · No deposit required to hold",
       "rangeSeparator": "–",
-      "ctaLock": "Get my locked price",
+      "ctaContinue": "Continue",
+      "ctaLock": "Lock this price",
       "ctaInvalidZip": "Submit a quote anyway",
-      "statePrompt": "Type both ZIPs to see your route.",
+      "howPricingWorks": "How pricing works →",
+      "statePrompt": "Type both ZIPs to start.",
       "stateInvalid": "We don't recognize one of those ZIPs. Submit a quote and your coordinator will check it.",
-      "stateUnknown": "Route check available after you submit a quote — typically 1 business hour.",
+      "stateUnknown": "We don't have those ZIPs in our quick-lookup. Submit a full quote with your pickup and delivery addresses.",
       "stateOk": {
         "milesLabel": "mi",
         "pickupWindow": "3–5 day pickup window typical",
-        "tierOpen": "Open Transport recommended for daily drivers like yours.",
-        "tierEnclosed": "Enclosed Premium recommended for classics + exotics.",
-        "tierSpecialty": "Specialty handling required — your coordinator will size it."
+        "tierOpen": "Open Transport for daily drivers.",
+        "tierEnclosed": "Enclosed Premium for classics + exotics.",
+        "tierSpecialty": "Specialty handling — your coordinator will size it."
       },
       "stateHawaii": {
         "tag": "Hawaii corridor",
@@ -756,7 +849,7 @@
     },
     "cta": {
       "title": "Ready to lock a price?",
-      "description": "Send us your origin, destination, and vehicle. Your coordinator will reply with a locked price within 1 business hour. No deposit, no obligation.",
+      "description": "Type your origin, destination, and vehicle. Get your locked price instantly. Your named coordinator takes over from booking — no deposit, no obligation.",
       "primary": "Get my locked price",
       "secondary": "Talk to a coordinator"
     }
@@ -855,7 +948,7 @@
       },
       "submit": {
         "button": "Submit quote request",
-        "footnote": "Your coordinator replies with a locked price within 1 business hour. No deposit required to receive the quote."
+        "footnote": "Get your locked price instantly online. No deposit required to receive the quote."
       },
       "verification": {
         "legend": "Verification",
@@ -928,7 +1021,7 @@
     "liveLabel": "Live",
     "finalCta": {
       "title": "Ready to lock a price?",
-      "description": "Tools above help you decide. When you're ready, your coordinator replies in 1 business hour.",
+      "description": "Tools above help you decide. When you're ready, lock your price in seconds.",
       "primary": "Get my locked price"
     }
   },
@@ -997,7 +1090,7 @@
       "timeline": "{days} days · 0 hours behind the wheel",
       "timelinePort": "Door-to-port-to-door",
       "breakdown": {
-        "estimatedPrice": "Estimated price",
+        "estimatedPrice": "Live price range",
         "yourTime": "Your time",
         "wear": "Wear & tear",
         "fuelHotelTolls": "Fuel · hotel · tolls",
@@ -1010,7 +1103,7 @@
         "included": "Included"
       },
       "invalidTitle": "Need a real ZIP to estimate",
-      "invalidTimeline": "Get a coordinator quote in 1 business hour.",
+      "invalidTimeline": "Submit a quote and our team will price it by hand.",
       "invalidMsg": "We pull pricing from a corridor table for v1 — odd or international ZIPs need a human price."
     },
     "drive": {
@@ -1055,13 +1148,13 @@
       "alaska": "You CAN drive the Alaska Highway. Most customers don't.",
       "alaskaSub": "A week through Canada in bear country, two border crossings, and you usually pay more than the ship route.",
       "invalid": "We couldn't recognize that ZIP — but we can still get you a real price.",
-      "invalidSub": "Submit a quote with your destination and a coordinator replies in 1 business hour with a locked price and the drive comparison."
+      "invalidSub": "Submit a quote with your destination and we'll send a locked price plus the drive comparison."
     },
     "ctas": {
       "primary": "Get my locked price →",
       "secondary": "Set a price-drop alert (coming soon)"
     },
-    "footnote": "The estimated ship price is our best guess, not your locked price. Real prices clear in 1 business hour after you submit a quote — that's when we run actual carrier pricing. Drive-side estimate uses $150/night hotels, $50/person/day food, $0.20/mi for vehicle wear (real marginal cost, not the IRS depreciation rate). Distance pulled from our top-80 corridor table — Google Maps API integration coming next."
+    "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote — that's where we run actual carrier pricing. Drive-side estimate uses $150/night hotels, $50/person/day food, $0.20/mi for vehicle wear (real marginal cost, not the IRS depreciation rate). Distance pulled from our top-80 corridor table — Google Maps API integration coming next."
   },
   "corridors": {
     "index": {
@@ -1778,7 +1871,7 @@
     },
     "cta": {
       "eyebrow": "Ready to ship?",
-      "title": "Get a locked price in 1 business hour.",
+      "title": "Get your locked price instantly.",
       "lead": "No deposit to get a quote. The number we send is the number you pay — same Price Promise on all three tiers.",
       "button": "Get my locked price"
     },
@@ -1813,6 +1906,49 @@
         "feature2": "RoRo vessel (Matson / Pasha)",
         "feature3": "Inland-to-port-to-island handoff",
         "ctaButton": "See HI / AK corridors"
+      }
+    }
+  },
+  "portal": {
+    "common": {
+      "wordmark": "Auto Line Logistics, Inc.",
+      "buildBanner": "Customer portal in development — your shipment data isn't connected yet. Full functionality lands before launch.",
+      "account": "Account",
+      "signOut": "Sign out",
+      "back": "Back",
+      "needHelp": "Need help? Email info@autolinelogistics.com or call your coordinator."
+    },
+    "login": {
+      "title": "Welcome back",
+      "description": "Enter your email and we'll send you a sign-in link. No password required.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "submit": "Send sign-in link",
+      "altSmsTitle": "Or use your phone number",
+      "altSmsDescription": "We'll text you a 6-digit code.",
+      "altSmsLink": "Use phone number →",
+      "buildBanner": "Auth flow not wired yet. This page is a UI stub. Real magic-link + SMS OTP coming when Firebase is provisioned."
+    },
+    "dashboard": {
+      "title": "Your shipments",
+      "subtitle": "Active and recent",
+      "emptyTitle": "No active shipments yet",
+      "emptyDescription": "Once you book a shipment, you'll see status, photos, and live tracking here.",
+      "emptyAction": "Get a quote →"
+    },
+    "shipment": {
+      "loading": "Loading your shipment…",
+      "notFound": "We couldn't find that shipment.",
+      "notFoundDescription": "Check the order number or contact your coordinator.",
+      "stage": {
+        "booked": "Booked",
+        "prep": "Prep stage",
+        "pickedUp": "Picked up",
+        "inTransit": "In transit",
+        "atDelivery": "At delivery",
+        "delivered": "Delivered",
+        "completed": "Completed",
+        "claimed": "Claim filed"
       }
     }
   }

@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
+import { AntiScamCard } from "@/components/AntiScamCard";
 
 /**
  * Anti-Scam Hub — destination page for the homepage's Anti-Scam Educator
@@ -81,19 +82,19 @@ export default function AntiScamHubPage() {
               />
               <AntiScamCard
                 num={2}
-                question={t("home.antiScam.questions.reviews.question")}
+                question={t("home.antiScam.questions.carrier.question")}
                 whyAskLabel={t("home.antiScam.whyAskLabel")}
-                whyAsk={t("home.antiScam.questions.reviews.whyAsk")}
+                whyAsk={t("home.antiScam.questions.carrier.whyAsk")}
                 honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
-                honestAnswer={t("home.antiScam.questions.reviews.honestAnswer")}
+                honestAnswer={t("home.antiScam.questions.carrier.honestAnswer")}
               />
               <AntiScamCard
                 num={3}
-                question={t("home.antiScam.questions.deposit.question")}
+                question={t("home.antiScam.questions.transit.question")}
                 whyAskLabel={t("home.antiScam.whyAskLabel")}
-                whyAsk={t("home.antiScam.questions.deposit.whyAsk")}
+                whyAsk={t("home.antiScam.questions.transit.whyAsk")}
                 honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
-                honestAnswer={t("home.antiScam.questions.deposit.honestAnswer")}
+                honestAnswer={t("home.antiScam.questions.transit.honestAnswer")}
               />
             </div>
           </Container>
@@ -153,49 +154,6 @@ export default function AntiScamHubPage() {
 
       <Footer />
     </>
-  );
-}
-
-// ── Question card (mirrors homepage AntiScamCard shape) ──────────────────
-function AntiScamCard({
-  num,
-  question,
-  whyAskLabel,
-  whyAsk,
-  honestAnswerLabel,
-  honestAnswer,
-}: {
-  num: 1 | 2 | 3;
-  question: string;
-  whyAskLabel: string;
-  whyAsk: string;
-  honestAnswerLabel: string;
-  honestAnswer: string;
-}) {
-  return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col">
-      <div className="w-8 h-8 rounded-full bg-orange text-white text-sm font-bold flex items-center justify-center mb-4">
-        {num}
-      </div>
-      <p className="text-charcoal font-bold text-base md:text-lg leading-snug mb-4">
-        {question}
-      </p>
-      <div className="border-t border-dashed border-gray-300 my-1" />
-      <div className="mt-3 mb-3">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-1">
-          {whyAskLabel}
-        </p>
-        <p className="text-sm text-gray-700 leading-relaxed">{whyAsk}</p>
-      </div>
-      <div className="bg-emerald-50 border-l-[3px] border-emerald-700 rounded-r-lg px-3 py-2.5 mt-auto">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 mb-1">
-          {honestAnswerLabel}
-        </p>
-        <p className="text-sm text-charcoal font-semibold leading-relaxed">
-          {honestAnswer}
-        </p>
-      </div>
-    </div>
   );
 }
 

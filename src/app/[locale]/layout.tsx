@@ -1,25 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader } from "next/font/google";
+import { Inter } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
-// Body sans-serif: Inter (clean, professional, neutral — pairs with serif headings)
+// Single-font system: Inter handles BOTH body and display (Stripe/Linear playbook).
+// May 17, 2026 — moved from Newsreader (serif) → Manrope (sans) → Inter (single-font)
+// after Eddie compared all 7 options at hero scale. Inter 900 (Black) carries the
+// hero headline; Inter 400-700 handles body + smaller headings. One HTTP request,
+// one typographic system, max minimalism.
+// See: brand-explorations/hero-font-comparison.html
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
-});
-
-// Heading serif: Newsreader (editorial-trust, matches the modern-trust voice).
-// Eddie note: Ben's truck-signage font is still pending identification (open Action Item).
-// When confirmed, swap or augment here.
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
 
@@ -115,7 +111,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>

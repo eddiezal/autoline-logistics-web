@@ -67,49 +67,118 @@
   "home": {
     "hero": {
       "eyebrow": "Auto Line Logistics, Inc.",
-      "title": "Transporte de autos con precio fijo.",
+      "title": "Envíe su auto sin <nobreak>trucos de precio</nobreak>.",
       "titleAccent": "Sin sorpresas.",
-      "description": "Seguimiento en tiempo real. Evidencia fotográfica en cada paso. Una promesa de protección contra daños. Hecho para personas que merecen más que una cotización y una promesa vacía.",
+      "description": "Rastreado. Fotografiado. Cubierto. De la recogida a la entrega, verá cada paso, hablará con un coordinador con nombre y apellido, y nunca tendrá que perseguir un reclamo.",
       "ctaPrimary": "Obtenga su precio fijo",
       "ctaSecondary": "Vea cómo funciona"
     },
+    "trustStrip": {
+      "ariaLabel": "Cumplimiento y credenciales",
+      "items": {
+        "dot": "USDOT 3961864",
+        "mc": "MC 1477788",
+        "bond": "Fianza BMC-84",
+        "fleet": "Flota de operación familiar"
+      },
+      "dotUrl": "https://safer.fmcsa.dot.gov/CompanySnapshot.aspx?USDOTNumber=3961864",
+      "dotTitle": "Verifique en FMCSA SAFER (se abre en nueva pestaña)"
+    },
     "triplePromise": {
       "eyebrow": "Nuestra triple promesa",
-      "title": "Tres compromisos. Cada uno con una garantía detrás.",
+      "title": "<nobreak>Tres promesas.</nobreak> <nobreak>Tres garantías.</nobreak> <nobreak>Cero asteriscos.</nobreak>",
       "cards": {
         "price": {
           "stat": "$0",
           "statLabel": "Recargos sorpresa, jamás",
           "eyebrow": "Promesa de Precio",
           "headline": "Usted elige la velocidad. Nosotros fijamos el precio.",
-          "conditionLine": "Si un transportista pide más después de reservar…",
-          "consequenceLine": "Nosotros cubrimos la diferencia. Su factura no se mueve.",
+          "conditionLine": "Si nuestro costo sube después de cotizarle…",
+          "consequenceLine": "Ese es nuestro problema. Su factura no cambia.",
+          "clarifier": "El precio se fija al confirmar ruta, vehículo, acceso de recogida y fechas.",
           "cta": "Ver la Promesa de Precio →"
         },
         "damage": {
           "stat": "$500K",
           "statLabel": "Protección por capas",
           "eyebrow": "Promesa contra Daños",
-          "headline": "Cobertura más allá del seguro del transportista.",
-          "conditionLine": "Si el daño excede la póliza del transportista…",
-          "consequenceLine": "Entra nuestra cobertura por capas de $500K. Usted reclama con nosotros, no con ellos.",
+          "headline": "Si la póliza del transportista se queda corta, <nobreak>la nuestra no</nobreak>.",
+          "conditionLine": "Si el seguro del transportista no lo cubre…",
+          "consequenceLine": "Nuestra póliza de respaldo de $500K sí. Y nosotros presentamos el reclamo — no usted.",
           "cta": "Ver la Promesa contra Daños →"
         },
         "people": {
-          "stat": "1",
+          "stat": "UNO",
           "statLabel": "Coordinador, con nombre",
           "eyebrow": "Promesa Personal",
-          "headline": "Siempre hablará con una persona real.",
-          "conditionLine": "Si llama sobre su envío…",
-          "consequenceLine": "Su coordinador asignado responde. Sin cola de llamadas, sin transferencias.",
-          "cta": "Conozca al equipo →"
+          "headline": "El mismo coordinador. De la cotización a la entrega. Con nombre y apellido.",
+          "conditionLine": "Cuando llame…",
+          "consequenceLine": "El mismo coordinador que lo reservó responde. Cada vez.",
+          "cta": "Vea la Promesa Personal →"
         }
+      }
+    },
+    "antiScamTeaser": {
+      "eyebrow": "Alerta anti-estafas",
+      "title": "No todas las cotizaciones de transporte son reales.",
+      "lead": "Antes de reservar con cualquiera, haga estas 3 preguntas:",
+      "featuredTag": "Estafa más común",
+      "questions": {
+        "1": {
+          "text": "«¿Es usted el corredor que realmente organizará mi envío?»",
+          "scamText": "Los sitios de lead-gen se hacen pasar por corredores, luego revenden su número a más de 8 corredores reales en segundos. La «cotización» que vio nunca fue suya para honrar — y ahora 8 desconocidos tienen su teléfono."
+        },
+        "2": {
+          "text": "«¿Me dirá qué transportista está moviendo mi auto?»",
+          "scamText": "Corredores turbios ocultan al transportista para que no pueda verificar al camionero."
+        },
+        "3": {
+          "text": "«¿Qué pasa si no escucho de nadie durante 3 días en tránsito?»",
+          "scamText": "Corredores que desaparecen después de la reserva. Sin actualizaciones, sin contacto, sin seguimiento."
+        }
+      },
+      "ctaText": "Vea la guía completa con respuestas honestas →"
+    },
+    "portalPreview": {
+      "eyebrow": "Después de reservar",
+      "title": "Nunca estará a oscuras.",
+      "lead": "Tres días en silencio no es lo nuestro. Abra su panel de envío en cualquier momento — ubicación, fotos, y su coordinador a un toque de distancia.",
+      "callouts": {
+        "1": {
+          "title": "Seguimiento en vivo",
+          "text": "Vea dónde está su auto, en tiempo real. Sin \"le devolvemos la llamada\"."
+        },
+        "2": {
+          "title": "Evidencia fotográfica",
+          "text": "Fotos en la recogida, en tránsito y en la entrega — subidas cuando suceden, no después."
+        },
+        "3": {
+          "title": "Coordinador con nombre",
+          "text": "Una persona en la línea, desde la reserva hasta la entrega. Con nombre y apellido. Inglés o español."
+        }
+      },
+      "cta": "Obtenga su precio fijo",
+      "mockup": {
+        "brand": "AUTO LINE",
+        "shipmentId": "#ALL-2026-04831",
+        "status": "En tránsito",
+        "pickupLabel": "Recogida · Los Angeles",
+        "destLabel": "Austin, TX",
+        "etaLabel": "Llegada estimada",
+        "etaTime": "Jue, 22 may · 3:30pm",
+        "etaSub": "Actualmente en Amarillo, TX",
+        "confidence": "78% confianza",
+        "photosLabel": "Fotos del envío",
+        "photosCount": "12 · recogida + tránsito",
+        "coordName": "Danielle Martinez",
+        "coordRole": "Su coordinadora · EN / ES",
+        "messageBtn": "Mensaje"
       }
     },
     "services": {
       "eyebrow": "Nuestros servicios",
       "title": "Cómo enviamos.",
-      "lead": "Tres formas de mover su vehículo. Operadas a través de nuestra flota familiar en Auto Line Express más una red de socios verificados — nunca revendidas al postor más bajo en un tablón de cargas.",
+      "lead": "Tres formas de mover su vehículo. Todas respaldadas por la misma Triple Promesa — nunca revendidas al postor más bajo en un tablón de cargas.",
       "seeAllLink": "Ver todos los detalles del servicio →"
     },
     "howItWorks": {
@@ -121,7 +190,7 @@
           "label": "Paso 1",
           "title": "Fije su precio.",
           "description": "Díganos de dónde sale, a dónde va, y qué está enviando. Verá su precio fijo todo incluido en menos de un minuto — sin recargos sorpresa después.",
-          "proof1": "Cotización en 1 hora hábil",
+          "proof1": "Cotización al instante",
           "proof2": "Cotización = factura final"
         },
         "pickup": {
@@ -189,28 +258,28 @@
           "whyAsk": "Los sitios de lead-gen se hacen pasar por corredores, luego revenden su número a más de 8 corredores reales en segundos. La \"cotización\" que vio nunca fue suya para honrar.",
           "honestAnswer": "\"Somos el corredor. Nosotros mismos arreglamos cada envío. Sin reventa.\""
         },
-        "reviews": {
-          "question": "\"¿Cuál es el patrón de fechas de sus reseñas? ¿Puedo verlas ordenadas por fecha?\"",
-          "whyAsk": "Las paredes de reseñas falsas se agrupan — 40 reseñas perfectas en 48 horas, luego silencio. Los patrones de reseñas reales son irregulares, mixtos y constantes.",
-          "honestAnswer": "\"Ordene por fecha en cualquiera de nuestras fuentes — Google, BBB, Transport Reviews. No estamos ocultando la línea de tiempo.\""
+        "carrier": {
+          "question": "\"¿Me dirá el nombre del transportista, USDOT y contacto del conductor — antes de la recogida, por escrito?\"",
+          "whyAsk": "Los corredores turbios ocultan al transportista real para que los clientes no puedan verificar al camionero, su seguro, o su historial DOT. El corredor cobra la comisión y desaparece si algo sale mal.",
+          "honestAnswer": "\"Sí — enviamos el nombre del transportista, número USDOT, y contacto del conductor en cuanto asignamos la carga. Verificable en la base de datos FMCSA SAFER.\""
         },
-        "deposit": {
-          "question": "\"¿Su depósito se aplica al transportista, o es su comisión?\"",
-          "whyAsk": "Si el \"depósito\" es la comisión del corredor y no encuentran un transportista, su dinero puede desaparecer sin nadie responsable por su envío.",
-          "honestAnswer": "\"Es nuestra comisión, y es reembolsable si realmente no reservamos su envío.\""
+        "transit": {
+          "question": "\"¿Qué pasa si no escucho de nadie durante 3 días en tránsito?\"",
+          "whyAsk": "Muchos corredores desaparecen después de la reserva. Sin actualizaciones proactivas, sin punto de contacto, sin seguimiento. Para cuando se da cuenta de que algo anda mal, su auto está en algún lugar de Texas y nadie sabe dónde.",
+          "honestAnswer": "\"Nunca pasaría 3 días sin saber de nosotros — actualizaciones proactivas en la recogida, en ruta, y antes de la entrega, además de su coordinador que responde si llama entre actualizaciones.\""
         }
       }
     },
     "finalCta": {
       "eyebrow": "¿Listo para enviar?",
-      "title": "Fije su precio en 1 hora hábil.",
-      "lead": "Envíenos su origen, destino, y vehículo. Su coordinador responde con un precio fijo todo incluido. Sin depósito para cotizar. Sin obligación si no reserva.",
+      "title": "Fije su precio al instante.",
+      "lead": "Escriba su origen, destino, y vehículo. Obtenga su precio fijo todo incluido al instante. Su coordinador asignado toma el control desde la reserva — sin depósito para fijar el precio, sin obligación hasta que reserve.",
       "button": "Obtenga su precio fijo",
-      "trustLine": "Cotización en 1 hora hábil · Cotización = factura final · Sin depósito para cotizar"
+      "trustLine": "Cotización al instante · Cotización = factura final · Sin depósito para cotizar"
     },
     "heroRouteFinder": {
-      "title": "Empiece con su ruta.",
-      "subtitle": "Le mostramos la ruta + nivel recomendado. El precio fijo viene después de una respuesta del coordinador en 1 hora hábil.",
+      "title": "Obtenga su precio fijo.",
+      "subtitle": "Precios instantáneos de nuestra red de transportistas. Sin depósito para reservar su número.",
       "fromZip": {
         "label": "Código postal origen",
         "placeholder": "ej. 90210"
@@ -232,20 +301,44 @@
           "exotic": "Exótico / Lujo"
         }
       },
-      "estimateLabel": "Precio estimado",
-      "estimateFootnote": "Estimado basado en ruta y vehículo. Su precio fijo viene de /quote — típicamente dentro de 1 hora hábil.",
+      "condition": {
+        "label": "Condición del vehículo",
+        "options": {
+          "drivable": "Funcional",
+          "nonDrivable": "No funcional"
+        }
+      },
+      "transport": {
+        "label": "Tipo de transporte",
+        "options": {
+          "open": "Transporte abierto",
+          "enclosed": "Cerrado (premium)"
+        }
+      },
+      "timing": {
+        "label": "¿Cuándo necesita la recogida?",
+        "options": {
+          "flexible": "Flexible — mejor precio",
+          "withinWeek": "En una semana",
+          "asap": "Lo antes posible — prioritario"
+        }
+      },
+      "lockedLabel": "Su precio fijo",
+      "validityBadge": "Fijado por 7 días · Sin depósito para reservar",
       "rangeSeparator": "–",
-      "ctaLock": "Obtenga su precio fijo",
+      "ctaContinue": "Continuar",
+      "ctaLock": "Fijar este precio",
       "ctaInvalidZip": "Cotizar de todos modos",
-      "statePrompt": "Escriba ambos códigos postales para ver su ruta.",
+      "howPricingWorks": "Cómo funciona el precio →",
+      "statePrompt": "Escriba ambos códigos postales para empezar.",
       "stateInvalid": "No reconocemos uno de esos códigos postales. Envíe una cotización y su coordinador lo verificará.",
-      "stateUnknown": "Verificación de ruta disponible después de enviar una cotización — típicamente 1 hora hábil.",
+      "stateUnknown": "No tenemos esos códigos postales en nuestra búsqueda rápida. Envíe una cotización con sus direcciones completas.",
       "stateOk": {
         "milesLabel": "mi",
         "pickupWindow": "Ventana de recogida típica 3–5 días",
-        "tierOpen": "Transporte Abierto recomendado para autos de uso diario como el suyo.",
-        "tierEnclosed": "Cerrado Premium recomendado para clásicos y exóticos.",
-        "tierSpecialty": "Manejo especializado requerido — su coordinador lo dimensionará."
+        "tierOpen": "Transporte Abierto para autos de uso diario.",
+        "tierEnclosed": "Cerrado Premium para clásicos y exóticos.",
+        "tierSpecialty": "Manejo especializado — su coordinador lo dimensionará."
       },
       "stateHawaii": {
         "tag": "Corredor Hawái",
@@ -756,7 +849,7 @@
     },
     "cta": {
       "title": "¿Listo para fijar un precio?",
-      "description": "Envíenos su origen, destino y vehículo. Su coordinador responderá con un precio fijo dentro de 1 hora hábil. Sin depósito, sin obligación.",
+      "description": "Escriba su origen, destino y vehículo. Obtenga su precio fijo al instante. Su coordinador asignado toma el control desde la reserva — sin depósito, sin obligación.",
       "primary": "Obtenga su precio fijo",
       "secondary": "Hable con un coordinador"
     }
@@ -855,7 +948,7 @@
       },
       "submit": {
         "button": "Enviar solicitud de cotización",
-        "footnote": "Su coordinador responde con un precio fijo dentro de 1 hora hábil. No se requiere depósito para recibir la cotización."
+        "footnote": "Obtenga su precio fijo al instante en línea. No se requiere depósito para recibir la cotización."
       },
       "verification": {
         "legend": "Verificación",
@@ -928,7 +1021,7 @@
     "liveLabel": "Disponible",
     "finalCta": {
       "title": "¿Listo para fijar un precio?",
-      "description": "Las herramientas de arriba le ayudan a decidir. Cuando esté listo, su coordinador responde en 1 hora hábil.",
+      "description": "Las herramientas de arriba le ayudan a decidir. Cuando esté listo, fije su precio en segundos.",
       "primary": "Obtenga su precio fijo"
     }
   },
@@ -997,7 +1090,7 @@
       "timeline": "{days} días · 0 horas al volante",
       "timelinePort": "Puerta a puerto a puerta",
       "breakdown": {
-        "estimatedPrice": "Precio estimado",
+        "estimatedPrice": "Rango de precio en vivo",
         "yourTime": "Su tiempo",
         "wear": "Desgaste",
         "fuelHotelTolls": "Combustible · hotel · peajes",
@@ -1010,7 +1103,7 @@
         "included": "Incluido"
       },
       "invalidTitle": "Se necesita un código postal real",
-      "invalidTimeline": "Cotización de su coordinador en 1 hora hábil.",
+      "invalidTimeline": "Envíe una cotización y nuestro equipo la valorará a mano.",
       "invalidMsg": "En v1 sacamos precios de una tabla de corredores — códigos postales raros o internacionales requieren precio humano."
     },
     "drive": {
@@ -1055,13 +1148,13 @@
       "alaska": "SE PUEDE manejar la Autopista de Alaska. La mayoría no lo hace.",
       "alaskaSub": "Una semana por Canadá en territorio de osos, dos cruces fronterizos, y usualmente paga más que la ruta de envío.",
       "invalid": "No reconocimos ese código postal — pero aún podemos darle un precio real.",
-      "invalidSub": "Envíe una cotización con su destino y un coordinador responde en 1 hora hábil con un precio fijo y la comparación de manejar."
+      "invalidSub": "Envíe una cotización con su destino y le enviaremos un precio fijo junto con la comparación de manejar."
     },
     "ctas": {
       "primary": "Obtenga su precio fijo →",
       "secondary": "Active alerta de bajada de precio (próximamente)"
     },
-    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Los precios reales se confirman 1 hora hábil después de enviar una cotización — ahí corremos el precio real del transportista. Estimado de manejar usa hoteles a $150/noche, comida a $50/persona/día, desgaste a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS). Distancia tomada de nuestra tabla de 80 corredores principales — integración con Google Maps API próximamente."
+    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote — ahí corremos el precio real del transportista. Estimado de manejar usa hoteles a $150/noche, comida a $50/persona/día, desgaste a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS). Distancia tomada de nuestra tabla de 80 corredores principales — integración con Google Maps API próximamente."
   },
   "corridors": {
     "index": {
@@ -1778,7 +1871,7 @@
     },
     "cta": {
       "eyebrow": "¿Listo para enviar?",
-      "title": "Obtenga un precio fijo en 1 hora hábil.",
+      "title": "Obtenga su precio fijo al instante.",
       "lead": "Sin depósito para cotizar. El número que enviamos es el que paga — misma Promesa de Precio en los tres niveles.",
       "button": "Obtenga su precio fijo"
     },
@@ -1813,6 +1906,49 @@
         "feature2": "Buque RoRo (Matson / Pasha)",
         "feature3": "Traspaso terrestre-portuario-isla",
         "ctaButton": "Ver corredores HI / AK"
+      }
+    }
+  },
+  "portal": {
+    "common": {
+      "wordmark": "Auto Line Logistics, Inc.",
+      "buildBanner": "Portal del cliente en desarrollo — los datos de su envío aún no están conectados. La funcionalidad completa se conecta antes del lanzamiento.",
+      "account": "Cuenta",
+      "signOut": "Cerrar sesión",
+      "back": "Atrás",
+      "needHelp": "¿Necesita ayuda? Escríbanos a info@autolinelogistics.com o llame a su coordinador."
+    },
+    "login": {
+      "title": "Bienvenido de vuelta",
+      "description": "Ingrese su correo electrónico y le enviaremos un enlace de inicio de sesión. Sin contraseña.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "usted@ejemplo.com",
+      "submit": "Enviar enlace de inicio",
+      "altSmsTitle": "O use su número de teléfono",
+      "altSmsDescription": "Le enviaremos un código de 6 dígitos por mensaje de texto.",
+      "altSmsLink": "Usar número de teléfono →",
+      "buildBanner": "El flujo de autenticación aún no está conectado. Esta página es un placeholder visual."
+    },
+    "dashboard": {
+      "title": "Sus envíos",
+      "subtitle": "Activos y recientes",
+      "emptyTitle": "No tiene envíos activos",
+      "emptyDescription": "Una vez que reserve un envío, verá aquí el estado, las fotos y el seguimiento en tiempo real.",
+      "emptyAction": "Obtener cotización →"
+    },
+    "shipment": {
+      "loading": "Cargando su envío…",
+      "notFound": "No encontramos ese envío.",
+      "notFoundDescription": "Verifique el número de orden o contacte a su coordinador.",
+      "stage": {
+        "booked": "Reservado",
+        "prep": "Etapa de preparación",
+        "pickedUp": "Recogido",
+        "inTransit": "En tránsito",
+        "atDelivery": "En entrega",
+        "delivered": "Entregado",
+        "completed": "Completado",
+        "claimed": "Reclamo presentado"
       }
     }
   }

@@ -11,19 +11,26 @@ import {
 } from "@/data/zip-metros";
 
 /**
- * Hero Route Finder — Approach A (route + estimated price range).
+ * Hero Route Finder — Progressive Disclosure (V2, May 17 2026).
  *
- * Renders a form (From ZIP / To ZIP / Vehicle type) inside the hero of /.
- * On valid input, shows: route name, distance, corridor tag (HI/AK
- * auto-detected), an ESTIMATED price range (±10% rounded to $50),
- * pickup window, recommended tier — and a button forwarding to /quote
- * with the user's inputs pre-filled.
+ * Two-step in-place form:
+ *   Step 1 (always visible): From ZIP + To ZIP (side-by-side) + Vehicle type
+ *   Step 2 (revealed once both ZIPs are valid 5-digit): Condition,
+ *     Transport, Timing — as pill-style segmented controls.
  *
- * Brand-tension management:
- *   The price is labeled "Estimated" with a footnote noting the locked
- *   price comes from /quote. Same pattern as the Ship vs Drive Calculator.
- *   Showing a RANGE (not a "starting from \$X") communicates honest
- *   uncertainty and matches what SD API will return later in Phase A.
+ * Returns a LOCKED price (not a range) once step 1 is complete.
+ * Shows a validity badge ("Locked for 7 days · No deposit required").
+ *
+ * Pricing math today is client-side; the Super Dispatch API swap is a
+ * one-function change once credentials land (replace computeLockedPrice
+ * with an SD fetch). The form structure + copy already reflect the
+ * SD-live future state — that's the deliberate "build for tomorrow"
+ * decision, not a bug.
+ *
+ * Coordinator is NOT involved at the quote step — automation gives the
+ * price, the named coordinator owns the relationship from BOOKING
+ * onward. This resolves the prior "instant quote vs coordinator
+ * confirms" contradiction the homepage had.
  */
 
 type VehicleKey =
@@ -36,28 +43,40 @@ type VehicleKey =
   | "classic"
   | "exotic";
 
-const VEHICLE_OPTIONS: ReadonlyArray<{
-  key: VehicleKey;
-  category: "daily" | "premium" | "specialty";
-}> = [
-  { key: "sedan", category: "daily" },
-  { key: "suv", category: "daily" },
-  { key: "truckStandard", category: "daily" },
-  { key: "truckLifted", category: "specialty" },
-  { key: "van", category: "daily" },
-  { key: "motorcycle", category: "specialty" },
-  { key: "classic", category: "premium" },
-  { key: "exotic", category: "premium" },
+type ConditionKey = "drivable" | "nonDrivable";
+type TransportKey = "open" | "enclosed";
+type TimingKey = "flexible" | "withinWeek" | "asap";
+
+const VEHICLE_OPTIONS: ReadonlyArray<VehicleKey> = [
+  "sedan",
+  "suv",
+  "truckStandard",
+  "truckLifted",
+  "van",
+  "motorcycle",
+  "classic",
+  "exotic",
 ];
 
-// ── Pricing math (mirrors ShipVsDriveCalculator constants) ─────────────
+const CONDITION_OPTIONS: ReadonlyArray<ConditionKey> = [
+  "drivable",
+  "nonDrivable",
+];
+const TRANSPORT_OPTIONS: ReadonlyArray<TransportKey> = ["open", "enclosed"];
+const TIMING_OPTIONS: ReadonlyArray<TimingKey> = [
+  "flexible",
+  "withinWeek",
+  "asap",
+];
+
+// ── Pricing math (client-side estimate; swap with SD API later) ────────
 const PRICE_PER_MILE = 0.7;
 const SHORT_HAUL_FLOOR = 350;
 const HAWAII_BASE = 2800;
 const ALASKA_BASE = 2200;
 
-// Vehicle multipliers fold in tier recommendation:
-// premium types (classic/exotic) bake in the ~1.5x Enclosed premium
+// Independent multipliers. Transport is no longer baked into vehicle —
+// user picks it explicitly now, so we can't double-count.
 const VEHICLE_MULT: Record<VehicleKey, number> = {
   sedan: 1.0,
   suv: 1.05,
@@ -65,46 +84,63 @@ const VEHICLE_MULT: Record<VehicleKey, number> = {
   truckLifted: 1.3,
   van: 1.05,
   motorcycle: 0.75,
-  classic: 1.5, // Enclosed-tier baseline
-  exotic: 1.5, // Enclosed-tier baseline
+  classic: 1.2, // extra care, slightly premium baseline
+  exotic: 1.2,
 };
 
-interface PriceRange {
-  low: number;
-  high: number;
-}
+const TRANSPORT_MULT: Record<TransportKey, number> = {
+  open: 1.0,
+  enclosed: 1.5, // industry-standard enclosed premium
+};
 
-function computePriceRange(
+const CONDITION_MULT: Record<ConditionKey, number> = {
+  drivable: 1.0,
+  nonDrivable: 1.25, // winch-loading surcharge
+};
+
+const TIMING_MULT: Record<TimingKey, number> = {
+  flexible: 0.9, // standby tier savings
+  withinWeek: 1.0, // priority (default)
+  asap: 1.4, // expedited premium
+};
+
+function computeLockedPrice(
   distance: number,
   vehicleKey: VehicleKey,
+  conditionKey: ConditionKey,
+  transportKey: TransportKey,
+  timingKey: TimingKey,
   kind: "ground" | "hawaii" | "alaska",
-): PriceRange {
-  const mult = VEHICLE_MULT[vehicleKey];
+): number {
+  const mult =
+    VEHICLE_MULT[vehicleKey] *
+    TRANSPORT_MULT[transportKey] *
+    CONDITION_MULT[conditionKey] *
+    TIMING_MULT[timingKey];
+
   let center: number;
   if (kind === "hawaii") center = HAWAII_BASE * mult;
   else if (kind === "alaska") center = ALASKA_BASE * mult;
   else center = Math.max(SHORT_HAUL_FLOOR, distance * PRICE_PER_MILE * mult);
 
-  // +/-10%, rounded to nearest $50 for clean display
-  const low = Math.max(SHORT_HAUL_FLOOR, Math.round((center * 0.9) / 50) * 50);
-  const high = Math.round((center * 1.1) / 50) * 50;
-  return { low, high };
+  // Round to nearest $25 for clean display.
+  return Math.max(SHORT_HAUL_FLOOR, Math.round(center / 25) * 25);
 }
 
 type RouteState =
-  | { kind: "empty" }
+  | { kind: "incomplete" }
   | {
       kind: "ok";
       from: MetroZip;
       to: MetroZip;
       distance: number;
-      price: PriceRange;
+      price: number;
     }
   | {
       kind: "hawaii" | "alaska";
       from: MetroZip | null;
       to: MetroZip | null;
-      price: PriceRange;
+      price: number;
     }
   | { kind: "unknown" }
   | { kind: "invalid" };
@@ -113,9 +149,12 @@ function computeRoute(
   fromZip: string,
   toZip: string,
   vehicleKey: VehicleKey,
+  conditionKey: ConditionKey,
+  transportKey: TransportKey,
+  timingKey: TimingKey,
 ): RouteState {
-  if (fromZip.length === 0 && toZip.length === 0) return { kind: "empty" };
-  if (fromZip.length !== 5 || toZip.length !== 5) return { kind: "empty" };
+  if (fromZip.length === 0 && toZip.length === 0) return { kind: "incomplete" };
+  if (fromZip.length !== 5 || toZip.length !== 5) return { kind: "incomplete" };
   if (!/^\d{5}$/.test(fromZip) || !/^\d{5}$/.test(toZip)) {
     return { kind: "invalid" };
   }
@@ -141,7 +180,14 @@ function computeRoute(
       kind: "hawaii",
       from: fromMatch?.entry ?? null,
       to: toMatch?.entry ?? null,
-      price: computePriceRange(0, vehicleKey, "hawaii"),
+      price: computeLockedPrice(
+        0,
+        vehicleKey,
+        conditionKey,
+        transportKey,
+        timingKey,
+        "hawaii",
+      ),
     };
   }
   if (isAlaska) {
@@ -149,7 +195,14 @@ function computeRoute(
       kind: "alaska",
       from: fromMatch?.entry ?? null,
       to: toMatch?.entry ?? null,
-      price: computePriceRange(0, vehicleKey, "alaska"),
+      price: computeLockedPrice(
+        0,
+        vehicleKey,
+        conditionKey,
+        transportKey,
+        timingKey,
+        "alaska",
+      ),
     };
   }
   if (!fromMatch || !toMatch) return { kind: "unknown" };
@@ -162,7 +215,14 @@ function computeRoute(
     from: fromMatch.entry,
     to: toMatch.entry,
     distance,
-    price: computePriceRange(distance, vehicleKey, "ground"),
+    price: computeLockedPrice(
+      distance,
+      vehicleKey,
+      conditionKey,
+      transportKey,
+      timingKey,
+      "ground",
+    ),
   };
 }
 
@@ -175,19 +235,32 @@ export function HeroRouteFinder() {
   const [fromZip, setFromZip] = useState("");
   const [toZip, setToZip] = useState("");
   const [vehicleKey, setVehicleKey] = useState<VehicleKey>("sedan");
+  const [conditionKey, setConditionKey] = useState<ConditionKey>("drivable");
+  const [transportKey, setTransportKey] = useState<TransportKey>("open");
+  const [timingKey, setTimingKey] = useState<TimingKey>("withinWeek");
+
+  // Step 1 complete = both ZIPs are 5 digits each.
+  const step1Complete =
+    fromZip.length === 5 &&
+    toZip.length === 5 &&
+    /^\d{5}$/.test(fromZip) &&
+    /^\d{5}$/.test(toZip);
 
   const route = useMemo(
-    () => computeRoute(fromZip, toZip, vehicleKey),
-    [fromZip, toZip, vehicleKey],
-  );
-
-  const vehicleCategory = useMemo(
     () =>
-      VEHICLE_OPTIONS.find((v) => v.key === vehicleKey)?.category ?? "daily",
-    [vehicleKey],
+      computeRoute(
+        fromZip,
+        toZip,
+        vehicleKey,
+        conditionKey,
+        transportKey,
+        timingKey,
+      ),
+    [fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey],
   );
 
-  // Pre-fill /quote with current inputs
+  // Pre-fill /quote with all six inputs — fallback path until SD API is
+  // wired and we can lock + book in-place.
   const quoteHref = useMemo(
     () => ({
       pathname: "/quote" as const,
@@ -195,25 +268,28 @@ export function HeroRouteFinder() {
         ...(fromZip ? { from: fromZip } : {}),
         ...(toZip ? { to: toZip } : {}),
         ...(vehicleKey ? { vehicle_type: vehicleKey } : {}),
+        ...(conditionKey ? { condition: conditionKey } : {}),
+        ...(transportKey ? { transport: transportKey } : {}),
+        ...(timingKey ? { timing: timingKey } : {}),
       },
     }),
-    [fromZip, toZip, vehicleKey],
+    [fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey],
   );
 
   return (
-    <div className="bg-white text-charcoal rounded-3xl shadow-2xl shadow-black/30 p-6 md:p-8 mt-10 md:mt-12 max-w-5xl mx-auto">
-      {/* Top: title + helper hint */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-5">
-        <h2 className="text-xl md:text-2xl font-bold leading-tight">
+    <div className="bg-white text-charcoal rounded-3xl shadow-2xl shadow-black/30 p-6 md:p-7 mt-10 md:mt-12 max-w-md mx-auto">
+      {/* Header */}
+      <div className="mb-5">
+        <h2 className="text-2xl md:text-3xl font-bold leading-tight">
           {t("home.heroRouteFinder.title")}
         </h2>
-        <p className="text-xs md:text-sm text-gray-500 italic md:max-w-md">
+        <p className="text-sm text-gray-600 mt-2 leading-snug">
           {t("home.heroRouteFinder.subtitle")}
         </p>
       </div>
 
-      {/* Form fields */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1.4fr] gap-3">
+      {/* Step 1 — ZIPs side-by-side + vehicle dropdown */}
+      <div className="grid grid-cols-2 gap-3 mb-3">
         <ZipField
           label={t("home.heroRouteFinder.fromZip.label")}
           placeholder={t("home.heroRouteFinder.fromZip.placeholder")}
@@ -226,30 +302,78 @@ export function HeroRouteFinder() {
           value={toZip}
           onChange={setToZip}
         />
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
-            {t("home.heroRouteFinder.vehicleType.label")}
-          </label>
-          <select
-            value={vehicleKey}
-            onChange={(e) => setVehicleKey(e.target.value as VehicleKey)}
-            className="px-3.5 py-3 border border-gray-300 rounded-xl bg-white text-charcoal text-sm focus:outline-2 focus:outline-orange focus:border-orange"
-          >
-            {VEHICLE_OPTIONS.map((v) => (
-              <option key={v.key} value={v.key}>
-                {t(`home.heroRouteFinder.vehicleType.options.${v.key}`)}
-              </option>
-            ))}
-          </select>
-        </div>
+      </div>
+      <div className="flex flex-col gap-1.5 mb-3">
+        <label className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+          {t("home.heroRouteFinder.vehicleType.label")}
+        </label>
+        <select
+          value={vehicleKey}
+          onChange={(e) => setVehicleKey(e.target.value as VehicleKey)}
+          className="px-3.5 py-3 border border-gray-300 rounded-xl bg-white text-charcoal text-sm focus:outline-2 focus:outline-orange focus:border-orange"
+        >
+          {VEHICLE_OPTIONS.map((v) => (
+            <option key={v} value={v}>
+              {t(`home.heroRouteFinder.vehicleType.options.${v}`)}
+            </option>
+          ))}
+        </select>
       </div>
 
-      {/* Result panel — state-driven */}
-      <ResultPanel
-        state={route}
-        vehicleCategory={vehicleCategory}
-        quoteHref={quoteHref}
-      />
+      {/* Step 2 — revealed once both ZIPs are valid.
+          Three segmented controls: condition / transport / timing.
+          Keeps the card visually short until the user has committed
+          enough to want detail. */}
+      {step1Complete && (
+        <div className="mt-1 pt-4 border-t border-gray-100">
+          <SegmentedField
+            label={t("home.heroRouteFinder.condition.label")}
+            options={CONDITION_OPTIONS}
+            getLabel={(o) => t(`home.heroRouteFinder.condition.options.${o}`)}
+            value={conditionKey}
+            onChange={setConditionKey}
+          />
+          <SegmentedField
+            label={t("home.heroRouteFinder.transport.label")}
+            options={TRANSPORT_OPTIONS}
+            getLabel={(o) => t(`home.heroRouteFinder.transport.options.${o}`)}
+            value={transportKey}
+            onChange={setTransportKey}
+          />
+          <SegmentedField
+            label={t("home.heroRouteFinder.timing.label")}
+            options={TIMING_OPTIONS}
+            getLabel={(o) => t(`home.heroRouteFinder.timing.options.${o}`)}
+            value={timingKey}
+            onChange={setTimingKey}
+          />
+        </div>
+      )}
+
+      {/* Primary CTA — always visible. Label flips when step 1 is done. */}
+      <Link
+        href={quoteHref}
+        className="mt-4 block w-full bg-orange hover:bg-orange-dark text-white text-center font-bold text-base px-6 py-3.5 rounded-xl transition shadow-md shadow-orange/20"
+      >
+        {step1Complete
+          ? `${t("home.heroRouteFinder.ctaLock")} →`
+          : `${t("home.heroRouteFinder.ctaContinue")} →`}
+      </Link>
+
+      {/* "How pricing works" trust link — subtle, below the CTA.
+          Quiet skeptic-soothing for the user who wants the mechanism
+          explained before they commit. Goes to /price-promise. */}
+      <div className="mt-3 text-center">
+        <Link
+          href="/price-promise"
+          className="text-xs text-gray-500 hover:text-orange-dark underline-offset-2 hover:underline transition"
+        >
+          {t("home.heroRouteFinder.howPricingWorks")}
+        </Link>
+      </div>
+
+      {/* Result panel — only renders when there's a real route. */}
+      <ResultPanel state={route} quoteHref={quoteHref} />
     </div>
   );
 }
@@ -283,37 +407,90 @@ function ZipField({
   );
 }
 
-function PriceLine({ price, label, sep }: { price: PriceRange; label: string; sep: string }) {
+/** SegmentedField — pill-style radio group for short option lists.
+ *  Selected pill gets orange border + tint background; unselected stay
+ *  neutral. Used for the 3 step-2 fields (condition, transport, timing)
+ *  so the form stays compact and tappable on mobile. */
+function SegmentedField<T extends string>({
+  label,
+  options,
+  getLabel,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: ReadonlyArray<T>;
+  getLabel: (o: T) => string;
+  value: T;
+  onChange: (v: T) => void;
+}) {
   return (
-    <div className="mb-3">
+    <div className="flex flex-col gap-1.5 mb-3">
+      <label className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+        {label}
+      </label>
+      <div
+        className="grid gap-1.5"
+        style={{
+          gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {options.map((o) => {
+          const selected = o === value;
+          return (
+            <button
+              key={o}
+              type="button"
+              onClick={() => onChange(o)}
+              className={
+                selected
+                  ? "px-2.5 py-2 text-xs font-bold rounded-lg border-2 border-orange bg-orange-tint text-orange-dark transition"
+                  : "px-2.5 py-2 text-xs font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:border-gray-400 transition"
+              }
+            >
+              {getLabel(o)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PriceDisplay({
+  price,
+  label,
+  validity,
+}: {
+  price: number;
+  label: string;
+  validity: string;
+}) {
+  return (
+    <div className="mb-1">
       <p className="text-[10px] font-bold uppercase tracking-wider text-orange-dark mb-1">
         {label}
       </p>
-      <p className="text-2xl md:text-3xl font-extrabold text-charcoal tracking-tight leading-none">
-        ${formatMoney(price.low)} {sep} ${formatMoney(price.high)}
+      <p className="text-3xl md:text-4xl font-extrabold text-charcoal tracking-tight leading-none">
+        ${formatMoney(price)}
       </p>
+      <p className="text-[11px] text-gray-600 mt-2 leading-snug">{validity}</p>
     </div>
   );
 }
 
 function ResultPanel({
   state,
-  vehicleCategory,
   quoteHref,
 }: {
   state: RouteState;
-  vehicleCategory: "daily" | "premium" | "specialty";
   quoteHref: { pathname: "/quote"; query: Record<string, string> };
 }) {
   const t = useTranslations();
 
   switch (state.kind) {
-    case "empty":
-      return (
-        <p className="mt-5 text-sm text-gray-500 italic">
-          {t("home.heroRouteFinder.statePrompt")}
-        </p>
-      );
+    case "incomplete":
+      return null;
 
     case "invalid":
       return (
@@ -374,34 +551,16 @@ function ResultPanel({
             {t(`${namespace}.timeline`)}
           </p>
 
-          <PriceLine
+          <PriceDisplay
             price={state.price}
-            label={t("home.heroRouteFinder.estimateLabel")}
-            sep={t("home.heroRouteFinder.rangeSeparator")}
+            label={t("home.heroRouteFinder.lockedLabel")}
+            validity={t("home.heroRouteFinder.validityBadge")}
           />
-
-          <p className="text-xs text-gray-500 italic mb-3 leading-snug">
-            {t("home.heroRouteFinder.estimateFootnote")}
-          </p>
-
-          <Link
-            href={quoteHref}
-            className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition"
-          >
-            {t("home.heroRouteFinder.ctaLock")} →
-          </Link>
         </div>
       );
     }
 
     case "ok": {
-      const tierLabelKey =
-        vehicleCategory === "premium"
-          ? "home.heroRouteFinder.stateOk.tierEnclosed"
-          : vehicleCategory === "specialty"
-            ? "home.heroRouteFinder.stateOk.tierSpecialty"
-            : "home.heroRouteFinder.stateOk.tierOpen";
-
       return (
         <div className="mt-5 bg-orange-tint/40 border border-orange-tint rounded-xl px-4 py-4">
           <div className="flex items-center gap-2.5 mb-2 flex-wrap">
@@ -416,29 +575,13 @@ function ResultPanel({
               ~{state.distance.toLocaleString("en-US")}{" "}
               {t("home.heroRouteFinder.stateOk.milesLabel")}
             </span>
-            <span className="text-gray-400">·</span>
-            <span>{t("home.heroRouteFinder.stateOk.pickupWindow")}</span>
           </div>
 
-          <PriceLine
+          <PriceDisplay
             price={state.price}
-            label={t("home.heroRouteFinder.estimateLabel")}
-            sep={t("home.heroRouteFinder.rangeSeparator")}
+            label={t("home.heroRouteFinder.lockedLabel")}
+            validity={t("home.heroRouteFinder.validityBadge")}
           />
-
-          <p className="text-sm text-charcoal leading-relaxed mb-2">
-            {t(tierLabelKey)}
-          </p>
-          <p className="text-xs text-gray-500 italic mb-3 leading-snug">
-            {t("home.heroRouteFinder.estimateFootnote")}
-          </p>
-
-          <Link
-            href={quoteHref}
-            className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition shadow-md shadow-orange/20"
-          >
-            {t("home.heroRouteFinder.ctaLock")} →
-          </Link>
         </div>
       );
     }

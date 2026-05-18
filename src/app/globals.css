@@ -1,25 +1,69 @@
 @import "tailwindcss";
 
 /* ============================================================
- * Auto Line Logistics — Brand Design Tokens
+ * Auto Line Logistics — Design Tokens
  *
- * Brand spec confirmed May 6, 2026 from Ben's vector logo.
- * Primary color: #FF6600 (Orange Gloss).
- * No blue tones anywhere — neutral grays + warm charcoals only.
+ * Lean 2-tier token system: brand (swaps on brand-direction lock)
+ * + stable (surfaces, state, text) + backward-compat aliases.
+ *
+ * History:
+ * - May 6, 2026: original brand spec locked at #FF6600 Orange Gloss
+ * - May 13, 2026: brand UNLOCKED by Ben at staging review; 7 directions
+ *   sent for his pick. Token system refactored to neutral semantic
+ *   names so brand swap is a 5-line edit, not a global find-replace.
+ *
+ * Architecture reference:
+ *   portal-design/architecture-v1.md, Section 10
  * ============================================================ */
 
 :root {
-  /* Brand */
-  --color-orange: #ff6600;
-  --color-orange-dark: #e55c00;
+  /* ============================================================
+   * BRAND TOKENS — the only things that swap on brand-direction lock
+   * Currently mapped to #FF6600 orange; will swap when Ben picks a
+   * direction from brand-explorations/directions-v1.html
+   * ============================================================ */
+  --color-brand-primary: #ff6600;
+  --color-brand-primary-hover: #e55c00;
+  --color-brand-ink: #1a1a1a;
+  --color-brand-paper: #ffffff;
+
+  --font-brand-display: var(--font-inter);
+  --font-brand-body: var(--font-inter);
+
+  /* Inter 900 at hero scale needs the tightest tracking of the 3 we tried.
+   * History: -0.01em (Newsreader) → -0.025em (Manrope) → -0.03em (Inter). */
+  --letter-spacing-display: -0.03em;
+
+  /* ============================================================
+   * STABLE SURFACES + TEXT — do not change on brand swap
+   * ============================================================ */
+  --color-surface: #ffffff;
+  --color-surface-elevated: #f5f5f5;
+  --color-text-default: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+
+  /* ============================================================
+   * STATE / STATUS — never swap (success is always green, etc.)
+   * ============================================================ */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-error: #ef4444;  /* legacy alias — prefer --color-danger going forward */
+
+  /* ============================================================
+   * BACKWARD-COMPAT ALIASES — existing pages keep working
+   * These point at brand tokens, so they reskin automatically when
+   * the brand-direction lock lands. Don't add new code that depends
+   * on these names — use --color-brand-* in new components.
+   * ============================================================ */
+  --color-orange: var(--color-brand-primary);
+  --color-orange-dark: var(--color-brand-primary-hover);
   --color-orange-light: #ffb380;
   --color-orange-tint: #ffe4cc;
-
-  /* Charcoal / dark surfaces */
   --color-charcoal: #2d2d2d;
   --color-charcoal-alt: #1f1f1f;
 
-  /* Neutral grays (no blue undertone) */
+  /* Neutral grays (no blue undertone) — used directly by existing pages */
   --color-gray-900: #1a1a1a;
   --color-gray-700: #404040;
   --color-gray-500: #6b6b6b;
@@ -28,49 +72,65 @@
   --color-gray-100: #f5f5f5;
   --color-white: #ffffff;
 
-  /* Semantic accents (used sparingly — for status/state, not brand) */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-
   /* Aliases for default theming */
-  --background: var(--color-white);
-  --foreground: var(--color-gray-900);
+  --background: var(--color-surface);
+  --foreground: var(--color-text-default);
 }
 
 @theme inline {
-  /* Tailwind utility classes pull from these */
+  /* ============================================================
+   * Tailwind v4 utility class generation.
+   * Each line here makes a CSS variable available as a utility
+   * (e.g., --color-brand-primary -> bg-brand-primary, text-brand-primary).
+   * ============================================================ */
+
+  /* Default theming */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
+  /* Brand utilities — for new portal components */
+  --color-brand-primary: var(--color-brand-primary);
+  --color-brand-primary-hover: var(--color-brand-primary-hover);
+  --color-brand-ink: var(--color-brand-ink);
+  --color-brand-paper: var(--color-brand-paper);
+
+  /* Stable surface + text utilities */
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-text-default: var(--color-text-default);
+  --color-text-muted: var(--color-text-muted);
+
+  /* State utilities */
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --color-error: var(--color-error);
+
+  /* Existing utilities — kept for backward compatibility with marketing pages */
   --color-orange: var(--color-orange);
   --color-orange-dark: var(--color-orange-dark);
   --color-orange-light: var(--color-orange-light);
   --color-orange-tint: var(--color-orange-tint);
-
   --color-charcoal: var(--color-charcoal);
   --color-charcoal-alt: var(--color-charcoal-alt);
 
-  --color-success: var(--color-success);
-  --color-warning: var(--color-warning);
-  --color-error: var(--color-error);
-
-  /* Fonts (loaded via next/font in layout.tsx) */
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-newsreader);
+  /* Font utilities — read from brand tokens, swap with brand direction */
+  --font-sans: var(--font-brand-body);
+  --font-serif: var(--font-brand-display);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-brand-body), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings use serif for editorial-trust feel */
+/* Headings use brand-display font + tokenized letter-spacing.
+ * Letter-spacing is brand-direction-dependent so we tokenize it.
+ * Sans fallback stack now that brand-display is Manrope (was Newsreader serif). */
 h1, h2, h3 {
-  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
-  font-feature-settings: "ss01", "ss02";
-  letter-spacing: -0.01em;
+  font-family: var(--font-brand-display), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: var(--letter-spacing-display);
 }

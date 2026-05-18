@@ -45,32 +45,92 @@ export default function Home() {
           </div>
 
           <Container className="relative z-10">
-            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-4">
-              {t("home.hero.eyebrow")}
-            </p>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-3xl">
-              {t("home.hero.title")}{" "}
-              <span className="text-orange">{t("home.hero.titleAccent")}</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-100 mt-6 max-w-2xl">
-              {t("home.hero.description")}
-            </p>
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link
-                href="/price-promise"
-                className="border border-white/60 hover:border-white text-white font-semibold px-6 py-3 rounded-full transition"
-              >
-                {t("home.hero.ctaSecondary")}
-              </Link>
-            </div>
+            {/* Hero layout — text left, Route Finder right at lg+; stacks
+                vertically below lg. The 1.1fr / 1fr split gives the text
+                slightly more room since headline + description is the more
+                variable-length content. items-start keeps both columns
+                anchored to the top so the card aligns with the title. */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-10 items-start">
+              {/* Left column: inverted-hierarchy title + description + secondary CTA.
+                  Promise-Forward layout (Option D, picked May 17, 2026): the orange
+                  accent ("Sin sorpresas." / "No surprises.") leads at display scale;
+                  the category descriptor ("Transporte de autos con precio fijo." /
+                  "Locked-price auto transport.") sits beneath at sub-headline scale.
+                  Eyebrow is dropped intentionally — the lead accent IS the brand
+                  anchor. Single <h1> with block-level spans preserves SEO + a11y;
+                  screen readers will read the accent first, then the descriptor. */}
+              <div>
+                <h1 className="leading-tight">
+                  <span className="block text-orange text-6xl md:text-7xl lg:text-[84px] font-black leading-[0.95] tracking-[-0.035em] mb-4">
+                    {t("home.hero.titleAccent")}
+                  </span>
+                  <span className="block text-2xl md:text-3xl font-bold leading-tight tracking-tight text-white">
+                    {t.rich("home.hero.title", {
+                      nobreak: (chunks) => <span className="whitespace-nowrap">{chunks}</span>,
+                    })}
+                  </span>
+                </h1>
+                <p className="text-lg md:text-xl text-white mt-6 max-w-2xl">
+                  {t("home.hero.description")}
+                </p>
+                <div className="flex flex-wrap gap-3 mt-8">
+                  {/* Secondary CTA — outline by design. The Route Finder
+                      card on the right carries the primary action; this
+                      button is the education off-ramp for visitors who
+                      aren't ready to enter ZIPs yet. Anchors to the
+                      #how-it-works section on the same page (browser-native
+                      smooth scroll via scroll-mt-16 on the target). Plain
+                      <a> instead of next-intl Link because this is in-page
+                      hash navigation, not route navigation. */}
+                  <a
+                    href="#how-it-works"
+                    className="border-2 border-white hover:bg-white hover:text-charcoal text-white font-semibold px-7 py-3.5 rounded-full transition"
+                  >
+                    {t("home.hero.ctaSecondary")}
+                  </a>
+                </div>
+              </div>
 
-            {/* Hero Route Finder — type ZIPs + vehicle, see route context,
-                then forward to /quote with everything pre-filled. This is
-                now the hero's primary CTA path (the "Get my locked price"
-                button used to live up here as a button; it now lives in
-                the result panel inside this card, so the user sees route
-                context BEFORE clicking through). */}
-            <HeroRouteFinder />
+              {/* Right column: Hero Route Finder card. Type ZIPs + vehicle,
+                  see route context, forward to /quote with everything
+                  pre-filled. Primary conversion path. */}
+              <div>
+                <HeroRouteFinder />
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        {/* Trust Strip — thin compliance band between the dark hero and the
+            white Triple Promise. Surfaces USDOT / MC / Bond + family-operated
+            proof above the fold so first-time visitors see verifiable
+            credibility BEFORE they hit our absolute trust claims. USDOT links
+            to FMCSA SAFER so skeptics can verify in one click — that single
+            outbound link does more for trust than 10 marketing claims would.
+            Light gray (gray-100) bridges the dark→white visual transition
+            without competing with either side. */}
+        <section
+          aria-label={t("home.trustStrip.ariaLabel")}
+          className="bg-gray-100 border-y border-gray-200 py-3"
+        >
+          <Container>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[12px] md:text-[13px] text-gray-700 font-medium">
+              <a
+                href={t("home.trustStrip.dotUrl")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-orange-dark hover:underline transition"
+                title={t("home.trustStrip.dotTitle")}
+              >
+                {t("home.trustStrip.items.dot")}
+              </a>
+              <span aria-hidden="true" className="text-gray-400">·</span>
+              <span>{t("home.trustStrip.items.mc")}</span>
+              <span aria-hidden="true" className="text-gray-400">·</span>
+              <span>{t("home.trustStrip.items.bond")}</span>
+              <span aria-hidden="true" className="text-gray-400">·</span>
+              <span>{t("home.trustStrip.items.fleet")}</span>
+            </div>
           </Container>
         </section>
 
@@ -85,7 +145,11 @@ export default function Home() {
               {t("home.triplePromise.eyebrow")}
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-charcoal max-w-2xl">
-              {t("home.triplePromise.title")}
+              {t.rich("home.triplePromise.title", {
+                nobreak: (chunks) => (
+                  <span className="whitespace-nowrap">{chunks}</span>
+                ),
+              })}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
@@ -97,6 +161,7 @@ export default function Home() {
                 headline={t("home.triplePromise.cards.price.headline")}
                 conditionLine={t("home.triplePromise.cards.price.conditionLine")}
                 consequenceLine={t("home.triplePromise.cards.price.consequenceLine")}
+                clarifier={t("home.triplePromise.cards.price.clarifier")}
                 cta={t("home.triplePromise.cards.price.cta")}
               />
               <PromiseCard
@@ -104,7 +169,11 @@ export default function Home() {
                 stat={t("home.triplePromise.cards.damage.stat")}
                 statLabel={t("home.triplePromise.cards.damage.statLabel")}
                 eyebrow={t("home.triplePromise.cards.damage.eyebrow")}
-                headline={t("home.triplePromise.cards.damage.headline")}
+                headline={t.rich("home.triplePromise.cards.damage.headline", {
+                  nobreak: (chunks) => (
+                    <span className="whitespace-nowrap">{chunks}</span>
+                  ),
+                })}
                 conditionLine={t("home.triplePromise.cards.damage.conditionLine")}
                 consequenceLine={t("home.triplePromise.cards.damage.consequenceLine")}
                 cta={t("home.triplePromise.cards.damage.cta")}
@@ -119,6 +188,162 @@ export default function Home() {
                 consequenceLine={t("home.triplePromise.cards.people.consequenceLine")}
                 cta={t("home.triplePromise.cards.people.cta")}
               />
+            </div>
+          </Container>
+        </section>
+
+        {/* Anti-Scam Teaser — small compact preview module that surfaces
+            the brand's "honest guide" positioning above the fold-equivalent.
+            Reviewer flagged the full anti-scam section as appearing too
+            late in the page (~page 8 of the PDF). Rather than move the
+            full section (which would push services + how-it-works down),
+            we tease the 3 questions here and anchor down to the full
+            section for the honest answers. Single source of truth — only
+            the questions repeat, and that repetition is intentional (the
+            teaser is the trailer, the full section is the payoff).
+            Amber background signals "warning / things to watch out for"
+            and breaks the white→gray rhythm between Triple Promise + Services. */}
+        <section
+          aria-label={t("home.antiScamTeaser.eyebrow")}
+          className="py-14 bg-amber-50 border-y border-amber-200"
+        >
+          <Container>
+            <div className="max-w-4xl mx-auto text-center">
+              <span className="inline-flex items-center gap-2 text-amber-800 text-xs font-bold uppercase tracking-wider bg-amber-100 px-3 py-1.5 rounded-full mb-4">
+                <svg
+                  className="w-3.5 h-3.5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+                </svg>
+                {t("home.antiScamTeaser.eyebrow")}
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold text-charcoal leading-tight">
+                {t("home.antiScamTeaser.title")}
+              </h2>
+              <p className="text-gray-700 text-base md:text-lg mt-3 leading-relaxed">
+                {t("home.antiScamTeaser.lead")}
+              </p>
+
+              {/* D3 layout — Featured + 2 Supporting (asymmetric).
+                  Question 1 is the most common scam (Lead-Gen Bait), so
+                  it gets the bigger orange-bordered card with more scam
+                  context. Questions 2 + 3 stack as supporting cards on
+                  the right with the basics. Visual hierarchy signals
+                  "if you read nothing else, read this one."
+                  Mobile (< md): stacks vertically, featured first. */}
+              <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-3.5 mt-7 text-left">
+                <FeaturedScamCard
+                  tag={t("home.antiScamTeaser.featuredTag")}
+                  question={t("home.antiScamTeaser.questions.1.text")}
+                  scamText={t("home.antiScamTeaser.questions.1.scamText")}
+                />
+                <div className="flex flex-col gap-3.5">
+                  <SupportingScamCard
+                    question={t("home.antiScamTeaser.questions.2.text")}
+                    scamText={t("home.antiScamTeaser.questions.2.scamText")}
+                  />
+                  <SupportingScamCard
+                    question={t("home.antiScamTeaser.questions.3.text")}
+                    scamText={t("home.antiScamTeaser.questions.3.scamText")}
+                  />
+                </div>
+              </div>
+
+              {/* Button-styled link to the dedicated /anti-scam page where
+                  the honest answers live. The full anti-scam section was
+                  removed from the homepage (May 17, 2026) after recognizing
+                  the question content was repeated across the site. One
+                  source of homepage truth (this teaser); depth lives on
+                  the dedicated page. Button styling (vs prior text link)
+                  is part of the B3 typography refactor — the CTA earns
+                  the orange-filled treatment because it's the actual
+                  action, not whispery decoration. */}
+              <Link
+                href="/anti-scam"
+                className="inline-flex items-center bg-orange hover:bg-orange-dark text-white font-bold text-sm md:text-base px-6 py-3 rounded-lg transition mt-7 shadow-md shadow-orange/20"
+              >
+                {t("home.antiScamTeaser.ctaText")}
+              </Link>
+            </div>
+          </Container>
+        </section>
+
+        {/* Portal Preview — "After you book" section.
+            Placement: directly between Anti-scam teaser and Services so that
+            the Black Hole question in the teaser ("what if I don't hear from
+            anyone for 3 days during transit?") gets its visual answer right
+            below ("you're never in the dark — here's the portal you'll see
+            after booking").
+            White background breaks the amber→gray rhythm between teaser
+            and services. Frame: anxiety relief, not feature list.
+            Mockup is currently stylized inline HTML/CSS — when the actual
+            portal UI is production-polished, swap to a real screenshot. */}
+        <section className="bg-white py-16 md:py-20">
+          <Container>
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              <p className="text-orange text-xs font-bold uppercase tracking-[0.12em] mb-3">
+                {t("home.portalPreview.eyebrow")}
+              </p>
+              <h2 className="text-3xl md:text-4xl lg:text-[42px] font-extrabold text-charcoal leading-[1.1] tracking-tight mb-3">
+                {t("home.portalPreview.title")}
+              </h2>
+              <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+                {t("home.portalPreview.lead")}
+              </p>
+            </div>
+
+            {/* 2-col grid: laptop mockup left, 3 callouts right. Stacks at lg- */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 lg:gap-14 items-center">
+              <LaptopPortalMockup
+                brand={t("home.portalPreview.mockup.brand")}
+                shipmentId={t("home.portalPreview.mockup.shipmentId")}
+                status={t("home.portalPreview.mockup.status")}
+                pickupLabel={t("home.portalPreview.mockup.pickupLabel")}
+                destLabel={t("home.portalPreview.mockup.destLabel")}
+                etaLabel={t("home.portalPreview.mockup.etaLabel")}
+                etaTime={t("home.portalPreview.mockup.etaTime")}
+                etaSub={t("home.portalPreview.mockup.etaSub")}
+                confidence={t("home.portalPreview.mockup.confidence")}
+                photosLabel={t("home.portalPreview.mockup.photosLabel")}
+                photosCount={t("home.portalPreview.mockup.photosCount")}
+                coordName={t("home.portalPreview.mockup.coordName")}
+                coordRole={t("home.portalPreview.mockup.coordRole")}
+                messageBtn={t("home.portalPreview.mockup.messageBtn")}
+              />
+
+              <div className="flex flex-col gap-7">
+                <PortalCallout
+                  num={1}
+                  title={t("home.portalPreview.callouts.1.title")}
+                  text={t("home.portalPreview.callouts.1.text")}
+                />
+                <PortalCallout
+                  num={2}
+                  title={t("home.portalPreview.callouts.2.title")}
+                  text={t("home.portalPreview.callouts.2.text")}
+                />
+                <PortalCallout
+                  num={3}
+                  title={t("home.portalPreview.callouts.3.title")}
+                  text={t("home.portalPreview.callouts.3.text")}
+                />
+              </div>
+            </div>
+
+            {/* Bottom CTA — sends visitor BACK into the quote flow.
+                Logic: they just saw what they get after booking → naturally
+                primed to start booking. Different intent from the anti-scam
+                teaser CTA above (which leads outward to /anti-scam). */}
+            <div className="text-center mt-12">
+              <Link
+                href="/quote"
+                className="inline-flex items-center bg-orange hover:bg-orange-dark text-white font-bold text-base px-7 py-3.5 rounded-xl transition shadow-md shadow-orange/20"
+              >
+                {t("home.portalPreview.cta")} →
+              </Link>
             </div>
           </Container>
         </section>
@@ -191,8 +416,10 @@ export default function Home() {
 
         {/* How It Works — 3-step explainer. Now on WHITE bg after the Services
             section insertion cascade-flipped the rhythm (white→gray→white→
-            gray→white→gray→orange). */}
-        <section className="py-20 bg-white">
+            gray→white→gray→orange).
+            id="how-it-works" is the anchor target for the hero "See how it
+            works" secondary CTA — keeps the button's label honest. */}
+        <section id="how-it-works" className="py-20 bg-white scroll-mt-16">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
               {t("home.howItWorks.eyebrow")}
@@ -347,67 +574,6 @@ export default function Home() {
           </Container>
         </section>
 
-                {/* Anti-Scam Educator — V1b question-led. Each card is a question
-            the consumer should ask any broker, plus the "Why ask it"
-            (the scam this exposes) and "Honest answer sounds like" (what
-            we'd say). Voice D / anti-scam. */}
-        <section className="py-20 bg-gray-100">
-          <Container>
-            <span className="inline-flex items-center gap-2 text-amber-700 text-xs font-bold uppercase tracking-wider bg-amber-100 px-3 py-1.5 rounded-full mb-3">
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
-              </svg>
-              {t("home.antiScam.eyebrow")}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-charcoal leading-tight max-w-3xl mt-2">
-              {t("home.antiScam.title")}{" "}
-              <span className="text-orange-dark">
-                {t("home.antiScam.titleAccent")}
-              </span>
-            </h2>
-            <p className="text-gray-700 text-lg mt-4 max-w-2xl leading-relaxed">
-              {t("home.antiScam.lead")}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-              <AntiScamCard
-                num={1}
-                question={t("home.antiScam.questions.leadGen.question")}
-                whyAskLabel={t("home.antiScam.whyAskLabel")}
-                whyAsk={t("home.antiScam.questions.leadGen.whyAsk")}
-                honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
-                honestAnswer={t("home.antiScam.questions.leadGen.honestAnswer")}
-              />
-              <AntiScamCard
-                num={2}
-                question={t("home.antiScam.questions.reviews.question")}
-                whyAskLabel={t("home.antiScam.whyAskLabel")}
-                whyAsk={t("home.antiScam.questions.reviews.whyAsk")}
-                honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
-                honestAnswer={t("home.antiScam.questions.reviews.honestAnswer")}
-              />
-              <AntiScamCard
-                num={3}
-                question={t("home.antiScam.questions.deposit.question")}
-                whyAskLabel={t("home.antiScam.whyAskLabel")}
-                whyAsk={t("home.antiScam.questions.deposit.whyAsk")}
-                honestAnswerLabel={t("home.antiScam.honestAnswerLabel")}
-                honestAnswer={t("home.antiScam.questions.deposit.honestAnswer")}
-              />
-            </div>
-
-            {/* Link to the full hub */}
-            <div className="text-center mt-10">
-              <Link
-                href="/anti-scam"
-                className="text-orange-dark font-semibold hover:underline"
-              >
-                {t("home.antiScam.hubLink")}
-              </Link>
-            </div>
-          </Container>
-        </section>
-
                 {/* Final CTA — closes the page with a strong "Ready to lock a price?"
             beat. Charcoal hero card centered in a white section. The closer
             between Anti-Scam Educator (gray) and the Build banner (orange-tint).
@@ -438,79 +604,10 @@ export default function Home() {
           </Container>
         </section>
 
-        {/* Build status banner — REMOVE once homepage is fleshed out and we go live on autolinelogistics.com */}
-        <section className="py-12 bg-orange-tint border-t border-orange/20">
-          <Container>
-            <p className="text-charcoal font-semibold mb-1">
-              🚧 Build status — Phase A bootstrap (updated May 12, 2026)
-            </p>
-            <p className="text-gray-700 text-sm">
-              Live: Triple Promise (V3d redesign with receipt panels), How It
-              Works, Behind the Promise, Helpful Tools, Ship vs Drive Calculator
-              (Phase A scope), California ↔ Hawaii and California ↔ Alaska
-              corridors. Next up: Super Dispatch + Authorize.Net integrations,
-              Anti-Scam Educator section, Tracking demo, remaining page
-              wire-ups for ES.
-            </p>
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="font-semibold text-orange-dark">⚠ Pending owner verification before launch:</span>{" "}
-              Triple Promise stats ($0 surprise upcharges · $500K cargo
-              coverage · 1 named coordinator); Behind the Promise stats
-              (35-truck fleet · 45,000 vehicles in 2025 · native bilingual).
-              Production cutover to{" "}
-              <span className="font-semibold">autolinelogistics.com</span>{" "}
-              target: end of Phase A.
-            </p>
-          </Container>
-        </section>
       </main>
 
       <Footer />
     </>
-  );
-}
-
-function AntiScamCard({
-  num,
-  question,
-  whyAskLabel,
-  whyAsk,
-  honestAnswerLabel,
-  honestAnswer,
-}: {
-  num: 1 | 2 | 3;
-  question: string;
-  whyAskLabel: string;
-  whyAsk: string;
-  honestAnswerLabel: string;
-  honestAnswer: string;
-}) {
-  return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col">
-      <div className="w-8 h-8 rounded-full bg-orange text-white text-sm font-bold flex items-center justify-center mb-4">
-        {num}
-      </div>
-      <p className="text-charcoal font-bold text-base md:text-lg leading-snug mb-4">
-        {question}
-      </p>
-      <div className="border-t border-dashed border-gray-300 my-1" />
-      <div className="mt-3 mb-3">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 mb-1">
-          {whyAskLabel}
-        </p>
-        <p className="text-sm text-gray-700 leading-relaxed">
-          {whyAsk}
-        </p>
-      </div>
-      <div className="bg-emerald-50 border-l-[3px] border-emerald-700 rounded-r-lg px-3 py-2.5 mt-auto">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 mb-1">
-          {honestAnswerLabel}
-        </p>
-        <p className="text-sm text-charcoal font-semibold leading-relaxed">
-          {honestAnswer}
-        </p>
-      </div>
-    </div>
   );
 }
 
@@ -722,19 +819,32 @@ function PromiseCard({
   href,
   stat,
   statLabel,
+  statSize = "default",
   eyebrow,
   headline,
   conditionLine,
   consequenceLine,
+  clarifier,
   cta,
 }: {
   href: string;
   stat: string;
   statLabel: string;
+  /** "large" bumps the stat font size — use for single-character stats
+   *  like "1" so they don't visually disappear next to "$0" or "$500K". */
+  statSize?: "default" | "large";
   eyebrow: string;
-  headline: string;
+  /** Accepts ReactNode so callers can pass t.rich() output with nowrap
+   *  spans for headline phrases that should not wrap mid-compound. */
+  headline: React.ReactNode;
   conditionLine: string;
   consequenceLine: string;
+  /** Optional small-print boundary line below the receipt. Names the
+   *  conditions under which the promise applies, so skeptical consumers
+   *  see the boundary BEFORE they leave the page and assume we're hiding
+   *  it. First used on Price Promise (May 17, 2026) — Damage + People
+   *  pending operational confirmation from Ben. */
+  clarifier?: string;
   cta: string;
 }) {
   return (
@@ -742,9 +852,17 @@ function PromiseCard({
       href={href}
       className="group bg-white border border-gray-200 rounded-2xl p-6 md:p-7 flex flex-col transition hover:border-orange hover:shadow-lg hover:-translate-y-0.5"
     >
-      {/* Stat anchor: huge number + label, divided from the rest */}
+      {/* Stat anchor: huge number + label, divided from the rest.
+          statSize="large" bumps single-char stats so they visually
+          match the weight of multi-char dollar stats. */}
       <div className="flex items-end gap-3.5 pb-4 mb-4 border-b border-gray-200">
-        <span className="text-4xl md:text-5xl font-extrabold text-orange-dark leading-none tracking-tight">
+        <span
+          className={`font-extrabold text-orange-dark leading-none tracking-tight ${
+            statSize === "large"
+              ? "text-7xl md:text-8xl"
+              : "text-4xl md:text-5xl"
+          }`}
+        >
           {stat}
         </span>
         <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 pb-1 flex-1">
@@ -752,29 +870,298 @@ function PromiseCard({
         </span>
       </div>
 
-      {/* Promise name + headline */}
-      <p className="text-orange text-[11px] font-bold uppercase tracking-wider mb-1.5">
+      {/* Promise name + headline. Eyebrow is gray (not orange) so the
+          orange stat above carries the color signal alone — reduces the
+          per-card orange touchpoint count from 6 to 4. */}
+      <p className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1.5">
         {eyebrow}
       </p>
       <h3 className="text-lg font-bold text-charcoal mb-3 leading-snug">
         {headline}
       </h3>
 
-      {/* The receipt: If X… → Then Y */}
-      <div className="border border-orange-tint rounded-xl p-3.5 mb-4">
-        <p className="text-sm text-gray-700 italic mb-1.5 leading-snug">
+      {/* The receipt: If X… → Then Y.
+          Condition is plain (not italic) — italic was reading as "footnote"
+          when it should read as a setup beat. Consequence text is dark
+          (charcoal); only the arrow stays orange, so the color carries
+          the signal without flooding the card.
+          md:min-h-[140px] keeps the three receipts visually aligned on
+          desktop even when the condition copy is much shorter (e.g.,
+          People card's "When you call..."). On mobile the cards stack
+          so the min-height is unnecessary — only kicks in at md+. */}
+      <div className="border border-orange-tint rounded-xl p-3.5 mb-4 md:min-h-[140px]">
+        <p className="text-sm text-gray-700 mb-1.5 leading-snug">
           {conditionLine}
         </p>
-        <p className="text-sm font-semibold text-orange-dark bg-orange-tint border-l-[3px] border-orange rounded px-3 py-1.5 leading-snug">
-          → {consequenceLine}
+        <p className="text-sm font-semibold text-charcoal bg-orange-tint border-l-[3px] border-orange rounded px-3 py-1.5 leading-snug">
+          <span className="text-orange font-black mr-1">→</span>
+          {consequenceLine}
         </p>
       </div>
+
+      {/* Boundary clarifier — small italic gray line beneath the receipt.
+          Names the conditions under which the promise actually applies.
+          Italic intentionally signals "small print" — the only place on
+          the card where we want that signal. Only renders if a clarifier
+          is provided (Price has one; Damage + People pending Ben sign-off). */}
+      {clarifier && (
+        <p className="text-[11px] text-gray-500 italic leading-snug -mt-1 mb-3">
+          {clarifier}
+        </p>
+      )}
 
       {/* CTA link */}
       <span className="text-sm text-orange-dark font-semibold mt-auto">
         {cta}
       </span>
     </Link>
+  );
+}
+
+/** FeaturedScamCard — the big anchor card in the D3 teaser layout. Orange
+ *  border + "Most common scam" tag draw the eye first. Question + scam
+ *  description live as two stacked sections inside the card, separated by
+ *  a thin amber rule (not a callout box, not a label) — type weight does
+ *  the differentiation work.
+ *
+ *  Typography discipline (May 17, 2026 refactor — B3 in the variations):
+ *   - "Ask this" / "The scam it exposes" labels DROPPED. The card already
+ *     visually shows what each block is — labeling was redundant.
+ *   - Question goes from italic+extrabold to italic+medium. Single
+ *     emphasis tool (italic) reads as "spoken question" without doubling
+ *     up with bold weight.
+ *   - Amber callout box around scam REPLACED with a thin horizontal rule
+ *     (border-t amber-200 + pt-3.5). Structure stays; decoration drops. */
+function FeaturedScamCard({
+  tag,
+  question,
+  scamText,
+}: {
+  tag: string;
+  question: string;
+  scamText: string;
+}) {
+  return (
+    <div className="relative bg-white border-2 border-orange rounded-xl p-5 md:p-6 flex flex-col gap-3.5">
+      {/* Orange tag floating above the top-left corner */}
+      <span className="absolute -top-2.5 left-5 bg-orange text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded">
+        {tag}
+      </span>
+      <p className="text-lg font-medium text-charcoal italic leading-snug">
+        {question}
+      </p>
+      <p className="text-sm text-gray-700 leading-relaxed pt-3.5 border-t border-amber-200">
+        {scamText}
+      </p>
+    </div>
+  );
+}
+
+/** SupportingScamCard — smaller card for the secondary anti-scam questions
+ *  in the D3 teaser layout. Same typography discipline as FeaturedScamCard:
+ *  no "Also ask" label (redundant), italic-medium question (not bold),
+ *  scam description separated by a thin amber rule (not stacked without
+ *  structure). Two of these stack on the right of the FeaturedScamCard. */
+function SupportingScamCard({
+  question,
+  scamText,
+}: {
+  question: string;
+  scamText: string;
+}) {
+  return (
+    <div className="bg-white border border-amber-200 rounded-lg p-4 flex-1">
+      <p className="text-base font-medium text-charcoal italic leading-snug">
+        {question}
+      </p>
+      <p className="text-xs text-gray-700 leading-relaxed pt-2.5 mt-2.5 border-t border-amber-200">
+        {scamText}
+      </p>
+    </div>
+  );
+}
+
+/** PortalCallout — numbered callout used in the Portal Preview section.
+ *  Orange-tint number circle + bold title + supporting text. Numbered so
+ *  the eye can map each callout to the device elements visible in the
+ *  laptop mockup beside it. */
+function PortalCallout({
+  num,
+  title,
+  text,
+}: {
+  num: number;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="flex items-start gap-3.5">
+      <span className="flex-shrink-0 w-9 h-9 bg-orange-tint text-orange-dark font-black text-sm rounded-full inline-flex items-center justify-center">
+        {num}
+      </span>
+      <div>
+        <p className="text-base md:text-lg font-extrabold text-charcoal mb-1 tracking-tight">
+          {title}
+        </p>
+        <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** LaptopPortalMockup — stylized "browser-in-laptop" mockup of the
+ *  in-transit customer portal. Renders a static representation of:
+ *    - Header (Auto Line brand · shipment ID · status pill)
+ *    - Map area with pickup pin, animated truck location, destination pin
+ *    - ETA card with confidence badge
+ *    - Photo evidence grid (6 thumbnails — pickup + transit)
+ *    - Coordinator card with avatar + Message action
+ *  All labels driven by i18n props for full EN/ES coverage. The shipment
+ *  ID, city names, date strings, and coordinator name are illustrative
+ *  (translated minimally — names + IDs stay constant across locales).
+ *  Production note: replace with a real portal screenshot once the
+ *  in-transit UI is polished. */
+function LaptopPortalMockup({
+  brand,
+  shipmentId,
+  status,
+  pickupLabel,
+  destLabel,
+  etaLabel,
+  etaTime,
+  etaSub,
+  confidence,
+  photosLabel,
+  photosCount,
+  coordName,
+  coordRole,
+  messageBtn,
+}: {
+  brand: string;
+  shipmentId: string;
+  status: string;
+  pickupLabel: string;
+  destLabel: string;
+  etaLabel: string;
+  etaTime: string;
+  etaSub: string;
+  confidence: string;
+  photosLabel: string;
+  photosCount: string;
+  coordName: string;
+  coordRole: string;
+  messageBtn: string;
+}) {
+  return (
+    <div className="relative">
+      {/* Laptop frame — dark slab with portal mockup inside */}
+      <div className="bg-[#1a1a1a] rounded-t-2xl rounded-b-sm p-2.5 shadow-2xl shadow-black/15">
+        <div className="bg-[#fafafa] rounded-lg overflow-hidden">
+          {/* Portal header */}
+          <div className="bg-white border-b border-gray-200 px-3.5 py-2.5 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black text-orange tracking-wider">
+                {brand}
+              </span>
+              <span className="text-gray-300">·</span>
+              <span className="text-[10px] text-gray-700 font-mono">
+                {shipmentId}
+              </span>
+            </div>
+            <span className="bg-[#d1fae5] text-[#065f46] text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+              ● {status}
+            </span>
+          </div>
+
+          {/* Map area with pins + truck */}
+          <div className="relative h-[130px] overflow-hidden"
+               style={{
+                 background:
+                   "radial-gradient(ellipse at 30% 70%, rgba(180,220,200,0.5) 0%, transparent 50%), linear-gradient(135deg, #c8e6f0 0%, #a7c8d8 60%, #8eb1c2 100%)",
+               }}>
+            {/* Road */}
+            <div
+              className="absolute top-1/2 -left-[5%] -right-[5%] h-[5px] -translate-y-1/2"
+              style={{
+                background:
+                  "repeating-linear-gradient(90deg, rgba(255,255,255,0.5) 0 14px, transparent 14px 22px)",
+                transform: "rotate(-6deg) translateY(-2px)",
+                boxShadow: "0 0 0 3px rgba(255,255,255,0.15)",
+              }}
+            />
+            {/* Pickup pin */}
+            <div className="absolute top-[68%] left-[14%] w-2.5 h-2.5 rounded-full bg-white border-[2.5px] border-orange shadow-sm" />
+            <span className="absolute top-[calc(68%+14px)] left-2 bg-white text-charcoal text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap z-10">
+              {pickupLabel}
+            </span>
+            {/* Truck */}
+            <div className="absolute top-[38%] left-[55%] w-7 h-[18px] bg-orange rounded shadow-lg shadow-orange/45 z-[2]">
+              <div className="absolute top-[3px] right-[3px] w-2 h-3 bg-white/40 rounded-sm" />
+            </div>
+            {/* Destination pin */}
+            <div className="absolute top-[32%] right-[10%] w-2.5 h-2.5 rounded-full bg-white border-[2.5px] border-orange shadow-sm" />
+            <span className="absolute top-[calc(32%-22px)] right-2 bg-white text-charcoal text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap z-10">
+              {destLabel}
+            </span>
+          </div>
+
+          {/* ETA section */}
+          <div className="bg-white px-3.5 py-3 border-b border-gray-200 flex justify-between items-center">
+            <div>
+              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">
+                {etaLabel}
+              </p>
+              <p className="text-[17px] font-extrabold text-charcoal leading-tight my-0.5 tracking-tight">
+                {etaTime}
+              </p>
+              <p className="text-[10px] text-gray-500">{etaSub}</p>
+            </div>
+            <span className="bg-orange-tint text-orange-dark text-[10px] font-black px-2.5 py-1 rounded-md">
+              {confidence}
+            </span>
+          </div>
+
+          {/* Photo grid */}
+          <div className="bg-white px-3.5 py-3 border-b border-gray-200">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[11px] font-bold text-charcoal">
+                {photosLabel}
+              </span>
+              <span className="text-[10px] text-gray-500">{photosCount}</span>
+            </div>
+            <div className="grid grid-cols-6 gap-[5px]">
+              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #b8b8b8, #707070)" }} />
+              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #404040, #1f1f1f)" }} />
+              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #b8b8b8, #707070)" }} />
+              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #8b6f47, #5a4830)" }} />
+              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #8b6f47, #5a4830)" }} />
+              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #8b6f47, #5a4830)" }} />
+            </div>
+          </div>
+
+          {/* Coordinator card */}
+          <div className="bg-white px-3.5 py-3 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange to-orange-dark text-white flex items-center justify-center text-sm font-black flex-shrink-0">
+              D
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-charcoal">{coordName}</p>
+              <p className="text-[10px] text-gray-500">{coordRole}</p>
+            </div>
+            <span className="text-[10px] font-bold text-orange-dark uppercase tracking-wider bg-orange-tint px-2.5 py-1.5 rounded-md">
+              {messageBtn}
+            </span>
+          </div>
+        </div>
+      </div>
+      {/* Laptop base — subtle dark slab below the screen for "laptop" silhouette */}
+      <div
+        className="h-2.5 -mx-6 mt-1.5 bg-gradient-to-b from-[#2d2d2d] to-[#1a1a1a]"
+        style={{ borderRadius: "0 0 50% 50% / 0 0 100% 100%", transform: "scaleX(1.05)" }}
+      />
+    </div>
   );
 }
 
