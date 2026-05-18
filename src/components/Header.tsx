@@ -67,12 +67,16 @@ export function Header() {
             />
           </Link>
 
+          {/* Main nav — kept to 5 items so visual count matches Ben's mental
+              model ("only 5 pages") while surfacing more depth than before.
+              Resources is the hub for educational content (anti-scam guide,
+              tools, blog when ready). Order: Home → Services → Promises →
+              Resources → About reads as offer → proof → education → trust.
+              Contact dropped (was 404ing to /contact, and phone/email/CTA
+              already live in the orange utility bar above). */}
           <nav className="flex items-center gap-6 text-sm font-medium text-gray-700">
             <Link href="/" className="hover:text-orange transition">
               {t("header.nav.home")}
-            </Link>
-            <Link href="/about" className="hover:text-orange transition">
-              {t("header.nav.about")}
             </Link>
             <Link href="/services" className="hover:text-orange transition">
               {t("header.nav.services")}
@@ -80,8 +84,11 @@ export function Header() {
             <Link href="/price-promise" className="hover:text-orange transition">
               {t("header.nav.promises")}
             </Link>
-            <Link href="/contact" className="hover:text-orange transition">
-              {t("header.nav.contact")}
+            <Link href="/resources" className="hover:text-orange transition">
+              {t("header.nav.resources")}
+            </Link>
+            <Link href="/about" className="hover:text-orange transition">
+              {t("header.nav.about")}
             </Link>
           </nav>
         </Container>

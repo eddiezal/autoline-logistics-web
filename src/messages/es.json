@@ -1,4 +1,57 @@
 {
+  "resources": {
+    "metadata": {
+      "title": "Recursos — Auto Line Logistics",
+      "description": "Herramientas y guías honestas para cualquiera que envíe un auto. Guía anti-estafas, calculadoras, y artículos mensuales sobre la industria de corredores."
+    },
+    "hero": {
+      "eyebrow": "Recursos útiles",
+      "title": "Todo lo que debe saber antes de enviar su auto.",
+      "lead": "Publicamos herramientas y guías honestas para la industria de corredores — no solo para nuestros clientes, para cualquiera que envíe un auto."
+    },
+    "cards": {
+      "antiScam": {
+        "eyebrow": "Guía",
+        "title": "Alerta anti-estafas",
+        "description": "3 preguntas que todo cliente debe hacer a cualquier corredor antes de reservar. Las estafas que exponen, y cómo suena una respuesta honesta.",
+        "cta": "Lea la guía →"
+      },
+      "shipVsDrive": {
+        "eyebrow": "Calculadora",
+        "title": "Enviar o Manejar",
+        "description": "La matemática detrás de enviar vs manejar su auto a través del país. La respuesta honesta suele ser «depende» — pero así puede descubrir cuál es la suya.",
+        "cta": "Abrir calculadora →"
+      },
+      "allTools": {
+        "eyebrow": "Herramientas",
+        "title": "Todas nuestras herramientas",
+        "description": "Calculadoras, herramientas de búsqueda y ayudas para decidir — gratuitas, sin registro. Actualizadas a medida que construimos más.",
+        "cta": "Ver todas las herramientas →"
+      }
+    },
+    "comingSoon": {
+      "eyebrow": "Nuevo cada mes",
+      "title": "Artículos publicándose en junio, julio, agosto.",
+      "articles": {
+        "1": {
+          "month": "Junio",
+          "title": "Cómo detectar a un mal corredor en 60 segundos"
+        },
+        "2": {
+          "month": "Julio",
+          "title": "Cebo y cambio — anatomía de la estafa"
+        },
+        "3": {
+          "month": "Agosto",
+          "title": "Cómo suena una buena llamada con un corredor"
+        }
+      },
+      "ctaLabel": "Avíseme cuando llegue el próximo",
+      "emailPlaceholder": "tu@email.com",
+      "ctaButton": "Avíseme",
+      "ctaFootnote": "Solo le escribiremos cuando se publique un nuevo artículo. Sin spam de boletín."
+    }
+  },
   "common": {
     "phone": "714-660-7558",
     "email": "info@autolinelogistics.com",
@@ -37,10 +90,10 @@
     "ctaQuote": "Obtenga su cotización al instante",
     "nav": {
       "home": "Inicio",
-      "about": "Nosotros",
       "services": "Servicios",
       "promises": "Promesas",
-      "contact": "Contacto"
+      "resources": "Recursos",
+      "about": "Nosotros"
     }
   },
   "footer": {

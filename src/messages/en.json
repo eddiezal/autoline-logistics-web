@@ -1,4 +1,57 @@
 {
+  "resources": {
+    "metadata": {
+      "title": "Resources — Auto Line Logistics",
+      "description": "Honest tools and guides for anyone shipping a car. Anti-scam guide, calculators, and monthly articles on the broker industry."
+    },
+    "hero": {
+      "eyebrow": "Helpful resources",
+      "title": "Everything you should know before shipping your car.",
+      "lead": "We publish honest tools and guides for the broker industry — not just for our customers, for anyone shipping a car."
+    },
+    "cards": {
+      "antiScam": {
+        "eyebrow": "Guide",
+        "title": "Anti-scam check",
+        "description": "3 questions every customer should ask any broker before booking. The scams they expose, and what an honest answer sounds like.",
+        "cta": "Read the guide →"
+      },
+      "shipVsDrive": {
+        "eyebrow": "Calculator",
+        "title": "Ship vs Drive",
+        "description": "The math behind shipping vs driving your car cross-country. Honest answer is usually \"it depends\" — but here's how to figure out which.",
+        "cta": "Open calculator →"
+      },
+      "allTools": {
+        "eyebrow": "Toolkit",
+        "title": "All our tools",
+        "description": "Calculators, lookup tools, and decision aids — free, no signup required. Updated as we build more.",
+        "cta": "See all tools →"
+      }
+    },
+    "comingSoon": {
+      "eyebrow": "New every month",
+      "title": "Articles dropping June, July, August.",
+      "articles": {
+        "1": {
+          "month": "June",
+          "title": "How to spot a bad broker in 60 seconds"
+        },
+        "2": {
+          "month": "July",
+          "title": "Bait-and-switch — anatomy of the scam"
+        },
+        "3": {
+          "month": "August",
+          "title": "What a good broker call actually sounds like"
+        }
+      },
+      "ctaLabel": "Notify me when the next one drops",
+      "emailPlaceholder": "you@email.com",
+      "ctaButton": "Notify me",
+      "ctaFootnote": "We'll only email when a new article publishes. No newsletter spam."
+    }
+  },
   "common": {
     "phone": "714-660-7558",
     "email": "info@autolinelogistics.com",
@@ -37,10 +90,10 @@
     "ctaQuote": "Get Your Instant Quote",
     "nav": {
       "home": "Home",
-      "about": "About",
       "services": "Services",
       "promises": "Promises",
-      "contact": "Contact"
+      "resources": "Resources",
+      "about": "About"
     }
   },
   "footer": {
