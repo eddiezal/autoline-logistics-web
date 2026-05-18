@@ -124,26 +124,97 @@
   "home": {
     "hero": {
       "eyebrow": "Auto Line Logistics, Inc.",
-      "title": "Ship your car without the <nobreak>bait-and-switch</nobreak>.",
-      "titleAccent": "No surprises.",
-      "description": "Tracked. Photographed. Covered. From pickup to delivery, you'll see every step, talk to one named coordinator, and never have to chase a claim.",
-      "ctaPrimary": "Get my locked price",
-      "ctaSecondary": "See how it works"
+      "badge": "Licensed, Bonded & Insured",
+      "title": "No surprises.",
+      "titleAccent": "No fake-low quote games.",
+      "description": "Ship your car with a locked price, photo-documented pickup and delivery, and one named coordinator from quote to drop-off.",
+      "ctaPrimary": "Get My Locked Price",
+      "ctaSecondary": "See the Anti-Scam Checklist",
+      "proofChips": {
+        "lockedPrice": "Locked Price",
+        "photos": "Pickup & Delivery Photos",
+        "coordinator": "Named Coordinator",
+        "insured": "Fully Licensed & Insured"
+      },
+      "stats": {
+        "shipments": "45,000+ vehicles shipped last year",
+        "coverage": "Door-to-door across the U.S., plus HI + AK"
+      },
+      "shipmentCard": {
+        "status": "In transit",
+        "shipmentId": "ALL-2026-04831",
+        "pickupCity": "Los Angeles, CA",
+        "destCity": "Austin, TX",
+        "pickupPhotos": "12 pickup photos uploaded",
+        "deliveryPhotos": "8 delivery photos uploaded",
+        "coordLabel": "Coordinator",
+        "coordName": "Danielle Martinez",
+        "etaLabel": "ETA",
+        "etaValue": "Thu, May 22 · 3:30 PM"
+      },
+      "lockedPriceCard": {
+        "label": "Locked Price",
+        "price": "$875",
+        "tagline": "No upcharges. No surprises."
+      }
     },
     "trustStrip": {
       "ariaLabel": "Compliance and credentials",
       "items": {
-        "dot": "USDOT 3961864",
-        "mc": "MC 1477788",
-        "bond": "BMC-84 Bond",
-        "fleet": "Family-operated fleet"
+        "dot": {
+          "label": "USDOT 3961864",
+          "sub": "Verified"
+        },
+        "mc": {
+          "label": "MC 1477788",
+          "sub": "Verified Authority"
+        },
+        "bond": {
+          "label": "BMC-84",
+          "sub": "Bond on File"
+        },
+        "fleet": {
+          "label": "Family-Operated",
+          "sub": "Customer-First"
+        },
+        "volume": {
+          "label": "45,000+ vehicles",
+          "sub": "shipped last year"
+        }
       },
       "dotUrl": "https://safer.fmcsa.dot.gov/CompanySnapshot.aspx?USDOTNumber=3961864",
       "dotTitle": "Verify on FMCSA SAFER (opens in new tab)"
     },
+    "antiScamBottomStrip": {
+      "ariaLabel": "Anti-scam reminder",
+      "text": "The auto transport industry is full of fake quotes and bait-and-switch tactics. Get our free anti-scam checklist and book with confidence.",
+      "cta": "Get the Anti-Scam Checklist"
+    },
     "triplePromise": {
       "eyebrow": "Our triple promise",
-      "title": "<nobreak>Three promises.</nobreak> <nobreak>Three guarantees.</nobreak> <nobreak>Zero asterisks.</nobreak>",
+      "title": "<nobreak>Three promises.</nobreak> <nobreak>No fine print games.</nobreak>",
+      "lead": "We built our process around the things that matter most when shipping your car.",
+      "seeHowLink": "See how it works",
+      "simpleCards": {
+        "lockedPrice": {
+          "num": "1.",
+          "title": "Locked Price",
+          "description": "The price we quote is the price you pay. Period.",
+          "link": "How Pricing Works"
+        },
+        "photoProof": {
+          "num": "2.",
+          "title": "Photo Proof",
+          "description": "We document pickup and delivery so you always know your car is in good hands.",
+          "link": "See Photo Examples"
+        },
+        "onePerson": {
+          "num": "3.",
+          "title": "One Person",
+          "description": "One named coordinator from start to finish. Real answers. Real updates.",
+          "link": "Meet Our Team"
+        }
+      },
       "cards": {
         "price": {
           "stat": "$0",

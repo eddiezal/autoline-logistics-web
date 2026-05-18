@@ -28,166 +28,251 @@ export default function Home() {
           - Right edge fades into `to-black/15` (slightly cooler than charcoal)
             to neutralize the amber bleed from the warm streetlights
         */}
-        <section className="relative bg-charcoal text-white py-16 md:py-20 pb-12 md:pb-16 overflow-hidden">
-          {/* Background image */}
+        {/* Hero — premium logistics command-center treatment (rebuild May 17 PM).
+            Two-line H1 at equal scale (was Option D's inverted hierarchy in
+            the morning pass — replaced after a stronger external creative
+            direction landed). Adds: badge above headline, 4 proof chips
+            below subhead, primary filled + secondary outline CTAs, stats
+            row, floating shipment + locked-price proof cards on desktop.
+            Heavier gradient overlay so the truck photo breathes more
+            (was muted in the previous pass; new direction wants more
+            cinematic drama).
+            Background image: /public/photography/hero-home.webp — same
+            asset, just less opacity-blocked. */}
+        <section className="relative bg-neutral-950 text-white overflow-hidden">
+          {/* Background image + heavier dark gradient overlays.
+              opacity-70 lets more of the truck photo come through.
+              Horizontal gradient: black on the left (text legibility)
+              → softer right (truck reveal). Vertical gradient bottom-fade
+              for the trust-strip overlap to land cleanly. */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="/photography/hero-home.webp"
-              alt="Auto Line car-hauler trucks on a snowy night"
+              src="/photography/hero-night.png"
+              alt="Auto Line car-hauler truck loaded with vehicles on the open road"
               fill
               priority
               sizes="100vw"
-              style={{ objectPosition: "65% center" }}
-              className="object-cover"
+              style={{ objectPosition: "center center" }}
+              className="object-cover opacity-80"
             />
-            {/* Diagonal gradient — heavy top-left for text legibility, light bottom-right so the image breathes. Right-edge bumped to `to-black/25` to calm the brightest streetlight clusters from competing with the orange CTA */}
-            <div className="absolute inset-0 bg-gradient-to-br from-charcoal/95 via-charcoal/55 to-black/25" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/35" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent" />
           </div>
 
           <Container className="relative z-10">
-            {/* Hero layout — text left, Route Finder right at lg+; stacks
-                vertically below lg. The 1.1fr / 1fr split gives the text
-                slightly more room since headline + description is the more
-                variable-length content. items-start keeps both columns
-                anchored to the top so the card aligns with the title. */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-10 items-start">
-              {/* Left column: inverted-hierarchy title + description + secondary CTA.
-                  Promise-Forward layout (Option D, picked May 17, 2026): the orange
-                  accent ("Sin sorpresas." / "No surprises.") leads at display scale;
-                  the category descriptor ("Transporte de autos con precio fijo." /
-                  "Locked-price auto transport.") sits beneath at sub-headline scale.
-                  Eyebrow is dropped intentionally — the lead accent IS the brand
-                  anchor. Single <h1> with block-level spans preserves SEO + a11y;
-                  screen readers will read the accent first, then the descriptor. */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-10 items-start pt-12 pb-28 lg:pt-16 lg:pb-36">
+              {/* Left column */}
               <div>
-                <h1 className="leading-tight">
-                  <span className="block text-orange text-6xl md:text-7xl lg:text-[84px] font-black leading-[0.95] tracking-[-0.035em] mb-4">
-                    {t("home.hero.titleAccent")}
-                  </span>
-                  <span className="block text-2xl md:text-3xl font-bold leading-tight tracking-tight text-white">
-                    {t.rich("home.hero.title", {
-                      nobreak: (chunks) => <span className="whitespace-nowrap">{chunks}</span>,
-                    })}
-                  </span>
+                {/* Badge above headline — compliance signal as first read */}
+                <div className="inline-flex items-center gap-2 rounded-full border border-orange/40 bg-black/40 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-4-4 1.41-1.41L11 12.17l5.59-5.59L18 8l-7 7z"/>
+                  </svg>
+                  {t("home.hero.badge")}
+                </div>
+
+                {/* Two-line H1: white "No surprises." over orange
+                    "No fake-low quote games." — both at H1 scale */}
+                <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-[-0.04em]">
+                  <span className="block text-white">{t("home.hero.title")}</span>
+                  <span className="block text-orange mt-2">{t("home.hero.titleAccent")}</span>
                 </h1>
-                <p className="text-lg md:text-xl text-white mt-6 max-w-2xl">
+
+                {/* Subhead — names the 3 pillars that map to the proof chips below */}
+                <p className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed text-white/85 font-medium">
                   {t("home.hero.description")}
                 </p>
-                <div className="flex flex-wrap gap-3 mt-8">
-                  {/* Secondary CTA — outline by design. The Route Finder
-                      card on the right carries the primary action; this
-                      button is the education off-ramp for visitors who
-                      aren't ready to enter ZIPs yet. Anchors to the
-                      #how-it-works section on the same page (browser-native
-                      smooth scroll via scroll-mt-16 on the target). Plain
-                      <a> instead of next-intl Link because this is in-page
-                      hash navigation, not route navigation. */}
-                  <a
-                    href="#how-it-works"
-                    className="border-2 border-white hover:bg-white hover:text-charcoal text-white font-semibold px-7 py-3.5 rounded-full transition"
+
+                {/* 4 proof chips — visual restatement of the brand pillars,
+                    each with an iconographic anchor */}
+                <div className="mt-7 grid max-w-2xl grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <ProofChip iconKey="lock" label={t("home.hero.proofChips.lockedPrice")} />
+                  <ProofChip iconKey="camera" label={t("home.hero.proofChips.photos")} />
+                  <ProofChip iconKey="user" label={t("home.hero.proofChips.coordinator")} />
+                  <ProofChip iconKey="shield" label={t("home.hero.proofChips.insured")} />
+                </div>
+
+                {/* Primary filled + secondary outline CTAs */}
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Link
+                    href="/quote"
+                    className="inline-flex h-13 items-center justify-center rounded-lg bg-orange hover:bg-orange-dark px-7 py-3.5 text-base font-bold text-white shadow-[0_14px_35px_rgba(255,102,0,0.35)] transition"
+                  >
+                    {t("home.hero.ctaPrimary")} →
+                  </Link>
+                  <Link
+                    href="/anti-scam"
+                    className="inline-flex h-13 items-center justify-center rounded-lg border border-white/35 bg-white/5 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm hover:bg-white/10 transition"
                   >
                     {t("home.hero.ctaSecondary")}
-                  </a>
+                  </Link>
+                </div>
+
+                {/* Stats row — concrete, non-review trust signals */}
+                <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-white/90">
+                  <span className="inline-flex items-center gap-2">
+                    <svg className="w-4 h-4 text-orange" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M3 13h18V7H3v6zm0 6h18v-4H3v4zM3 5h18V3H3v2z"/>
+                    </svg>
+                    {t("home.hero.stats.shipments")}
+                  </span>
+                  <span aria-hidden="true" className="text-white/40 hidden sm:inline">·</span>
+                  <span className="text-white/85">{t("home.hero.stats.coverage")}</span>
                 </div>
               </div>
 
-              {/* Right column: Hero Route Finder card. Type ZIPs + vehicle,
-                  see route context, forward to /quote with everything
-                  pre-filled. Primary conversion path. */}
-              <div>
+              {/* Right column: Hero Route Finder — unchanged functionally,
+                  pulls its own form state and progressive disclosure logic */}
+              <div className="lg:mt-2">
                 <HeroRouteFinder />
               </div>
             </div>
           </Container>
+
+          {/* Floating proof cards (ShipmentProofCard + LockedPriceMiniCard)
+              temporarily removed — May 17, 2026 PM rebuild.
+              Reason: the cards landed on the form column at xl breakpoints
+              against the new hero-night.png composition (truck cab sits
+              more right-aligned than the previous photo). Covering the
+              form's Vehicle Type dropdown + truncating the secondary CTA
+              made the form unusable. Component definitions kept below for
+              tomorrow's reposition pass — likely needs left-[28%] / [34%]
+              + narrower widths + bumped to 2xl breakpoint, OR moved into
+              the Portal Preview section entirely. JSON keys for shipment
+              card + locked-price card preserved (home.hero.shipmentCard.*
+              and home.hero.lockedPriceCard.*). */}
         </section>
 
-        {/* Trust Strip — thin compliance band between the dark hero and the
-            white Triple Promise. Surfaces USDOT / MC / Bond + family-operated
-            proof above the fold so first-time visitors see verifiable
-            credibility BEFORE they hit our absolute trust claims. USDOT links
-            to FMCSA SAFER so skeptics can verify in one click — that single
-            outbound link does more for trust than 10 marketing claims would.
-            Light gray (gray-100) bridges the dark→white visual transition
-            without competing with either side. */}
-        <section
+        {/* Trust strip — white card overlapping hero/Triple Promise boundary.
+            Stripe / Square pattern. The card sits half-on-dark, half-on-white
+            via negative margin pull (-mt-12 lg:-mt-14 on the wrapper). Each
+            item shows label + small "verified" sub. USDOT links to FMCSA
+            SAFER. 5 items vs the previous 4 — added volume stat as the 5th
+            anchor where the mockup had "A+ Trusted by Thousands" (we don't
+            have ratings to substantiate the A+, so substituted a real claim). */}
+        <div
           aria-label={t("home.trustStrip.ariaLabel")}
-          className="bg-gray-100 border-y border-gray-200 py-3"
+          className="relative z-30 -mt-12 lg:-mt-14 px-4 sm:px-6 lg:px-8 mb-2 lg:mb-4"
         >
+          <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.18)] ring-1 ring-black/10 grid grid-cols-2 lg:grid-cols-5 gap-3 p-5">
+            <TrustStripItem
+              iconKey="shield-check"
+              label={t("home.trustStrip.items.dot.label")}
+              sub={t("home.trustStrip.items.dot.sub")}
+              href={t("home.trustStrip.dotUrl")}
+              title={t("home.trustStrip.dotTitle")}
+            />
+            <TrustStripItem
+              iconKey="shield-check"
+              label={t("home.trustStrip.items.mc.label")}
+              sub={t("home.trustStrip.items.mc.sub")}
+            />
+            <TrustStripItem
+              iconKey="shield-check"
+              label={t("home.trustStrip.items.bond.label")}
+              sub={t("home.trustStrip.items.bond.sub")}
+            />
+            <TrustStripItem
+              iconKey="users"
+              label={t("home.trustStrip.items.fleet.label")}
+              sub={t("home.trustStrip.items.fleet.sub")}
+            />
+            <TrustStripItem
+              iconKey="truck"
+              label={t("home.trustStrip.items.volume.label")}
+              sub={t("home.trustStrip.items.volume.sub")}
+            />
+          </div>
+        </div>
+
+        {/* Triple Promise — simplified V4 (May 17 PM rebuild).
+            Replaces the stat-anchor + receipt format with a cleaner one-line
+            description + link pattern. The receipt format moves to the
+            dedicated promise pages (/price-promise, /damage-promise,
+            /people-promise) where there's room for depth. Homepage cards
+            are now scannable in 2-3 seconds each. */}
+        <section className="pt-14 pb-16 md:pt-16 md:pb-20 bg-white">
           <Container>
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[12px] md:text-[13px] text-gray-700 font-medium">
-              <a
-                href={t("home.trustStrip.dotUrl")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-orange-dark hover:underline transition"
-                title={t("home.trustStrip.dotTitle")}
-              >
-                {t("home.trustStrip.items.dot")}
-              </a>
-              <span aria-hidden="true" className="text-gray-400">·</span>
-              <span>{t("home.trustStrip.items.mc")}</span>
-              <span aria-hidden="true" className="text-gray-400">·</span>
-              <span>{t("home.trustStrip.items.bond")}</span>
-              <span aria-hidden="true" className="text-gray-400">·</span>
-              <span>{t("home.trustStrip.items.fleet")}</span>
+            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 lg:gap-12 items-end">
+              <div>
+                <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                  {t("home.triplePromise.eyebrow")}
+                </p>
+                <h2 className="text-3xl md:text-4xl lg:text-[40px] font-extrabold text-charcoal leading-[1.1] tracking-tight">
+                  {t.rich("home.triplePromise.title", {
+                    nobreak: (chunks) => (
+                      <span className="whitespace-nowrap">{chunks}</span>
+                    ),
+                  })}
+                </h2>
+              </div>
+              <div>
+                <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                  {t("home.triplePromise.lead")}
+                </p>
+                <a
+                  href="#how-it-works"
+                  className="inline-flex items-center gap-1 mt-3 text-orange-dark font-bold text-sm hover:underline"
+                >
+                  {t("home.triplePromise.seeHowLink")} →
+                </a>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+              <SimplePromiseCard
+                href="/price-promise"
+                iconKey="lock"
+                num={t("home.triplePromise.simpleCards.lockedPrice.num")}
+                title={t("home.triplePromise.simpleCards.lockedPrice.title")}
+                description={t("home.triplePromise.simpleCards.lockedPrice.description")}
+                link={t("home.triplePromise.simpleCards.lockedPrice.link")}
+              />
+              <SimplePromiseCard
+                href="/damage-promise"
+                iconKey="camera"
+                num={t("home.triplePromise.simpleCards.photoProof.num")}
+                title={t("home.triplePromise.simpleCards.photoProof.title")}
+                description={t("home.triplePromise.simpleCards.photoProof.description")}
+                link={t("home.triplePromise.simpleCards.photoProof.link")}
+              />
+              <SimplePromiseCard
+                href="/people-promise"
+                iconKey="user"
+                num={t("home.triplePromise.simpleCards.onePerson.num")}
+                title={t("home.triplePromise.simpleCards.onePerson.title")}
+                description={t("home.triplePromise.simpleCards.onePerson.description")}
+                link={t("home.triplePromise.simpleCards.onePerson.link")}
+              />
             </div>
           </Container>
         </section>
 
-        {/* Triple Promise — V3d redesign with stat anchors + receipt panels.
-            TODO (before production cutover): verify stat claims with Ben:
-              - "$0 surprise upcharges, ever" — strongest claim, needs the strongest defense
-              - "$500K cargo coverage" — confirmed by Ben May 13 (bond dropped, cargo only)
-              - "1 named coordinator" — confirm operational reality */}
-        <section className="py-20 bg-white">
+        {/* Anti-scam bottom strip — charcoal bar conversion catch-net.
+            Soft-touch CTA for visitors who scrolled past Triple Promise
+            without engaging — gives them an off-ramp into /anti-scam. */}
+        <section
+          aria-label={t("home.antiScamBottomStrip.ariaLabel")}
+          className="bg-charcoal text-white py-8 md:py-10"
+        >
           <Container>
-            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
-              {t("home.triplePromise.eyebrow")}
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-charcoal max-w-2xl">
-              {t.rich("home.triplePromise.title", {
-                nobreak: (chunks) => (
-                  <span className="whitespace-nowrap">{chunks}</span>
-                ),
-              })}
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-              <PromiseCard
-                href="/price-promise"
-                stat={t("home.triplePromise.cards.price.stat")}
-                statLabel={t("home.triplePromise.cards.price.statLabel")}
-                eyebrow={t("home.triplePromise.cards.price.eyebrow")}
-                headline={t("home.triplePromise.cards.price.headline")}
-                conditionLine={t("home.triplePromise.cards.price.conditionLine")}
-                consequenceLine={t("home.triplePromise.cards.price.consequenceLine")}
-                clarifier={t("home.triplePromise.cards.price.clarifier")}
-                cta={t("home.triplePromise.cards.price.cta")}
-              />
-              <PromiseCard
-                href="/damage-promise"
-                stat={t("home.triplePromise.cards.damage.stat")}
-                statLabel={t("home.triplePromise.cards.damage.statLabel")}
-                eyebrow={t("home.triplePromise.cards.damage.eyebrow")}
-                headline={t.rich("home.triplePromise.cards.damage.headline", {
-                  nobreak: (chunks) => (
-                    <span className="whitespace-nowrap">{chunks}</span>
-                  ),
-                })}
-                conditionLine={t("home.triplePromise.cards.damage.conditionLine")}
-                consequenceLine={t("home.triplePromise.cards.damage.consequenceLine")}
-                cta={t("home.triplePromise.cards.damage.cta")}
-              />
-              <PromiseCard
-                href="/people-promise"
-                stat={t("home.triplePromise.cards.people.stat")}
-                statLabel={t("home.triplePromise.cards.people.statLabel")}
-                eyebrow={t("home.triplePromise.cards.people.eyebrow")}
-                headline={t("home.triplePromise.cards.people.headline")}
-                conditionLine={t("home.triplePromise.cards.people.conditionLine")}
-                consequenceLine={t("home.triplePromise.cards.people.consequenceLine")}
-                cta={t("home.triplePromise.cards.people.cta")}
-              />
+            <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-8 max-w-5xl mx-auto">
+              <div className="flex items-start gap-4 flex-1">
+                <span className="flex-shrink-0 w-11 h-11 rounded-full border border-orange/50 flex items-center justify-center bg-orange/10">
+                  <svg className="w-5 h-5 text-orange" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+                  </svg>
+                </span>
+                <p className="text-sm md:text-base leading-relaxed text-white/90">
+                  {t("home.antiScamBottomStrip.text")}
+                </p>
+              </div>
+              <Link
+                href="/anti-scam"
+                className="flex-shrink-0 inline-flex items-center justify-center rounded-lg border border-orange bg-transparent hover:bg-orange px-5 py-3 text-sm font-bold text-orange hover:text-white transition whitespace-nowrap"
+              >
+                {t("home.antiScamBottomStrip.cta")} →
+              </Link>
             </div>
           </Container>
         </section>
@@ -611,6 +696,305 @@ export default function Home() {
   );
 }
 
+// ──────────────────────────────────────────────────────────────────────
+// Hero components (May 17 PM rebuild)
+// ──────────────────────────────────────────────────────────────────────
+
+/** ProofChip — small icon + label chip beneath the hero subhead.
+ *  Each chip names one of the 4 brand pillars (Locked Price · Photos ·
+ *  Coordinator · Insured). Translucent backdrop so the truck photo
+ *  still bleeds through. Icon set is inline SVG to avoid adding a
+ *  dependency for 4 glyphs. */
+function ProofChip({
+  iconKey,
+  label,
+}: {
+  iconKey: "lock" | "camera" | "user" | "shield";
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2.5 rounded-xl border border-white/12 bg-black/30 p-2.5 backdrop-blur-sm">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-orange/45 bg-orange/10 text-orange">
+        <HeroIcon iconKey={iconKey} className="w-4 h-4" />
+      </span>
+      <span className="text-xs md:text-[13px] font-bold leading-tight text-white">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+/** HeroIcon — inline SVG icon set used by hero proof chips, trust strip,
+ *  and simple promise cards. Avoids adding lucide-react / react-icons
+ *  just for these 6 glyphs. */
+function HeroIcon({
+  iconKey,
+  className = "w-5 h-5",
+}: {
+  iconKey: "lock" | "camera" | "user" | "shield" | "shield-check" | "users" | "truck";
+  className?: string;
+}) {
+  switch (iconKey) {
+    case "lock":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+        </svg>
+      );
+    case "camera":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 15.5c1.93 0 3.5-1.57 3.5-3.5S13.93 8.5 12 8.5 8.5 10.07 8.5 12s1.57 3.5 3.5 3.5zM20 4h-3.17l-1.84-2H9.01L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h4.05l1.83-2h4.24l1.83 2H20v12zM12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z" />
+        </svg>
+      );
+    case "user":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+        </svg>
+      );
+    case "shield":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
+        </svg>
+      );
+    case "shield-check":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-4-4 1.41-1.41L11 12.17l5.59-5.59L18 8l-7 7z" />
+        </svg>
+      );
+    case "users":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+        </svg>
+      );
+    case "truck":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
+/** ShipmentProofCard — floating dark card overlay on the hero, desktop only.
+ *  Shows a stylized "live shipment" snapshot to make the post-booking
+ *  experience visible above the fold. Pulls all labels from JSON (i18n).
+ *  Positioned absolutely; hidden on mobile to avoid clutter. */
+function ShipmentProofCard({
+  status,
+  shipmentId,
+  pickupCity,
+  destCity,
+  pickupPhotos,
+  deliveryPhotos,
+  coordLabel,
+  coordName,
+  etaLabel,
+  etaValue,
+}: {
+  status: string;
+  shipmentId: string;
+  pickupCity: string;
+  destCity: string;
+  pickupPhotos: string;
+  deliveryPhotos: string;
+  coordLabel: string;
+  coordName: string;
+  etaLabel: string;
+  etaValue: string;
+}) {
+  return (
+    <div className="hidden xl:block absolute left-[42%] top-[44%] z-20 w-72 rounded-2xl border border-white/15 bg-black/75 p-5 text-white shadow-2xl backdrop-blur-md">
+      {/* Status pill */}
+      <span className="inline-block bg-green-500/20 text-green-300 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded">
+        {status}
+      </span>
+      {/* Shipment ID */}
+      <div className="mt-3 font-mono text-sm font-bold text-white">
+        {shipmentId}
+      </div>
+      {/* Route */}
+      <div className="mt-1 text-[13px] text-white/85">
+        {pickupCity} <span className="text-orange">→</span> {destCity}
+      </div>
+      {/* Photo lines */}
+      <div className="mt-4 space-y-1.5">
+        <div className="flex items-center gap-2 text-[12px] text-white/85">
+          <svg className="w-3.5 h-3.5 text-white/60" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 15.5c1.93 0 3.5-1.57 3.5-3.5S13.93 8.5 12 8.5 8.5 10.07 8.5 12s1.57 3.5 3.5 3.5z M20 4h-3.17l-1.84-2H9.01L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
+          </svg>
+          <span className="flex-1">{pickupPhotos}</span>
+          <svg className="w-3.5 h-3.5 text-green-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+        </div>
+        <div className="flex items-center gap-2 text-[12px] text-white/85">
+          <svg className="w-3.5 h-3.5 text-white/60" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 15.5c1.93 0 3.5-1.57 3.5-3.5S13.93 8.5 12 8.5 8.5 10.07 8.5 12s1.57 3.5 3.5 3.5z M20 4h-3.17l-1.84-2H9.01L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
+          </svg>
+          <span className="flex-1">{deliveryPhotos}</span>
+          <svg className="w-3.5 h-3.5 text-green-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+        </div>
+      </div>
+      {/* Coordinator */}
+      <div className="mt-4 pt-3 border-t border-white/10 flex items-center gap-2.5">
+        <span className="w-7 h-7 rounded-full bg-gradient-to-br from-orange to-orange-dark flex items-center justify-center text-[11px] font-black text-white">
+          {coordName.charAt(0)}
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="text-[10px] text-white/60 font-semibold uppercase tracking-wider">
+            {coordLabel}
+          </div>
+          <div className="text-[12px] font-bold text-white truncate">
+            {coordName}
+          </div>
+        </div>
+      </div>
+      {/* ETA */}
+      <div className="mt-3 text-[11px]">
+        <span className="text-white/60 font-semibold uppercase tracking-wider">
+          {etaLabel}
+        </span>
+        <div className="text-[12px] font-bold text-white mt-0.5">
+          {etaValue}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** LockedPriceMiniCard — small white card overlay layered below the
+ *  ShipmentProofCard. Pairs the brand promise ("locked price") with a
+ *  concrete number ($875) as visual rhetoric. Desktop only. */
+function LockedPriceMiniCard({
+  label,
+  price,
+  tagline,
+}: {
+  label: string;
+  price: string;
+  tagline: string;
+}) {
+  return (
+    <div className="hidden xl:block absolute left-[48%] top-[80%] z-30 w-60 rounded-xl bg-white p-4 text-charcoal shadow-2xl ring-1 ring-black/10">
+      <div className="flex items-center justify-between mb-1">
+        <div className="inline-flex items-center gap-1.5">
+          <svg className="w-3.5 h-3.5 text-charcoal" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+          </svg>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-700">
+            {label}
+          </span>
+        </div>
+        <span className="text-xl font-extrabold text-orange-dark tracking-tight">
+          {price}
+        </span>
+      </div>
+      <p className="text-[11px] text-gray-600 leading-snug mt-1">
+        {tagline}
+      </p>
+    </div>
+  );
+}
+
+/** TrustStripItem — one row in the white-card trust strip overlapping the
+ *  hero/Triple-Promise boundary. Icon + label + sub-label. If `href` is
+ *  provided, wraps in an outbound link (used for the USDOT FMCSA lookup). */
+function TrustStripItem({
+  iconKey,
+  label,
+  sub,
+  href,
+  title,
+}: {
+  iconKey: "shield-check" | "users" | "truck";
+  label: string;
+  sub: string;
+  href?: string;
+  title?: string;
+}) {
+  const inner = (
+    <div className="flex items-center gap-3">
+      <span className="flex-shrink-0 w-10 h-10 rounded-lg bg-charcoal text-orange flex items-center justify-center">
+        <HeroIcon iconKey={iconKey} className="w-5 h-5" />
+      </span>
+      <div className="min-w-0">
+        <div className="text-[13px] font-bold text-charcoal leading-tight truncate">
+          {label}
+        </div>
+        <div className="text-[11px] text-gray-500 mt-0.5 truncate">{sub}</div>
+      </div>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={title}
+        className="hover:opacity-80 transition"
+      >
+        {inner}
+      </a>
+    );
+  }
+  return inner;
+}
+
+/** SimplePromiseCard — the V4 simplified card for the homepage Triple
+ *  Promise section. Replaces the V3 stat-anchor + receipt format with
+ *  icon + number + title + one-line description + link. Whole card
+ *  clickable. The receipt format moves to the dedicated promise pages
+ *  where there's room for proof depth. */
+function SimplePromiseCard({
+  href,
+  iconKey,
+  num,
+  title,
+  description,
+  link,
+}: {
+  href: "/price-promise" | "/damage-promise" | "/people-promise";
+  iconKey: "lock" | "camera" | "user";
+  num: string;
+  title: string;
+  description: string;
+  link: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group bg-white border border-gray-200 rounded-2xl p-6 md:p-7 flex flex-col transition hover:border-orange hover:shadow-lg hover:-translate-y-0.5"
+    >
+      <span className="w-12 h-12 rounded-full bg-orange-tint text-orange-dark inline-flex items-center justify-center mb-4">
+        <HeroIcon iconKey={iconKey} className="w-5 h-5" />
+      </span>
+      <h3 className="text-lg md:text-xl font-extrabold text-charcoal mb-3 leading-tight tracking-tight">
+        <span className="text-charcoal/60 mr-1.5">{num}</span>
+        {title}
+      </h3>
+      <p className="text-sm md:text-base text-gray-700 leading-relaxed flex-1 mb-3">
+        {description}
+      </p>
+      <span className="text-sm font-bold text-orange-dark group-hover:underline">
+        {link} →
+      </span>
+    </Link>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────
+
 function BehindCard({
   tag,
   stat,
@@ -815,108 +1199,12 @@ function ServiceSideCard({
   );
 }
 
-function PromiseCard({
-  href,
-  stat,
-  statLabel,
-  statSize = "default",
-  eyebrow,
-  headline,
-  conditionLine,
-  consequenceLine,
-  clarifier,
-  cta,
-}: {
-  href: string;
-  stat: string;
-  statLabel: string;
-  /** "large" bumps the stat font size — use for single-character stats
-   *  like "1" so they don't visually disappear next to "$0" or "$500K". */
-  statSize?: "default" | "large";
-  eyebrow: string;
-  /** Accepts ReactNode so callers can pass t.rich() output with nowrap
-   *  spans for headline phrases that should not wrap mid-compound. */
-  headline: React.ReactNode;
-  conditionLine: string;
-  consequenceLine: string;
-  /** Optional small-print boundary line below the receipt. Names the
-   *  conditions under which the promise applies, so skeptical consumers
-   *  see the boundary BEFORE they leave the page and assume we're hiding
-   *  it. First used on Price Promise (May 17, 2026) — Damage + People
-   *  pending operational confirmation from Ben. */
-  clarifier?: string;
-  cta: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group bg-white border border-gray-200 rounded-2xl p-6 md:p-7 flex flex-col transition hover:border-orange hover:shadow-lg hover:-translate-y-0.5"
-    >
-      {/* Stat anchor: huge number + label, divided from the rest.
-          statSize="large" bumps single-char stats so they visually
-          match the weight of multi-char dollar stats. */}
-      <div className="flex items-end gap-3.5 pb-4 mb-4 border-b border-gray-200">
-        <span
-          className={`font-extrabold text-orange-dark leading-none tracking-tight ${
-            statSize === "large"
-              ? "text-7xl md:text-8xl"
-              : "text-4xl md:text-5xl"
-          }`}
-        >
-          {stat}
-        </span>
-        <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 pb-1 flex-1">
-          {statLabel}
-        </span>
-      </div>
-
-      {/* Promise name + headline. Eyebrow is gray (not orange) so the
-          orange stat above carries the color signal alone — reduces the
-          per-card orange touchpoint count from 6 to 4. */}
-      <p className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1.5">
-        {eyebrow}
-      </p>
-      <h3 className="text-lg font-bold text-charcoal mb-3 leading-snug">
-        {headline}
-      </h3>
-
-      {/* The receipt: If X… → Then Y.
-          Condition is plain (not italic) — italic was reading as "footnote"
-          when it should read as a setup beat. Consequence text is dark
-          (charcoal); only the arrow stays orange, so the color carries
-          the signal without flooding the card.
-          md:min-h-[140px] keeps the three receipts visually aligned on
-          desktop even when the condition copy is much shorter (e.g.,
-          People card's "When you call..."). On mobile the cards stack
-          so the min-height is unnecessary — only kicks in at md+. */}
-      <div className="border border-orange-tint rounded-xl p-3.5 mb-4 md:min-h-[140px]">
-        <p className="text-sm text-gray-700 mb-1.5 leading-snug">
-          {conditionLine}
-        </p>
-        <p className="text-sm font-semibold text-charcoal bg-orange-tint border-l-[3px] border-orange rounded px-3 py-1.5 leading-snug">
-          <span className="text-orange font-black mr-1">→</span>
-          {consequenceLine}
-        </p>
-      </div>
-
-      {/* Boundary clarifier — small italic gray line beneath the receipt.
-          Names the conditions under which the promise actually applies.
-          Italic intentionally signals "small print" — the only place on
-          the card where we want that signal. Only renders if a clarifier
-          is provided (Price has one; Damage + People pending Ben sign-off). */}
-      {clarifier && (
-        <p className="text-[11px] text-gray-500 italic leading-snug -mt-1 mb-3">
-          {clarifier}
-        </p>
-      )}
-
-      {/* CTA link */}
-      <span className="text-sm text-orange-dark font-semibold mt-auto">
-        {cta}
-      </span>
-    </Link>
-  );
-}
+// PromiseCard removed (May 17 PM rebuild) — used by the old V3 Triple
+// Promise stat-anchor + receipt format. New homepage uses SimplePromiseCard
+// (defined near the top of the component section above). The receipt format
+// content lives in the JSON under home.triplePromise.cards.* and will move
+// into the dedicated promise pages (/price-promise, /damage-promise,
+// /people-promise) where there's room for depth.
 
 /** FeaturedScamCard — the big anchor card in the D3 teaser layout. Orange
  *  border + "Most common scam" tag draw the eye first. Question + scam

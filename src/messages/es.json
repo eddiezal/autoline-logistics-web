@@ -124,26 +124,97 @@
   "home": {
     "hero": {
       "eyebrow": "Auto Line Logistics, Inc.",
-      "title": "Envíe su auto sin <nobreak>trucos de precio</nobreak>.",
-      "titleAccent": "Sin sorpresas.",
-      "description": "Rastreado. Fotografiado. Cubierto. De la recogida a la entrega, verá cada paso, hablará con un coordinador con nombre y apellido, y nunca tendrá que perseguir un reclamo.",
+      "badge": "Con licencia, fianza y seguro",
+      "title": "Sin sorpresas.",
+      "titleAccent": "Sin juegos de cotizaciones falsas.",
+      "description": "Envíe su auto con precio fijo, fotos documentadas de recogida y entrega, y un coordinador con nombre desde la cotización hasta la entrega.",
       "ctaPrimary": "Obtenga su precio fijo",
-      "ctaSecondary": "Vea cómo funciona"
+      "ctaSecondary": "Vea la lista anti-estafas",
+      "proofChips": {
+        "lockedPrice": "Precio fijo",
+        "photos": "Fotos de recogida y entrega",
+        "coordinator": "Coordinador asignado",
+        "insured": "Con licencia y seguro completos"
+      },
+      "stats": {
+        "shipments": "Más de 45,000 vehículos enviados el año pasado",
+        "coverage": "Puerta a puerta en EE.UU., más HI + AK"
+      },
+      "shipmentCard": {
+        "status": "En tránsito",
+        "shipmentId": "ALL-2026-04831",
+        "pickupCity": "Los Angeles, CA",
+        "destCity": "Austin, TX",
+        "pickupPhotos": "12 fotos de recogida subidas",
+        "deliveryPhotos": "8 fotos de entrega subidas",
+        "coordLabel": "Coordinadora",
+        "coordName": "Danielle Martinez",
+        "etaLabel": "Llegada estimada",
+        "etaValue": "Jue, 22 may · 3:30 PM"
+      },
+      "lockedPriceCard": {
+        "label": "Precio fijo",
+        "price": "$875",
+        "tagline": "Sin recargos. Sin sorpresas."
+      }
     },
     "trustStrip": {
       "ariaLabel": "Cumplimiento y credenciales",
       "items": {
-        "dot": "USDOT 3961864",
-        "mc": "MC 1477788",
-        "bond": "Fianza BMC-84",
-        "fleet": "Flota de operación familiar"
+        "dot": {
+          "label": "USDOT 3961864",
+          "sub": "Verificado"
+        },
+        "mc": {
+          "label": "MC 1477788",
+          "sub": "Autoridad verificada"
+        },
+        "bond": {
+          "label": "BMC-84",
+          "sub": "Fianza en archivo"
+        },
+        "fleet": {
+          "label": "Operación familiar",
+          "sub": "Cliente primero"
+        },
+        "volume": {
+          "label": "Más de 45,000 vehículos",
+          "sub": "enviados el año pasado"
+        }
       },
       "dotUrl": "https://safer.fmcsa.dot.gov/CompanySnapshot.aspx?USDOTNumber=3961864",
       "dotTitle": "Verifique en FMCSA SAFER (se abre en nueva pestaña)"
     },
+    "antiScamBottomStrip": {
+      "ariaLabel": "Recordatorio anti-estafas",
+      "text": "La industria del transporte de autos está llena de cotizaciones falsas y tácticas de cebo y cambio. Obtenga nuestra lista anti-estafas gratis y reserve con confianza.",
+      "cta": "Obtenga la lista anti-estafas"
+    },
     "triplePromise": {
       "eyebrow": "Nuestra triple promesa",
-      "title": "<nobreak>Tres promesas.</nobreak> <nobreak>Tres garantías.</nobreak> <nobreak>Cero asteriscos.</nobreak>",
+      "title": "<nobreak>Tres promesas.</nobreak> <nobreak>Sin letra pequeña.</nobreak>",
+      "lead": "Construimos nuestro proceso alrededor de lo que más importa al enviar su auto.",
+      "seeHowLink": "Vea cómo funciona",
+      "simpleCards": {
+        "lockedPrice": {
+          "num": "1.",
+          "title": "Precio fijo",
+          "description": "El precio que cotizamos es el precio que paga. Punto.",
+          "link": "Cómo funciona el precio"
+        },
+        "photoProof": {
+          "num": "2.",
+          "title": "Prueba fotográfica",
+          "description": "Documentamos la recogida y la entrega para que siempre sepa que su auto está en buenas manos.",
+          "link": "Ver ejemplos de fotos"
+        },
+        "onePerson": {
+          "num": "3.",
+          "title": "Una persona",
+          "description": "Un coordinador con nombre de principio a fin. Respuestas reales. Actualizaciones reales.",
+          "link": "Conozca al equipo"
+        }
+      },
       "cards": {
         "price": {
           "stat": "$0",
