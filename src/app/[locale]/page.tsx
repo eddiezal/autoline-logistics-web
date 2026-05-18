@@ -143,215 +143,199 @@ export default function Home() {
               and home.hero.lockedPriceCard.*). */}
         </section>
 
-        {/* Trust strip — white card overlapping hero/Triple Promise boundary.
-            Stripe / Square pattern. The card sits half-on-dark, half-on-white
-            via negative margin pull (-mt-12 lg:-mt-14 on the wrapper). Each
-            item shows label + small "verified" sub. USDOT links to FMCSA
-            SAFER. 5 items vs the previous 4 — added volume stat as the 5th
-            anchor where the mockup had "A+ Trusted by Thousands" (we don't
-            have ratings to substantiate the A+, so substituted a real claim). */}
+        {/* Trust strip — white card overlapping hero/next section boundary.
+            Restructured to make 45,000+ the DOMINANT proof item:
+            asymmetric grid (1.35fr / 1fr / 1fr / 1fr / 1fr) gives the
+            volume stat extra width; large orange number; vertical
+            dividers separate items on lg+. The 4 compliance items
+            sit smaller as a row of supporting credentials. */}
         <div
           aria-label={t("home.trustStrip.ariaLabel")}
           className="relative z-30 -mt-12 lg:-mt-14 px-4 sm:px-6 lg:px-8 mb-2 lg:mb-4"
         >
-          <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.18)] ring-1 ring-black/10 grid grid-cols-2 lg:grid-cols-5 gap-3 p-5">
-            <TrustStripItem
-              iconKey="shield-check"
-              label={t("home.trustStrip.items.dot.label")}
-              sub={t("home.trustStrip.items.dot.sub")}
-              href={t("home.trustStrip.dotUrl")}
-              title={t("home.trustStrip.dotTitle")}
-            />
-            <TrustStripItem
-              iconKey="shield-check"
-              label={t("home.trustStrip.items.mc.label")}
-              sub={t("home.trustStrip.items.mc.sub")}
-            />
-            <TrustStripItem
-              iconKey="shield-check"
-              label={t("home.trustStrip.items.bond.label")}
-              sub={t("home.trustStrip.items.bond.sub")}
-            />
-            <TrustStripItem
-              iconKey="users"
-              label={t("home.trustStrip.items.fleet.label")}
-              sub={t("home.trustStrip.items.fleet.sub")}
-            />
-            <TrustStripItem
-              iconKey="truck"
-              label={t("home.trustStrip.items.volume.label")}
-              sub={t("home.trustStrip.items.volume.sub")}
-            />
+          <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.18)] ring-1 ring-black/10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1fr_1fr] gap-5 lg:gap-0 p-6 lg:p-7">
+            {/* Dominant volume item — 45,000+ in large orange */}
+            <div className="flex items-center gap-4 lg:border-r lg:border-gray-200 lg:pr-6">
+              <span className="flex-shrink-0 w-12 h-12 rounded-lg bg-orange-tint text-orange-dark inline-flex items-center justify-center">
+                <HeroIcon iconKey="truck" className="w-6 h-6" />
+              </span>
+              <div className="min-w-0">
+                <div className="text-3xl md:text-4xl font-black tracking-tight text-orange leading-none">
+                  {t("home.trustStrip.items.volume.label")}
+                </div>
+                <div className="text-[11px] md:text-xs text-gray-600 leading-snug mt-1.5">
+                  {t("home.trustStrip.items.volume.sub")}
+                </div>
+              </div>
+            </div>
+
+            {/* 4 supporting compliance items — wrapped with border-r dividers */}
+            <div className="lg:border-r lg:border-gray-200 lg:px-5">
+              <TrustStripItem
+                iconKey="shield-check"
+                label={t("home.trustStrip.items.dot.label")}
+                sub={t("home.trustStrip.items.dot.sub")}
+                href={t("home.trustStrip.dotUrl")}
+                title={t("home.trustStrip.dotTitle")}
+              />
+            </div>
+            <div className="lg:border-r lg:border-gray-200 lg:px-5">
+              <TrustStripItem
+                iconKey="shield-check"
+                label={t("home.trustStrip.items.mc.label")}
+                sub={t("home.trustStrip.items.mc.sub")}
+              />
+            </div>
+            <div className="lg:border-r lg:border-gray-200 lg:px-5">
+              <TrustStripItem
+                iconKey="shield-check"
+                label={t("home.trustStrip.items.bond.label")}
+                sub={t("home.trustStrip.items.bond.sub")}
+              />
+            </div>
+            <div className="lg:pl-5">
+              <TrustStripItem
+                iconKey="users"
+                label={t("home.trustStrip.items.fleet.label")}
+                sub={t("home.trustStrip.items.fleet.sub")}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Triple Promise — simplified V4 (May 17 PM rebuild).
-            Replaces the stat-anchor + receipt format with a cleaner one-line
-            description + link pattern. The receipt format moves to the
-            dedicated promise pages (/price-promise, /damage-promise,
-            /people-promise) where there's room for depth. Homepage cards
-            are now scannable in 2-3 seconds each. */}
-        <section className="pt-14 pb-16 md:pt-16 md:pb-20 bg-white">
+        {/* Triple Promise — V5 (May 17 PM, 2nd brief).
+            2-column layout: intro (eyebrow + 3-line title + lead + see-how
+            link) on left, 3 cards stacked on right at lg+. Cards are
+            premium-styled "protection mechanism" cards with bigger icons,
+            stronger hierarchy, and a thin orange divider line under the
+            title. Each card explicitly names the customer fear it prevents
+            (surprise pricing, vehicle condition, getting someone on phone). */}
+        <section className="pt-20 pb-20 md:pt-24 md:pb-24 bg-white">
           <Container>
-            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 lg:gap-12 items-end">
+            <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.6fr] gap-10 lg:gap-14">
+              {/* Left: intro */}
               <div>
-                <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                <p className="text-orange text-xs font-bold uppercase tracking-[0.12em] mb-4">
                   {t("home.triplePromise.eyebrow")}
                 </p>
-                <h2 className="text-3xl md:text-4xl lg:text-[40px] font-extrabold text-charcoal leading-[1.1] tracking-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-[42px] font-black text-charcoal leading-[1.05] tracking-[-0.02em]">
                   {t.rich("home.triplePromise.title", {
-                    nobreak: (chunks) => (
-                      <span className="whitespace-nowrap">{chunks}</span>
-                    ),
+                    line: (chunks) => <span className="block">{chunks}</span>,
                   })}
                 </h2>
-              </div>
-              <div>
-                <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                <p className="text-gray-700 text-base md:text-lg leading-relaxed mt-6 max-w-md">
                   {t("home.triplePromise.lead")}
                 </p>
                 <a
                   href="#how-it-works"
-                  className="inline-flex items-center gap-1 mt-3 text-orange-dark font-bold text-sm hover:underline"
+                  className="inline-flex items-center mt-5 text-orange-dark font-black text-sm hover:underline"
                 >
                   {t("home.triplePromise.seeHowLink")} →
                 </a>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
-              <SimplePromiseCard
-                href="/price-promise"
-                iconKey="lock"
-                num={t("home.triplePromise.simpleCards.lockedPrice.num")}
-                title={t("home.triplePromise.simpleCards.lockedPrice.title")}
-                description={t("home.triplePromise.simpleCards.lockedPrice.description")}
-                link={t("home.triplePromise.simpleCards.lockedPrice.link")}
-              />
-              <SimplePromiseCard
-                href="/damage-promise"
-                iconKey="camera"
-                num={t("home.triplePromise.simpleCards.photoProof.num")}
-                title={t("home.triplePromise.simpleCards.photoProof.title")}
-                description={t("home.triplePromise.simpleCards.photoProof.description")}
-                link={t("home.triplePromise.simpleCards.photoProof.link")}
-              />
-              <SimplePromiseCard
-                href="/people-promise"
-                iconKey="user"
-                num={t("home.triplePromise.simpleCards.onePerson.num")}
-                title={t("home.triplePromise.simpleCards.onePerson.title")}
-                description={t("home.triplePromise.simpleCards.onePerson.description")}
-                link={t("home.triplePromise.simpleCards.onePerson.link")}
-              />
-            </div>
-          </Container>
-        </section>
-
-        {/* Anti-scam bottom strip — charcoal bar conversion catch-net.
-            Soft-touch CTA for visitors who scrolled past Triple Promise
-            without engaging — gives them an off-ramp into /anti-scam. */}
-        <section
-          aria-label={t("home.antiScamBottomStrip.ariaLabel")}
-          className="bg-charcoal text-white py-8 md:py-10"
-        >
-          <Container>
-            <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-8 max-w-5xl mx-auto">
-              <div className="flex items-start gap-4 flex-1">
-                <span className="flex-shrink-0 w-11 h-11 rounded-full border border-orange/50 flex items-center justify-center bg-orange/10">
-                  <svg className="w-5 h-5 text-orange" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
-                  </svg>
-                </span>
-                <p className="text-sm md:text-base leading-relaxed text-white/90">
-                  {t("home.antiScamBottomStrip.text")}
-                </p>
-              </div>
-              <Link
-                href="/anti-scam"
-                className="flex-shrink-0 inline-flex items-center justify-center rounded-lg border border-orange bg-transparent hover:bg-orange px-5 py-3 text-sm font-bold text-orange hover:text-white transition whitespace-nowrap"
-              >
-                {t("home.antiScamBottomStrip.cta")} →
-              </Link>
-            </div>
-          </Container>
-        </section>
-
-        {/* Anti-Scam Teaser — small compact preview module that surfaces
-            the brand's "honest guide" positioning above the fold-equivalent.
-            Reviewer flagged the full anti-scam section as appearing too
-            late in the page (~page 8 of the PDF). Rather than move the
-            full section (which would push services + how-it-works down),
-            we tease the 3 questions here and anchor down to the full
-            section for the honest answers. Single source of truth — only
-            the questions repeat, and that repetition is intentional (the
-            teaser is the trailer, the full section is the payoff).
-            Amber background signals "warning / things to watch out for"
-            and breaks the white→gray rhythm between Triple Promise + Services. */}
-        <section
-          aria-label={t("home.antiScamTeaser.eyebrow")}
-          className="py-14 bg-amber-50 border-y border-amber-200"
-        >
-          <Container>
-            <div className="max-w-4xl mx-auto text-center">
-              <span className="inline-flex items-center gap-2 text-amber-800 text-xs font-bold uppercase tracking-wider bg-amber-100 px-3 py-1.5 rounded-full mb-4">
-                <svg
-                  className="w-3.5 h-3.5"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
-                </svg>
-                {t("home.antiScamTeaser.eyebrow")}
-              </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-charcoal leading-tight">
-                {t("home.antiScamTeaser.title")}
-              </h2>
-              <p className="text-gray-700 text-base md:text-lg mt-3 leading-relaxed">
-                {t("home.antiScamTeaser.lead")}
-              </p>
-
-              {/* D3 layout — Featured + 2 Supporting (asymmetric).
-                  Question 1 is the most common scam (Lead-Gen Bait), so
-                  it gets the bigger orange-bordered card with more scam
-                  context. Questions 2 + 3 stack as supporting cards on
-                  the right with the basics. Visual hierarchy signals
-                  "if you read nothing else, read this one."
-                  Mobile (< md): stacks vertically, featured first. */}
-              <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-3.5 mt-7 text-left">
-                <FeaturedScamCard
-                  tag={t("home.antiScamTeaser.featuredTag")}
-                  question={t("home.antiScamTeaser.questions.1.text")}
-                  scamText={t("home.antiScamTeaser.questions.1.scamText")}
+              {/* Right: 3 protection-mechanism cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <SimplePromiseCard
+                  href="/price-promise"
+                  iconKey="lock"
+                  num={t("home.triplePromise.simpleCards.lockedPrice.num")}
+                  title={t("home.triplePromise.simpleCards.lockedPrice.title")}
+                  description={t("home.triplePromise.simpleCards.lockedPrice.description")}
+                  link={t("home.triplePromise.simpleCards.lockedPrice.link")}
                 />
-                <div className="flex flex-col gap-3.5">
-                  <SupportingScamCard
-                    question={t("home.antiScamTeaser.questions.2.text")}
-                    scamText={t("home.antiScamTeaser.questions.2.scamText")}
+                <SimplePromiseCard
+                  href="/damage-promise"
+                  iconKey="camera"
+                  num={t("home.triplePromise.simpleCards.photoProof.num")}
+                  title={t("home.triplePromise.simpleCards.photoProof.title")}
+                  description={t("home.triplePromise.simpleCards.photoProof.description")}
+                  link={t("home.triplePromise.simpleCards.photoProof.link")}
+                />
+                <SimplePromiseCard
+                  href="/people-promise"
+                  iconKey="user"
+                  num={t("home.triplePromise.simpleCards.onePerson.num")}
+                  title={t("home.triplePromise.simpleCards.onePerson.title")}
+                  description={t("home.triplePromise.simpleCards.onePerson.description")}
+                  link={t("home.triplePromise.simpleCards.onePerson.link")}
+                />
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        {/* Anti-scam buyer protection guide — V3 (May 17 PM, 2nd brief).
+            Replaces the D3 teaser AND the charcoal bottom strip that sat
+            between Triple Promise and the teaser. Reframed as a practical
+            "buyer protection field guide" with a warmer amber background
+            container, 2-col layout (intro left + 3 question cards right),
+            and a "Why it matters" box on each card. Bottom belief line
+            establishes the brand's transparency promise. */}
+        <section
+          aria-label={t("home.antiScamGuide.ariaLabel")}
+          className="bg-orange-50/70 px-4 sm:px-6 lg:px-8 py-14 md:py-16"
+        >
+          <Container>
+            <div className="max-w-7xl mx-auto rounded-3xl bg-[#FFF7E8] p-6 sm:p-8 lg:p-12 shadow-sm">
+              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.6fr] gap-10 lg:gap-14">
+                {/* Left: intro + CTA */}
+                <div>
+                  <p className="text-orange-dark text-xs font-bold uppercase tracking-[0.12em] mb-4">
+                    {t("home.antiScamGuide.eyebrow")}
+                  </p>
+                  <h2 className="text-3xl md:text-4xl font-black text-charcoal leading-[1.1] tracking-[-0.02em]">
+                    {t("home.antiScamGuide.title")}
+                  </h2>
+                  <p className="text-gray-700 text-base md:text-lg leading-relaxed mt-5">
+                    {t("home.antiScamGuide.lead")}
+                  </p>
+                  <Link
+                    href="/anti-scam"
+                    className="inline-flex items-center mt-6 text-orange-dark font-black text-sm md:text-base hover:underline"
+                  >
+                    {t("home.antiScamGuide.ctaPrimary")} →
+                  </Link>
+                  <p className="text-xs text-gray-500 mt-2">
+                    {t("home.antiScamGuide.reassurance")}
+                  </p>
+                </div>
+
+                {/* Right: 3 question cards */}
+                <div className="space-y-5">
+                  <AntiScamQuestionCard
+                    num="1"
+                    title={t("home.antiScamGuide.questions.1.title")}
+                    body={t("home.antiScamGuide.questions.1.body")}
+                    whyMattersLabel={t("home.antiScamGuide.whyMattersLabel")}
+                    whyMatters={t("home.antiScamGuide.questions.1.whyMatters")}
                   />
-                  <SupportingScamCard
-                    question={t("home.antiScamTeaser.questions.3.text")}
-                    scamText={t("home.antiScamTeaser.questions.3.scamText")}
+                  <AntiScamQuestionCard
+                    num="2"
+                    title={t("home.antiScamGuide.questions.2.title")}
+                    body={t("home.antiScamGuide.questions.2.body")}
+                    whyMattersLabel={t("home.antiScamGuide.whyMattersLabel")}
+                    whyMatters={t("home.antiScamGuide.questions.2.whyMatters")}
+                  />
+                  <AntiScamQuestionCard
+                    num="3"
+                    title={t("home.antiScamGuide.questions.3.title")}
+                    body={t("home.antiScamGuide.questions.3.body")}
+                    whyMattersLabel={t("home.antiScamGuide.whyMattersLabel")}
+                    whyMatters={t("home.antiScamGuide.questions.3.whyMatters")}
                   />
                 </div>
               </div>
 
-              {/* Button-styled link to the dedicated /anti-scam page where
-                  the honest answers live. The full anti-scam section was
-                  removed from the homepage (May 17, 2026) after recognizing
-                  the question content was repeated across the site. One
-                  source of homepage truth (this teaser); depth lives on
-                  the dedicated page. Button styling (vs prior text link)
-                  is part of the B3 typography refactor — the CTA earns
-                  the orange-filled treatment because it's the actual
-                  action, not whispery decoration. */}
-              <Link
-                href="/anti-scam"
-                className="inline-flex items-center bg-orange hover:bg-orange-dark text-white font-bold text-sm md:text-base px-6 py-3 rounded-lg transition mt-7 shadow-md shadow-orange/20"
-              >
-                {t("home.antiScamTeaser.ctaText")}
-              </Link>
+              {/* Bottom belief line — Auto Line's transparency commitment */}
+              <div className="mt-10 lg:mt-12 pt-8 border-t border-orange-200 max-w-2xl">
+                <p className="text-base md:text-lg font-black text-charcoal">
+                  {t("home.antiScamGuide.belief.title")}
+                </p>
+                <p className="text-sm md:text-base text-gray-700 leading-relaxed mt-2">
+                  {t("home.antiScamGuide.belief.body")}
+                </p>
+              </div>
             </div>
           </Container>
         </section>
@@ -974,19 +958,28 @@ function SimplePromiseCard({
   return (
     <Link
       href={href}
-      className="group bg-white border border-gray-200 rounded-2xl p-6 md:p-7 flex flex-col transition hover:border-orange hover:shadow-lg hover:-translate-y-0.5"
+      className="group bg-white border border-gray-200 rounded-2xl p-7 md:p-8 flex flex-col transition shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-orange/40"
     >
-      <span className="w-12 h-12 rounded-full bg-orange-tint text-orange-dark inline-flex items-center justify-center mb-4">
-        <HeroIcon iconKey={iconKey} className="w-5 h-5" />
+      {/* Bigger icon circle — "protection mechanism" feel */}
+      <span className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-orange-tint text-orange-dark inline-flex items-center justify-center mb-5">
+        <HeroIcon iconKey={iconKey} className="w-6 h-6 md:w-7 md:h-7" />
       </span>
-      <h3 className="text-lg md:text-xl font-extrabold text-charcoal mb-3 leading-tight tracking-tight">
-        <span className="text-charcoal/60 mr-1.5">{num}</span>
+      {/* Orange number — larger, dominant */}
+      <span className="text-3xl font-black text-orange leading-none mb-3">
+        {num}
+      </span>
+      {/* Title */}
+      <h3 className="text-lg md:text-xl font-black text-charcoal leading-tight tracking-tight">
         {title}
       </h3>
-      <p className="text-sm md:text-base text-gray-700 leading-relaxed flex-1 mb-3">
+      {/* Thin orange divider line under title — protection-mechanism cue */}
+      <div className="w-12 h-0.5 bg-orange/60 my-4" />
+      {/* Body */}
+      <p className="text-sm md:text-base text-gray-700 leading-relaxed flex-1">
         {description}
       </p>
-      <span className="text-sm font-bold text-orange-dark group-hover:underline">
+      {/* CTA link */}
+      <span className="text-sm font-black text-orange-dark group-hover:underline mt-6">
         {link} →
       </span>
     </Link>
@@ -1206,65 +1199,55 @@ function ServiceSideCard({
 // into the dedicated promise pages (/price-promise, /damage-promise,
 // /people-promise) where there's room for depth.
 
-/** FeaturedScamCard — the big anchor card in the D3 teaser layout. Orange
- *  border + "Most common scam" tag draw the eye first. Question + scam
- *  description live as two stacked sections inside the card, separated by
- *  a thin amber rule (not a callout box, not a label) — type weight does
- *  the differentiation work.
- *
- *  Typography discipline (May 17, 2026 refactor — B3 in the variations):
- *   - "Ask this" / "The scam it exposes" labels DROPPED. The card already
- *     visually shows what each block is — labeling was redundant.
- *   - Question goes from italic+extrabold to italic+medium. Single
- *     emphasis tool (italic) reads as "spoken question" without doubling
- *     up with bold weight.
- *   - Amber callout box around scam REPLACED with a thin horizontal rule
- *     (border-t amber-200 + pt-3.5). Structure stays; decoration drops. */
-function FeaturedScamCard({
-  tag,
-  question,
-  scamText,
-}: {
-  tag: string;
-  question: string;
-  scamText: string;
-}) {
-  return (
-    <div className="relative bg-white border-2 border-orange rounded-xl p-5 md:p-6 flex flex-col gap-3.5">
-      {/* Orange tag floating above the top-left corner */}
-      <span className="absolute -top-2.5 left-5 bg-orange text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded">
-        {tag}
-      </span>
-      <p className="text-lg font-medium text-charcoal italic leading-snug">
-        {question}
-      </p>
-      <p className="text-sm text-gray-700 leading-relaxed pt-3.5 border-t border-amber-200">
-        {scamText}
-      </p>
-    </div>
-  );
-}
+// FeaturedScamCard + SupportingScamCard removed (May 17 PM, 2nd brief).
+// Were used by the D3 anti-scam teaser layout (orange-bordered featured
+// + 2 supporting cards). Replaced with the buyer-protection field guide
+// pattern — see AntiScamQuestionCard below.
 
-/** SupportingScamCard — smaller card for the secondary anti-scam questions
- *  in the D3 teaser layout. Same typography discipline as FeaturedScamCard:
- *  no "Also ask" label (redundant), italic-medium question (not bold),
- *  scam description separated by a thin amber rule (not stacked without
- *  structure). Two of these stack on the right of the FeaturedScamCard. */
-function SupportingScamCard({
-  question,
-  scamText,
+/** AntiScamQuestionCard — a single question card in the anti-scam buyer-
+ *  protection field guide section. Shows: numbered orange circle + question
+ *  title + body + "Why it matters" callout box with warning icon.
+ *  Practical advice tone, not promo. Used 3× in the antiScamGuide section. */
+function AntiScamQuestionCard({
+  num,
+  title,
+  body,
+  whyMattersLabel,
+  whyMatters,
 }: {
-  question: string;
-  scamText: string;
+  num: string;
+  title: string;
+  body: string;
+  whyMattersLabel: string;
+  whyMatters: string;
 }) {
   return (
-    <div className="bg-white border border-amber-200 rounded-lg p-4 flex-1">
-      <p className="text-base font-medium text-charcoal italic leading-snug">
-        {question}
-      </p>
-      <p className="text-xs text-gray-700 leading-relaxed pt-2.5 mt-2.5 border-t border-amber-200">
-        {scamText}
-      </p>
+    <div className="rounded-2xl border border-orange/30 bg-white p-6 shadow-sm">
+      {/* Numbered orange circle */}
+      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange text-sm font-black text-white">
+        {num}
+      </span>
+      {/* Question title */}
+      <h3 className="mt-4 text-base md:text-lg font-black leading-tight text-charcoal">
+        {title}
+      </h3>
+      {/* Body */}
+      <p className="mt-3 text-sm leading-6 text-gray-700">{body}</p>
+      {/* "Why it matters" callout box — warning icon + label + body */}
+      <div className="mt-5 rounded-xl border border-orange/30 bg-orange-tint/40 p-4">
+        <div className="flex items-center gap-2 text-xs font-black text-charcoal uppercase tracking-wider">
+          <svg
+            className="w-4 h-4 text-orange-dark"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+          </svg>
+          {whyMattersLabel}
+        </div>
+        <p className="mt-2 text-sm leading-6 text-gray-700">{whyMatters}</p>
+      </div>
     </div>
   );
 }

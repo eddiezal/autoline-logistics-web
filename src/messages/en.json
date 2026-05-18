@@ -178,41 +178,36 @@
           "sub": "Customer-First"
         },
         "volume": {
-          "label": "45,000+ vehicles",
-          "sub": "shipped last year"
+          "label": "45,000+",
+          "sub": "vehicles shipped last year"
         }
       },
       "dotUrl": "https://safer.fmcsa.dot.gov/CompanySnapshot.aspx?USDOTNumber=3961864",
       "dotTitle": "Verify on FMCSA SAFER (opens in new tab)"
     },
-    "antiScamBottomStrip": {
-      "ariaLabel": "Anti-scam reminder",
-      "text": "The auto transport industry is full of fake quotes and bait-and-switch tactics. Get our free anti-scam checklist and book with confidence.",
-      "cta": "Get the Anti-Scam Checklist"
-    },
     "triplePromise": {
       "eyebrow": "Our triple promise",
-      "title": "<nobreak>Three promises.</nobreak> <nobreak>No fine print games.</nobreak>",
-      "lead": "We built our process around the things that matter most when shipping your car.",
+      "title": "<line>Price locked.</line> <line>Car documented.</line> <line>One person accountable.</line>",
+      "lead": "We built our process around the three things customers worry about most: surprise pricing, vehicle condition, and getting someone on the phone.",
       "seeHowLink": "See how it works",
       "simpleCards": {
         "lockedPrice": {
-          "num": "1.",
-          "title": "Locked Price",
-          "description": "The price we quote is the price you pay. Period.",
-          "link": "How Pricing Works"
+          "num": "1",
+          "title": "Price locked after confirmation",
+          "description": "Fake-low quotes usually change after the customer is already committed. We confirm your route, vehicle, access, and pickup window first, then lock the price.",
+          "link": "See how pricing works"
         },
         "photoProof": {
-          "num": "2.",
-          "title": "Photo Proof",
-          "description": "We document pickup and delivery so you always know your car is in good hands.",
-          "link": "See Photo Examples"
+          "num": "2",
+          "title": "Pickup & delivery photo proof",
+          "description": "Your vehicle is photographed at pickup and delivery, creating a condition record before it leaves and when it arrives.",
+          "link": "See photo examples"
         },
         "onePerson": {
-          "num": "3.",
-          "title": "One Person",
-          "description": "One named coordinator from start to finish. Real answers. Real updates.",
-          "link": "Meet Our Team"
+          "num": "3",
+          "title": "One coordinator owns the shipment",
+          "description": "You are not passed around a call center. One named coordinator follows your shipment from quote to drop-off.",
+          "link": "Meet your coordinator"
         }
       },
       "cards": {
@@ -246,26 +241,35 @@
         }
       }
     },
-    "antiScamTeaser": {
+    "antiScamGuide": {
+      "ariaLabel": "Anti-scam buyer protection checklist",
       "eyebrow": "Anti-scam check",
-      "title": "Not all auto transport quotes are real.",
-      "lead": "Before you book with anyone, ask these 3 questions:",
-      "featuredTag": "Most common scam",
+      "title": "Before you book with anyone, ask these 3 questions.",
+      "lead": "Use this checklist with Auto Line or any transport company. If they cannot answer clearly, keep looking.",
+      "ctaPrimary": "Get the full anti-scam checklist",
+      "reassurance": "100% free. No signup required.",
+      "whyMattersLabel": "Why it matters",
       "questions": {
         "1": {
-          "text": "\"Are you the broker who'll actually arrange my shipment?\"",
-          "scamText": "Lead-gen sites mask as brokers, then resell your number to 8+ real brokers in seconds. The \"quote\" you saw was never theirs to honor — and now 8 strangers have your phone number."
+          "title": "Did you generate this quote, or buy my lead?",
+          "body": "Lead-gen sites can sell your information to multiple brokers within seconds.",
+          "whyMatters": "If they didn't generate your quote, you're not their customer — you're someone else's lead."
         },
         "2": {
-          "text": "\"Will you tell me which carrier is moving my car?\"",
-          "scamText": "Shady brokers hide the carrier so you can't verify the trucker."
+          "title": "Is this price locked after I confirm the details?",
+          "body": "Fake-low quotes often rise once the broker has to find a real carrier for your route.",
+          "whyMatters": "A real company locks the price upfront so you're never hit with last-minute increases."
         },
         "3": {
-          "text": "\"What happens if I don't hear from anyone for 3 days during transit?\"",
-          "scamText": "Brokers who vanish after booking. No updates, no contact, no tracking."
+          "title": "Who owns my shipment from pickup to delivery?",
+          "body": "You should have one accountable person, not a rotating call center or different reps.",
+          "whyMatters": "One coordinator means faster answers, better updates, and someone who gets it done."
         }
       },
-      "ctaText": "See the full guide with honest answers →"
+      "belief": {
+        "title": "We believe in transparency.",
+        "body": "We're comfortable answering these questions because our process is built the right way."
+      }
     },
     "portalPreview": {
       "eyebrow": "After you book",

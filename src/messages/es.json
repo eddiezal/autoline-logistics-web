@@ -178,41 +178,36 @@
           "sub": "Cliente primero"
         },
         "volume": {
-          "label": "Más de 45,000 vehículos",
-          "sub": "enviados el año pasado"
+          "label": "45,000+",
+          "sub": "vehículos enviados el año pasado"
         }
       },
       "dotUrl": "https://safer.fmcsa.dot.gov/CompanySnapshot.aspx?USDOTNumber=3961864",
       "dotTitle": "Verifique en FMCSA SAFER (se abre en nueva pestaña)"
     },
-    "antiScamBottomStrip": {
-      "ariaLabel": "Recordatorio anti-estafas",
-      "text": "La industria del transporte de autos está llena de cotizaciones falsas y tácticas de cebo y cambio. Obtenga nuestra lista anti-estafas gratis y reserve con confianza.",
-      "cta": "Obtenga la lista anti-estafas"
-    },
     "triplePromise": {
       "eyebrow": "Nuestra triple promesa",
-      "title": "<nobreak>Tres promesas.</nobreak> <nobreak>Sin letra pequeña.</nobreak>",
-      "lead": "Construimos nuestro proceso alrededor de lo que más importa al enviar su auto.",
+      "title": "<line>Precio fijo.</line> <line>Auto documentado.</line> <line>Una persona responsable.</line>",
+      "lead": "Construimos nuestro proceso alrededor de las tres cosas que más preocupan a los clientes: precios sorpresa, condición del vehículo, y poder hablar con alguien.",
       "seeHowLink": "Vea cómo funciona",
       "simpleCards": {
         "lockedPrice": {
-          "num": "1.",
-          "title": "Precio fijo",
-          "description": "El precio que cotizamos es el precio que paga. Punto.",
-          "link": "Cómo funciona el precio"
+          "num": "1",
+          "title": "Precio fijo después de confirmar",
+          "description": "Las cotizaciones falsas bajas suelen cambiar después de que el cliente ya se comprometió. Confirmamos su ruta, vehículo, acceso y ventana de recogida primero, luego fijamos el precio.",
+          "link": "Vea cómo funciona el precio"
         },
         "photoProof": {
-          "num": "2.",
-          "title": "Prueba fotográfica",
-          "description": "Documentamos la recogida y la entrega para que siempre sepa que su auto está en buenas manos.",
+          "num": "2",
+          "title": "Prueba fotográfica de recogida y entrega",
+          "description": "Su vehículo se fotografía en la recogida y entrega, creando un registro de condición antes de salir y al llegar.",
           "link": "Ver ejemplos de fotos"
         },
         "onePerson": {
-          "num": "3.",
-          "title": "Una persona",
-          "description": "Un coordinador con nombre de principio a fin. Respuestas reales. Actualizaciones reales.",
-          "link": "Conozca al equipo"
+          "num": "3",
+          "title": "Un coordinador es responsable del envío",
+          "description": "Usted no es pasado por un centro de llamadas. Un coordinador con nombre sigue su envío desde la cotización hasta la entrega.",
+          "link": "Conozca a su coordinador"
         }
       },
       "cards": {
@@ -246,26 +241,35 @@
         }
       }
     },
-    "antiScamTeaser": {
+    "antiScamGuide": {
+      "ariaLabel": "Lista anti-estafas para proteger al comprador",
       "eyebrow": "Alerta anti-estafas",
-      "title": "No todas las cotizaciones de transporte son reales.",
-      "lead": "Antes de reservar con cualquiera, haga estas 3 preguntas:",
-      "featuredTag": "Estafa más común",
+      "title": "Antes de reservar con cualquiera, haga estas 3 preguntas.",
+      "lead": "Use esta lista con Auto Line o cualquier compañía de transporte. Si no pueden responder claramente, siga buscando.",
+      "ctaPrimary": "Obtenga la lista anti-estafas completa",
+      "reassurance": "100% gratis. Sin registro requerido.",
+      "whyMattersLabel": "Por qué importa",
       "questions": {
         "1": {
-          "text": "«¿Es usted el corredor que realmente organizará mi envío?»",
-          "scamText": "Los sitios de lead-gen se hacen pasar por corredores, luego revenden su número a más de 8 corredores reales en segundos. La «cotización» que vio nunca fue suya para honrar — y ahora 8 desconocidos tienen su teléfono."
+          "title": "¿Usted generó esta cotización, o compró mi información?",
+          "body": "Los sitios de lead-gen pueden vender su información a múltiples corredores en segundos.",
+          "whyMatters": "Si no generaron su cotización, usted no es su cliente — es la información de otro."
         },
         "2": {
-          "text": "«¿Me dirá qué transportista está moviendo mi auto?»",
-          "scamText": "Corredores turbios ocultan al transportista para que no pueda verificar al camionero."
+          "title": "¿Este precio queda fijo después de que confirme los detalles?",
+          "body": "Las cotizaciones falsas bajas suelen subir cuando el corredor tiene que encontrar un transportista real para su ruta.",
+          "whyMatters": "Una empresa real fija el precio por adelantado para que nunca le sorprendan con aumentos de última hora."
         },
         "3": {
-          "text": "«¿Qué pasa si no escucho de nadie durante 3 días en tránsito?»",
-          "scamText": "Corredores que desaparecen después de la reserva. Sin actualizaciones, sin contacto, sin seguimiento."
+          "title": "¿Quién es responsable de mi envío desde la recogida hasta la entrega?",
+          "body": "Debe tener una persona responsable, no un centro de llamadas rotativo o diferentes representantes.",
+          "whyMatters": "Un coordinador significa respuestas más rápidas, mejores actualizaciones, y alguien que lo hace."
         }
       },
-      "ctaText": "Vea la guía completa con respuestas honestas →"
+      "belief": {
+        "title": "Creemos en la transparencia.",
+        "body": "Estamos cómodos respondiendo estas preguntas porque nuestro proceso está construido de la manera correcta."
+      }
     },
     "portalPreview": {
       "eyebrow": "Después de reservar",
