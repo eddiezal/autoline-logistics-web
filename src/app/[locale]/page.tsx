@@ -212,55 +212,50 @@ export default function Home() {
             (surprise pricing, vehicle condition, getting someone on phone). */}
         <section className="pt-20 pb-20 md:pt-24 md:pb-24 bg-white">
           <Container>
-            <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.6fr] gap-10 lg:gap-14">
-              {/* Left: intro */}
-              <div>
-                <p className="text-orange text-xs font-bold uppercase tracking-[0.12em] mb-4">
-                  {t("home.triplePromise.eyebrow")}
-                </p>
-                <h2 className="text-3xl md:text-4xl lg:text-[42px] font-black text-charcoal leading-[1.05] tracking-[-0.02em]">
-                  {t.rich("home.triplePromise.title", {
-                    line: (chunks) => <span className="block">{chunks}</span>,
-                  })}
-                </h2>
-                <p className="text-gray-700 text-base md:text-lg leading-relaxed mt-6 max-w-md">
-                  {t("home.triplePromise.lead")}
-                </p>
-                <a
-                  href="#how-it-works"
-                  className="inline-flex items-center mt-5 text-orange-dark font-black text-sm hover:underline"
-                >
-                  {t("home.triplePromise.seeHowLink")} →
-                </a>
-              </div>
+            {/* Intro on top — eyebrow + 3-line title + lead + see-how link */}
+            <div className="max-w-3xl">
+              <p className="text-orange text-xs font-bold uppercase tracking-[0.12em] mb-4">
+                {t("home.triplePromise.eyebrow")}
+              </p>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-charcoal leading-[0.95] tracking-tight">
+                {t.rich("home.triplePromise.title", {
+                  line: (chunks) => <span className="block">{chunks}</span>,
+                })}
+              </h2>
+              <p className="text-gray-700 text-base sm:text-lg leading-7 mt-6 max-w-2xl">
+                {t("home.triplePromise.lead")}
+              </p>
+              <a
+                href="#how-it-works"
+                className="inline-flex items-center mt-5 text-orange-dark font-black text-sm hover:underline"
+              >
+                {t("home.triplePromise.seeHowLink")} →
+              </a>
+            </div>
 
-              {/* Right: 3 protection-mechanism cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <SimplePromiseCard
-                  href="/price-promise"
-                  iconKey="lock"
-                  num={t("home.triplePromise.simpleCards.lockedPrice.num")}
-                  title={t("home.triplePromise.simpleCards.lockedPrice.title")}
-                  description={t("home.triplePromise.simpleCards.lockedPrice.description")}
-                  link={t("home.triplePromise.simpleCards.lockedPrice.link")}
-                />
-                <SimplePromiseCard
-                  href="/damage-promise"
-                  iconKey="camera"
-                  num={t("home.triplePromise.simpleCards.photoProof.num")}
-                  title={t("home.triplePromise.simpleCards.photoProof.title")}
-                  description={t("home.triplePromise.simpleCards.photoProof.description")}
-                  link={t("home.triplePromise.simpleCards.photoProof.link")}
-                />
-                <SimplePromiseCard
-                  href="/people-promise"
-                  iconKey="user"
-                  num={t("home.triplePromise.simpleCards.onePerson.num")}
-                  title={t("home.triplePromise.simpleCards.onePerson.title")}
-                  description={t("home.triplePromise.simpleCards.onePerson.description")}
-                  link={t("home.triplePromise.simpleCards.onePerson.link")}
-                />
-              </div>
+            {/* 3-card grid below intro — full-width cards, side-by-side header */}
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              <SimplePromiseCard
+                href="/price-promise"
+                num={t("home.triplePromise.simpleCards.lockedPrice.num")}
+                title={t("home.triplePromise.simpleCards.lockedPrice.title")}
+                description={t("home.triplePromise.simpleCards.lockedPrice.description")}
+                link={t("home.triplePromise.simpleCards.lockedPrice.link")}
+              />
+              <SimplePromiseCard
+                href="/damage-promise"
+                num={t("home.triplePromise.simpleCards.photoProof.num")}
+                title={t("home.triplePromise.simpleCards.photoProof.title")}
+                description={t("home.triplePromise.simpleCards.photoProof.description")}
+                link={t("home.triplePromise.simpleCards.photoProof.link")}
+              />
+              <SimplePromiseCard
+                href="/people-promise"
+                num={t("home.triplePromise.simpleCards.onePerson.num")}
+                title={t("home.triplePromise.simpleCards.onePerson.title")}
+                description={t("home.triplePromise.simpleCards.onePerson.description")}
+                link={t("home.triplePromise.simpleCards.onePerson.link")}
+              />
             </div>
           </Container>
         </section>
@@ -277,8 +272,8 @@ export default function Home() {
           className="bg-orange-50/70 px-4 sm:px-6 lg:px-8 py-14 md:py-16"
         >
           <Container>
-            <div className="max-w-7xl mx-auto rounded-3xl bg-[#FFF7E8] p-6 sm:p-8 lg:p-12 shadow-sm">
-              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.6fr] gap-10 lg:gap-14">
+            <div className="max-w-7xl mx-auto rounded-3xl bg-[#FFF7E8] p-6 sm:p-8 lg:p-10 shadow-sm">
+              <div className="grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-10 lg:gap-12">
                 {/* Left: intro + CTA */}
                 <div>
                   <p className="text-orange-dark text-xs font-bold uppercase tracking-[0.12em] mb-4">
@@ -935,21 +930,19 @@ function TrustStripItem({
   return inner;
 }
 
-/** SimplePromiseCard — the V4 simplified card for the homepage Triple
- *  Promise section. Replaces the V3 stat-anchor + receipt format with
- *  icon + number + title + one-line description + link. Whole card
- *  clickable. The receipt format moves to the dedicated promise pages
- *  where there's room for proof depth. */
+/** SimplePromiseCard — V5 layout-correction pass (May 17 PM brief #3).
+ *  Drops the icon circle. Number + title share a flex row so the title
+ *  gets normal wrapping width instead of breaking every word. Divider
+ *  widens to w-20. Wider, less tall cards thanks to p-8 padding + the
+ *  stacked section layout (intro on top, 3-card grid full-width below). */
 function SimplePromiseCard({
   href,
-  iconKey,
   num,
   title,
   description,
   link,
 }: {
   href: "/price-promise" | "/damage-promise" | "/people-promise";
-  iconKey: "lock" | "camera" | "user";
   num: string;
   title: string;
   description: string;
@@ -958,28 +951,26 @@ function SimplePromiseCard({
   return (
     <Link
       href={href}
-      className="group bg-white border border-gray-200 rounded-2xl p-7 md:p-8 flex flex-col transition shadow-sm hover:-translate-y-1 hover:shadow-xl hover:border-orange/40"
+      className="group bg-white border border-gray-200 rounded-2xl p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:border-orange/40"
     >
-      {/* Bigger icon circle — "protection mechanism" feel */}
-      <span className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-orange-tint text-orange-dark inline-flex items-center justify-center mb-5">
-        <HeroIcon iconKey={iconKey} className="w-6 h-6 md:w-7 md:h-7" />
-      </span>
-      {/* Orange number — larger, dominant */}
-      <span className="text-3xl font-black text-orange leading-none mb-3">
-        {num}
-      </span>
-      {/* Title */}
-      <h3 className="text-lg md:text-xl font-black text-charcoal leading-tight tracking-tight">
-        {title}
-      </h3>
-      {/* Thin orange divider line under title — protection-mechanism cue */}
-      <div className="w-12 h-0.5 bg-orange/60 my-4" />
+      {/* Number + title — side-by-side header so the title reads as
+          one unit instead of breaking every word. */}
+      <div className="flex items-start gap-4">
+        <span className="text-3xl font-black text-orange leading-none flex-shrink-0">
+          {num}
+        </span>
+        <h3 className="text-xl font-black leading-tight text-charcoal">
+          {title}
+        </h3>
+      </div>
+      {/* Wider divider rule — protection-mechanism cue */}
+      <div className="mt-5 h-px w-20 bg-orange/50" />
       {/* Body */}
-      <p className="text-sm md:text-base text-gray-700 leading-relaxed flex-1">
+      <p className="mt-5 text-base leading-7 text-gray-700">
         {description}
       </p>
       {/* CTA link */}
-      <span className="text-sm font-black text-orange-dark group-hover:underline mt-6">
+      <span className="mt-6 inline-flex items-center text-sm font-black text-orange-dark group-hover:text-orange">
         {link} →
       </span>
     </Link>
@@ -1223,18 +1214,20 @@ function AntiScamQuestionCard({
 }) {
   return (
     <div className="rounded-2xl border border-orange/30 bg-white p-6 shadow-sm">
-      {/* Numbered orange circle */}
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange text-sm font-black text-white">
-        {num}
-      </span>
-      {/* Question title */}
-      <h3 className="mt-4 text-base md:text-lg font-black leading-tight text-charcoal">
-        {title}
-      </h3>
+      {/* Numbered orange circle + title — side-by-side header so each
+          question reads as one unit instead of two stacked elements. */}
+      <div className="flex items-start gap-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange text-sm font-black text-white">
+          {num}
+        </span>
+        <h3 className="text-lg font-black leading-snug text-charcoal">
+          {title}
+        </h3>
+      </div>
       {/* Body */}
       <p className="mt-3 text-sm leading-6 text-gray-700">{body}</p>
-      {/* "Why it matters" callout box — warning icon + label + body */}
-      <div className="mt-5 rounded-xl border border-orange/30 bg-orange-tint/40 p-4">
+      {/* "Why it matters" callout box — tighter spacing, smaller footprint. */}
+      <div className="mt-4 rounded-xl border border-orange/30 bg-orange-tint/40 p-4">
         <div className="flex items-center gap-2 text-xs font-black text-charcoal uppercase tracking-wider">
           <svg
             className="w-4 h-4 text-orange-dark"
