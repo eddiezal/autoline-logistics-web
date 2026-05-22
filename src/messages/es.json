@@ -126,15 +126,15 @@
       "eyebrow": "Auto Line Logistics, Inc.",
       "badge": "Con licencia, fianza y seguro",
       "title": "Sin sorpresas.",
-      "titleAccent": "Sin juegos de cotizaciones falsas.",
-      "description": "Envíe su auto con precio fijo, fotos documentadas de recogida y entrega, y un coordinador con nombre desde la cotización hasta la entrega.",
+      "titleAccent": "Sin trampas ni anzuelos.",
+      "description": "Envíe su auto con precio fijo, fotos documentadas de recogida y entrega, transportistas verificados, y un coordinador con nombre, con sede en EE. UU., desde la cotización hasta la entrega.",
       "ctaPrimary": "Obtenga su precio fijo",
       "ctaSecondary": "Vea la lista anti-estafas",
       "proofChips": {
         "lockedPrice": "Precio fijo",
         "photos": "Fotos de recogida y entrega",
-        "coordinator": "Coordinador asignado",
-        "insured": "Con licencia y seguro completos"
+        "coordinator": "Coordinador en EE. UU.",
+        "insured": "Con fianza, licencia y seguro"
       },
       "stats": {
         "shipments": "Más de 45,000 vehículos enviados el año pasado",
@@ -194,7 +194,7 @@
         "lockedPrice": {
           "num": "1",
           "title": "Precio fijo después de confirmar",
-          "description": "Las cotizaciones falsas bajas suelen cambiar después de que el cliente ya se comprometió. Confirmamos su ruta, vehículo, acceso y ventana de recogida primero, luego fijamos el precio.",
+          "description": "Las cotizaciones de gancho suelen cambiar después de que el cliente ya se comprometió. Confirmamos su ruta, vehículo, acceso y ventana de recogida primero, luego fijamos el precio.",
           "link": "Vea cómo funciona el precio"
         },
         "photoProof": {
@@ -205,8 +205,8 @@
         },
         "onePerson": {
           "num": "3",
-          "title": "Un coordinador es responsable del envío",
-          "description": "Usted no es pasado por un centro de llamadas. Un coordinador con nombre sigue su envío desde la cotización hasta la entrega.",
+          "title": "Un coordinador, personalmente responsable",
+          "description": "Nunca lo pasan por un centro de llamadas ni lo tratan como un número. Un coordinador con nombre sigue su envío desde la cotización hasta la entrega.",
           "link": "Conozca a su coordinador"
         }
       },
@@ -257,7 +257,7 @@
         },
         "2": {
           "title": "¿Este precio queda fijo después de que confirme los detalles?",
-          "body": "Las cotizaciones falsas bajas suelen subir cuando el corredor tiene que encontrar un transportista real para su ruta.",
+          "body": "Las cotizaciones de gancho suelen subir cuando el corredor tiene que encontrar un transportista real para su ruta.",
           "whyMatters": "Una empresa real fija el precio por adelantado para que nunca le sorprendan con aumentos de última hora."
         },
         "3": {

@@ -126,15 +126,15 @@
       "eyebrow": "Auto Line Logistics, Inc.",
       "badge": "Licensed, Bonded & Insured",
       "title": "No surprises.",
-      "titleAccent": "No fake-low quote games.",
-      "description": "Ship your car with a locked price, photo-documented pickup and delivery, and one named coordinator from quote to drop-off.",
+      "titleAccent": "No bait and switch.",
+      "description": "Ship your car with a locked price, photo-documented pickup and delivery, vetted carriers, and one named, U.S.-based coordinator from quote to drop-off.",
       "ctaPrimary": "Get My Locked Price",
       "ctaSecondary": "See the Anti-Scam Checklist",
       "proofChips": {
         "lockedPrice": "Locked Price",
         "photos": "Pickup & Delivery Photos",
-        "coordinator": "Named Coordinator",
-        "insured": "Fully Licensed & Insured"
+        "coordinator": "U.S.-Based Coordinator",
+        "insured": "Bonded, Licensed & Insured"
       },
       "stats": {
         "shipments": "45,000+ vehicles shipped last year",
@@ -194,7 +194,7 @@
         "lockedPrice": {
           "num": "1",
           "title": "Price locked after confirmation",
-          "description": "Fake-low quotes usually change after the customer is already committed. We confirm your route, vehicle, access, and pickup window first, then lock the price.",
+          "description": "Bait-and-switch quotes usually change after the customer is already committed. We confirm your route, vehicle, access, and pickup window first, then lock the price.",
           "link": "See how pricing works"
         },
         "photoProof": {
@@ -205,8 +205,8 @@
         },
         "onePerson": {
           "num": "3",
-          "title": "One coordinator owns the shipment",
-          "description": "You are not passed around a call center. One named coordinator follows your shipment from quote to drop-off.",
+          "title": "One coordinator, personally responsible",
+          "description": "You're never passed around a call center or treated like a number. One named coordinator follows your shipment from quote to drop-off.",
           "link": "Meet your coordinator"
         }
       },
@@ -257,7 +257,7 @@
         },
         "2": {
           "title": "Is this price locked after I confirm the details?",
-          "body": "Fake-low quotes often rise once the broker has to find a real carrier for your route.",
+          "body": "Bait-and-switch quotes often rise once the broker has to find a real carrier for your route.",
           "whyMatters": "A real company locks the price upfront so you're never hit with last-minute increases."
         },
         "3": {
