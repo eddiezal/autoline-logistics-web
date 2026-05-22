@@ -1,0 +1,112 @@
+/**
+ * Super Dispatch — Pricing Insights client (SERVER ONLY).
+ * Imported only by /api/pricing — never a client component — so the token
+ * never reaches the browser. Do NOT add "use client".
+ *
+ * Endpoint:  POST https://pricing-insights.superdispatch.com/api/v1/recommended-price
+ * Auth:      X-API-Key header (static token).
+ * Coverage:  continental US only (no AK/HI/PR/cross-border).
+ * Rate:      50 req / 10s per IP (covered by route debounce + 3h cache).
+ *
+ * Request body (confirmed from SD reference):
+ *   { pickup:{city?,state?,zip}, delivery:{city?,state?,zip},
+ *     trailer_type:"open"|"enclosed", vehicles:[{type, is_inoperable}] }
+ * Response is { meta, data } — exact price/confidence field names inside `data`
+ * are confirmed on the first live call (parseResponse tries the common shapes).
+ */
+
+import "server-only";
+
+export interface PriceQuery {
+  pickup: { city?: string; state?: string; zip: string };
+  delivery: { city?: string; state?: string; zip: string };
+  vehicleType: string;
+  isInoperable: boolean;
+  trailerType: "open" | "enclosed";
+}
+
+export interface PriceEstimate {
+  price: number;
+  low: number;
+  high: number;
+  confidence: number | null;
+  source: "sd";
+}
+
+const env = {
+  apiKey:
+    process.env.SD_PRICING_API_KEY?.trim() ||
+    process.env.SD_PRICING_ACCESS_TOKEN?.trim() ||
+    "",
+  baseUrl: (process.env.SD_PRICING_BASE_URL?.trim() || "").replace(/\/$/, ""),
+  quotePath: process.env.SD_PRICING_QUOTE_PATH?.trim() || "",
+};
+
+function isConfigured(): boolean {
+  return Boolean(env.apiKey && env.baseUrl && env.quotePath);
+}
+
+function loc(l: { city?: string; state?: string; zip: string }) {
+  return {
+    ...(l.city ? { city: l.city } : {}),
+    ...(l.state ? { state: l.state } : {}),
+    zip: l.zip,
+  };
+}
+
+function buildPayload(q: PriceQuery): Record<string, unknown> {
+  return {
+    pickup: loc(q.pickup),
+    delivery: loc(q.delivery),
+    trailer_type: q.trailerType,
+    vehicles: [{ type: q.vehicleType, is_inoperable: q.isInoperable }],
+  };
+}
+
+// Response is { meta, data }; price/confidence live in data. Tries common names.
+function parseResponse(json: Record<string, unknown>): PriceEstimate | null {
+  const num = (v: unknown): number | null => {
+    const n = typeof v === "string" ? parseFloat(v) : (v as number);
+    return Number.isFinite(n) ? Math.round(n) : null;
+  };
+  const root = (json.data as Record<string, unknown>) || json;
+  const price =
+    num(root.price) ??
+    num(root.recommended_price) ??
+    num(root.recommendation) ??
+    num(root.median) ??
+    num(root.mean);
+  if (price == null) return null;
+  const low = num(root.low) ?? num(root.min) ?? Math.round(price * 0.9);
+  const high = num(root.high) ?? num(root.max) ?? Math.round(price * 1.1);
+  const confidence =
+    num(root.confidence) ?? num(root.confidence_score) ?? num(root.score);
+  return { price, low, high, confidence, source: "sd" };
+}
+
+export async function getSdPriceEstimate(
+  q: PriceQuery,
+): Promise<PriceEstimate | null> {
+  if (!isConfigured()) return null;
+  try {
+    const res = await fetch(env.baseUrl + env.quotePath, {
+      method: "POST",
+      headers: {
+        "X-API-Key": env.apiKey,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(buildPayload(q)),
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      console.warn(`SD pricing call failed: ${res.status} ${res.statusText}`);
+      return null;
+    }
+    const json = (await res.json()) as Record<string, unknown>;
+    return parseResponse(json);
+  } catch (err) {
+    console.warn("SD pricing error:", err);
+    return null;
+  }
+}

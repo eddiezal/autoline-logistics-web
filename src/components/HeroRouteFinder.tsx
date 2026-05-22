@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
@@ -259,6 +259,50 @@ export function HeroRouteFinder() {
     [fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey],
   );
 
+  // Live SD pricing override. POSTs to our /api/pricing route (token stays
+  // server-side). Replaces the local estimate with SD's market price when
+  // available; otherwise the local computeLockedPrice estimate stands. Dormant
+  // until SD_PRICING_* env vars are set.
+  const [livePrice, setLivePrice] = useState<number | null>(null);
+  useEffect(() => {
+    setLivePrice(null);
+    // SD Pricing Insights covers the continental US only — HI/AK (and every
+    // non-"ok" state) keep the local estimate, so only mainland routes hit SD.
+    if (route.kind !== "ok") return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      fetch("/api/pricing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fromZip,
+          toZip,
+          fromCity: route.from.city,
+          fromState: route.from.state,
+          toCity: route.to.city,
+          toState: route.to.state,
+          vehicleType: vehicleKey,
+          isInoperable: conditionKey === "nonDrivable",
+          transportType: transportKey,
+        }),
+        signal: controller.signal,
+      })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (d && d.source === "sd" && typeof d.price === "number") {
+            const adjusted =
+              Math.round((d.price * TIMING_MULT[timingKey]) / 25) * 25;
+            setLivePrice(adjusted);
+          }
+        })
+        .catch(() => {});
+    }, 350);
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [route.kind, fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey]);
+
   // Pre-fill /quote with all six inputs — fallback path until SD API is
   // wired and we can lock + book in-place.
   const quoteHref = useMemo(
@@ -373,7 +417,7 @@ export function HeroRouteFinder() {
       </div>
 
       {/* Result panel — only renders when there's a real route. */}
-      <ResultPanel state={route} quoteHref={quoteHref} />
+      <ResultPanel state={route} quoteHref={quoteHref} livePrice={livePrice} />
     </div>
   );
 }
@@ -482,9 +526,11 @@ function PriceDisplay({
 function ResultPanel({
   state,
   quoteHref,
+  livePrice,
 }: {
   state: RouteState;
   quoteHref: { pathname: "/quote"; query: Record<string, string> };
+  livePrice: number | null;
 }) {
   const t = useTranslations();
 
@@ -552,7 +598,7 @@ function ResultPanel({
           </p>
 
           <PriceDisplay
-            price={state.price}
+            price={livePrice ?? state.price}
             label={t("home.heroRouteFinder.lockedLabel")}
             validity={t("home.heroRouteFinder.validityBadge")}
           />
@@ -578,7 +624,7 @@ function ResultPanel({
           </div>
 
           <PriceDisplay
-            price={state.price}
+            price={livePrice ?? state.price}
             label={t("home.heroRouteFinder.lockedLabel")}
             validity={t("home.heroRouteFinder.validityBadge")}
           />
