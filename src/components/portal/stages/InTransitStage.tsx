@@ -18,6 +18,7 @@ import {
   PickupTeamCard,
   LockedPriceCard,
   ShipmentDetailsCard,
+  HelpfulResourcesCard,
   IconLock,
   IconUser,
   IconHeadset,
@@ -132,6 +133,7 @@ export function InTransitStage({ shipment }: Props) {
           )}
           <LockedPriceCard amountCents={priceLockedCents} />
           <ShipmentDetailsCard shipment={shipment} />
+          <HelpfulResourcesCard />
         </aside>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import type { Driver, Coordinator, Shipment } from "@/lib/types/shipment";
 import type { ReactNode } from "react";
+import { Link } from "@/i18n/navigation";
 
 /**
  * Shared portal primitives + sidebar cards + helpers.
@@ -336,6 +337,108 @@ export function LockedPriceCard({ amountCents }: { amountCents: number }) {
   );
 }
 
+/**
+ * <HelpfulResourcesCard> — shared sidebar card linking the authenticated
+ * customer back to the marketing-site reference content most relevant to
+ * an active shipment (Triple Promise pages, anti-scam guide, full
+ * resources index). Same component rendered on PREP + IN_TRANSIT so the
+ * sidebar reads consistently across stages.
+ *
+ * Long-term: add stage-specific portal articles (pickup-day timeline,
+ * damage-claim process, transit-delay handling). For now this routes to
+ * existing marketing content so it ships fast and gives the sidebar a
+ * "we've thought about everything you might need" finish.
+ */
+export function HelpfulResourcesCard() {
+  return (
+    <Card>
+      <CardHead title="Helpful resources" />
+      <div className="px-5 py-4 space-y-3">
+        <ResourceLink
+          href="/price-promise"
+          icon={<IconLock />}
+          title="Price Promise"
+          sub="What the locked price means"
+        />
+        <ResourceLink
+          href="/damage-promise"
+          icon={<IconShield />}
+          title="Damage Promise"
+          sub="$500K cargo coverage explained"
+        />
+        <ResourceLink
+          href="/people-promise"
+          icon={<IconHeadset />}
+          title="People Promise"
+          sub="Why we name your coordinator"
+        />
+        <ResourceLink
+          href="/anti-scam"
+          icon={<IconAlert />}
+          title="Spot the scams"
+          sub="What separates real brokers from the noise"
+        />
+      </div>
+      <div
+        className="px-5 py-3 border-t flex items-center justify-between"
+        style={{
+          background: "var(--color-surface-elevated)",
+          borderColor: "var(--color-gray-200)",
+        }}
+      >
+        <Link
+          href="/resources"
+          className="text-[12.5px] font-bold inline-flex items-center gap-1.5 hover:gap-2 transition-all"
+          style={{ color: "var(--color-brand-primary)" }}
+        >
+          <IconBook color="currentColor" size={14} />
+          Browse all resources →
+        </Link>
+      </div>
+    </Card>
+  );
+}
+
+function ResourceLink({
+  href,
+  icon,
+  title,
+  sub,
+}: {
+  href: string;
+  icon: ReactNode;
+  title: string;
+  sub: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-start gap-3 py-1 rounded-lg group transition-colors"
+    >
+      <span
+        className="flex-shrink-0 mt-0.5"
+        style={{ color: "var(--color-brand-primary)" }}
+      >
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <div
+          className="text-[13.5px] font-bold leading-tight transition-colors"
+          style={{ color: "var(--color-text-default)" }}
+        >
+          {title}
+        </div>
+        <div
+          className="text-[12px] mt-0.5 leading-snug"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          {sub}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export function ShipmentDetailsCard({ shipment }: { shipment: Shipment }) {
   const rows: { k: string; v: string }[] = [
     { k: "Order", v: shipment.orderNumber },
@@ -501,6 +604,47 @@ export function IconFlag({
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M4 21V4a1 1 0 0 1 1-1h14l-3 5 3 5H5" />
+    </svg>
+  );
+}
+export function IconShield({
+  color = "currentColor",
+  size = 18,
+}: {
+  color?: string;
+  size?: number;
+}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+export function IconAlert({
+  color = "currentColor",
+  size = 18,
+}: {
+  color?: string;
+  size?: number;
+}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}
+export function IconBook({
+  color = "currentColor",
+  size = 18,
+}: {
+  color?: string;
+  size?: number;
+}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
     </svg>
   );
 }
