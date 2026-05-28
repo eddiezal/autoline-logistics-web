@@ -1,20 +1,55 @@
-import { useTranslations } from "next-intl";
+"use client";
 
 /**
  * Portal login — `/portal/login`
  *
- * MVP UI: magic link email form + SMS OTP fallback link.
+ * Passwordless magic-link sign-in (Firebase Email Link). Flow:
+ *   1. Customer enters email → sendSignInLinkToEmail()
+ *   2. We stash the email (+ any returnTo) in localStorage — Firebase needs the
+ *      same email to complete sign-in on the callback, and the link may be
+ *      opened in a different tab.
+ *   3. Customer clicks the link → /portal/login/callback finishes sign-in and
+ *      mints the session cookie.
  *
- * When Firebase Auth is wired:
- * - Email submit → Firebase Auth `sendSignInLinkToEmail()` → check email
- * - Redirect to /portal on successful link click
- * - SMS link → /portal/login/sms (phone number entry)
- *
- * Currently a UI stub — form submit does nothing.
+ * SMS OTP was scoped out for Phase A (deferred to Phase B).
  */
+
+import { useState, type FormEvent } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { sendSignInLinkToEmail } from "firebase/auth";
+import { getClientAuth } from "@/lib/firebase/client";
+
+type Status = "idle" | "sending" | "sent" | "error";
 
 export default function PortalLogin() {
   const t = useTranslations("portal.login");
+  const locale = useLocale();
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    const addr = email.trim();
+    if (!addr) return;
+    setStatus("sending");
+    try {
+      const url = `${window.location.origin}/${locale}/portal/login/callback`;
+      await sendSignInLinkToEmail(getClientAuth(), addr, {
+        url,
+        handleCodeInApp: true,
+      });
+      window.localStorage.setItem("emailForSignIn", addr);
+      const returnTo = searchParams.get("returnTo");
+      if (returnTo) window.localStorage.setItem("returnTo", returnTo);
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  const sending = status === "sending";
 
   return (
     <div className="max-w-md mx-auto">
@@ -25,93 +60,84 @@ export default function PortalLogin() {
           borderColor: "var(--color-gray-200)",
         }}
       >
-        <h1
-          className="text-3xl font-bold"
-          style={{
-            color: "var(--color-text-default)",
-            fontFamily: "var(--font-brand-display)",
-            letterSpacing: "var(--letter-spacing-display)",
-          }}
-        >
-          {t("title")}
-        </h1>
-        <p className="mt-2" style={{ color: "var(--color-text-muted)" }}>
-          {t("description")}
-        </p>
-
-        {/* Build-status note */}
-        <div
-          className="mt-4 text-xs border rounded-lg px-3 py-2"
-          style={{
-            color: "color-mix(in oklab, var(--color-warning) 90%, black)",
-            background: "color-mix(in oklab, var(--color-warning) 12%, white)",
-            borderColor: "color-mix(in oklab, var(--color-warning) 35%, white)",
-          }}
-        >
-          {t("buildBanner")}
-        </div>
-
-        <form className="mt-6 space-y-4">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-semibold mb-2"
-              style={{ color: "var(--color-text-default)" }}
-            >
-              {t("emailLabel")}
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder={t("emailPlaceholder")}
-              className="w-full px-4 py-3 rounded-lg border text-base focus:outline-none focus:ring-2"
+        {status === "sent" ? (
+          <>
+            <h1
+              className="text-3xl font-bold"
               style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-gray-300)",
                 color: "var(--color-text-default)",
+                fontFamily: "var(--font-brand-display)",
+                letterSpacing: "var(--letter-spacing-display)",
               }}
-              disabled
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full px-6 py-3 rounded-full font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-            style={{
-              background: "var(--color-brand-primary)",
-              color: "var(--color-brand-paper)",
-            }}
-            disabled
-          >
-            {t("submit")}
-          </button>
-        </form>
+            >
+              {t("linkSentTitle")}
+            </h1>
+            <p className="mt-3" style={{ color: "var(--color-text-muted)" }}>
+              {t("linkSentBody", { email })}
+            </p>
+          </>
+        ) : (
+          <>
+            <h1
+              className="text-3xl font-bold"
+              style={{
+                color: "var(--color-text-default)",
+                fontFamily: "var(--font-brand-display)",
+                letterSpacing: "var(--letter-spacing-display)",
+              }}
+            >
+              {t("title")}
+            </h1>
+            <p className="mt-2" style={{ color: "var(--color-text-muted)" }}>
+              {t("description")}
+            </p>
 
-        {/* SMS alternative */}
-        <div
-          className="mt-6 pt-6 border-t"
-          style={{ borderColor: "var(--color-gray-200)" }}
-        >
-          <p
-            className="text-sm font-semibold"
-            style={{ color: "var(--color-text-default)" }}
-          >
-            {t("altSmsTitle")}
-          </p>
-          <p
-            className="text-sm mt-1"
-            style={{ color: "var(--color-text-muted)" }}
-          >
-            {t("altSmsDescription")}
-          </p>
-          <button
-            type="button"
-            className="mt-3 text-sm font-semibold hover:underline"
-            style={{ color: "var(--color-brand-primary)" }}
-            disabled
-          >
-            {t("altSmsLink")}
-          </button>
-        </div>
+            <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: "var(--color-text-default)" }}
+                >
+                  {t("emailLabel")}
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder={t("emailPlaceholder")}
+                  className="w-full px-4 py-3 rounded-lg border text-base focus:outline-none focus:ring-2"
+                  style={{
+                    background: "var(--color-surface)",
+                    borderColor: "var(--color-gray-300)",
+                    color: "var(--color-text-default)",
+                  }}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={sending}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={sending}
+                className="w-full px-6 py-3 rounded-full font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
+                style={{
+                  background: "var(--color-brand-primary)",
+                  color: "var(--color-brand-paper)",
+                }}
+              >
+                {sending ? t("sending") : t("submit")}
+              </button>
+
+              {status === "error" && (
+                <p className="text-sm" style={{ color: "var(--color-danger)" }}>
+                  {t("error")}
+                </p>
+              )}
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

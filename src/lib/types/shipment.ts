@@ -224,6 +224,13 @@ export type ChecklistKey =
 export interface ChecklistItem {
   key: ChecklistKey;
   completedAt?: ISODate;
+  /**
+   * Required before pickup vs. recommended. Drives the "Still needed"
+   * split on PrepStage so customers don't confuse "leave keys" (mandatory)
+   * with "wash car" (nice-to-have). Required items use the hi-vis lime
+   * brand accent; recommended use neutral styling.
+   */
+  required: boolean;
 }
 
 /* ============================================================

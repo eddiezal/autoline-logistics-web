@@ -42,18 +42,6 @@ export default function PortalLayout({
       className="min-h-screen flex flex-col"
       style={{ background: "var(--color-surface)" }}
     >
-      {/* Build status banner — kill once Firebase is wired + real data flows */}
-      <div
-        className="border-b px-4 py-2 text-center text-sm"
-        style={{
-          background: "color-mix(in oklab, var(--color-warning) 12%, white)",
-          borderColor: "color-mix(in oklab, var(--color-warning) 35%, white)",
-          color: "var(--color-text-default)",
-        }}
-      >
-        🚧 {t("buildBanner")}
-      </div>
-
       {/* Top bar — wordmark + locale + account */}
       <header
         className="px-4 py-3 md:px-6 flex items-center justify-between gap-4"

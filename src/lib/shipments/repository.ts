@@ -1,42 +1,62 @@
 /**
- * Shipment repository — the layer between portal components and the
- * data store. Today it reads from mock fixtures. When Ben provisions
- * GCP and we wire Firestore (~Mon May 18+), the internals of this file
- * change but the function signatures stay identical so callers don't.
+ * Shipment repository — the layer between portal server components and the
+ * data store. Backend is toggled by the SHIPMENTS_SOURCE env var:
+ *   - "firestore" → live reads via firebase-admin (see ./firestore.ts)
+ *   - anything else (default) → in-memory mock fixtures
  *
- * Async signatures from day one: today they resolve synchronously, but
- * Firestore's `getDoc`/`getDocs` are async — matching now means the
- * swap is mechanical.
+ * Keep mock as the default so the portal renders even before Firestore is
+ * seeded; flip to "firestore" in .env.local once `/api/admin/seed` has run.
+ *
+ * Server-only: the Firestore path pulls in firebase-admin. No client component
+ * imports this module (portal components receive shipments as props).
+ *
+ * Async signatures throughout so the mock↔Firestore swap is invisible to callers.
  */
 
+import "server-only";
 import { MOCK_SHIPMENTS } from "@/lib/mock/shipments";
 import type { Shipment } from "@/lib/types/shipment";
+import {
+  getShipmentByOrderNumberFs,
+  listShipmentsForCustomerFs,
+  listShipmentsForCustomerByEmailFs,
+} from "./firestore";
 
-/**
- * Fetch a single shipment by its human-readable order number.
- *
- * Today: linear scan over MOCK_SHIPMENTS.
- * Monday: replace internals with:
- *   const snap = await getDoc(doc(db, 'shipments', orderNumber));
- *   if (!snap.exists()) return null;
- *   // Verify auth.uid matches snap.data().customer.id (access control)
- *   return snap.data() as Shipment;
- */
+const useFirestore = process.env.SHIPMENTS_SOURCE === "firestore";
+
+/** Fetch a single shipment by its human-readable order number. */
 export async function getShipmentByOrderNumber(
   orderNumber: string,
 ): Promise<Shipment | null> {
-  const shipment = MOCK_SHIPMENTS.find(
-    (s) => s.orderNumber === orderNumber,
+  if (useFirestore) return getShipmentByOrderNumberFs(orderNumber);
+  return MOCK_SHIPMENTS.find((s) => s.orderNumber === orderNumber) ?? null;
+}
+
+/** List all shipments belonging to a customer id (future: keyed by Firebase uid). */
+export async function listShipmentsForCustomer(
+  customerId: string,
+): Promise<Shipment[]> {
+  if (useFirestore) return listShipmentsForCustomerFs(customerId);
+  return MOCK_SHIPMENTS.filter((s) => s.customer.id === customerId);
+}
+
+/**
+ * List shipments by customer email — the dashboard's query, since magic-link
+ * auth identifies customers by email. Email is unique per customer.
+ */
+export async function listShipmentsForCustomerByEmail(
+  email: string,
+): Promise<Shipment[]> {
+  const normalized = email.trim().toLowerCase();
+  if (useFirestore) return listShipmentsForCustomerByEmailFs(normalized);
+  return MOCK_SHIPMENTS.filter(
+    (s) => s.customer.email.trim().toLowerCase() === normalized,
   );
-  return shipment ?? null;
 }
 
 /* ------------------------------------------------------------
  * Coming soon (when needed):
- *
- * - listShipmentsForCustomer(customerId): for the dashboard list
- *   view when we have a customer with multiple shipments.
- * - subscribeToShipment(orderNumber, callback): for real-time
- *   Firestore listener, used in client components that need live
- *   updates (map position, milestone arrivals, photo arrivals).
+ * - subscribeToShipment(orderNumber, callback): real-time Firestore
+ *   listener for client components needing live updates (map position,
+ *   milestone arrivals, photo arrivals).
  * ------------------------------------------------------------ */

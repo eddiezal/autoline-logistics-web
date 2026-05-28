@@ -1,15 +1,56 @@
-import type { Shipment, MilestoneType } from "@/lib/types/shipment";
+"use client";
+
+import { useState } from "react";
+import type {
+  Shipment,
+  MilestoneType,
+  Milestone,
+  Photo,
+  Location,
+  ETAEstimate,
+  Address,
+  Coordinator,
+} from "@/lib/types/shipment";
+import {
+  Card,
+  CardHead,
+  TrustPillar,
+  PickupTeamCard,
+  LockedPriceCard,
+  ShipmentDetailsCard,
+  IconLock,
+  IconUser,
+  IconHeadset,
+  IconCamera,
+  IconMapPin,
+  IconClock,
+  IconTruck,
+  IconFlag,
+  IconCheck,
+  formatUSD,
+  tzShortName,
+  timeAgo,
+} from "../_shared";
 
 /**
- * <InTransitStage> — basic functional UI proving the data flows.
+ * <InTransitStage> — visibility-focused cousin of PrepStage (May 27, 2026).
  *
- * Scope: render current-location, ETA, milestone timeline, and the
- * pickup/transit photo counts. Mockup-quality polish (live map, photo
- * gallery with click-to-expand, ETA confidence-fill visual) is a
- * separate session.
+ * Different emotional frame from PrepStage. There, the customer's job was
+ * "do these things before pickup." Here, the customer has nothing to do —
+ * the answer to "what do I need to do?" is "watch us deliver your car."
+ * So this stage is visibility-led, not action-led:
  *
- * Live map specifically is deferred until SD GPS data flows in real
- * time — we have one Location snapshot, not a live feed yet.
+ *   1. TransitSummary       — soft green hero: "{driver} is on the way to {city}"
+ *                             + ETA + confidence + trust strip (same 4 pillars)
+ *   2. LiveLocationCard     — vertical journey rail: origin → current → destination
+ *   3. MilestoneTimeline    — events that have happened + the next expected one
+ *   4. PhotoTabsCard        — Pickup / Transit / Delivery tabs (Delivery locked)
+ *   5. Sidebar              — same shared cards as PrepStage so the two stages
+ *                             feel like one continuous product
+ *
+ * No CTA in the hero — the brand statement is "you can relax, we've got it."
+ *
+ * Client component because PhotoTabsCard uses useState for tab switching.
  */
 
 type Props = { shipment: Shipment };
@@ -25,350 +66,780 @@ const MILESTONE_LABELS: Record<MilestoneType, string> = {
   documentsComplete: "Documents complete",
 };
 
+/* ============================================================
+ * Main composition
+ * ============================================================ */
+
 export function InTransitStage({ shipment }: Props) {
-  const { currentLocation, eta, milestones, driver, coordinator } = shipment;
-  const pickupPhotos = shipment.pickupPhotos ?? [];
-  const transitPhotos = shipment.transitPhotos ?? [];
+  const {
+    driver,
+    coordinator,
+    currentLocation,
+    eta,
+    milestones,
+    origin,
+    destination,
+    priceLockedCents,
+    pickupPhotos,
+    transitPhotos,
+    deliveryPhotos,
+  } = shipment;
+
+  const firstName = coordinator?.name.split(" ")[0] ?? "your coordinator";
 
   return (
     <div className="space-y-6">
-      {/* Current status banner */}
-      {currentLocation && eta && (
-        <CurrentStatusBanner location={currentLocation} eta={eta} />
-      )}
+      <TransitSummary
+        driverName={driver?.name}
+        destination={destination}
+        currentLocation={currentLocation}
+        eta={eta}
+        priceLockedCents={priceLockedCents}
+        coordinator={coordinator}
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column: timeline + photos */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card title="Trip timeline">
-            <ol
-              className="space-y-3"
-              style={{ color: "var(--color-text-default)" }}
-            >
-              {milestones
-                .slice()
-                .sort(
-                  (a, b) =>
-                    new Date(a.at).getTime() - new Date(b.at).getTime(),
-                )
-                .map((m) => (
-                  <li key={m.id} className="flex items-start gap-3">
-                    <span
-                      className="inline-block w-3 h-3 rounded-full mt-1.5 flex-shrink-0"
-                      style={{ background: "var(--color-brand-primary)" }}
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold">
-                        {MILESTONE_LABELS[m.type]}
-                      </p>
-                      <p
-                        className="text-xs"
-                        style={{ color: "var(--color-text-muted)" }}
-                      >
-                        {formatDateTime(m.at)}
-                        {m.location ? ` · ${m.location.label}` : ""}
-                      </p>
-                      {m.notes && (
-                        <p
-                          className="text-xs italic mt-1"
-                          style={{ color: "var(--color-text-muted)" }}
-                        >
-                          {m.notes}
-                        </p>
-                      )}
-                    </div>
-                  </li>
-                ))}
-            </ol>
-          </Card>
-
-          <Card title="Inspection photos">
-            <div className="flex gap-4 text-sm">
-              <PhotoTab label="Pickup" count={pickupPhotos.length} />
-              <PhotoTab label="Transit" count={transitPhotos.length} />
-              <PhotoTab label="Delivery" count={0} locked />
-            </div>
-            <p
-              className="mt-4 text-xs"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              {pickupPhotos.length} pickup photos captured by the driver at
-              load.{" "}
-              {transitPhotos.length > 0
-                ? `${transitPhotos.length} transit waypoint photo${transitPhotos.length === 1 ? "" : "s"} captured en route.`
-                : "Waypoint photos populate as the driver makes stops."}{" "}
-              Delivery photos appear once the vehicle arrives.
-            </p>
-          </Card>
-        </div>
-
-        {/* Right column: shipment + driver + coordinator */}
-        <div className="space-y-6">
-          <Card title="Shipment">
-            <DataRow label="Order" value={shipment.orderNumber} />
-            <DataRow
-              label="Vehicle"
-              value={`${shipment.vehicle.year} ${shipment.vehicle.make} ${shipment.vehicle.model}`}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+        {/* MAIN COLUMN */}
+        <main className="space-y-6 min-w-0">
+          {currentLocation && (
+            <LiveLocationCard
+              origin={origin}
+              destination={destination}
+              currentLocation={currentLocation}
             />
-            <DataRow
-              label="Route"
-              value={`${shipment.origin.city}, ${shipment.origin.state} → ${shipment.destination.city}, ${shipment.destination.state}`}
-            />
-            <DataRow
-              label="Tier"
-              value={
-                shipment.tier.charAt(0).toUpperCase() + shipment.tier.slice(1)
-              }
-            />
-            <DataRow
-              label="Locked price"
-              value={formatUSD(shipment.priceLockedCents)}
-            />
-          </Card>
-
-          {driver && (
-            <Card title="Your driver">
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center font-bold"
-                  style={{
-                    background: "var(--color-brand-primary)",
-                    color: "var(--color-brand-paper)",
-                  }}
-                >
-                  {driver.initials}
-                </div>
-                <div>
-                  <p
-                    className="font-semibold"
-                    style={{ color: "var(--color-text-default)" }}
-                  >
-                    {driver.name}
-                  </p>
-                  <p
-                    className="text-sm"
-                    style={{ color: "var(--color-text-muted)" }}
-                  >
-                    {driver.carrierName} · {driver.rating}★ ·{" "}
-                    {driver.yearsExperience} yrs
-                  </p>
-                </div>
-              </div>
-            </Card>
           )}
+          <MilestoneTimeline
+            milestones={milestones}
+            eta={eta}
+            destination={destination}
+          />
+          <PhotoTabsCard
+            pickup={pickupPhotos ?? []}
+            transit={transitPhotos ?? []}
+            delivery={deliveryPhotos ?? []}
+          />
+        </main>
 
-          {coordinator && (
-            <Card title="Your coordinator">
-              <p
-                className="font-semibold"
-                style={{ color: "var(--color-text-default)" }}
-              >
-                {coordinator.name}
-              </p>
-              <p
-                className="text-sm mt-1"
-                style={{ color: "var(--color-text-muted)" }}
-              >
-                {coordinator.hours.start}–{coordinator.hours.end}{" "}
-                {tzShortName(coordinator.hours.timezone)}
-              </p>
-              <a
-                href={`mailto:${coordinator.email}`}
-                className="text-sm font-semibold hover:underline block mt-2"
-                style={{ color: "var(--color-brand-primary)" }}
-              >
-                {coordinator.email}
-              </a>
-            </Card>
+        {/* SIDEBAR */}
+        <aside className="space-y-5">
+          {(driver || coordinator) && (
+            <PickupTeamCard
+              driver={driver}
+              coordinator={coordinator}
+              title="Your team"
+              helpLineText={`Questions during transit? Contact ${firstName}.`}
+            />
           )}
-        </div>
+          <LockedPriceCard amountCents={priceLockedCents} />
+          <ShipmentDetailsCard shipment={shipment} />
+        </aside>
       </div>
     </div>
   );
 }
 
 /* ============================================================
- * Sub-components
+ * TransitSummary — visibility hero (cousin of ReadinessSummary)
  * ============================================================ */
 
-function CurrentStatusBanner({
-  location,
+function TransitSummary({
+  driverName,
+  destination,
+  currentLocation,
   eta,
+  priceLockedCents,
+  coordinator,
 }: {
-  location: { label: string; lastUpdatedAt: string };
-  eta: { at: string; confidenceScore: number };
+  driverName?: string;
+  destination: Address;
+  currentLocation?: Location;
+  eta?: ETAEstimate;
+  priceLockedCents: number;
+  coordinator?: Coordinator;
 }) {
-  const confidencePct = Math.round(eta.confidenceScore * 100);
+  const confidencePct = eta ? Math.round(eta.confidenceScore * 100) : null;
+  const etaText = eta ? formatETA(eta.at, "America/Denver") : null;
+  // NB: in production the ETA timezone should come from destination — using
+  // America/Denver here as a heuristic; refactor when SD feeds a proper tz.
+
   return (
     <section
-      className="rounded-2xl p-6"
+      className="rounded-2xl border overflow-hidden"
       style={{
         background:
-          "linear-gradient(135deg, var(--color-brand-ink), color-mix(in oklab, var(--color-brand-ink) 80%, var(--color-brand-primary)))",
-        color: "var(--color-brand-paper)",
+          "color-mix(in oklab, var(--color-brand-primary) 6%, white)",
+        borderColor:
+          "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
       }}
     >
-      <p
-        className="text-xs uppercase tracking-wider opacity-75"
-        style={{ fontFamily: "var(--font-brand-body)" }}
-      >
-        Current location
-      </p>
-      <h2
-        className="text-2xl md:text-3xl font-bold mt-1"
+      <div className="px-6 py-6 md:px-8 md:py-7">
+        <h2
+          className="text-2xl md:text-[26px] font-extrabold leading-tight"
+          style={{
+            color: "var(--color-brand-ink)",
+            fontFamily: "var(--font-brand-display)",
+            letterSpacing: "var(--letter-spacing-display)",
+          }}
+        >
+          {driverName ? `${driverName} is on the way to ` : "On the way to "}
+          <span style={{ color: "var(--color-brand-primary)" }}>
+            {destination.city}
+          </span>
+        </h2>
+        <p
+          className="mt-2 text-sm md:text-[15px] leading-relaxed max-w-xl"
+          style={{ color: "var(--color-text-default)" }}
+        >
+          {currentLocation ? (
+            <>
+              Currently near{" "}
+              <strong style={{ color: "var(--color-brand-ink)" }}>
+                {currentLocation.label}
+              </strong>
+              .{" "}
+            </>
+          ) : null}
+          {etaText ? (
+            <>
+              Expected to deliver{" "}
+              <strong style={{ color: "var(--color-brand-ink)" }}>
+                {etaText}
+              </strong>
+              .
+            </>
+          ) : (
+            "ETA updating."
+          )}
+        </p>
+
+        {confidencePct !== null && (
+          <div className="mt-3 flex items-center gap-2">
+            <span
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-bold"
+              style={{
+                background: "var(--color-brand-accent)",
+                color: "var(--color-brand-accent-ink)",
+              }}
+            >
+              <IconClock color="currentColor" size={12} />
+              {confidencePct}% confidence
+            </span>
+            <span
+              className="text-[12px]"
+              style={{ color: "var(--color-text-muted)" }}
+            >
+              {confidencePct >= 80
+                ? "On schedule"
+                : confidencePct >= 60
+                  ? "Tracking — minor variability possible"
+                  : "Significant variability — coordinator will follow up"}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 border-t"
         style={{
-          fontFamily: "var(--font-brand-display)",
-          letterSpacing: "var(--letter-spacing-display)",
+          borderColor:
+            "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
         }}
       >
-        {location.label}
-      </h2>
-      <p className="text-sm mt-1 opacity-90">
-        Last updated {timeAgo(location.lastUpdatedAt)}
-      </p>
-      <div
-        className="mt-4 pt-4 border-t flex items-baseline justify-between gap-4"
-        style={{ borderColor: "rgba(255,255,255,0.15)" }}
-      >
-        <div>
-          <p className="text-xs uppercase tracking-wider opacity-75">
-            Estimated arrival
-          </p>
-          <p
-            className="text-xl font-bold mt-1"
-            style={{
-              fontFamily: "var(--font-brand-display)",
-              letterSpacing: "var(--letter-spacing-display)",
-            }}
-          >
-            {formatDateTime(eta.at)}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-xs uppercase tracking-wider opacity-75">
-            Confidence
-          </p>
-          <p className="text-xl font-bold mt-1">{confidencePct}%</p>
-        </div>
+        <TrustPillar
+          icon={<IconLock />}
+          label="Price locked"
+          detail={`${formatUSD(priceLockedCents)} · no changes`}
+        />
+        <TrustPillar
+          icon={<IconUser />}
+          label="Named driver"
+          detail={driverName ?? "Assignment in progress"}
+        />
+        <TrustPillar
+          icon={<IconHeadset />}
+          label="Dedicated coordinator"
+          detail={
+            coordinator
+              ? `${coordinator.name} · ${coordinator.languages
+                  .map((l) => l.toUpperCase())
+                  .join("/")}`
+              : "EN · ES"
+          }
+        />
+        <TrustPillar
+          icon={<IconCamera />}
+          label="Photos protect you"
+          detail="Arriving at each milestone"
+        />
       </div>
     </section>
   );
 }
 
-function Card({
-  title,
-  children,
+/* ============================================================
+ * LiveLocationCard — vertical journey rail (origin → current → destination)
+ * ============================================================ */
+
+function LiveLocationCard({
+  origin,
+  destination,
+  currentLocation,
 }: {
-  title: string;
-  children: React.ReactNode;
+  origin: Address;
+  destination: Address;
+  currentLocation: Location;
 }) {
   return (
-    <section
-      className="rounded-2xl border p-5 md:p-6"
-      style={{
-        background: "var(--color-surface)",
-        borderColor: "var(--color-gray-200)",
-      }}
-    >
-      <h3
-        className="text-sm font-bold uppercase tracking-wider mb-3"
-        style={{ color: "var(--color-text-muted)" }}
-      >
-        {title}
-      </h3>
-      {children}
-    </section>
+    <Card>
+      {/* Note: "Last reported X ago" sits on the current-position marker
+          below; omitted here to avoid the duplication Eddie flagged. */}
+      <CardHead title="Live location" />
+      <div className="px-5 md:px-6 py-5">
+        <ol className="relative space-y-5">
+          <JourneyStop
+            icon={<IconMapPin color="var(--color-brand-primary)" size={16} />}
+            label={`${origin.city}, ${origin.state}`}
+            sub="Origin"
+            tone="done"
+            showConnector
+          />
+          <JourneyStop
+            icon={<IconTruck color="var(--color-brand-accent-ink)" size={16} />}
+            label={currentLocation.label}
+            sub={`Last reported ${timeAgo(currentLocation.lastUpdatedAt)}`}
+            tone="current"
+            showConnector
+          />
+          <JourneyStop
+            icon={<IconFlag color="var(--color-text-muted)" size={16} />}
+            label={`${destination.city}, ${destination.state}`}
+            sub="Destination"
+            tone="upcoming"
+            showConnector={false}
+          />
+        </ol>
+      </div>
+    </Card>
   );
 }
 
-function DataRow({ label, value }: { label: string; value: string }) {
+function JourneyStop({
+  icon,
+  label,
+  sub,
+  tone,
+  showConnector,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  sub: string;
+  tone: "done" | "current" | "upcoming";
+  showConnector: boolean;
+}) {
+  const isCurrent = tone === "current";
+  const isUpcoming = tone === "upcoming";
+
+  const dotBg = isCurrent
+    ? "var(--color-brand-accent)"
+    : isUpcoming
+      ? "var(--color-surface-elevated)"
+      : "color-mix(in oklab, var(--color-brand-primary) 12%, white)";
+  const dotBorder = isCurrent
+    ? "var(--color-brand-accent)"
+    : isUpcoming
+      ? "var(--color-gray-300)"
+      : "color-mix(in oklab, var(--color-brand-primary) 40%, white)";
+  const labelColor = isUpcoming
+    ? "var(--color-text-muted)"
+    : "var(--color-text-default)";
+
   return (
-    <div className="flex items-baseline justify-between gap-3 py-1.5 text-sm">
-      <span style={{ color: "var(--color-text-muted)" }}>{label}</span>
+    <li className="relative flex items-start gap-4">
+      {/* Connector line (vertical) */}
+      {showConnector && (
+        <span
+          aria-hidden
+          className="absolute"
+          style={{
+            left: 17,
+            top: 36,
+            width: 2,
+            height: 28,
+            background: isCurrent
+              ? "color-mix(in oklab, var(--color-brand-primary) 30%, white)"
+              : "var(--color-gray-200)",
+          }}
+        />
+      )}
+      {/* Marker dot */}
       <span
-        className="font-semibold text-right"
-        style={{ color: "var(--color-text-default)" }}
+        className="relative flex-shrink-0 grid place-items-center rounded-full border-2"
+        style={{
+          width: 36,
+          height: 36,
+          background: dotBg,
+          borderColor: dotBorder,
+          boxShadow: isCurrent
+            ? "0 0 0 6px color-mix(in oklab, var(--color-brand-accent) 18%, transparent)"
+            : "none",
+        }}
       >
-        {value}
+        {icon}
       </span>
+      {/* Label */}
+      <div className="min-w-0 pt-1">
+        <div
+          className="text-[14.5px] font-extrabold leading-tight"
+          style={{ color: labelColor }}
+        >
+          {label}
+        </div>
+        <div
+          className="text-[12px] mt-0.5"
+          style={{
+            color: isCurrent
+              ? "var(--color-brand-primary)"
+              : "var(--color-text-muted)",
+          }}
+        >
+          {sub}
+        </div>
+      </div>
+    </li>
+  );
+}
+
+/* ============================================================
+ * MilestoneTimeline — events that have happened + expected delivery
+ * ============================================================ */
+
+function MilestoneTimeline({
+  milestones,
+  eta,
+  destination,
+}: {
+  milestones: Milestone[];
+  eta?: ETAEstimate;
+  destination: Address;
+}) {
+  const sorted = [...milestones].sort(
+    (a, b) => new Date(a.at).getTime() - new Date(b.at).getTime(),
+  );
+
+  return (
+    <Card>
+      <CardHead
+        title="Trip timeline"
+        sub={`${sorted.length} ${sorted.length === 1 ? "milestone" : "milestones"} so far${eta ? " · 1 expected ahead" : ""}.`}
+      />
+      <div className="px-5 md:px-6 py-5">
+        <ol className="relative space-y-4">
+          {sorted.map((m, idx) => (
+            <MilestoneRow
+              key={m.id}
+              milestone={m}
+              isLast={idx === sorted.length - 1 && !eta}
+            />
+          ))}
+          {eta && (
+            <ExpectedDeliveryRow
+              eta={eta}
+              destination={destination}
+              isLast
+            />
+          )}
+        </ol>
+      </div>
+    </Card>
+  );
+}
+
+function MilestoneRow({
+  milestone,
+  isLast,
+}: {
+  milestone: Milestone;
+  isLast: boolean;
+}) {
+  const Icon = milestoneIcon(milestone.type);
+  return (
+    <li className="relative flex items-start gap-4">
+      {!isLast && (
+        <span
+          aria-hidden
+          className="absolute"
+          style={{
+            left: 13,
+            top: 28,
+            width: 2,
+            height: 32,
+            background: "var(--color-gray-200)",
+          }}
+        />
+      )}
+      <span
+        className="flex-shrink-0 grid place-items-center rounded-full"
+        style={{
+          width: 28,
+          height: 28,
+          background: "color-mix(in oklab, var(--color-brand-primary) 12%, white)",
+          color: "var(--color-brand-primary)",
+        }}
+      >
+        <Icon color="currentColor" size={14} />
+      </span>
+      <div className="min-w-0 pt-0.5">
+        <div
+          className="text-[14px] font-bold leading-tight"
+          style={{ color: "var(--color-text-default)" }}
+        >
+          {MILESTONE_LABELS[milestone.type]}
+        </div>
+        <div
+          className="text-[12px] mt-0.5"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          {formatMilestoneTime(milestone.at)}
+          {milestone.location?.label ? ` · ${milestone.location.label}` : ""}
+        </div>
+        {milestone.notes && (
+          <div
+            className="text-[12px] italic mt-1"
+            style={{ color: "var(--color-text-muted)" }}
+          >
+            {milestone.notes}
+          </div>
+        )}
+      </div>
+    </li>
+  );
+}
+
+function ExpectedDeliveryRow({
+  eta,
+  destination,
+  isLast,
+}: {
+  eta: ETAEstimate;
+  destination: Address;
+  isLast: boolean;
+}) {
+  return (
+    <li className="relative flex items-start gap-4">
+      {!isLast && (
+        <span
+          aria-hidden
+          className="absolute"
+          style={{
+            left: 13,
+            top: 28,
+            width: 2,
+            height: 32,
+            background: "var(--color-gray-200)",
+          }}
+        />
+      )}
+      <span
+        className="flex-shrink-0 grid place-items-center rounded-full border-2"
+        style={{
+          width: 28,
+          height: 28,
+          background: "var(--color-surface-elevated)",
+          borderColor: "var(--color-gray-300)",
+          color: "var(--color-text-muted)",
+          borderStyle: "dashed",
+        }}
+      >
+        <IconFlag color="currentColor" size={14} />
+      </span>
+      <div className="min-w-0 pt-0.5">
+        <div
+          className="text-[14px] font-bold leading-tight"
+          style={{ color: "var(--color-text-default)" }}
+        >
+          Expected delivery
+        </div>
+        <div
+          className="text-[12px] mt-0.5"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          {formatETA(eta.at, "America/Denver")} · {destination.city},{" "}
+          {destination.state}
+        </div>
+      </div>
+    </li>
+  );
+}
+
+function milestoneIcon(type: MilestoneType): typeof IconCheck {
+  switch (type) {
+    case "pickedUp":
+      return IconTruck;
+    case "atWaypoint":
+      return IconMapPin;
+    case "atDestinationRegion":
+    case "delivered":
+      return IconFlag;
+    case "driverAssigned":
+      return IconUser;
+    case "booked":
+    case "prepStarted":
+    case "documentsComplete":
+    default:
+      return IconCheck;
+  }
+}
+
+/* ============================================================
+ * PhotoTabsCard — Pickup / Transit / Delivery (client-side tabs)
+ * ============================================================ */
+
+type TabKey = "pickup" | "transit" | "delivery";
+
+function PhotoTabsCard({
+  pickup,
+  transit,
+  delivery,
+}: {
+  pickup: Photo[];
+  transit: Photo[];
+  delivery: Photo[];
+}) {
+  const [active, setActive] = useState<TabKey>(
+    transit.length > 0 ? "transit" : "pickup",
+  );
+
+  const tabs: Array<{
+    key: TabKey;
+    label: string;
+    count: number;
+    locked: boolean;
+  }> = [
+    { key: "pickup", label: "Pickup", count: pickup.length, locked: false },
+    { key: "transit", label: "Transit", count: transit.length, locked: false },
+    {
+      key: "delivery",
+      label: "Delivery",
+      count: delivery.length,
+      locked: delivery.length === 0,
+    },
+  ];
+
+  return (
+    <Card>
+      <CardHead
+        title="Inspection photos"
+        sub="Driver photos captured at each milestone — full documentation in case of a damage question."
+      />
+      <div className="px-5 md:px-6 pt-4">
+        <div
+          className="flex gap-1.5 p-1 rounded-xl"
+          style={{ background: "var(--color-surface-elevated)" }}
+        >
+          {tabs.map((t) => {
+            const isActive = t.key === active;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                disabled={t.locked}
+                onClick={() => !t.locked && setActive(t.key)}
+                className="flex-1 rounded-lg px-3 py-2 text-[13px] font-bold transition-colors"
+                style={{
+                  background: isActive
+                    ? "var(--color-surface)"
+                    : "transparent",
+                  color: t.locked
+                    ? "var(--color-text-muted)"
+                    : isActive
+                      ? "var(--color-brand-ink)"
+                      : "var(--color-text-muted)",
+                  cursor: t.locked ? "not-allowed" : "pointer",
+                  opacity: t.locked ? 0.5 : 1,
+                  boxShadow: isActive
+                    ? "0 1px 3px rgba(10,30,20,0.08)"
+                    : "none",
+                }}
+              >
+                {t.label}{" "}
+                <span
+                  className="ml-1 text-[11.5px] font-bold"
+                  style={{
+                    color: isActive
+                      ? "var(--color-brand-primary)"
+                      : "var(--color-text-muted)",
+                  }}
+                >
+                  {t.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div className="px-5 md:px-6 pt-4 pb-6">
+        <TabPanel
+          tab={active}
+          pickup={pickup}
+          transit={transit}
+          delivery={delivery}
+        />
+      </div>
+    </Card>
+  );
+}
+
+function TabPanel({
+  tab,
+  pickup,
+  transit,
+  delivery,
+}: {
+  tab: TabKey;
+  pickup: Photo[];
+  transit: Photo[];
+  delivery: Photo[];
+}) {
+  if (tab === "delivery" && delivery.length === 0) {
+    return (
+      <div
+        className="rounded-xl border border-dashed py-10 text-center"
+        style={{
+          borderColor: "var(--color-gray-300)",
+          background: "var(--color-surface-elevated)",
+        }}
+      >
+        <div
+          className="inline-flex items-center justify-center w-10 h-10 rounded-full mb-3"
+          style={{
+            background: "var(--color-gray-200)",
+            color: "var(--color-text-muted)",
+          }}
+        >
+          <IconFlag color="currentColor" size={18} />
+        </div>
+        <div
+          className="text-[14px] font-bold"
+          style={{ color: "var(--color-text-default)" }}
+        >
+          Delivery photos arrive after handoff
+        </div>
+        <p
+          className="text-[12.5px] mt-1 max-w-md mx-auto"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          Your driver will capture inspection photos at delivery; you'll see
+          them here within minutes of the handoff.
+        </p>
+      </div>
+    );
+  }
+
+  const photos =
+    tab === "pickup" ? pickup : tab === "transit" ? transit : delivery;
+
+  if (photos.length === 0) {
+    return (
+      <p
+        className="text-[13px] italic"
+        style={{ color: "var(--color-text-muted)" }}
+      >
+        No photos yet for this segment.
+      </p>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+      {photos.map((p) => (
+        <PhotoThumb key={p.id} photo={p} />
+      ))}
     </div>
   );
 }
 
-function PhotoTab({
-  label,
-  count,
-  locked,
-}: {
-  label: string;
-  count: number;
-  locked?: boolean;
-}) {
+function PhotoThumb({ photo }: { photo: Photo }) {
   return (
     <div
-      className="flex-1 rounded-lg border px-3 py-2 text-center"
+      className="rounded-lg overflow-hidden border relative"
       style={{
-        borderColor: locked ? "var(--color-gray-200)" : "var(--color-gray-300)",
-        background: locked
-          ? "var(--color-surface-elevated)"
-          : "var(--color-surface)",
-        opacity: locked ? 0.5 : 1,
+        background:
+          "color-mix(in oklab, var(--color-brand-primary) 6%, white)",
+        borderColor: "var(--color-gray-200)",
+        aspectRatio: "1 / 1",
       }}
     >
+      {/* Placeholder — real <img> wires in when Firebase Storage lands. */}
       <div
-        className="text-xs font-semibold uppercase tracking-wider"
-        style={{ color: "var(--color-text-muted)" }}
+        className="absolute inset-0 grid place-items-center"
+        style={{ color: "var(--color-brand-primary)" }}
       >
-        {label}
+        <IconCamera />
       </div>
-      <div
-        className="text-lg font-bold mt-0.5"
-        style={{ color: "var(--color-text-default)" }}
-      >
-        {count}
-      </div>
+      {photo.caption && (
+        <div
+          className="absolute bottom-0 left-0 right-0 px-2 py-1 text-[10.5px] font-bold truncate"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(10,30,20,0.85), transparent)",
+            color: "white",
+          }}
+        >
+          {photo.caption}
+        </div>
+      )}
     </div>
   );
 }
 
 /* ============================================================
- * Helpers
+ * IN_TRANSIT-specific helpers
  * ============================================================ */
 
-function formatUSD(cents: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(cents / 100);
-}
-
-function formatDateTime(iso: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+function formatMilestoneTime(iso: string): string {
+  const fmt = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-  }).format(new Date(iso));
+  });
+  return fmt.format(new Date(iso));
 }
 
-function timeAgo(iso: string): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  const min = Math.floor(ms / 60000);
-  if (min < 1) return "just now";
-  if (min < 60) return `${min} min ago`;
-  const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr} hr${hr === 1 ? "" : "s"} ago`;
-  const d = Math.floor(hr / 24);
-  return `${d} day${d === 1 ? "" : "s"} ago`;
+function formatETA(iso: string, tz: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const dateFmt = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    timeZone: tz,
+  });
+  const timeFmt = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: tz,
+  });
+  const isToday = isSameLocalDay(d, now, tz);
+  const isTomorrow = isSameLocalDay(
+    d,
+    new Date(now.getTime() + 24 * 60 * 60 * 1000),
+    tz,
+  );
+  const datePart = isToday
+    ? "today"
+    : isTomorrow
+      ? "tomorrow"
+      : dateFmt.format(d);
+  return `${datePart} at ${timeFmt.format(d)} ${tzShortName(tz)}`;
 }
 
-function tzShortName(tz: string): string {
-  const map: Record<string, string> = {
-    "America/Los_Angeles": "PT",
-    "America/Phoenix": "MT",
-    "America/Chicago": "CT",
-    "America/New_York": "ET",
-  };
-  return map[tz] ?? tz;
+function isSameLocalDay(a: Date, b: Date, tz: string): boolean {
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: tz,
+  });
+  return fmt.format(a) === fmt.format(b);
 }

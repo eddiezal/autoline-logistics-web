@@ -2056,10 +2056,14 @@
       "emailLabel": "Correo electrónico",
       "emailPlaceholder": "usted@ejemplo.com",
       "submit": "Enviar enlace de inicio",
-      "altSmsTitle": "O use su número de teléfono",
-      "altSmsDescription": "Le enviaremos un código de 6 dígitos por mensaje de texto.",
-      "altSmsLink": "Usar número de teléfono →",
-      "buildBanner": "El flujo de autenticación aún no está conectado. Esta página es un placeholder visual."
+      "sending": "Enviando…",
+      "linkSentTitle": "Revise su correo",
+      "linkSentBody": "Enviamos un enlace de inicio de sesión a {email}. Ábralo en este dispositivo para terminar de iniciar sesión.",
+      "error": "Hubo un problema al enviar su enlace. Inténtelo de nuevo.",
+      "verifying": "Iniciando sesión…",
+      "confirmEmailTitle": "Confirme su correo",
+      "confirmEmailBody": "Vuelva a ingresar el correo al que se envió este enlace para terminar de iniciar sesión.",
+      "callbackError": "Este enlace de inicio de sesión no es válido o expiró. Solicite uno nuevo."
     },
     "dashboard": {
       "title": "Sus envíos",

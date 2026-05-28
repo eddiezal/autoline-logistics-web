@@ -2056,10 +2056,14 @@
       "emailLabel": "Email address",
       "emailPlaceholder": "you@example.com",
       "submit": "Send sign-in link",
-      "altSmsTitle": "Or use your phone number",
-      "altSmsDescription": "We'll text you a 6-digit code.",
-      "altSmsLink": "Use phone number →",
-      "buildBanner": "Auth flow not wired yet. This page is a UI stub. Real magic-link + SMS OTP coming when Firebase is provisioned."
+      "sending": "Sending…",
+      "linkSentTitle": "Check your email",
+      "linkSentBody": "We sent a sign-in link to {email}. Open it on this device to finish signing in.",
+      "error": "Something went wrong sending your link. Please try again.",
+      "verifying": "Signing you in…",
+      "confirmEmailTitle": "Confirm your email",
+      "confirmEmailBody": "Re-enter the email this link was sent to, to finish signing in.",
+      "callbackError": "This sign-in link is invalid or has expired. Request a new one."
     },
     "dashboard": {
       "title": "Your shipments",

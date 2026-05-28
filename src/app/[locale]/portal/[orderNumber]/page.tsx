@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { getShipmentByOrderNumber } from "@/lib/shipments/repository";
 import { ShipmentView } from "@/components/portal/ShipmentView";
+import { requireSession } from "@/lib/firebase/session";
 
 /**
  * Shipment detail view — `/portal/[orderNumber]`
@@ -25,7 +26,11 @@ type Props = {
 };
 
 export default async function ShipmentPage({ params }: Props) {
-  const { orderNumber } = await params;
+  const { orderNumber, locale } = await params;
+  // Layer 2: real session verification (Node). Redirects to login if invalid.
+  // TODO(#38/#39): also assert session.uid === shipment.customer.id (ownership)
+  // once shipments resolve from Firestore.
+  await requireSession(locale);
   const shipment = await getShipmentByOrderNumber(orderNumber);
 
   if (!shipment) {

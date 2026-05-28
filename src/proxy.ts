@@ -35,26 +35,18 @@ const PORTAL_PATH = /^\/(?:[a-z]{2}\/)?portal(?:\/|$)/;
 const PORTAL_LOGIN_PATH = /^\/(?:[a-z]{2}\/)?portal\/login(?:\/|$)/;
 
 /* ─────────────────────────────────────────────────────────────
- * Auth check — STUBBED today.
+ * Auth gate — Layer 1 (Edge): cookie PRESENCE only.
  *
- * Returns true (allow) so portal pages remain accessible during dev.
- * To test the redirect-to-login flow, temporarily flip to `return false`.
- *
- * TODO(Firebase, ~May 18+):
- *   const session = request.cookies.get("__session")?.value;
- *   if (!session) return false;
- *   try {
- *     // On Node runtime: firebase-admin auth.verifySessionCookie()
- *     // On Edge runtime: jose-based JWT verification vs Firebase JWKS
- *     await verifySessionCookie(session);
- *     return true;
- *   } catch {
- *     return false;
- *   }
+ * The proxy runs on the Edge runtime, where firebase-admin cannot run, so we
+ * only check that a __session cookie exists and bounce to login if it doesn't.
+ * The real cryptographic verification (verifySessionCookie, with revocation)
+ * runs on the Node side in requireSession() — see src/lib/firebase/session.ts —
+ * which the protected portal server components call. A forged or expired
+ * cookie slips past this presence check but is rejected there.
  * ──────────────────────────────────────────────────────────── */
 
-function isAuthenticated(_request: NextRequest): boolean {
-  return true;
+function isAuthenticated(request: NextRequest): boolean {
+  return Boolean(request.cookies.get("__session")?.value);
 }
 
 /* ─────────────────────────────────────────────────────────────

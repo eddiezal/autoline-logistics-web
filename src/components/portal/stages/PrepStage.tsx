@@ -1,16 +1,58 @@
-import type { Shipment, ChecklistKey } from "@/lib/types/shipment";
+import type {
+  Shipment,
+  ChecklistKey,
+  ChecklistItem,
+  Photo,
+  PhotoAngle,
+  Coordinator,
+  PickupWindow,
+} from "@/lib/types/shipment";
+import {
+  Card,
+  CardHead,
+  ProgressBar,
+  TrustPillar,
+  PickupTeamCard,
+  LockedPriceCard,
+  ShipmentDetailsCard,
+  IconLock,
+  IconUser,
+  IconHeadset,
+  IconCamera,
+  IconCheck,
+  IconPlus,
+  formatUSD,
+  tzShortName,
+} from "../_shared";
 
 /**
- * <PrepStage> — basic functional UI proving the data flows.
+ * <PrepStage> — Variation A+ redesign (May 27, 2026).
  *
- * Scope: render the customer's prep-stage data in a readable layout.
- * NOT in scope this session: matching the mockup's polish (rich
- * checklist UI with timestamps, photo grid with upload affordances,
- * "what to expect on pickup day" timeline, brand-styled cards).
- * That's a separate UI-build session — data layer must be sound first.
+ * Action-led, not status-led. The customer should land here and know
+ * instantly: "I'm almost ready. My driver is named. My price is locked.
+ * Here's exactly what I still need to do."
+ *
+ * Layout
+ * ------
+ *   1. ReadinessSummary    — soft green-tint hero + trust strip + lime CTA
+ *   2. Main column (left): PickupPhotos → StillNeeded → CompletedPrep
+ *      Photos lead because they're the highest-stakes customer action
+ *      (damage-claim defense).
+ *   3. Sidebar (right):    PickupTeam (driver + coordinator unified)
+ *                          LockedPrice (Pine card, brand promise)
+ *                          ShipmentDetails (quiet reference)
+ *
+ * All primitives + sidebar cards live in ../_shared so InTransitStage
+ * uses the identical visual system.
+ *
+ * Mockup reference: brand-explorations/portal-prep-variation-a-plus.html
  */
 
 type Props = { shipment: Shipment };
+
+/* ============================================================
+ * Labels + descriptions (PREP-specific)
+ * ============================================================ */
 
 const CHECKLIST_LABELS: Record<ChecklistKey, string> = {
   removePersonalItems: "Remove all personal items",
@@ -23,7 +65,19 @@ const CHECKLIST_LABELS: Record<ChecklistKey, string> = {
   leaveKeys: "Leave one set of keys",
 };
 
-const REQUIRED_PHOTO_ANGLES = [
+/** One-line context shown under each item in the "Still needed" card. */
+const CHECKLIST_DESCRIPTIONS: Record<ChecklistKey, string> = {
+  removePersonalItems: "Personal belongings aren't covered by the carrier's insurance.",
+  removeAccessories: "Loose roof racks, antennas, and exterior accessories.",
+  reduceFuel: "Lighter loads improve fuel efficiency on the haul.",
+  disableAlarm: "Prevents alarm triggers in transit.",
+  noteExistingDamage: "Photograph and note pre-existing dings for the BOL.",
+  batteryAndTires: "Vehicle must be operable for loading/unloading.",
+  wash: "Cleaner photos make condition crystal-clear if there's ever a dispute.",
+  leaveKeys: "Have them ready for the driver at handoff.",
+};
+
+const REQUIRED_PHOTO_ANGLES: readonly PhotoAngle[] = [
   "front",
   "rear",
   "driverSide",
@@ -32,359 +86,484 @@ const REQUIRED_PHOTO_ANGLES = [
   "damage",
 ] as const;
 
+const PHOTO_ANGLE_LABELS: Record<string, string> = {
+  front: "Front",
+  rear: "Rear",
+  driverSide: "Driver side",
+  passengerSide: "Passenger side",
+  dashboard: "Dashboard",
+  damage: "Existing damage",
+};
+
+/* ============================================================
+ * Main composition
+ * ============================================================ */
+
 export function PrepStage({ shipment }: Props) {
-  const { driver, coordinator, scheduledPickup, prepChecklist, customerPrepPhotos } =
-    shipment;
+  const {
+    driver,
+    coordinator,
+    scheduledPickup,
+    prepChecklist,
+    customerPrepPhotos,
+    priceLockedCents,
+  } = shipment;
 
-  const checklistDone =
-    prepChecklist?.filter((c) => c.completedAt).length ?? 0;
-  const checklistTotal = prepChecklist?.length ?? 0;
-  const checklistPct =
-    checklistTotal > 0 ? Math.round((checklistDone / checklistTotal) * 100) : 0;
+  const checklist = prepChecklist ?? [];
+  const incomplete = checklist.filter((c) => !c.completedAt);
+  const completed = checklist.filter((c) => c.completedAt);
+  const requiredChecklistLeft = incomplete.filter((c) => c.required);
+  const recommendedChecklistLeft = incomplete.filter((c) => !c.required);
 
-  const photosDone = customerPrepPhotos?.length ?? 0;
-  const photosTotal = REQUIRED_PHOTO_ANGLES.length;
+  const photosUploaded = customerPrepPhotos ?? [];
+  const photosLeft = REQUIRED_PHOTO_ANGLES.length - photosUploaded.length;
+
+  // Photos count as required — they're the damage-claim defense.
+  const requiredLeft = requiredChecklistLeft.length + photosLeft;
+  const recommendedLeft = recommendedChecklistLeft.length;
+  const itemsLeft = requiredLeft + recommendedLeft;
 
   return (
     <div className="space-y-6">
-      {/* Days-to-go banner */}
-      {scheduledPickup && (
-        <DaysToGoBanner pickup={scheduledPickup} driverName={driver?.name} />
-      )}
+      <ReadinessSummary
+        driverName={driver?.name}
+        pickup={scheduledPickup}
+        itemsLeft={itemsLeft}
+        requiredLeft={requiredLeft}
+        recommendedLeft={recommendedLeft}
+        priceLockedCents={priceLockedCents}
+        coordinator={coordinator}
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column: checklist + photo doc */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card title={`Vehicle prep checklist — ${checklistDone}/${checklistTotal}`}>
-            <ProgressBar pct={checklistPct} />
-            <ul className="mt-4 space-y-2 text-sm">
-              {prepChecklist?.map((item) => (
-                <li
-                  key={item.key}
-                  className="flex items-start gap-3"
-                  style={{ color: "var(--color-text-default)" }}
-                >
-                  <span
-                    className="inline-block w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
-                    style={{
-                      background: item.completedAt
-                        ? "var(--color-success)"
-                        : "var(--color-gray-200)",
-                      color: item.completedAt
-                        ? "var(--color-brand-paper)"
-                        : "var(--color-text-muted)",
-                    }}
-                  >
-                    {item.completedAt ? "✓" : ""}
-                  </span>
-                  <span
-                    className={item.completedAt ? "" : "opacity-60"}
-                  >
-                    {CHECKLIST_LABELS[item.key]}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-
-          <Card title={`Photo documentation — ${photosDone}/${photosTotal}`}>
-            <ProgressBar pct={Math.round((photosDone / photosTotal) * 100)} />
-            <p
-              className="mt-3 text-sm"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              Photos must be uploaded before pickup. They document the
-              vehicle&rsquo;s pre-transport condition for damage-claim purposes.
-            </p>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {REQUIRED_PHOTO_ANGLES.map((angle) => {
-                const uploaded = customerPrepPhotos?.find(
-                  (p) => p.angle === angle,
-                );
-                return (
-                  <div
-                    key={angle}
-                    className="aspect-square rounded-lg border flex items-center justify-center text-xs text-center px-2"
-                    style={{
-                      borderColor: uploaded
-                        ? "var(--color-success)"
-                        : "var(--color-gray-300)",
-                      background: uploaded
-                        ? "color-mix(in oklab, var(--color-success) 8%, white)"
-                        : "var(--color-surface-elevated)",
-                      color: uploaded
-                        ? "var(--color-success)"
-                        : "var(--color-text-muted)",
-                    }}
-                  >
-                    {uploaded ? `✓ ${angleLabel(angle)}` : `+ ${angleLabel(angle)}`}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        </div>
-
-        {/* Right column: shipment summary + driver + coordinator */}
-        <div className="space-y-6">
-          <Card title="Shipment">
-            <DataRow label="Order" value={shipment.orderNumber} />
-            <DataRow
-              label="Vehicle"
-              value={`${shipment.vehicle.year} ${shipment.vehicle.make} ${shipment.vehicle.model}`}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+        {/* MAIN COLUMN */}
+        <main className="space-y-6 min-w-0">
+          <PickupPhotosCard photos={photosUploaded} />
+          {incomplete.length > 0 && (
+            <StillNeededCard
+              required={requiredChecklistLeft}
+              recommended={recommendedChecklistLeft}
             />
-            <DataRow
-              label="Route"
-              value={`${shipment.origin.city}, ${shipment.origin.state} → ${shipment.destination.city}, ${shipment.destination.state}`}
-            />
-            <DataRow
-              label="Tier"
-              value={
-                shipment.tier.charAt(0).toUpperCase() + shipment.tier.slice(1)
-              }
-            />
-            <DataRow
-              label="Locked price"
-              value={formatUSD(shipment.priceLockedCents)}
-            />
-          </Card>
-
-          {driver && (
-            <Card title="Your driver">
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center font-bold"
-                  style={{
-                    background: "var(--color-brand-primary)",
-                    color: "var(--color-brand-paper)",
-                  }}
-                >
-                  {driver.initials}
-                </div>
-                <div>
-                  <p
-                    className="font-semibold"
-                    style={{ color: "var(--color-text-default)" }}
-                  >
-                    {driver.name}
-                  </p>
-                  <p
-                    className="text-sm"
-                    style={{ color: "var(--color-text-muted)" }}
-                  >
-                    {driver.carrierName} · {driver.rating}★ ·{" "}
-                    {driver.yearsExperience} yrs
-                  </p>
-                </div>
-              </div>
-            </Card>
           )}
+          {completed.length > 0 && <CompletedPrepCard items={completed} />}
+        </main>
 
-          {coordinator && (
-            <Card title="Your coordinator">
-              <p
-                className="font-semibold"
-                style={{ color: "var(--color-text-default)" }}
-              >
-                {coordinator.name}{" "}
-                <span
-                  className="text-xs font-normal ml-1"
-                  style={{ color: "var(--color-text-muted)" }}
-                >
-                  ({coordinator.languages.map((l) => l.toUpperCase()).join(" · ")})
-                </span>
-              </p>
-              <p
-                className="text-sm mt-1"
-                style={{ color: "var(--color-text-muted)" }}
-              >
-                {coordinator.hours.start}–{coordinator.hours.end}{" "}
-                {tzShortName(coordinator.hours.timezone)}
-              </p>
-              <a
-                href={`mailto:${coordinator.email}`}
-                className="text-sm font-semibold hover:underline block mt-2"
-                style={{ color: "var(--color-brand-primary)" }}
-              >
-                {coordinator.email}
-              </a>
-            </Card>
+        {/* SIDEBAR */}
+        <aside className="space-y-5">
+          {(driver || coordinator) && (
+            <PickupTeamCard driver={driver} coordinator={coordinator} />
           )}
-        </div>
+          <LockedPriceCard amountCents={priceLockedCents} />
+          <ShipmentDetailsCard shipment={shipment} />
+        </aside>
       </div>
     </div>
   );
 }
 
 /* ============================================================
- * Sub-components
+ * ReadinessSummary — soft green hero + trust strip + CTA
  * ============================================================ */
 
-function DaysToGoBanner({
-  pickup,
+function ReadinessSummary({
   driverName,
+  pickup,
+  itemsLeft,
+  requiredLeft,
+  recommendedLeft,
+  priceLockedCents,
+  coordinator,
 }: {
-  pickup: { start: string; end: string; timezone: string };
   driverName?: string;
+  pickup?: PickupWindow;
+  itemsLeft: number;
+  requiredLeft: number;
+  recommendedLeft: number;
+  priceLockedCents: number;
+  coordinator?: Coordinator;
 }) {
-  const daysUntil = daysFromNow(pickup.start);
+  const allDone = itemsLeft === 0;
   return (
     <section
-      className="rounded-2xl border p-6"
+      className="rounded-2xl border overflow-hidden"
       style={{
-        background: "color-mix(in oklab, var(--color-warning) 10%, white)",
-        borderColor: "color-mix(in oklab, var(--color-warning) 35%, white)",
+        background: "color-mix(in oklab, var(--color-brand-primary) 6%, white)",
+        borderColor:
+          "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
       }}
     >
-      <h2
-        className="text-lg font-bold"
-        style={{ color: "var(--color-text-default)" }}
+      <div className="px-6 py-6 md:px-8 md:py-7">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+          <div className="min-w-0">
+            <h2
+              className="text-2xl md:text-[26px] font-extrabold leading-tight"
+              style={{
+                color: "var(--color-brand-ink)",
+                fontFamily: "var(--font-brand-display)",
+                letterSpacing: "var(--letter-spacing-display)",
+              }}
+            >
+              {allDone
+                ? "You're ready for pickup"
+                : "You're almost ready for pickup"}
+            </h2>
+            <p
+              className="mt-2 text-sm md:text-[15px] leading-relaxed max-w-xl"
+              style={{ color: "var(--color-text-default)" }}
+            >
+              {driverName
+                ? `${driverName} is scheduled to arrive `
+                : "Pickup is scheduled "}
+              <strong style={{ color: "var(--color-brand-ink)" }}>
+                {pickup ? formatPickupWindow(pickup) : "soon"}
+              </strong>
+              {allDone
+                ? ". Everything's set — see you at handoff."
+                : ". Complete your remaining items before then."}
+            </p>
+            {!allDone && (
+              <p
+                className="mt-3 text-[13px] font-semibold"
+                style={{ color: "var(--color-brand-primary)" }}
+              >
+                {itemsLeft} {itemsLeft === 1 ? "item" : "items"} left —{" "}
+                <span style={{ color: "#365314" }}>
+                  {requiredLeft} required
+                </span>
+                {recommendedLeft > 0
+                  ? `, ${recommendedLeft} recommended`
+                  : ""}
+              </p>
+            )}
+          </div>
+
+          {!allDone && (
+            <button
+              type="button"
+              className="flex-shrink-0 rounded-xl font-bold text-[14px] px-5 py-3 transition-opacity hover:opacity-90"
+              style={{
+                background: "var(--color-brand-accent)",
+                color: "var(--color-brand-accent-ink)",
+                boxShadow:
+                  "0 10px 22px color-mix(in oklab, var(--color-brand-accent) 30%, transparent)",
+              }}
+            >
+              Finish pickup prep →
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 border-t"
+        style={{
+          borderColor:
+            "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
+        }}
       >
-        Get ready for pickup —{" "}
-        <span
+        <TrustPillar
+          icon={<IconLock />}
+          label="Price locked"
+          detail={`${formatUSD(priceLockedCents)} · no changes`}
+        />
+        <TrustPillar
+          icon={<IconUser />}
+          label="Named driver"
+          detail={driverName ?? "Assignment incoming"}
+        />
+        <TrustPillar
+          icon={<IconHeadset />}
+          label="Dedicated coordinator"
+          detail={
+            coordinator
+              ? `${coordinator.name} · ${coordinator.languages
+                  .map((l) => l.toUpperCase())
+                  .join("/")}`
+              : "EN · ES"
+          }
+        />
+        <TrustPillar
+          icon={<IconCamera />}
+          label="Photos protect you"
+          detail="For damage claims"
+        />
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+ * PickupPhotosCard — named-angle grid with done/empty states
+ * ============================================================ */
+
+function PickupPhotosCard({ photos }: { photos: Photo[] }) {
+  const total = REQUIRED_PHOTO_ANGLES.length;
+  const done = REQUIRED_PHOTO_ANGLES.filter((a) =>
+    photos.some((p) => p.angle === a),
+  ).length;
+  const pct = Math.round((done / total) * 100);
+  const left = total - done;
+
+  return (
+    <Card>
+      <CardHead
+        title={`Pickup photos — ${done} of ${total} complete`}
+        sub="These document your vehicle before transport and help protect you if there's ever a damage question."
+        rightChip={left > 0 ? `${left} left` : "All done"}
+        chipTone={left > 0 ? "lime" : "muted"}
+      />
+      <div className="px-5 md:px-6 pb-5 md:pb-6">
+        <ProgressBar pct={pct} />
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+          {REQUIRED_PHOTO_ANGLES.map((angle) => {
+            const uploaded = photos.find((p) => p.angle === angle);
+            return (
+              <PhotoTile
+                key={angle}
+                label={PHOTO_ANGLE_LABELS[angle] ?? angle}
+                uploaded={Boolean(uploaded)}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function PhotoTile({ label, uploaded }: { label: string; uploaded: boolean }) {
+  if (uploaded) {
+    return (
+      <div
+        className="rounded-xl flex flex-col items-center justify-center gap-1.5 text-center px-3 py-4 border"
+        style={{
+          background:
+            "color-mix(in oklab, var(--color-brand-primary) 10%, white)",
+          borderColor:
+            "color-mix(in oklab, var(--color-brand-primary) 35%, white)",
+          aspectRatio: "1.2 / 1",
+        }}
+      >
+        <IconCheck color="var(--color-brand-primary)" />
+        <div
+          className="text-[13px] font-bold"
           style={{
-            color:
-              "color-mix(in oklab, var(--color-warning) 80%, black)",
+            color: "color-mix(in oklab, var(--color-brand-primary) 80%, black)",
           }}
         >
-          {daysUntil <= 0
-            ? "today"
-            : daysUntil === 1
-              ? "1 day to go"
-              : `${daysUntil} days to go`}
-        </span>
-      </h2>
-      <p
-        className="mt-2 text-sm"
-        style={{ color: "var(--color-text-default)" }}
-      >
-        {driverName ? `${driverName} is scheduled to arrive ` : "Pickup window: "}
-        <strong>{formatPickupWindow(pickup)}</strong>. Finish your prep
-        checklist and upload pickup photos so everything&rsquo;s ready.
-      </p>
-    </section>
-  );
-}
-
-function Card({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+          {label}
+        </div>
+        <div
+          className="text-[11px] font-semibold"
+          style={{ color: "var(--color-brand-primary)" }}
+        >
+          Uploaded
+        </div>
+      </div>
+    );
+  }
   return (
-    <section
-      className="rounded-2xl border p-5 md:p-6"
+    <button
+      type="button"
+      className="rounded-xl flex flex-col items-center justify-center gap-1.5 text-center px-3 py-4 transition-all hover:-translate-y-px"
       style={{
-        background: "var(--color-surface)",
-        borderColor: "var(--color-gray-200)",
+        background: "var(--color-brand-paper)",
+        border: "1.5px dashed var(--color-gray-300)",
+        aspectRatio: "1.2 / 1",
       }}
     >
-      <h3
-        className="text-sm font-bold uppercase tracking-wider mb-3"
-        style={{ color: "var(--color-text-muted)" }}
-      >
-        {title}
-      </h3>
-      {children}
-    </section>
-  );
-}
-
-function DataRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-3 py-1.5 text-sm">
-      <span style={{ color: "var(--color-text-muted)" }}>{label}</span>
-      <span
-        className="font-semibold text-right"
+      <IconPlus color="var(--color-text-muted)" />
+      <div
+        className="text-[13px] font-bold"
         style={{ color: "var(--color-text-default)" }}
       >
-        {value}
-      </span>
-    </div>
+        {label}
+      </div>
+      <div
+        className="text-[11px] font-semibold"
+        style={{ color: "var(--color-text-muted)" }}
+      >
+        Tap to upload
+      </div>
+    </button>
   );
 }
 
-function ProgressBar({ pct }: { pct: number }) {
+/* ============================================================
+ * StillNeededCard — required (lime family) + recommended (neutral)
+ * ============================================================ */
+
+function StillNeededCard({
+  required,
+  recommended,
+}: {
+  required: ChecklistItem[];
+  recommended: ChecklistItem[];
+}) {
+  const total = required.length + recommended.length;
+  return (
+    <Card>
+      <CardHead
+        title="Still needed"
+        sub="Finish these before your driver arrives."
+        rightChip={`${total} left`}
+        chipTone="lime"
+      />
+      <div className="px-5 md:px-6 pb-5 md:pb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {required.length > 0 && (
+            <NeedBlock
+              tone="required"
+              tag="Required before pickup"
+              items={required}
+            />
+          )}
+          {recommended.length > 0 && (
+            <NeedBlock
+              tone="recommended"
+              tag="Recommended"
+              items={recommended}
+            />
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function NeedBlock({
+  tone,
+  tag,
+  items,
+}: {
+  tone: "required" | "recommended";
+  tag: string;
+  items: ChecklistItem[];
+}) {
+  const isRequired = tone === "required";
   return (
     <div
-      className="h-2 rounded-full overflow-hidden"
-      style={{ background: "var(--color-gray-200)" }}
+      className="rounded-xl p-4 border"
+      style={{
+        background: isRequired
+          ? "color-mix(in oklab, var(--color-brand-accent) 10%, white)"
+          : "var(--color-surface-elevated)",
+        borderColor: isRequired
+          ? "color-mix(in oklab, var(--color-brand-accent) 30%, white)"
+          : "var(--color-gray-200)",
+      }}
     >
       <div
-        className="h-full rounded-full transition-all"
+        className="text-[10.5px] font-extrabold uppercase tracking-wider mb-2.5"
         style={{
-          width: `${pct}%`,
-          background: "var(--color-brand-primary)",
+          color: isRequired ? "#365314" : "var(--color-text-muted)",
         }}
-      />
+      >
+        {tag}
+      </div>
+      <ul className="space-y-2.5">
+        {items.map((item) => (
+          <li key={item.key} className="flex items-start gap-2.5">
+            <span
+              className="flex-shrink-0 mt-2 rounded-full"
+              style={{
+                width: 8,
+                height: 8,
+                background: isRequired
+                  ? "var(--color-brand-accent)"
+                  : "var(--color-gray-300)",
+              }}
+            />
+            <div className="min-w-0">
+              <div
+                className="text-[14px] font-bold leading-snug"
+                style={{ color: "var(--color-text-default)" }}
+              >
+                {CHECKLIST_LABELS[item.key]}
+              </div>
+              <div
+                className="text-[12.5px] mt-0.5 leading-snug"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                {CHECKLIST_DESCRIPTIONS[item.key]}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
 /* ============================================================
- * Helpers
+ * CompletedPrepCard — muted, secondary
  * ============================================================ */
 
-function formatUSD(cents: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(cents / 100);
+function CompletedPrepCard({ items }: { items: ChecklistItem[] }) {
+  return (
+    <Card>
+      <div
+        className="px-5 md:px-6 py-4 flex items-center justify-between"
+        style={{
+          background: "var(--color-surface-elevated)",
+          borderBottom: "1px solid var(--color-gray-200)",
+        }}
+      >
+        <h3
+          className="text-[14px] font-bold"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          Completed — {items.length} {items.length === 1 ? "item" : "items"}
+        </h3>
+      </div>
+      <ul
+        className="px-5 md:px-6 py-4 grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-5"
+        style={{ background: "var(--color-surface-elevated)" }}
+      >
+        {items.map((item) => (
+          <li
+            key={item.key}
+            className="flex items-center gap-2 text-[13px]"
+            style={{ color: "var(--color-text-muted)" }}
+          >
+            <IconCheck color="var(--color-brand-primary)" size={14} />
+            {CHECKLIST_LABELS[item.key]}
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
 }
 
-function daysFromNow(iso: string): number {
-  const ms = new Date(iso).getTime() - Date.now();
-  return Math.ceil(ms / (1000 * 60 * 60 * 24));
-}
+/* ============================================================
+ * PREP-specific helpers
+ * ============================================================ */
 
-function angleLabel(angle: string): string {
-  const labels: Record<string, string> = {
-    front: "Front",
-    rear: "Rear",
-    driverSide: "Driver side",
-    passengerSide: "Passenger side",
-    dashboard: "Dashboard",
-    damage: "Damage",
-  };
-  return labels[angle] ?? angle;
-}
-
-function tzShortName(tz: string): string {
-  // Quick mapping for the timezones we use; full Intl.DateTimeFormat
-  // resolution lands when we have more locales.
-  const map: Record<string, string> = {
-    "America/Los_Angeles": "PT",
-    "America/Phoenix": "MT",
-    "America/Chicago": "CT",
-    "America/New_York": "ET",
-  };
-  return map[tz] ?? tz;
-}
-
-function formatPickupWindow(pickup: {
-  start: string;
-  end: string;
-  timezone: string;
-}): string {
+function formatPickupWindow(pickup: PickupWindow): string {
   const start = new Date(pickup.start);
   const end = new Date(pickup.end);
-  const opts: Intl.DateTimeFormatOptions = {
+  const today = isSameLocalDay(start, new Date(), pickup.timezone);
+  const dateFmt = new Intl.DateTimeFormat("en-US", {
     weekday: "short",
     month: "short",
     day: "numeric",
+    timeZone: pickup.timezone,
+  });
+  const timeFmt = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",
     timeZone: pickup.timezone,
-  };
-  const fmt = new Intl.DateTimeFormat("en-US", opts);
-  // Pull just the time piece for `end`.
-  const endTime = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: pickup.timezone,
-  }).format(end);
-  return `${fmt.format(start)}–${endTime} ${tzShortName(pickup.timezone)}`;
+  });
+  const prefix = today ? "today" : dateFmt.format(start);
+  return `${prefix} between ${timeFmt.format(start)} and ${timeFmt.format(end)} ${tzShortName(pickup.timezone)}`;
+}
+
+function isSameLocalDay(a: Date, b: Date, tz: string): boolean {
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: tz,
+  });
+  return fmt.format(a) === fmt.format(b);
 }

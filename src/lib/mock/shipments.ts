@@ -52,7 +52,7 @@ const SARAH_SHIPMENT: Shipment = {
 
   customer: {
     id: "cust_sarah",
-    email: "sarah.chen@gmail.com",
+    email: "eddie@zaldivarlabs.com",
     phone: "+13105551234",
     name: { first: "Sarah", last: "Chen" },
     locale: "en",
@@ -80,20 +80,22 @@ const SARAH_SHIPMENT: Shipment = {
   coordinator: COORDINATOR_DANIELLE,
 
   scheduledPickup: {
-    start: "2026-05-20T17:00:00.000Z",   // 10:00 AM PDT
-    end: "2026-05-20T21:00:00.000Z",     // 2:00 PM PDT
+    // Bumped to today so the demo reads "today" instead of a stale date.
+    // For a true live demo we'd compute this relative to "now"; hardcoded is fine for fixtures.
+    start: "2026-05-28T17:00:00.000Z",   // 10:00 AM PDT (today)
+    end: "2026-05-28T21:00:00.000Z",     // 2:00 PM PDT
     timezone: "America/Los_Angeles",
   },
 
   prepChecklist: [
-    { key: "removePersonalItems", completedAt: "2026-05-13T16:14:00.000Z" },
-    { key: "removeAccessories",   completedAt: "2026-05-13T16:18:00.000Z" },
-    { key: "reduceFuel",          completedAt: "2026-05-14T15:02:00.000Z" },
-    { key: "disableAlarm",        completedAt: "2026-05-14T15:05:00.000Z" },
-    { key: "noteExistingDamage",  completedAt: "2026-05-14T15:20:00.000Z" },
-    { key: "batteryAndTires",     completedAt: "2026-05-14T15:25:00.000Z" },
-    { key: "wash" },              // Not done yet
-    { key: "leaveKeys" },         // Not done yet
+    { key: "removePersonalItems", required: true,  completedAt: "2026-05-13T16:14:00.000Z" },
+    { key: "removeAccessories",   required: true,  completedAt: "2026-05-13T16:18:00.000Z" },
+    { key: "reduceFuel",          required: true,  completedAt: "2026-05-14T15:02:00.000Z" },
+    { key: "disableAlarm",        required: true,  completedAt: "2026-05-14T15:05:00.000Z" },
+    { key: "noteExistingDamage",  required: true,  completedAt: "2026-05-14T15:20:00.000Z" },
+    { key: "batteryAndTires",     required: true,  completedAt: "2026-05-14T15:25:00.000Z" },
+    { key: "wash",                required: false }, // recommended — improves photo clarity, not blocking
+    { key: "leaveKeys",           required: true  }, // mandatory — driver can't take the vehicle without them
   ],
 
   customerPrepPhotos: [
@@ -173,7 +175,7 @@ const MIKE_SHIPMENT: Shipment = {
 
   customer: {
     id: "cust_mike",
-    email: "mjohnson@example.com",
+    email: "eddie@zaldivarlabs.com",
     phone: "+14805559876",
     name: { first: "Mike", last: "Johnson" },
     locale: "en",
@@ -194,25 +196,25 @@ const MIKE_SHIPMENT: Shipment = {
   tier: "expedited",
   priceLockedCents: 189000,  // $1,890.00
 
-  createdAt: "2026-05-10T19:10:00.000Z",
-  bookedAt: "2026-05-10T19:25:00.000Z",
+  createdAt: "2026-05-25T19:10:00.000Z",
+  bookedAt: "2026-05-25T19:25:00.000Z",
 
   driver: DRIVER_MARCUS,
   coordinator: COORDINATOR_DANIELLE,
 
   scheduledPickup: {
-    start: "2026-05-15T14:00:00.000Z",
-    end: "2026-05-15T18:00:00.000Z",
+    start: "2026-05-26T14:00:00.000Z",
+    end: "2026-05-26T18:00:00.000Z",
     timezone: "America/Phoenix",
   },
 
-  pickedUpAt: "2026-05-15T15:12:00.000Z",
+  pickedUpAt: "2026-05-26T15:12:00.000Z",
 
   // Pickup photos (12 standard)
   pickupPhotos: Array.from({ length: 12 }, (_, i) => ({
     id: `ph_pickup_${i + 1}`,
     url: "/photography/placeholder-vehicle.webp",
-    capturedAt: "2026-05-15T15:18:00.000Z",
+    capturedAt: "2026-05-26T15:18:00.000Z",
     capturedBy: "driver" as const,
     angle: (
       [
@@ -228,7 +230,7 @@ const MIKE_SHIPMENT: Shipment = {
     {
       id: "ph_transit_1",
       url: "/photography/placeholder-vehicle.webp",
-      capturedAt: "2026-05-15T22:30:00.000Z",
+      capturedAt: "2026-05-26T22:30:00.000Z",
       capturedBy: "driver",
       angle: "waypoint",
       caption: "Phoenix departure",
@@ -236,7 +238,7 @@ const MIKE_SHIPMENT: Shipment = {
     {
       id: "ph_transit_2",
       url: "/photography/placeholder-vehicle.webp",
-      capturedAt: "2026-05-16T18:45:00.000Z",
+      capturedAt: "2026-05-27T18:45:00.000Z",
       capturedBy: "driver",
       angle: "waypoint",
       caption: "Tucson check-in",
@@ -247,36 +249,36 @@ const MIKE_SHIPMENT: Shipment = {
     lat: 35.0844,
     lng: -106.6504,
     label: "Near Albuquerque, NM",
-    lastUpdatedAt: "2026-05-17T13:42:00.000Z",
+    lastUpdatedAt: "2026-05-28T13:42:00.000Z",
   },
 
   eta: {
-    at: "2026-05-18T14:00:00.000Z",     // 8:00 AM MT
+    at: "2026-05-29T14:00:00.000Z",     // 8:00 AM MT
     confidenceScore: 0.85,
-    computedAt: "2026-05-17T13:42:00.000Z",
+    computedAt: "2026-05-28T13:42:00.000Z",
   },
 
   milestones: [
     {
       id: "ms_101",
       type: "booked",
-      at: "2026-05-10T19:25:00.000Z",
+      at: "2026-05-25T19:25:00.000Z",
     },
     {
       id: "ms_102",
       type: "driverAssigned",
-      at: "2026-05-13T10:15:00.000Z",
+      at: "2026-05-25T22:00:00.000Z",
     },
     {
       id: "ms_103",
       type: "pickedUp",
-      at: "2026-05-15T15:12:00.000Z",
+      at: "2026-05-26T15:12:00.000Z",
       location: { lat: 33.4484, lng: -112.0740, label: "Phoenix, AZ" },
     },
     {
       id: "ms_104",
       type: "atWaypoint",
-      at: "2026-05-16T18:45:00.000Z",
+      at: "2026-05-27T18:45:00.000Z",
       location: { lat: 32.2226, lng: -110.9747, label: "Tucson, AZ" },
     },
   ],
@@ -288,7 +290,7 @@ const MIKE_SHIPMENT: Shipment = {
       amountCents: 28350,   // $283.50 (15% of $1,890)
       method: "card",
       status: "succeeded",
-      processedAt: "2026-05-10T19:26:00.000Z",
+      processedAt: "2026-05-25T19:26:00.000Z",
     },
     {
       id: "pay_102",
@@ -296,7 +298,7 @@ const MIKE_SHIPMENT: Shipment = {
       amountCents: 160650,  // $1,606.50
       method: "card",
       status: "succeeded",
-      processedAt: "2026-05-14T08:00:00.000Z",
+      processedAt: "2026-05-25T22:30:00.000Z",
     },
   ],
 };
