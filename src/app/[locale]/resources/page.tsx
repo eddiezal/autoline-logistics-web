@@ -141,7 +141,7 @@ export default function ResourcesPage() {
                   />
                   <button
                     type="button"
-                    className="bg-orange hover:bg-orange-dark text-white font-bold text-sm px-5 py-3 rounded-lg transition"
+                    className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-sm px-5 py-3 rounded-lg transition"
                   >
                     {t("resources.comingSoon.ctaButton")}
                   </button>

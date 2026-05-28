@@ -305,7 +305,7 @@ function ResultsView({
       <div className="flex flex-wrap gap-2.5">
         <Link
           href={quoteHref}
-          className="inline-flex items-center px-5 py-2.5 rounded-full bg-orange hover:bg-orange-dark text-white text-sm font-semibold transition"
+          className="inline-flex items-center px-5 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-sm font-semibold transition"
         >
           {t("shipVsDrive.ctas.primary")}
         </Link>
@@ -636,7 +636,7 @@ function CardShell({
   const cls = {
     neutral: "bg-white border-2 border-gray-200",
     winner:
-      "bg-gradient-to-b from-orange-tint to-white border-2 border-orange shadow-[0_8px_24px_rgba(255,102,0,0.12)]",
+      "bg-gradient-to-b from-orange-tint to-white border-2 border-orange shadow-[0_8px_24px_rgba(132,204,22,0.12)]",
     ocean: "bg-gradient-to-b from-blue-100 to-white border-2 border-blue-300",
     unavailable: "bg-gray-100 border-2 border-gray-200",
   }[variant];

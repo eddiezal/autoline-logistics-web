@@ -44,8 +44,10 @@ export function Header() {
 
   return (
     <header>
-      {/* Top utility bar — brand orange */}
-      <div className="bg-orange text-white text-sm">
+      {/* Top utility bar — Pine (#0a1e14), matches the hero ink so the
+          header reads as one system with the hero instead of a competing
+          mid-green strip. Locked May 22, 2026 (Option A). */}
+      <div className="bg-brand-ink text-white text-sm">
         <Container className="flex items-center justify-between py-2 gap-4 flex-wrap">
           <div className="flex items-center gap-4">
             <a
@@ -216,7 +218,7 @@ export function Header() {
               <Link
                 href="/quote"
                 onClick={closeMenu}
-                className="block w-full mt-3 mb-3 bg-orange hover:bg-orange-dark text-white font-bold text-center text-sm px-5 py-3 rounded-lg transition shadow-md shadow-orange/20"
+                className="block w-full mt-3 mb-3 bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-center text-sm px-5 py-3 rounded-lg transition shadow-md shadow-orange/20"
               >
                 {t("header.ctaQuote")} →
               </Link>

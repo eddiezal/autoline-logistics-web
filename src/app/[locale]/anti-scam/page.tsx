@@ -143,7 +143,7 @@ export default function AntiScamHubPage() {
               </p>
               <Link
                 href="/quote"
-                className="inline-block mt-8 bg-orange hover:bg-orange-dark text-white font-semibold px-7 py-3.5 rounded-full transition"
+                className="inline-block mt-8 bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-7 py-3.5 rounded-full transition"
               >
                 {t("antiScamHub.cta.button")} →
               </Link>

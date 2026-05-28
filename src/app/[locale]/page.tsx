@@ -40,11 +40,13 @@ export default function Home() {
             Background image: /public/photography/hero-home.webp — same
             asset, just less opacity-blocked. */}
         <section className="relative bg-neutral-950 text-white overflow-hidden">
-          {/* Background image + heavier dark gradient overlays.
-              opacity-70 lets more of the truck photo come through.
-              Horizontal gradient: black on the left (text legibility)
-              → softer right (truck reveal). Vertical gradient bottom-fade
-              for the trust-strip overlap to land cleanly. */}
+          {/* Background image + PINE-TINTED gradient overlays.
+              Restored to match green-finalize-operator.html (the demo Eddie
+              signed off on) — May 22, 2026. The prior pure-black gradients
+              (from-black via-black/75 to-black/35) crushed the dusk-carrier
+              photo to near-black on the live build. Pine-tinted rgba(10,30,20)
+              at lighter weights keeps text legible on the left while letting
+              the lit truck cab reveal on the right. Image unchanged. */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/photography/hero-night.png"
@@ -55,8 +57,20 @@ export default function Home() {
               style={{ objectPosition: "center center" }}
               className="object-cover opacity-80"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/35" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to right, rgba(10,30,20,0.92), rgba(10,30,20,0.55) 50%, rgba(10,30,20,0.2))",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(8,20,14,0.6), transparent 60%)",
+              }}
+            />
           </div>
 
           <Container className="relative z-10">
@@ -75,7 +89,7 @@ export default function Home() {
                     "No fake-low quote games." — both at H1 scale */}
                 <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-[-0.04em]">
                   <span className="block text-white">{t("home.hero.title")}</span>
-                  <span className="block text-orange mt-2">{t("home.hero.titleAccent")}</span>
+                  <span className="block text-brand-accent mt-2">{t("home.hero.titleAccent")}</span>
                 </h1>
 
                 {/* Subhead — names the 3 pillars that map to the proof chips below */}
@@ -96,7 +110,7 @@ export default function Home() {
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link
                     href="/quote"
-                    className="inline-flex h-13 items-center justify-center rounded-lg bg-orange hover:bg-orange-dark px-7 py-3.5 text-base font-bold text-white shadow-[0_14px_35px_rgba(255,102,0,0.35)] transition"
+                    className="inline-flex h-13 items-center justify-center rounded-lg bg-brand-accent hover:bg-brand-accent-hover px-7 py-3.5 text-base font-bold text-brand-accent-ink shadow-[0_14px_35px_rgba(132,204,22,0.35)] transition"
                   >
                     {t("home.hero.ctaPrimary")} →
                   </Link>
@@ -404,7 +418,7 @@ export default function Home() {
             <div className="text-center mt-12">
               <Link
                 href="/quote"
-                className="inline-flex items-center bg-orange hover:bg-orange-dark text-white font-bold text-base px-7 py-3.5 rounded-xl transition shadow-md shadow-orange/20"
+                className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-base px-7 py-3.5 rounded-xl transition shadow-md shadow-orange/20"
               >
                 {t("home.portalPreview.cta")} →
               </Link>
@@ -657,7 +671,7 @@ export default function Home() {
               </p>
               <Link
                 href="/quote"
-                className="inline-block mt-8 bg-orange hover:bg-orange-dark text-white font-bold text-base px-8 py-4 rounded-full transition shadow-lg shadow-orange/20"
+                className="inline-block mt-8 bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-base px-8 py-4 rounded-full transition shadow-lg shadow-orange/20"
               >
                 {t("home.finalCta.button")} →
               </Link>
@@ -964,7 +978,7 @@ function SimplePromiseCard({
         </h3>
       </div>
       {/* Wider divider rule — protection-mechanism cue */}
-      <div className="mt-5 h-px w-20 bg-orange/50" />
+      <div className="mt-5 h-px w-20 bg-brand-accent" />
       {/* Body */}
       <p className="mt-5 text-base leading-7 text-gray-700">
         {description}
@@ -1093,7 +1107,7 @@ function ServiceFeaturedCard({
   ctaHref: string;
 }) {
   return (
-    <div className="relative bg-gradient-to-b from-orange-tint via-white to-white border-2 border-orange rounded-2xl p-7 md:p-8 shadow-[0_12px_32px_rgba(255,102,0,0.08)] flex flex-col gap-4">
+    <div className="relative bg-gradient-to-b from-orange-tint via-white to-white border-2 border-orange rounded-2xl p-7 md:p-8 shadow-[0_12px_32px_rgba(132,204,22,0.08)] flex flex-col gap-4">
       <span className="absolute -top-3 left-7 inline-block bg-orange text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
         {badge}
       </span>
@@ -1126,7 +1140,7 @@ function ServiceFeaturedCard({
       <div className="flex items-center justify-between gap-3 flex-wrap mt-3">
         <Link
           href={ctaHref}
-          className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition"
+          className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-sm font-bold px-5 py-2.5 rounded-full transition"
         >
           {ctaButton} →
         </Link>

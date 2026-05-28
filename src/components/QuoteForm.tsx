@@ -227,7 +227,7 @@ export function QuoteForm({
         <button
           type="submit"
           disabled={!captchaToken}
-          className="bg-orange hover:bg-orange-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold px-8 py-3 rounded-full transition"
+          className="bg-brand-accent hover:bg-brand-accent-hover disabled:bg-gray-300 disabled:cursor-not-allowed text-brand-accent-ink font-semibold px-8 py-3 rounded-full transition"
         >
           {t("quote.form.submit.button")}
         </button>

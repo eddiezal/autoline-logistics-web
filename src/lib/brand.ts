@@ -1,20 +1,23 @@
 /**
  * Auto Line Logistics — Brand spec (single source of truth for code).
  *
- * Confirmed May 6, 2026. Hex extracted directly from Ben's vector logo.
- * Logo files: see /workspace/brand-assets/zaldivar-labs/ (Zaldivar Labs)
- * and /AutoExpress/brand-assets/ (Auto Line Logistics — orange/black + white/black .eps).
+ * Brand color LOCKED May 22, 2026: Operator Green (Option A) from
+ * brand-explorations/green-finalize-operator.html — deep green primary
+ * + hi-vis lime accent (replaces orange on CTAs/numbers), pine ink, off-white.
+ * Logo files in /AutoExpress/brand-assets/ still need recoloring to match.
  *
- * If you find yourself adding a blue or purple color, stop. Brand is
- * orange + neutral grays + black + white. Period.
+ * Keys keep their legacy "orange" names so imports don't break; VALUES are now
+ * green. Brand = green + lime accent + neutral grays + black + white.
  */
 
 export const BRAND = {
   colors: {
-    orange: "#FF6600",
-    orangeDark: "#E55C00",
-    orangeLight: "#FFB380",
-    orangeTint: "#FFE4CC",
+    orange: "#15803D",      // legacy key -- now Operator green (primary)
+    orangeDark: "#166534",  // deeper green (hover)
+    orangeLight: "#86EFAC", // light green
+    orangeTint: "#DCFCE7",  // green tint
+    accent: "#84CC16",      // hi-vis lime -- CTAs / numbers / highlights
+    accentInk: "#0A1E14",   // dark text to sit on lime
 
     charcoal: "#2D2D2D",
     charcoalAlt: "#1F1F1F",

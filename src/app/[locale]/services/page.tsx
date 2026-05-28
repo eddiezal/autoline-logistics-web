@@ -86,7 +86,7 @@ export default function ServicesPage() {
           <Container>
             <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-5">
               {/* Featured: Open Transport */}
-              <div className="relative bg-gradient-to-b from-orange-tint via-white to-white border-2 border-orange rounded-2xl p-7 md:p-8 shadow-[0_12px_32px_rgba(255,102,0,0.08)] flex flex-col gap-4">
+              <div className="relative bg-gradient-to-b from-orange-tint via-white to-white border-2 border-orange rounded-2xl p-7 md:p-8 shadow-[0_12px_32px_rgba(132,204,22,0.08)] flex flex-col gap-4">
                 <span className="absolute -top-3 left-7 inline-block bg-orange text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
                   {t("services.tiers.open.badge")}
                 </span>
@@ -125,7 +125,7 @@ export default function ServicesPage() {
                 <div className="flex items-center justify-between gap-3 flex-wrap mt-3">
                   <Link
                     href="/quote"
-                    className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition"
+                    className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-sm font-bold px-5 py-2.5 rounded-full transition"
                   >
                     {t("services.tiers.open.ctaButton")} →
                   </Link>
@@ -390,7 +390,7 @@ export default function ServicesPage() {
               </p>
               <Link
                 href="/quote"
-                className="inline-block mt-8 bg-orange hover:bg-orange-dark text-white font-semibold px-7 py-3.5 rounded-full transition"
+                className="inline-block mt-8 bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-7 py-3.5 rounded-full transition"
               >
                 {t("services.cta.button")} →
               </Link>

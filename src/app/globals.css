@@ -19,13 +19,16 @@
 :root {
   /* ============================================================
    * BRAND TOKENS — the only things that swap on brand-direction lock
-   * Currently mapped to #FF6600 orange; will swap when Ben picks a
-   * direction from brand-explorations/directions-v1.html
+   * LOCKED May 22, 2026: Operator Green (Option A) from green-finalize-operator.html.
+   * Deep green primary + hi-vis lime accent (replaces orange on CTAs/numbers).
    * ============================================================ */
-  --color-brand-primary: #ff6600;
-  --color-brand-primary-hover: #e55c00;
-  --color-brand-ink: #1a1a1a;
-  --color-brand-paper: #ffffff;
+  --color-brand-primary: #15803d;        /* Operator green */
+  --color-brand-primary-hover: #166534;  /* deeper green (hover) */
+  --color-brand-ink: #0a1e14;            /* pine (green-black) */
+  --color-brand-paper: #fafaf9;          /* warm off-white */
+  --color-brand-accent: #84cc16;         /* hi-vis lime: CTAs / numbers */
+  --color-brand-accent-ink: #0a1e14;     /* dark text on lime */
+  --color-brand-accent-hover: #65a30d;   /* deeper lime (hover) */
 
   --font-brand-display: var(--font-inter);
   --font-brand-body: var(--font-inter);
@@ -58,8 +61,8 @@
    * ============================================================ */
   --color-orange: var(--color-brand-primary);
   --color-orange-dark: var(--color-brand-primary-hover);
-  --color-orange-light: #ffb380;
-  --color-orange-tint: #ffe4cc;
+  --color-orange-light: #86efac;  /* light green (legacy alias) */
+  --color-orange-tint: #dcfce7;   /* green tint (legacy alias) */
   --color-charcoal: #2d2d2d;
   --color-charcoal-alt: #1f1f1f;
 
@@ -93,6 +96,9 @@
   --color-brand-primary-hover: var(--color-brand-primary-hover);
   --color-brand-ink: var(--color-brand-ink);
   --color-brand-paper: var(--color-brand-paper);
+  --color-brand-accent: var(--color-brand-accent);
+  --color-brand-accent-ink: var(--color-brand-accent-ink);
+  --color-brand-accent-hover: var(--color-brand-accent-hover);
 
   /* Stable surface + text utilities */
   --color-surface: var(--color-surface);

@@ -397,7 +397,7 @@ export function HeroRouteFinder() {
       {/* Primary CTA — always visible. Label flips when step 1 is done. */}
       <Link
         href={quoteHref}
-        className="mt-4 block w-full bg-orange hover:bg-orange-dark text-white text-center font-bold text-base px-6 py-3.5 rounded-xl transition shadow-md shadow-orange/20"
+        className="mt-4 block w-full bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-center font-bold text-base px-6 py-3.5 rounded-xl transition shadow-md shadow-orange/20"
       >
         {step1Complete
           ? `${t("home.heroRouteFinder.ctaLock")} →`
@@ -546,7 +546,7 @@ function ResultPanel({
           </p>
           <Link
             href={quoteHref}
-            className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition"
+            className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-sm font-bold px-5 py-2.5 rounded-full transition"
           >
             {t("home.heroRouteFinder.ctaInvalidZip")} →
           </Link>
@@ -561,7 +561,7 @@ function ResultPanel({
           </p>
           <Link
             href={quoteHref}
-            className="inline-flex items-center bg-orange hover:bg-orange-dark text-white text-sm font-bold px-5 py-2.5 rounded-full transition"
+            className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-sm font-bold px-5 py-2.5 rounded-full transition"
           >
             {t("home.heroRouteFinder.ctaLock")} →
           </Link>

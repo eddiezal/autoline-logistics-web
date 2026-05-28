@@ -128,7 +128,7 @@ export default function PeoplePromisePage() {
               <div className="flex flex-wrap gap-3 mt-8">
                 <Link
                   href="/quote"
-                  className="bg-orange hover:bg-orange-dark text-white font-semibold px-6 py-3 rounded-full transition"
+                  className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-6 py-3 rounded-full transition"
                 >
                   {t("peoplePromise.cta.primary")}
                 </Link>

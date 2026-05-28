@@ -78,7 +78,7 @@ export const metadata: Metadata = {
 
 // themeColor lives on viewport export in Next 14+ (split out from Metadata)
 export const viewport: Viewport = {
-  themeColor: "#FF6600",
+  themeColor: "#15803D",
   width: "device-width",
   initialScale: 1,
 };
