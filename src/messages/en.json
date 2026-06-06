@@ -2090,6 +2090,13 @@
         "completed": "Completed",
         "claimed": "Claim filed"
       }
+    },
+    "prep": {
+      "photoUploadModal": {
+        "title": "Photo upload coming at launch",
+        "body": "When we go live, this will let you upload your {angle} photo directly from your phone. For now, your prep checklist still counts toward readiness — and your coordinator can take photos another way if you need to send them sooner.",
+        "dismiss": "Got it"
+      }
     }
   }
 }

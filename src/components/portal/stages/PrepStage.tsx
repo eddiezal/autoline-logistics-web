@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import type {
   Shipment,
   ChecklistKey,
@@ -124,6 +128,11 @@ export function PrepStage({ shipment }: Props) {
   const recommendedLeft = recommendedChecklistLeft.length;
   const itemsLeft = requiredLeft + recommendedLeft;
 
+  // Photo upload affordance: clicking an empty tile opens a "coming at launch"
+  // modal naming the specific angle. Real upload pipeline ships post-launch
+  // (Phase B) — see Notion punchlist for Option A vs B context.
+  const [uploadAngle, setUploadAngle] = useState<PhotoAngle | null>(null);
+
   return (
     <div className="space-y-6">
       <ReadinessSummary
@@ -139,7 +148,10 @@ export function PrepStage({ shipment }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
         {/* MAIN COLUMN */}
         <main className="space-y-6 min-w-0">
-          <PickupPhotosCard photos={photosUploaded} />
+          <PickupPhotosCard
+            photos={photosUploaded}
+            onUploadClick={(angle) => setUploadAngle(angle)}
+          />
           {incomplete.length > 0 && (
             <StillNeededCard
               required={requiredChecklistLeft}
@@ -159,6 +171,13 @@ export function PrepStage({ shipment }: Props) {
           <HelpfulResourcesCard />
         </aside>
       </div>
+
+      {uploadAngle && (
+        <PhotoUploadModal
+          angleLabel={PHOTO_ANGLE_LABELS[uploadAngle] ?? uploadAngle}
+          onClose={() => setUploadAngle(null)}
+        />
+      )}
     </div>
   );
 }
@@ -298,7 +317,13 @@ function ReadinessSummary({
  * PickupPhotosCard — named-angle grid with done/empty states
  * ============================================================ */
 
-function PickupPhotosCard({ photos }: { photos: Photo[] }) {
+function PickupPhotosCard({
+  photos,
+  onUploadClick,
+}: {
+  photos: Photo[];
+  onUploadClick: (angle: PhotoAngle) => void;
+}) {
   const total = REQUIRED_PHOTO_ANGLES.length;
   const done = REQUIRED_PHOTO_ANGLES.filter((a) =>
     photos.some((p) => p.angle === a),
@@ -324,6 +349,7 @@ function PickupPhotosCard({ photos }: { photos: Photo[] }) {
                 key={angle}
                 label={PHOTO_ANGLE_LABELS[angle] ?? angle}
                 uploaded={Boolean(uploaded)}
+                onClick={() => onUploadClick(angle)}
               />
             );
           })}
@@ -333,7 +359,15 @@ function PickupPhotosCard({ photos }: { photos: Photo[] }) {
   );
 }
 
-function PhotoTile({ label, uploaded }: { label: string; uploaded: boolean }) {
+function PhotoTile({
+  label,
+  uploaded,
+  onClick,
+}: {
+  label: string;
+  uploaded: boolean;
+  onClick: () => void;
+}) {
   if (uploaded) {
     return (
       <div
@@ -367,7 +401,8 @@ function PhotoTile({ label, uploaded }: { label: string; uploaded: boolean }) {
   return (
     <button
       type="button"
-      className="rounded-xl flex flex-col items-center justify-center gap-1.5 text-center px-3 py-4 transition-all hover:-translate-y-px"
+      onClick={onClick}
+      className="rounded-xl flex flex-col items-center justify-center gap-1.5 text-center px-3 py-4 transition-all hover:-translate-y-px cursor-pointer"
       style={{
         background: "var(--color-brand-paper)",
         border: "1.5px dashed var(--color-gray-300)",
@@ -388,6 +423,124 @@ function PhotoTile({ label, uploaded }: { label: string; uploaded: boolean }) {
         Tap to upload
       </div>
     </button>
+  );
+}
+
+/* ============================================================
+ * PhotoUploadModal — "coming at launch" affordance (Option B)
+ *
+ * Real upload pipeline (Option A: Firebase Storage + per-customer rules) is
+ * deferred to Phase B. This modal explains the temporary state without
+ * faking a broken upload flow — the customer trusts the portal more if we
+ * say "not yet" honestly than if we present a button that does nothing.
+ *
+ * Esc closes; click on the backdrop closes. Brand-styled.
+ * ============================================================ */
+
+function PhotoUploadModal({
+  angleLabel,
+  onClose,
+}: {
+  angleLabel: string;
+  onClose: () => void;
+}) {
+  const t = useTranslations("portal.prep.photoUploadModal");
+  const dismissBtnRef = useRef<HTMLButtonElement>(null);
+  // Ref-pinned onClose so the window keydown listener always calls the latest
+  // closure even though we attach it only once. Avoids stale-closure issues
+  // without re-attaching the listener on every parent render.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    // Window keydown for Esc — catches the key regardless of focus.
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onCloseRef.current();
+      }
+    }
+    window.addEventListener("keydown", handleKey, { capture: true });
+    // Lock body scroll while open.
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    // Auto-focus the dismiss button so Enter also closes.
+    dismissBtnRef.current?.focus();
+    return () => {
+      window.removeEventListener("keydown", handleKey, { capture: true });
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="photo-upload-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      style={{
+        background: "color-mix(in oklab, var(--color-brand-ink) 60%, transparent)",
+      }}
+      onClick={onClose}
+    >
+      <div
+        className="rounded-2xl shadow-xl max-w-md w-full overflow-hidden"
+        style={{
+          background: "var(--color-brand-paper)",
+          borderTop: "4px solid var(--color-brand-accent)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="px-6 py-6 md:px-7 md:py-7">
+          <div
+            className="inline-flex items-center justify-center rounded-full mb-4"
+            style={{
+              width: 44,
+              height: 44,
+              background:
+                "color-mix(in oklab, var(--color-brand-accent) 22%, white)",
+            }}
+          >
+            <IconCamera color="#365314" />
+          </div>
+          <h2
+            id="photo-upload-modal-title"
+            className="text-xl md:text-[22px] font-extrabold leading-tight"
+            style={{
+              color: "var(--color-brand-ink)",
+              fontFamily: "var(--font-brand-display)",
+              letterSpacing: "var(--letter-spacing-display)",
+            }}
+          >
+            {t("title")}
+          </h2>
+          <p
+            className="mt-3 text-[14px] leading-relaxed"
+            style={{ color: "var(--color-text-default)" }}
+          >
+            {t("body", { angle: angleLabel.toLowerCase() })}
+          </p>
+          <button
+            ref={dismissBtnRef}
+            type="button"
+            onClick={onClose}
+            onKeyDown={(e) => {
+              if (e.key === "Escape" || e.key === "Enter") {
+                e.preventDefault();
+                onClose();
+              }
+            }}
+            className="mt-6 w-full rounded-xl font-bold text-[14px] px-5 py-3 transition-opacity hover:opacity-90"
+            style={{
+              background: "var(--color-brand-accent)",
+              color: "var(--color-brand-accent-ink)",
+            }}
+          >
+            {t("dismiss")}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

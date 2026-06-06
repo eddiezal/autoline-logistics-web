@@ -2090,6 +2090,13 @@
         "completed": "Completado",
         "claimed": "Reclamo presentado"
       }
+    },
+    "prep": {
+      "photoUploadModal": {
+        "title": "La carga de fotos llega al lanzamiento",
+        "body": "Cuando salgamos en vivo, podrá subir su foto {angle} directamente desde su teléfono. Por ahora, su lista de preparación sigue contando para el estado de listo, y su coordinador puede tomar fotos de otra manera si necesita enviarlas antes.",
+        "dismiss": "Entendido"
+      }
     }
   }
 }
