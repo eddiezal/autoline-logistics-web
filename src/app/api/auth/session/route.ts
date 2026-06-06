@@ -44,8 +44,13 @@ export async function POST(req: Request) {
       maxAge: EXPIRES_IN_MS / 1000,
     });
     return NextResponse.json({ ok: true });
-  } catch {
-    // ID token invalid, expired, or older than 5 minutes.
+  } catch (err) {
+    // Most common failure modes when running locally on ADC:
+    //   • ID token invalid / expired / older than 5 minutes (user issue)
+    //   • Caller lacks `iam.serviceAccounts.signBlob` on the firebase-adminsdk
+    //     service account (ADC + missing Service Account Token Creator role)
+    // We log here so dev can see the real cause; the response stays generic.
+    console.error("[/api/auth/session] createSessionCookie failed:", err);
     return NextResponse.json({ error: "Invalid ID token." }, { status: 401 });
   }
 }
