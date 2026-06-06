@@ -2172,6 +2172,72 @@
         "body": "When we go live, this will let you upload your {angle} photo directly from your phone. For now, your prep checklist still counts toward readiness — and your coordinator can take photos another way if you need to send them sooner.",
         "dismiss": "Got it"
       }
+    },
+    "transit": {
+      "summary": {
+        "titleWithDriver": "{driverName} is on the way to",
+        "titleNoDriver": "On the way to",
+        "currentlyNear": "Currently near",
+        "expectedToDeliver": "Expected to deliver",
+        "etaUpdating": "ETA updating.",
+        "confidenceChip": "{pct}% confidence",
+        "confidenceHigh": "On schedule",
+        "confidenceMid": "Tracking — minor variability possible",
+        "confidenceLow": "Significant variability — coordinator will follow up"
+      },
+      "trust": {
+        "priceLocked": "Price locked",
+        "priceLockedDetail": "{amount} · no changes",
+        "namedDriver": "Named driver",
+        "driverPending": "Assignment in progress",
+        "coordinator": "Dedicated coordinator",
+        "coordinatorFallback": "EN · ES",
+        "photosProtect": "Photos protect you",
+        "photosProtectDetail": "Arriving at each milestone"
+      },
+      "team": {
+        "title": "Your team",
+        "helpLine": "Questions during transit? Contact {firstName}.",
+        "fallbackFirstName": "your coordinator"
+      },
+      "liveLocation": {
+        "title": "Live location",
+        "originLabel": "Origin",
+        "destinationLabel": "Destination",
+        "lastReported": "Last reported {ago}"
+      },
+      "timeline": {
+        "title": "Trip timeline",
+        "sub": "{count, plural, one {# milestone} other {# milestones}} so far.",
+        "subWithExpected": "{count, plural, one {# milestone} other {# milestones}} so far · 1 expected ahead.",
+        "expectedDelivery": "Expected delivery",
+        "expectedDeliveryDetail": "{eta} · {city}, {state}"
+      },
+      "milestones": {
+        "booked": "Order booked",
+        "prepStarted": "Prep started",
+        "driverAssigned": "Driver assigned",
+        "pickedUp": "Picked up",
+        "atWaypoint": "Waypoint check-in",
+        "atDestinationRegion": "Arrived in destination region",
+        "delivered": "Delivered",
+        "documentsComplete": "Documents complete"
+      },
+      "photos": {
+        "title": "Inspection photos",
+        "sub": "Driver photos captured at each milestone — full documentation in case of a damage question.",
+        "tabPickup": "Pickup",
+        "tabTransit": "Transit",
+        "tabDelivery": "Delivery",
+        "deliveryLockedTitle": "Delivery photos arrive after handoff",
+        "deliveryLockedBody": "Your driver will capture inspection photos at delivery; you'll see them here within minutes of the handoff.",
+        "noPhotosYet": "No photos yet for this segment."
+      },
+      "eta": {
+        "today": "today",
+        "tomorrow": "tomorrow",
+        "atTime": "{prefix} at {time} {tz}"
+      }
     }
   }
 }

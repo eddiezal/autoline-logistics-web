@@ -2172,6 +2172,72 @@
         "body": "Cuando salgamos en vivo, podrá subir su foto del {angle} directamente desde su teléfono. Por ahora, su lista de preparación sigue contando para el estado de listo, y su coordinador puede tomar fotos de otra manera si necesita enviarlas antes.",
         "dismiss": "Entendido"
       }
+    },
+    "transit": {
+      "summary": {
+        "titleWithDriver": "{driverName} va camino a",
+        "titleNoDriver": "En camino a",
+        "currentlyNear": "Actualmente cerca de",
+        "expectedToDeliver": "Entrega prevista",
+        "etaUpdating": "Hora de llegada actualizándose.",
+        "confidenceChip": "{pct}% de confianza",
+        "confidenceHigh": "En horario",
+        "confidenceMid": "Rastreando — variabilidad menor posible",
+        "confidenceLow": "Variabilidad significativa — el coordinador hará seguimiento"
+      },
+      "trust": {
+        "priceLocked": "Precio bloqueado",
+        "priceLockedDetail": "{amount} · sin cambios",
+        "namedDriver": "Conductor asignado",
+        "driverPending": "Asignación en proceso",
+        "coordinator": "Coordinador dedicado",
+        "coordinatorFallback": "EN · ES",
+        "photosProtect": "Las fotos lo protegen",
+        "photosProtectDetail": "Llegando en cada hito"
+      },
+      "team": {
+        "title": "Su equipo",
+        "helpLine": "¿Preguntas durante el tránsito? Contacte a {firstName}.",
+        "fallbackFirstName": "su coordinador"
+      },
+      "liveLocation": {
+        "title": "Ubicación en vivo",
+        "originLabel": "Origen",
+        "destinationLabel": "Destino",
+        "lastReported": "Reportado {ago}"
+      },
+      "timeline": {
+        "title": "Línea de tiempo del viaje",
+        "sub": "{count, plural, one {# hito} other {# hitos}} hasta ahora.",
+        "subWithExpected": "{count, plural, one {# hito} other {# hitos}} hasta ahora · 1 esperado.",
+        "expectedDelivery": "Entrega esperada",
+        "expectedDeliveryDetail": "{eta} · {city}, {state}"
+      },
+      "milestones": {
+        "booked": "Pedido reservado",
+        "prepStarted": "Preparación iniciada",
+        "driverAssigned": "Conductor asignado",
+        "pickedUp": "Recogido",
+        "atWaypoint": "Punto de control intermedio",
+        "atDestinationRegion": "Llegó a la región de destino",
+        "delivered": "Entregado",
+        "documentsComplete": "Documentos completados"
+      },
+      "photos": {
+        "title": "Fotos de inspección",
+        "sub": "Fotos del conductor capturadas en cada hito — documentación completa en caso de pregunta sobre daños.",
+        "tabPickup": "Recogida",
+        "tabTransit": "Tránsito",
+        "tabDelivery": "Entrega",
+        "deliveryLockedTitle": "Las fotos de entrega llegan después del traspaso",
+        "deliveryLockedBody": "Su conductor capturará fotos de inspección al entregar; las verá aquí minutos después del traspaso.",
+        "noPhotosYet": "Aún no hay fotos para este segmento."
+      },
+      "eta": {
+        "today": "hoy",
+        "tomorrow": "mañana",
+        "atTime": "{prefix} a las {time} {tz}"
+      }
     }
   }
 }

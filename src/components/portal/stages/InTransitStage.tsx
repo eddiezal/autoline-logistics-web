@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import type {
   Shipment,
   MilestoneType,
@@ -52,26 +53,19 @@ import {
  * No CTA in the hero — the brand statement is "you can relax, we've got it."
  *
  * Client component because PhotoTabsCard uses useState for tab switching.
+ *
+ * EN/ES localized via next-intl (`portal.transit.*`). Strings live in
+ * `src/messages/{en,es}.json`. Date/time formatting follows useLocale().
  */
 
 type Props = { shipment: Shipment };
-
-const MILESTONE_LABELS: Record<MilestoneType, string> = {
-  booked: "Order booked",
-  prepStarted: "Prep started",
-  driverAssigned: "Driver assigned",
-  pickedUp: "Picked up",
-  atWaypoint: "Waypoint check-in",
-  atDestinationRegion: "Arrived in destination region",
-  delivered: "Delivered",
-  documentsComplete: "Documents complete",
-};
 
 /* ============================================================
  * Main composition
  * ============================================================ */
 
 export function InTransitStage({ shipment }: Props) {
+  const t = useTranslations("portal.transit");
   const {
     driver,
     coordinator,
@@ -86,7 +80,7 @@ export function InTransitStage({ shipment }: Props) {
     deliveryPhotos,
   } = shipment;
 
-  const firstName = coordinator?.name.split(" ")[0] ?? "your coordinator";
+  const firstName = coordinator?.name.split(" ")[0] ?? t("team.fallbackFirstName");
 
   return (
     <div className="space-y-6">
@@ -127,8 +121,8 @@ export function InTransitStage({ shipment }: Props) {
             <PickupTeamCard
               driver={driver}
               coordinator={coordinator}
-              title="Your team"
-              helpLineText={`Questions during transit? Contact ${firstName}.`}
+              title={t("team.title")}
+              helpLineText={t("team.helpLine", { firstName })}
             />
           )}
           <LockedPriceCard amountCents={priceLockedCents} />
@@ -159,10 +153,12 @@ function TransitSummary({
   priceLockedCents: number;
   coordinator?: Coordinator;
 }) {
+  const t = useTranslations("portal.transit");
+  const locale = useLocale();
   const confidencePct = eta ? Math.round(eta.confidenceScore * 100) : null;
-  const etaText = eta ? formatETA(eta.at, "America/Denver") : null;
   // NB: in production the ETA timezone should come from destination — using
   // America/Denver here as a heuristic; refactor when SD feeds a proper tz.
+  const etaText = eta ? formatETA(eta.at, "America/Denver", locale, t) : null;
 
   return (
     <section
@@ -183,7 +179,9 @@ function TransitSummary({
             letterSpacing: "var(--letter-spacing-display)",
           }}
         >
-          {driverName ? `${driverName} is on the way to ` : "On the way to "}
+          {driverName
+            ? `${t("summary.titleWithDriver", { driverName })} `
+            : `${t("summary.titleNoDriver")} `}
           <span style={{ color: "var(--color-brand-primary)" }}>
             {destination.city}
           </span>
@@ -194,7 +192,7 @@ function TransitSummary({
         >
           {currentLocation ? (
             <>
-              Currently near{" "}
+              {t("summary.currentlyNear")}{" "}
               <strong style={{ color: "var(--color-brand-ink)" }}>
                 {currentLocation.label}
               </strong>
@@ -203,14 +201,14 @@ function TransitSummary({
           ) : null}
           {etaText ? (
             <>
-              Expected to deliver{" "}
+              {t("summary.expectedToDeliver")}{" "}
               <strong style={{ color: "var(--color-brand-ink)" }}>
                 {etaText}
               </strong>
               .
             </>
           ) : (
-            "ETA updating."
+            t("summary.etaUpdating")
           )}
         </p>
 
@@ -224,17 +222,17 @@ function TransitSummary({
               }}
             >
               <IconClock color="currentColor" size={12} />
-              {confidencePct}% confidence
+              {t("summary.confidenceChip", { pct: confidencePct })}
             </span>
             <span
               className="text-[12px]"
               style={{ color: "var(--color-text-muted)" }}
             >
               {confidencePct >= 80
-                ? "On schedule"
+                ? t("summary.confidenceHigh")
                 : confidencePct >= 60
-                  ? "Tracking — minor variability possible"
-                  : "Significant variability — coordinator will follow up"}
+                  ? t("summary.confidenceMid")
+                  : t("summary.confidenceLow")}
             </span>
           </div>
         )}
@@ -249,29 +247,31 @@ function TransitSummary({
       >
         <TrustPillar
           icon={<IconLock />}
-          label="Price locked"
-          detail={`${formatUSD(priceLockedCents)} · no changes`}
+          label={t("trust.priceLocked")}
+          detail={t("trust.priceLockedDetail", {
+            amount: formatUSD(priceLockedCents),
+          })}
         />
         <TrustPillar
           icon={<IconUser />}
-          label="Named driver"
-          detail={driverName ?? "Assignment in progress"}
+          label={t("trust.namedDriver")}
+          detail={driverName ?? t("trust.driverPending")}
         />
         <TrustPillar
           icon={<IconHeadset />}
-          label="Dedicated coordinator"
+          label={t("trust.coordinator")}
           detail={
             coordinator
               ? `${coordinator.name} · ${coordinator.languages
                   .map((l) => l.toUpperCase())
                   .join("/")}`
-              : "EN · ES"
+              : t("trust.coordinatorFallback")
           }
         />
         <TrustPillar
           icon={<IconCamera />}
-          label="Photos protect you"
-          detail="Arriving at each milestone"
+          label={t("trust.photosProtect")}
+          detail={t("trust.photosProtectDetail")}
         />
       </div>
     </section>
@@ -291,31 +291,32 @@ function LiveLocationCard({
   destination: Address;
   currentLocation: Location;
 }) {
+  const t = useTranslations("portal.transit.liveLocation");
   return (
     <Card>
       {/* Note: "Last reported X ago" sits on the current-position marker
           below; omitted here to avoid the duplication Eddie flagged. */}
-      <CardHead title="Live location" />
+      <CardHead title={t("title")} />
       <div className="px-5 md:px-6 py-5">
         <ol className="relative space-y-5">
           <JourneyStop
             icon={<IconMapPin color="var(--color-brand-primary)" size={16} />}
             label={`${origin.city}, ${origin.state}`}
-            sub="Origin"
+            sub={t("originLabel")}
             tone="done"
             showConnector
           />
           <JourneyStop
             icon={<IconTruck color="var(--color-brand-accent-ink)" size={16} />}
             label={currentLocation.label}
-            sub={`Last reported ${timeAgo(currentLocation.lastUpdatedAt)}`}
+            sub={t("lastReported", { ago: timeAgo(currentLocation.lastUpdatedAt) })}
             tone="current"
             showConnector
           />
           <JourneyStop
             icon={<IconFlag color="var(--color-text-muted)" size={16} />}
             label={`${destination.city}, ${destination.state}`}
-            sub="Destination"
+            sub={t("destinationLabel")}
             tone="upcoming"
             showConnector={false}
           />
@@ -424,15 +425,18 @@ function MilestoneTimeline({
   eta?: ETAEstimate;
   destination: Address;
 }) {
+  const t = useTranslations("portal.transit.timeline");
   const sorted = [...milestones].sort(
     (a, b) => new Date(a.at).getTime() - new Date(b.at).getTime(),
   );
 
+  const subKey = eta ? "subWithExpected" : "sub";
+
   return (
     <Card>
       <CardHead
-        title="Trip timeline"
-        sub={`${sorted.length} ${sorted.length === 1 ? "milestone" : "milestones"} so far${eta ? " · 1 expected ahead" : ""}.`}
+        title={t("title")}
+        sub={t(subKey, { count: sorted.length })}
       />
       <div className="px-5 md:px-6 py-5">
         <ol className="relative space-y-4">
@@ -463,6 +467,8 @@ function MilestoneRow({
   milestone: Milestone;
   isLast: boolean;
 }) {
+  const t = useTranslations("portal.transit");
+  const locale = useLocale();
   const Icon = milestoneIcon(milestone.type);
   return (
     <li className="relative flex items-start gap-4">
@@ -495,13 +501,13 @@ function MilestoneRow({
           className="text-[14px] font-bold leading-tight"
           style={{ color: "var(--color-text-default)" }}
         >
-          {MILESTONE_LABELS[milestone.type]}
+          {t(`milestones.${milestone.type}`)}
         </div>
         <div
           className="text-[12px] mt-0.5"
           style={{ color: "var(--color-text-muted)" }}
         >
-          {formatMilestoneTime(milestone.at)}
+          {formatMilestoneTime(milestone.at, locale)}
           {milestone.location?.label ? ` · ${milestone.location.label}` : ""}
         </div>
         {milestone.notes && (
@@ -526,6 +532,8 @@ function ExpectedDeliveryRow({
   destination: Address;
   isLast: boolean;
 }) {
+  const t = useTranslations("portal.transit");
+  const locale = useLocale();
   return (
     <li className="relative flex items-start gap-4">
       {!isLast && (
@@ -559,14 +567,17 @@ function ExpectedDeliveryRow({
           className="text-[14px] font-bold leading-tight"
           style={{ color: "var(--color-text-default)" }}
         >
-          Expected delivery
+          {t("timeline.expectedDelivery")}
         </div>
         <div
           className="text-[12px] mt-0.5"
           style={{ color: "var(--color-text-muted)" }}
         >
-          {formatETA(eta.at, "America/Denver")} · {destination.city},{" "}
-          {destination.state}
+          {t("timeline.expectedDeliveryDetail", {
+            eta: formatETA(eta.at, "America/Denver", locale, t),
+            city: destination.city,
+            state: destination.state,
+          })}
         </div>
       </div>
     </li>
@@ -607,6 +618,7 @@ function PhotoTabsCard({
   transit: Photo[];
   delivery: Photo[];
 }) {
+  const t = useTranslations("portal.transit.photos");
   const [active, setActive] = useState<TabKey>(
     transit.length > 0 ? "transit" : "pickup",
   );
@@ -617,11 +629,11 @@ function PhotoTabsCard({
     count: number;
     locked: boolean;
   }> = [
-    { key: "pickup", label: "Pickup", count: pickup.length, locked: false },
-    { key: "transit", label: "Transit", count: transit.length, locked: false },
+    { key: "pickup", label: t("tabPickup"), count: pickup.length, locked: false },
+    { key: "transit", label: t("tabTransit"), count: transit.length, locked: false },
     {
       key: "delivery",
-      label: "Delivery",
+      label: t("tabDelivery"),
       count: delivery.length,
       locked: delivery.length === 0,
     },
@@ -630,40 +642,40 @@ function PhotoTabsCard({
   return (
     <Card>
       <CardHead
-        title="Inspection photos"
-        sub="Driver photos captured at each milestone — full documentation in case of a damage question."
+        title={t("title")}
+        sub={t("sub")}
       />
       <div className="px-5 md:px-6 pt-4">
         <div
           className="flex gap-1.5 p-1 rounded-xl"
           style={{ background: "var(--color-surface-elevated)" }}
         >
-          {tabs.map((t) => {
-            const isActive = t.key === active;
+          {tabs.map((tab) => {
+            const isActive = tab.key === active;
             return (
               <button
-                key={t.key}
+                key={tab.key}
                 type="button"
-                disabled={t.locked}
-                onClick={() => !t.locked && setActive(t.key)}
+                disabled={tab.locked}
+                onClick={() => !tab.locked && setActive(tab.key)}
                 className="flex-1 rounded-lg px-3 py-2 text-[13px] font-bold transition-colors"
                 style={{
                   background: isActive
                     ? "var(--color-surface)"
                     : "transparent",
-                  color: t.locked
+                  color: tab.locked
                     ? "var(--color-text-muted)"
                     : isActive
                       ? "var(--color-brand-ink)"
                       : "var(--color-text-muted)",
-                  cursor: t.locked ? "not-allowed" : "pointer",
-                  opacity: t.locked ? 0.5 : 1,
+                  cursor: tab.locked ? "not-allowed" : "pointer",
+                  opacity: tab.locked ? 0.5 : 1,
                   boxShadow: isActive
                     ? "0 1px 3px rgba(10,30,20,0.08)"
                     : "none",
                 }}
               >
-                {t.label}{" "}
+                {tab.label}{" "}
                 <span
                   className="ml-1 text-[11.5px] font-bold"
                   style={{
@@ -672,7 +684,7 @@ function PhotoTabsCard({
                       : "var(--color-text-muted)",
                   }}
                 >
-                  {t.count}
+                  {tab.count}
                 </span>
               </button>
             );
@@ -702,6 +714,8 @@ function TabPanel({
   transit: Photo[];
   delivery: Photo[];
 }) {
+  const t = useTranslations("portal.transit.photos");
+
   if (tab === "delivery" && delivery.length === 0) {
     return (
       <div
@@ -724,14 +738,13 @@ function TabPanel({
           className="text-[14px] font-bold"
           style={{ color: "var(--color-text-default)" }}
         >
-          Delivery photos arrive after handoff
+          {t("deliveryLockedTitle")}
         </div>
         <p
           className="text-[12.5px] mt-1 max-w-md mx-auto"
           style={{ color: "var(--color-text-muted)" }}
         >
-          Your driver will capture inspection photos at delivery; you'll see
-          them here within minutes of the handoff.
+          {t("deliveryLockedBody")}
         </p>
       </div>
     );
@@ -746,7 +759,7 @@ function TabPanel({
         className="text-[13px] italic"
         style={{ color: "var(--color-text-muted)" }}
       >
-        No photos yet for this segment.
+        {t("noPhotosYet")}
       </p>
     );
   }
@@ -798,8 +811,8 @@ function PhotoThumb({ photo }: { photo: Photo }) {
  * IN_TRANSIT-specific helpers
  * ============================================================ */
 
-function formatMilestoneTime(iso: string): string {
-  const fmt = new Intl.DateTimeFormat("en-US", {
+function formatMilestoneTime(iso: string, locale: string): string {
+  const fmt = new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "numeric",
@@ -808,16 +821,26 @@ function formatMilestoneTime(iso: string): string {
   return fmt.format(new Date(iso));
 }
 
-function formatETA(iso: string, tz: string): string {
+/**
+ * Formats an ETA as "{today|tomorrow|date} at {time} {tz}", localized via
+ * portal.transit.eta.*. Date itself rendered via Intl.DateTimeFormat(locale, ...)
+ * so weekday/month names come out in the active locale.
+ */
+function formatETA(
+  iso: string,
+  tz: string,
+  locale: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
   const d = new Date(iso);
   const now = new Date();
-  const dateFmt = new Intl.DateTimeFormat("en-US", {
+  const dateFmt = new Intl.DateTimeFormat(locale, {
     weekday: "short",
     month: "short",
     day: "numeric",
     timeZone: tz,
   });
-  const timeFmt = new Intl.DateTimeFormat("en-US", {
+  const timeFmt = new Intl.DateTimeFormat(locale, {
     hour: "numeric",
     minute: "2-digit",
     timeZone: tz,
@@ -828,12 +851,16 @@ function formatETA(iso: string, tz: string): string {
     new Date(now.getTime() + 24 * 60 * 60 * 1000),
     tz,
   );
-  const datePart = isToday
-    ? "today"
+  const prefix = isToday
+    ? t("eta.today")
     : isTomorrow
-      ? "tomorrow"
+      ? t("eta.tomorrow")
       : dateFmt.format(d);
-  return `${datePart} at ${timeFmt.format(d)} ${tzShortName(tz)}`;
+  return t("eta.atTime", {
+    prefix,
+    time: timeFmt.format(d),
+    tz: tzShortName(tz),
+  });
 }
 
 function isSameLocalDay(a: Date, b: Date, tz: string): boolean {
