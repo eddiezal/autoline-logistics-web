@@ -21,6 +21,11 @@
 
 import { NextResponse } from "next/server";
 import { chargeWithOpaqueData, isConfigured } from "@/lib/payments/authnet";
+import {
+  checkRateLimit,
+  getClientIp,
+  tooManyRequestsResponse,
+} from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
 
@@ -38,6 +43,17 @@ function str(v: unknown): string | undefined {
 }
 
 export async function POST(req: Request) {
+  // Rate limit: 5 charge attempts per minute per IP. Card-testing bots iterate
+  // many stolen PANs fast; legitimate customers retry maybe once or twice.
+  // Burst over this and we 429 with Retry-After.
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit({
+    key: `payments-charge:${ip}`,
+    limit: 5,
+    windowMs: 60_000,
+  });
+  if (!rl.success) return tooManyRequestsResponse(rl);
+
   if (!isConfigured()) {
     return NextResponse.json(
       { error: "Payments are not configured." },

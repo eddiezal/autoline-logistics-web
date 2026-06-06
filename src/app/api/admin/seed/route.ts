@@ -15,6 +15,11 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { MOCK_SHIPMENTS } from "@/lib/mock/shipments";
+import {
+  checkRateLimit,
+  getClientIp,
+  tooManyRequestsResponse,
+} from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
 
@@ -25,6 +30,16 @@ export async function POST(req: Request) {
       { status: 403 },
     );
   }
+  // Even in dev, throttle to 3/min/IP — defense in depth against accidental
+  // loops or anyone who finds SEED_TOKEN in a leaked .env.
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit({
+    key: `admin-seed:${ip}`,
+    limit: 3,
+    windowMs: 60_000,
+  });
+  if (!rl.success) return tooManyRequestsResponse(rl);
+
   const token = new URL(req.url).searchParams.get("token");
   if (!process.env.SEED_TOKEN || token !== process.env.SEED_TOKEN) {
     return NextResponse.json(

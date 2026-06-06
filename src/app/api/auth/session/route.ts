@@ -13,6 +13,11 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getAdminAuth } from "@/lib/firebase/admin";
+import {
+  checkRateLimit,
+  getClientIp,
+  tooManyRequestsResponse,
+} from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
 
@@ -20,6 +25,16 @@ const EXPIRES_IN_MS = 14 * 24 * 60 * 60 * 1000; // 14 days
 const COOKIE_NAME = "__session";
 
 export async function POST(req: Request) {
+  // Rate limit: 10 session mints per minute per IP. Real users hit this once
+  // per sign-in; bots hammering forged ID tokens get throttled.
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit({
+    key: `auth-session:${ip}`,
+    limit: 10,
+    windowMs: 60_000,
+  });
+  if (!rl.success) return tooManyRequestsResponse(rl);
+
   let idToken: string | undefined;
   try {
     const body = (await req.json()) as { idToken?: string };
