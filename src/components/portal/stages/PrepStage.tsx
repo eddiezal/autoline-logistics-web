@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type {
   Shipment,
-  ChecklistKey,
   ChecklistItem,
   Photo,
   PhotoAngle,
@@ -51,36 +50,12 @@ import {
  * uses the identical visual system.
  *
  * Mockup reference: brand-explorations/portal-prep-variation-a-plus.html
+ *
+ * EN/ES localized via next-intl (`portal.prep.*`). Strings live in
+ * `src/messages/{en,es}.json`; date/time formatting follows useLocale().
  */
 
 type Props = { shipment: Shipment };
-
-/* ============================================================
- * Labels + descriptions (PREP-specific)
- * ============================================================ */
-
-const CHECKLIST_LABELS: Record<ChecklistKey, string> = {
-  removePersonalItems: "Remove all personal items",
-  removeAccessories: "Remove or secure loose accessories",
-  reduceFuel: "Reduce fuel to ¼ tank",
-  disableAlarm: "Disable aftermarket alarm",
-  noteExistingDamage: "Note any existing damage",
-  batteryAndTires: "Battery charged & tires inflated",
-  wash: "Wash your vehicle",
-  leaveKeys: "Leave one set of keys",
-};
-
-/** One-line context shown under each item in the "Still needed" card. */
-const CHECKLIST_DESCRIPTIONS: Record<ChecklistKey, string> = {
-  removePersonalItems: "Personal belongings aren't covered by the carrier's insurance.",
-  removeAccessories: "Loose roof racks, antennas, and exterior accessories.",
-  reduceFuel: "Lighter loads improve fuel efficiency on the haul.",
-  disableAlarm: "Prevents alarm triggers in transit.",
-  noteExistingDamage: "Photograph and note pre-existing dings for the BOL.",
-  batteryAndTires: "Vehicle must be operable for loading/unloading.",
-  wash: "Cleaner photos make condition crystal-clear if there's ever a dispute.",
-  leaveKeys: "Have them ready for the driver at handoff.",
-};
 
 const REQUIRED_PHOTO_ANGLES: readonly PhotoAngle[] = [
   "front",
@@ -91,20 +66,12 @@ const REQUIRED_PHOTO_ANGLES: readonly PhotoAngle[] = [
   "damage",
 ] as const;
 
-const PHOTO_ANGLE_LABELS: Record<string, string> = {
-  front: "Front",
-  rear: "Rear",
-  driverSide: "Driver side",
-  passengerSide: "Passenger side",
-  dashboard: "Dashboard",
-  damage: "Existing damage",
-};
-
 /* ============================================================
  * Main composition
  * ============================================================ */
 
 export function PrepStage({ shipment }: Props) {
+  const t = useTranslations("portal.prep");
   const {
     driver,
     coordinator,
@@ -174,7 +141,7 @@ export function PrepStage({ shipment }: Props) {
 
       {uploadAngle && (
         <PhotoUploadModal
-          angleLabel={PHOTO_ANGLE_LABELS[uploadAngle] ?? uploadAngle}
+          angleLabel={t(`photos.angles.${uploadAngle}`)}
           onClose={() => setUploadAngle(null)}
         />
       )}
@@ -203,7 +170,12 @@ function ReadinessSummary({
   priceLockedCents: number;
   coordinator?: Coordinator;
 }) {
+  const t = useTranslations("portal.prep");
+  const locale = useLocale();
   const allDone = itemsLeft === 0;
+
+  const windowText = pickup ? formatPickupWindow(pickup, locale, t) : t("ready.windowSoon");
+
   return (
     <section
       className="rounded-2xl border overflow-hidden"
@@ -224,35 +196,31 @@ function ReadinessSummary({
                 letterSpacing: "var(--letter-spacing-display)",
               }}
             >
-              {allDone
-                ? "You're ready for pickup"
-                : "You're almost ready for pickup"}
+              {allDone ? t("ready.titleReady") : t("ready.titleNotReady")}
             </h2>
             <p
               className="mt-2 text-sm md:text-[15px] leading-relaxed max-w-xl"
               style={{ color: "var(--color-text-default)" }}
             >
               {driverName
-                ? `${driverName} is scheduled to arrive `
-                : "Pickup is scheduled "}
+                ? `${t("ready.withDriver", { driverName })} `
+                : `${t("ready.noDriver")} `}
               <strong style={{ color: "var(--color-brand-ink)" }}>
-                {pickup ? formatPickupWindow(pickup) : "soon"}
+                {windowText}
               </strong>
-              {allDone
-                ? ". Everything's set — see you at handoff."
-                : ". Complete your remaining items before then."}
+              {allDone ? t("ready.complete") : t("ready.remaining")}
             </p>
             {!allDone && (
               <p
                 className="mt-3 text-[13px] font-semibold"
                 style={{ color: "var(--color-brand-primary)" }}
               >
-                {itemsLeft} {itemsLeft === 1 ? "item" : "items"} left —{" "}
+                {t("ready.itemsLeft", { count: itemsLeft })} —{" "}
                 <span style={{ color: "#365314" }}>
-                  {requiredLeft} required
+                  {t("ready.requiredCount", { count: requiredLeft })}
                 </span>
                 {recommendedLeft > 0
-                  ? `, ${recommendedLeft} recommended`
+                  ? `, ${t("ready.recommendedCount", { count: recommendedLeft })}`
                   : ""}
               </p>
             )}
@@ -269,7 +237,7 @@ function ReadinessSummary({
                   "0 10px 22px color-mix(in oklab, var(--color-brand-accent) 30%, transparent)",
               }}
             >
-              Finish pickup prep →
+              {t("ready.cta")}
             </button>
           )}
         </div>
@@ -284,29 +252,31 @@ function ReadinessSummary({
       >
         <TrustPillar
           icon={<IconLock />}
-          label="Price locked"
-          detail={`${formatUSD(priceLockedCents)} · no changes`}
+          label={t("trust.priceLocked")}
+          detail={t("trust.priceLockedDetail", {
+            amount: formatUSD(priceLockedCents),
+          })}
         />
         <TrustPillar
           icon={<IconUser />}
-          label="Named driver"
-          detail={driverName ?? "Assignment incoming"}
+          label={t("trust.namedDriver")}
+          detail={driverName ?? t("trust.driverPending")}
         />
         <TrustPillar
           icon={<IconHeadset />}
-          label="Dedicated coordinator"
+          label={t("trust.coordinator")}
           detail={
             coordinator
               ? `${coordinator.name} · ${coordinator.languages
                   .map((l) => l.toUpperCase())
                   .join("/")}`
-              : "EN · ES"
+              : t("trust.coordinatorFallback")
           }
         />
         <TrustPillar
           icon={<IconCamera />}
-          label="Photos protect you"
-          detail="For damage claims"
+          label={t("trust.photosProtect")}
+          detail={t("trust.photosProtectDetail")}
         />
       </div>
     </section>
@@ -324,6 +294,7 @@ function PickupPhotosCard({
   photos: Photo[];
   onUploadClick: (angle: PhotoAngle) => void;
 }) {
+  const t = useTranslations("portal.prep.photos");
   const total = REQUIRED_PHOTO_ANGLES.length;
   const done = REQUIRED_PHOTO_ANGLES.filter((a) =>
     photos.some((p) => p.angle === a),
@@ -334,9 +305,9 @@ function PickupPhotosCard({
   return (
     <Card>
       <CardHead
-        title={`Pickup photos — ${done} of ${total} complete`}
-        sub="These document your vehicle before transport and help protect you if there's ever a damage question."
-        rightChip={left > 0 ? `${left} left` : "All done"}
+        title={t("title", { done, total })}
+        sub={t("sub")}
+        rightChip={left > 0 ? t("leftChip", { count: left }) : t("allDoneChip")}
         chipTone={left > 0 ? "lime" : "muted"}
       />
       <div className="px-5 md:px-6 pb-5 md:pb-6">
@@ -347,7 +318,7 @@ function PickupPhotosCard({
             return (
               <PhotoTile
                 key={angle}
-                label={PHOTO_ANGLE_LABELS[angle] ?? angle}
+                label={t(`angles.${angle}`)}
                 uploaded={Boolean(uploaded)}
                 onClick={() => onUploadClick(angle)}
               />
@@ -368,6 +339,7 @@ function PhotoTile({
   uploaded: boolean;
   onClick: () => void;
 }) {
+  const t = useTranslations("portal.prep.photos");
   if (uploaded) {
     return (
       <div
@@ -393,7 +365,7 @@ function PhotoTile({
           className="text-[11px] font-semibold"
           style={{ color: "var(--color-brand-primary)" }}
         >
-          Uploaded
+          {t("uploaded")}
         </div>
       </div>
     );
@@ -420,9 +392,158 @@ function PhotoTile({
         className="text-[11px] font-semibold"
         style={{ color: "var(--color-text-muted)" }}
       >
-        Tap to upload
+        {t("tapToUpload")}
       </div>
     </button>
+  );
+}
+
+/* ============================================================
+ * StillNeededCard — required (lime family) + recommended (neutral)
+ * ============================================================ */
+
+function StillNeededCard({
+  required,
+  recommended,
+}: {
+  required: ChecklistItem[];
+  recommended: ChecklistItem[];
+}) {
+  const t = useTranslations("portal.prep.stillNeeded");
+  const total = required.length + recommended.length;
+  return (
+    <Card>
+      <CardHead
+        title={t("title")}
+        sub={t("sub")}
+        rightChip={t("leftChip", { count: total })}
+        chipTone="lime"
+      />
+      <div className="px-5 md:px-6 pb-5 md:pb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {required.length > 0 && (
+            <NeedBlock
+              tone="required"
+              tag={t("requiredTag")}
+              items={required}
+            />
+          )}
+          {recommended.length > 0 && (
+            <NeedBlock
+              tone="recommended"
+              tag={t("recommendedTag")}
+              items={recommended}
+            />
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function NeedBlock({
+  tone,
+  tag,
+  items,
+}: {
+  tone: "required" | "recommended";
+  tag: string;
+  items: ChecklistItem[];
+}) {
+  const t = useTranslations("portal.prep.checklist");
+  const isRequired = tone === "required";
+  return (
+    <div
+      className="rounded-xl p-4 border"
+      style={{
+        background: isRequired
+          ? "color-mix(in oklab, var(--color-brand-accent) 10%, white)"
+          : "var(--color-surface-elevated)",
+        borderColor: isRequired
+          ? "color-mix(in oklab, var(--color-brand-accent) 30%, white)"
+          : "var(--color-gray-200)",
+      }}
+    >
+      <div
+        className="text-[10.5px] font-extrabold uppercase tracking-wider mb-2.5"
+        style={{
+          color: isRequired ? "#365314" : "var(--color-text-muted)",
+        }}
+      >
+        {tag}
+      </div>
+      <ul className="space-y-2.5">
+        {items.map((item) => (
+          <li key={item.key} className="flex items-start gap-2.5">
+            <span
+              className="flex-shrink-0 mt-2 rounded-full"
+              style={{
+                width: 8,
+                height: 8,
+                background: isRequired
+                  ? "var(--color-brand-accent)"
+                  : "var(--color-gray-300)",
+              }}
+            />
+            <div className="min-w-0">
+              <div
+                className="text-[14px] font-bold leading-snug"
+                style={{ color: "var(--color-text-default)" }}
+              >
+                {t(`labels.${item.key}`)}
+              </div>
+              <div
+                className="text-[12.5px] mt-0.5 leading-snug"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                {t(`descriptions.${item.key}`)}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/* ============================================================
+ * CompletedPrepCard — muted, secondary
+ * ============================================================ */
+
+function CompletedPrepCard({ items }: { items: ChecklistItem[] }) {
+  const t = useTranslations("portal.prep");
+  return (
+    <Card>
+      <div
+        className="px-5 md:px-6 py-4 flex items-center justify-between"
+        style={{
+          background: "var(--color-surface-elevated)",
+          borderBottom: "1px solid var(--color-gray-200)",
+        }}
+      >
+        <h3
+          className="text-[14px] font-bold"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          {t("completed.title", { count: items.length })}
+        </h3>
+      </div>
+      <ul
+        className="px-5 md:px-6 py-4 grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-5"
+        style={{ background: "var(--color-surface-elevated)" }}
+      >
+        {items.map((item) => (
+          <li
+            key={item.key}
+            className="flex items-center gap-2 text-[13px]"
+            style={{ color: "var(--color-text-muted)" }}
+          >
+            <IconCheck color="var(--color-brand-primary)" size={14} />
+            {t(`checklist.labels.${item.key}`)}
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 }
 
@@ -545,172 +666,41 @@ function PhotoUploadModal({
 }
 
 /* ============================================================
- * StillNeededCard — required (lime family) + recommended (neutral)
- * ============================================================ */
-
-function StillNeededCard({
-  required,
-  recommended,
-}: {
-  required: ChecklistItem[];
-  recommended: ChecklistItem[];
-}) {
-  const total = required.length + recommended.length;
-  return (
-    <Card>
-      <CardHead
-        title="Still needed"
-        sub="Finish these before your driver arrives."
-        rightChip={`${total} left`}
-        chipTone="lime"
-      />
-      <div className="px-5 md:px-6 pb-5 md:pb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {required.length > 0 && (
-            <NeedBlock
-              tone="required"
-              tag="Required before pickup"
-              items={required}
-            />
-          )}
-          {recommended.length > 0 && (
-            <NeedBlock
-              tone="recommended"
-              tag="Recommended"
-              items={recommended}
-            />
-          )}
-        </div>
-      </div>
-    </Card>
-  );
-}
-
-function NeedBlock({
-  tone,
-  tag,
-  items,
-}: {
-  tone: "required" | "recommended";
-  tag: string;
-  items: ChecklistItem[];
-}) {
-  const isRequired = tone === "required";
-  return (
-    <div
-      className="rounded-xl p-4 border"
-      style={{
-        background: isRequired
-          ? "color-mix(in oklab, var(--color-brand-accent) 10%, white)"
-          : "var(--color-surface-elevated)",
-        borderColor: isRequired
-          ? "color-mix(in oklab, var(--color-brand-accent) 30%, white)"
-          : "var(--color-gray-200)",
-      }}
-    >
-      <div
-        className="text-[10.5px] font-extrabold uppercase tracking-wider mb-2.5"
-        style={{
-          color: isRequired ? "#365314" : "var(--color-text-muted)",
-        }}
-      >
-        {tag}
-      </div>
-      <ul className="space-y-2.5">
-        {items.map((item) => (
-          <li key={item.key} className="flex items-start gap-2.5">
-            <span
-              className="flex-shrink-0 mt-2 rounded-full"
-              style={{
-                width: 8,
-                height: 8,
-                background: isRequired
-                  ? "var(--color-brand-accent)"
-                  : "var(--color-gray-300)",
-              }}
-            />
-            <div className="min-w-0">
-              <div
-                className="text-[14px] font-bold leading-snug"
-                style={{ color: "var(--color-text-default)" }}
-              >
-                {CHECKLIST_LABELS[item.key]}
-              </div>
-              <div
-                className="text-[12.5px] mt-0.5 leading-snug"
-                style={{ color: "var(--color-text-muted)" }}
-              >
-                {CHECKLIST_DESCRIPTIONS[item.key]}
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-/* ============================================================
- * CompletedPrepCard — muted, secondary
- * ============================================================ */
-
-function CompletedPrepCard({ items }: { items: ChecklistItem[] }) {
-  return (
-    <Card>
-      <div
-        className="px-5 md:px-6 py-4 flex items-center justify-between"
-        style={{
-          background: "var(--color-surface-elevated)",
-          borderBottom: "1px solid var(--color-gray-200)",
-        }}
-      >
-        <h3
-          className="text-[14px] font-bold"
-          style={{ color: "var(--color-text-muted)" }}
-        >
-          Completed — {items.length} {items.length === 1 ? "item" : "items"}
-        </h3>
-      </div>
-      <ul
-        className="px-5 md:px-6 py-4 grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-5"
-        style={{ background: "var(--color-surface-elevated)" }}
-      >
-        {items.map((item) => (
-          <li
-            key={item.key}
-            className="flex items-center gap-2 text-[13px]"
-            style={{ color: "var(--color-text-muted)" }}
-          >
-            <IconCheck color="var(--color-brand-primary)" size={14} />
-            {CHECKLIST_LABELS[item.key]}
-          </li>
-        ))}
-      </ul>
-    </Card>
-  );
-}
-
-/* ============================================================
  * PREP-specific helpers
  * ============================================================ */
 
-function formatPickupWindow(pickup: PickupWindow): string {
+/**
+ * Formats the scheduled pickup window in the active locale. The date itself
+ * is rendered by `Intl.DateTimeFormat(locale, ...)` so weekday + month names
+ * naturally come out localized; the wrapper words ("today" / "between … and …")
+ * are translated via portal.prep.pickupWindow.*.
+ */
+function formatPickupWindow(
+  pickup: PickupWindow,
+  locale: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
   const start = new Date(pickup.start);
   const end = new Date(pickup.end);
   const today = isSameLocalDay(start, new Date(), pickup.timezone);
-  const dateFmt = new Intl.DateTimeFormat("en-US", {
+  const dateFmt = new Intl.DateTimeFormat(locale, {
     weekday: "short",
     month: "short",
     day: "numeric",
     timeZone: pickup.timezone,
   });
-  const timeFmt = new Intl.DateTimeFormat("en-US", {
+  const timeFmt = new Intl.DateTimeFormat(locale, {
     hour: "numeric",
     minute: "2-digit",
     timeZone: pickup.timezone,
   });
-  const prefix = today ? "today" : dateFmt.format(start);
-  return `${prefix} between ${timeFmt.format(start)} and ${timeFmt.format(end)} ${tzShortName(pickup.timezone)}`;
+  const prefix = today ? t("pickupWindow.today") : dateFmt.format(start);
+  const between = t("pickupWindow.between", {
+    start: timeFmt.format(start),
+    end: timeFmt.format(end),
+    tz: tzShortName(pickup.timezone),
+  });
+  return `${prefix} ${between}`;
 }
 
 function isSameLocalDay(a: Date, b: Date, tz: string): boolean {

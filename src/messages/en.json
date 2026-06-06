@@ -2092,6 +2092,81 @@
       }
     },
     "prep": {
+      "ready": {
+        "titleNotReady": "You're almost ready for pickup",
+        "titleReady": "You're ready for pickup",
+        "withDriver": "{driverName} is scheduled to arrive",
+        "noDriver": "Pickup is scheduled",
+        "windowSoon": "soon",
+        "complete": ". Everything's set — see you at handoff.",
+        "remaining": ". Complete your remaining items before then.",
+        "itemsLeft": "{count, plural, one {# item} other {# items}} left",
+        "requiredCount": "{count} required",
+        "recommendedCount": "{count} recommended",
+        "cta": "Finish pickup prep →"
+      },
+      "trust": {
+        "priceLocked": "Price locked",
+        "priceLockedDetail": "{amount} · no changes",
+        "namedDriver": "Named driver",
+        "driverPending": "Assignment incoming",
+        "coordinator": "Dedicated coordinator",
+        "coordinatorFallback": "EN · ES",
+        "photosProtect": "Photos protect you",
+        "photosProtectDetail": "For damage claims"
+      },
+      "photos": {
+        "title": "Pickup photos — {done} of {total} complete",
+        "sub": "These document your vehicle before transport and help protect you if there's ever a damage question.",
+        "leftChip": "{count} left",
+        "allDoneChip": "All done",
+        "uploaded": "Uploaded",
+        "tapToUpload": "Tap to upload",
+        "angles": {
+          "front": "Front",
+          "rear": "Rear",
+          "driverSide": "Driver side",
+          "passengerSide": "Passenger side",
+          "dashboard": "Dashboard",
+          "damage": "Existing damage"
+        }
+      },
+      "checklist": {
+        "labels": {
+          "removePersonalItems": "Remove all personal items",
+          "removeAccessories": "Remove or secure loose accessories",
+          "reduceFuel": "Reduce fuel to ¼ tank",
+          "disableAlarm": "Disable aftermarket alarm",
+          "noteExistingDamage": "Note any existing damage",
+          "batteryAndTires": "Battery charged & tires inflated",
+          "wash": "Wash your vehicle",
+          "leaveKeys": "Leave one set of keys"
+        },
+        "descriptions": {
+          "removePersonalItems": "Personal belongings aren't covered by the carrier's insurance.",
+          "removeAccessories": "Loose roof racks, antennas, and exterior accessories.",
+          "reduceFuel": "Lighter loads improve fuel efficiency on the haul.",
+          "disableAlarm": "Prevents alarm triggers in transit.",
+          "noteExistingDamage": "Photograph and note pre-existing dings for the BOL.",
+          "batteryAndTires": "Vehicle must be operable for loading/unloading.",
+          "wash": "Cleaner photos make condition crystal-clear if there's ever a dispute.",
+          "leaveKeys": "Have them ready for the driver at handoff."
+        }
+      },
+      "stillNeeded": {
+        "title": "Still needed",
+        "sub": "Finish these before your driver arrives.",
+        "leftChip": "{count} left",
+        "requiredTag": "Required before pickup",
+        "recommendedTag": "Recommended"
+      },
+      "completed": {
+        "title": "Completed — {count, plural, one {# item} other {# items}}"
+      },
+      "pickupWindow": {
+        "today": "today",
+        "between": "between {start} and {end} {tz}"
+      },
       "photoUploadModal": {
         "title": "Photo upload coming at launch",
         "body": "When we go live, this will let you upload your {angle} photo directly from your phone. For now, your prep checklist still counts toward readiness — and your coordinator can take photos another way if you need to send them sooner.",

@@ -2092,9 +2092,84 @@
       }
     },
     "prep": {
+      "ready": {
+        "titleNotReady": "Casi está listo para la recogida",
+        "titleReady": "Está listo para la recogida",
+        "withDriver": "{driverName} llegará",
+        "noDriver": "La recogida está programada",
+        "windowSoon": "pronto",
+        "complete": ". Todo está listo — nos vemos en la entrega del vehículo.",
+        "remaining": ". Complete sus tareas restantes antes de entonces.",
+        "itemsLeft": "{count, plural, one {# tarea} other {# tareas}} restante{count, plural, one {} other {s}}",
+        "requiredCount": "{count, plural, one {# requerida} other {# requeridas}}",
+        "recommendedCount": "{count, plural, one {# recomendada} other {# recomendadas}}",
+        "cta": "Terminar la preparación →"
+      },
+      "trust": {
+        "priceLocked": "Precio bloqueado",
+        "priceLockedDetail": "{amount} · sin cambios",
+        "namedDriver": "Conductor asignado",
+        "driverPending": "Asignación próxima",
+        "coordinator": "Coordinador dedicado",
+        "coordinatorFallback": "EN · ES",
+        "photosProtect": "Las fotos lo protegen",
+        "photosProtectDetail": "Para reclamos de daños"
+      },
+      "photos": {
+        "title": "Fotos para la recogida — {done} de {total} completas",
+        "sub": "Estas documentan su vehículo antes del transporte y ayudan a protegerlo si alguna vez hay una pregunta sobre daños.",
+        "leftChip": "{count, plural, one {# restante} other {# restantes}}",
+        "allDoneChip": "Todo listo",
+        "uploaded": "Subida",
+        "tapToUpload": "Toque para subir",
+        "angles": {
+          "front": "Frente",
+          "rear": "Atrás",
+          "driverSide": "Lado del conductor",
+          "passengerSide": "Lado del pasajero",
+          "dashboard": "Tablero",
+          "damage": "Daños existentes"
+        }
+      },
+      "checklist": {
+        "labels": {
+          "removePersonalItems": "Quite todos los objetos personales",
+          "removeAccessories": "Quite o asegure los accesorios sueltos",
+          "reduceFuel": "Reduzca el combustible a ¼ de tanque",
+          "disableAlarm": "Desactive la alarma instalada",
+          "noteExistingDamage": "Anote cualquier daño existente",
+          "batteryAndTires": "Batería cargada y llantas infladas",
+          "wash": "Lave su vehículo",
+          "leaveKeys": "Deje un juego de llaves"
+        },
+        "descriptions": {
+          "removePersonalItems": "Las pertenencias personales no están cubiertas por el seguro del transportista.",
+          "removeAccessories": "Portaequipajes, antenas y accesorios exteriores sueltos.",
+          "reduceFuel": "Las cargas más ligeras mejoran la eficiencia de combustible en el viaje.",
+          "disableAlarm": "Evita que se active la alarma durante el tránsito.",
+          "noteExistingDamage": "Fotografíe y anote los daños existentes para el conocimiento de embarque.",
+          "batteryAndTires": "El vehículo debe estar operativo para cargar y descargar.",
+          "wash": "Las fotos limpias dejan la condición clara si llega a haber alguna disputa.",
+          "leaveKeys": "Téngalas listas para el conductor al momento de la entrega."
+        }
+      },
+      "stillNeeded": {
+        "title": "Aún se necesita",
+        "sub": "Termine estas tareas antes de que llegue su conductor.",
+        "leftChip": "{count, plural, one {# restante} other {# restantes}}",
+        "requiredTag": "Requerido antes de la recogida",
+        "recommendedTag": "Recomendado"
+      },
+      "completed": {
+        "title": "Completado — {count, plural, one {# tarea} other {# tareas}}"
+      },
+      "pickupWindow": {
+        "today": "hoy",
+        "between": "entre {start} y {end} {tz}"
+      },
       "photoUploadModal": {
         "title": "La carga de fotos llega al lanzamiento",
-        "body": "Cuando salgamos en vivo, podrá subir su foto {angle} directamente desde su teléfono. Por ahora, su lista de preparación sigue contando para el estado de listo, y su coordinador puede tomar fotos de otra manera si necesita enviarlas antes.",
+        "body": "Cuando salgamos en vivo, podrá subir su foto del {angle} directamente desde su teléfono. Por ahora, su lista de preparación sigue contando para el estado de listo, y su coordinador puede tomar fotos de otra manera si necesita enviarlas antes.",
         "dismiss": "Entendido"
       }
     }
