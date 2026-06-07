@@ -31,7 +31,7 @@ const CSP_DIRECTIVES = [
   "font-src 'self' data:",
   "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://www.google-analytics.com https://*.gstatic.com",
   // Fetch destinations.
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://www.google-analytics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://o*.ingest.sentry.io https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com",
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://www.google-analytics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com",
   // iframes for: Google sign-in popup, Auth.net Accept.js, hCaptcha challenge, Firebase auth handler.
   "frame-src 'self' https://accounts.google.com https://*.authorize.net https://js.authorize.net https://jstest.authorize.net https://*.hcaptcha.com https://hcaptcha.com https://*.firebaseapp.com",
   // Disallow inline plugins entirely.
