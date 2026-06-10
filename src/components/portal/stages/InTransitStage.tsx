@@ -15,24 +15,20 @@ import type {
 import {
   Card,
   CardHead,
-  TrustPillar,
   PickupTeamCard,
   LockedPriceCard,
   ShipmentDetailsCard,
   HelpfulResourcesCard,
-  IconLock,
   IconUser,
-  IconHeadset,
   IconCamera,
   IconMapPin,
   IconClock,
   IconTruck,
   IconFlag,
   IconCheck,
-  formatUSD,
   tzShortName,
-  timeAgo,
 } from "../_shared";
+import { TransitMap } from "../_map";
 
 /**
  * <InTransitStage> — visibility-focused cousin of PrepStage (May 27, 2026).
@@ -83,26 +79,49 @@ export function InTransitStage({ shipment }: Props) {
   const firstName = coordinator?.name.split(" ")[0] ?? t("team.fallbackFirstName");
 
   return (
-    <div className="space-y-6">
-      <TransitSummary
+    <div className="space-y-[18px]">
+      {/* TrackingMapModule — unified status header + map + route summary.
+          Replaces the old separate TransitSummary hero and InlineMapBlock
+          per the Option B spec (2026-06-09). The dark-green header band
+          flows visually into the dark map, making this read as ONE live
+          tracking experience instead of three stacked cards. */}
+      <TrackingMapModule
         driverName={driver?.name}
+        origin={origin}
         destination={destination}
         currentLocation={currentLocation}
         eta={eta}
-        priceLockedCents={priceLockedCents}
-        coordinator={coordinator}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-        {/* MAIN COLUMN */}
-        <main className="space-y-6 min-w-0">
-          {currentLocation && (
-            <LiveLocationCard
-              origin={origin}
-              destination={destination}
-              currentLocation={currentLocation}
+      {/* Trust strip removed 2026-06-09 — Driver/Coordinator/Photos are
+          already richer-rendered by PickupTeamCard + PhotoTabsCard
+          downstream. Eddie's read: the strip was acting as a preview of
+          content that appears again. */}
+
+      {/* Two-column grid on desktop, single-column stack on mobile.
+          Mobile order (priority-sorted per Eddie 2026-06-09):
+            1. Team       — "who has my car, who do I call" is the most
+                            important reassurance after the live map
+            2. Timeline   — what happened / what's next
+            3. Photos     — proof of condition
+            4. Price      — locked promise
+            5. Details    — order metadata
+            6. Resources  — help links
+          Desktop preserves the original visual split (main + sidebar)
+          using explicit grid-column / grid-row placement on each block. */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-x-6 gap-y-[22px] lg:gap-y-6">
+        {(driver || coordinator) && (
+          <div className="lg:col-start-2 lg:row-start-1">
+            <PickupTeamCard
+              driver={driver}
+              coordinator={coordinator}
+              title={t("team.title")}
+              helpLineText={t("team.helpLine", { firstName })}
             />
-          )}
+          </div>
+        )}
+
+        <div className="lg:col-start-1 lg:row-start-1 lg:row-span-2 space-y-[22px] min-w-0">
           <MilestoneTimeline
             milestones={milestones}
             eta={eta}
@@ -113,220 +132,353 @@ export function InTransitStage({ shipment }: Props) {
             transit={transitPhotos ?? []}
             delivery={deliveryPhotos ?? []}
           />
-        </main>
+        </div>
 
-        {/* SIDEBAR */}
-        <aside className="space-y-5">
-          {(driver || coordinator) && (
-            <PickupTeamCard
-              driver={driver}
-              coordinator={coordinator}
-              title={t("team.title")}
-              helpLineText={t("team.helpLine", { firstName })}
-            />
-          )}
+        <div className="lg:col-start-2 lg:row-start-2 space-y-5">
           <LockedPriceCard amountCents={priceLockedCents} />
           <ShipmentDetailsCard shipment={shipment} />
-          <HelpfulResourcesCard />
-        </aside>
+          <HelpfulResourcesCard
+            variant="inTransit"
+            orderNumber={shipment.orderNumber}
+          />
+        </div>
       </div>
     </div>
   );
 }
 
 /* ============================================================
- * TransitSummary — visibility hero (cousin of ReadinessSummary)
+ * TrackingMapModule — unified status header + map + route summary
+ *
+ * Spec 2026-06-09 (Option B): the whole module reads as a single
+ * connected live-tracking experience rather than three stacked cards.
+ * Dark green gradient header band on top flows visually into the dark
+ * map; route summary row sits below the map as a continuous strip with
+ * vertical dividers between origin / current / destination.
  * ============================================================ */
 
-function TransitSummary({
+function TrackingMapModule({
   driverName,
+  origin,
   destination,
   currentLocation,
   eta,
-  priceLockedCents,
-  coordinator,
 }: {
   driverName?: string;
+  origin: Address;
   destination: Address;
   currentLocation?: Location;
   eta?: ETAEstimate;
-  priceLockedCents: number;
-  coordinator?: Coordinator;
 }) {
-  const t = useTranslations("portal.transit");
-  const locale = useLocale();
-  const confidencePct = eta ? Math.round(eta.confidenceScore * 100) : null;
-  // NB: in production the ETA timezone should come from destination — using
-  // America/Denver here as a heuristic; refactor when SD feeds a proper tz.
-  const etaText = eta ? formatETA(eta.at, "America/Denver", locale, t) : null;
-
   return (
     <section
-      className="rounded-2xl border overflow-hidden"
+      className="overflow-hidden"
       style={{
-        background:
-          "color-mix(in oklab, var(--color-brand-primary) 6%, white)",
-        borderColor:
-          "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
+        background: "#ffffff",
+        border: "1px solid #dbe5dd",
+        borderRadius: 18,
+        boxShadow: "0 1px 2px rgba(15, 23, 42, 0.04)",
       }}
     >
-      <div className="px-6 py-6 md:px-8 md:py-7">
-        <h2
-          className="text-2xl md:text-[26px] font-extrabold leading-tight"
-          style={{
-            color: "var(--color-brand-ink)",
-            fontFamily: "var(--font-brand-display)",
-            letterSpacing: "var(--letter-spacing-display)",
-          }}
-        >
-          {driverName
-            ? `${t("summary.titleWithDriver", { driverName })} `
-            : `${t("summary.titleNoDriver")} `}
-          <span style={{ color: "var(--color-brand-primary)" }}>
-            {destination.city}
-          </span>
-        </h2>
-        <p
-          className="mt-2 text-sm md:text-[15px] leading-relaxed max-w-xl"
-          style={{ color: "var(--color-text-default)" }}
-        >
-          {currentLocation ? (
-            <>
-              {t("summary.currentlyNear")}{" "}
-              <strong style={{ color: "var(--color-brand-ink)" }}>
-                {currentLocation.label}
-              </strong>
-              .{" "}
-            </>
-          ) : null}
-          {etaText ? (
-            <>
-              {t("summary.expectedToDeliver")}{" "}
-              <strong style={{ color: "var(--color-brand-ink)" }}>
-                {etaText}
-              </strong>
-              .
-            </>
-          ) : (
-            t("summary.etaUpdating")
-          )}
-        </p>
+      <TrackingStatusHeader
+        driverName={driverName}
+        destination={destination}
+        currentLocation={currentLocation}
+        eta={eta}
+      />
 
-        {confidencePct !== null && (
-          <div className="mt-3 flex items-center gap-2">
-            <span
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-bold"
-              style={{
-                background: "var(--color-brand-accent)",
-                color: "var(--color-brand-accent-ink)",
-              }}
-            >
-              <IconClock color="currentColor" size={12} />
-              {t("summary.confidenceChip", { pct: confidencePct })}
-            </span>
-            <span
-              className="text-[12px]"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              {confidencePct >= 80
-                ? t("summary.confidenceHigh")
-                : confidencePct >= 60
-                  ? t("summary.confidenceMid")
-                  : t("summary.confidenceLow")}
-            </span>
-          </div>
-        )}
-      </div>
+      {currentLocation && (
+        <TransitMap
+          origin={origin}
+          destination={destination}
+          currentLocation={currentLocation}
+          // 330px — was 360 (Eddie 2026-06-09: map dominated, timeline
+          // started too far down the fold). Shaving 30px lifts the
+          // milestone timeline closer to the user without losing
+          // tracking-module presence.
+          heightPx={330}
+        />
+      )}
 
       <div
-        className="grid grid-cols-2 md:grid-cols-4 border-t"
-        style={{
-          borderColor:
-            "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
-        }}
+        className="grid grid-cols-1 sm:grid-cols-3"
+        style={{ borderTop: "1px solid #e2e8f0" }}
       >
-        <TrustPillar
-          icon={<IconLock />}
-          label={t("trust.priceLocked")}
-          detail={t("trust.priceLockedDetail", {
-            amount: formatUSD(priceLockedCents),
-          })}
+        <RouteEndItem
+          label="ORIGIN"
+          city={`${origin.city}, ${origin.state}`}
+          tone="origin"
+          showDivider
         />
-        <TrustPillar
-          icon={<IconUser />}
-          label={t("trust.namedDriver")}
-          detail={driverName ?? t("trust.driverPending")}
+        <RouteEndItem
+          label="CURRENT"
+          city={currentLocation ? `Near ${currentLocation.label}` : "Tracking soon"}
+          tone="current"
+          showDivider
         />
-        <TrustPillar
-          icon={<IconHeadset />}
-          label={t("trust.coordinator")}
-          detail={
-            coordinator
-              ? `${coordinator.name} · ${coordinator.languages
-                  .map((l) => l.toUpperCase())
-                  .join("/")}`
-              : t("trust.coordinatorFallback")
-          }
-        />
-        <TrustPillar
-          icon={<IconCamera />}
-          label={t("trust.photosProtect")}
-          detail={t("trust.photosProtectDetail")}
+        <RouteEndItem
+          label="DESTINATION"
+          city={`${destination.city}, ${destination.state}`}
+          tone="destination"
         />
       </div>
     </section>
   );
 }
 
-/* ============================================================
- * LiveLocationCard — vertical journey rail (origin → current → destination)
- * ============================================================ */
-
-function LiveLocationCard({
-  origin,
+function TrackingStatusHeader({
+  driverName,
   destination,
   currentLocation,
+  eta,
 }: {
-  origin: Address;
+  driverName?: string;
   destination: Address;
-  currentLocation: Location;
+  currentLocation?: Location;
+  eta?: ETAEstimate;
 }) {
-  const t = useTranslations("portal.transit.liveLocation");
+  const t = useTranslations("portal.transit");
+  const locale = useLocale();
+  const firstName = driverName?.split(" ")[0];
+  const confidencePct = eta ? Math.round(eta.confidenceScore * 100) : null;
+  // NB: in production the ETA timezone should come from destination — using
+  // America/Denver here as a heuristic; refactor when SD feeds a proper tz.
+  const etaText = eta ? formatETA(eta.at, "America/Denver", locale, t) : null;
+  const confidenceLabel =
+    confidencePct === null
+      ? null
+      : confidencePct >= 80
+        ? t("summary.confidenceHigh")
+        : confidencePct >= 60
+          ? t("summary.confidenceMid")
+          : t("summary.confidenceLow");
+
   return (
-    <Card>
-      {/* Note: "Last reported X ago" sits on the current-position marker
-          below; omitted here to avoid the duplication Eddie flagged. */}
-      <CardHead title={t("title")} />
-      <div className="px-5 md:px-6 py-5">
-        <ol className="relative space-y-5">
-          <JourneyStop
-            icon={<IconMapPin color="var(--color-brand-primary)" size={16} />}
-            label={`${origin.city}, ${origin.state}`}
-            sub={t("originLabel")}
-            tone="done"
-            showConnector
-          />
-          <JourneyStop
-            icon={<IconTruck color="var(--color-brand-accent-ink)" size={16} />}
-            label={currentLocation.label}
-            sub={t("lastReported", { ago: timeAgo(currentLocation.lastUpdatedAt) })}
-            tone="current"
-            showConnector
-          />
-          <JourneyStop
-            icon={<IconFlag color="var(--color-text-muted)" size={16} />}
-            label={`${destination.city}, ${destination.state}`}
-            sub={t("destinationLabel")}
-            tone="upcoming"
-            showConnector={false}
-          />
-        </ol>
+    // Mobile: 14px 16px padding, items-start (no vertical centering).
+    // Desktop (md+): 20px 24px padding (Eddie 2026-06-09 — slightly more
+    // horizontal breathing room so the inline status line doesn't crowd
+    // the edges if copy grows), items-center for the icon/text balance.
+    <div
+      className="flex items-start md:items-center gap-3 md:gap-4 px-4 py-3.5 md:px-6 md:py-5"
+      style={{
+        background: "linear-gradient(90deg, #052e1a 0%, #0b3b24 100%)",
+        color: "#ffffff",
+      }}
+    >
+      {/* Truck icon bubble — 36px on mobile, 44px desktop. */}
+      <div
+        className="grid place-items-center flex-shrink-0 w-9 h-9 md:w-11 md:h-11"
+        style={{
+          borderRadius: 999,
+          background: "#16a34a",
+          color: "#ffffff",
+        }}
+      >
+        <IconTruck color="currentColor" size={20} />
       </div>
-    </Card>
+
+      <div className="flex-1 min-w-0">
+        <h2
+          className="leading-tight"
+          style={{
+            fontSize: 18,
+            fontWeight: 800,
+            letterSpacing: "-0.02em",
+            color: "#ffffff",
+            fontFamily: "var(--font-brand-display)",
+            textAlign: "left",
+            // Cap the headline width so it wraps predictably and any
+            // overflow ("Denver" on a second line on narrow mobile) sits
+            // tight-left under "Marcus is on the way to", instead of
+            // looking visually centered against trailing whitespace.
+            maxWidth: "22ch",
+            // text-wrap: balance distributes the wrap across both lines
+            // ("Marcus is on the way" / "to Denver") rather than orphaning
+            // a single short word — reads as a status, not a hero ad.
+            textWrap: "balance",
+          }}
+        >
+          {firstName
+            ? `${t("summary.titleWithDriver", { driverName: firstName })} `
+            : `${t("summary.titleNoDriver")} `}
+          <span style={{ color: "#86efac" }}>{destination.city}</span>
+        </h2>
+
+        {/* Status meta — grid stack on mobile, inline flow on desktop.
+            Each line gets a small lime-tinted leading icon (check / clock /
+            pin) instead of relying on dot separators. The icons act as the
+            visual rhythm AND give a left-edge alignment anchor across all
+            three lines. Dot separators kept on desktop only for the inline
+            flow; hidden by default on mobile via DarkSep's own class. */}
+        <div
+          className="grid gap-y-1 md:flex md:flex-row md:flex-wrap md:items-center md:gap-x-3 md:gap-y-1"
+          style={{
+            marginTop: 6,
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#d1fae5",
+            lineHeight: 1.35,
+          }}
+        >
+          {confidenceLabel && (
+            <MetaLine icon={<IconCheck color="currentColor" size={13} />}>
+              {confidenceLabel}
+            </MetaLine>
+          )}
+          {etaText && (
+            <>
+              <DarkSep />
+              <MetaLine icon={<IconClock color="currentColor" size={13} />}>
+                {t.rich("summary.statusETA", {
+                  eta: etaText,
+                  strong: (chunks) => (
+                    <strong style={{ color: "#ffffff" }}>{chunks}</strong>
+                  ),
+                })}
+              </MetaLine>
+            </>
+          )}
+          {!etaText && (
+            <MetaLine icon={<IconClock color="currentColor" size={13} />}>
+              {t("summary.etaUpdating")}
+            </MetaLine>
+          )}
+          {currentLocation && (
+            <>
+              <DarkSep />
+              <MetaLine icon={<IconMapPin color="currentColor" size={13} />}>
+                {t("summary.statusLastReported", { location: currentLocation.label })}
+              </MetaLine>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
-function JourneyStop({
+/** Single status meta line — small leading icon + text, aligned baseline.
+ *  Used inside the dark green TrackingStatusHeader. Icons are 13px and
+ *  inherit the lime-tinted (#d1fae5) parent color. */
+function MetaLine({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span aria-hidden className="inline-flex flex-shrink-0" style={{ opacity: 0.85 }}>
+        {icon}
+      </span>
+      <span>{children}</span>
+    </span>
+  );
+}
+
+/** Lime-tinted dot separator for the dark status header.
+ *  Hidden on mobile (the meta stacks vertically with leading icons instead).
+ *  Defaults to display:none + md:inline-block to avoid the Tailwind class-
+ *  order specificity gotcha that was causing dots to leak through on mobile
+ *  even when callers passed `hidden md:inline-block` explicitly. */
+function DarkSep() {
+  return (
+    <span
+      aria-hidden
+      className="hidden md:inline-block rounded-full"
+      style={{
+        width: 3,
+        height: 3,
+        background: "rgba(209, 250, 229, 0.5)",
+      }}
+    />
+  );
+}
+
+/* ============================================================
+ * RouteEndItem — Origin / Current / Destination summary row
+ *
+ * Sits as the bottom row of TrackingMapModule with vertical dividers
+ * between columns. Per spec: NO redundant label-below-the-city. The
+ * uppercase ORIGIN/CURRENT/DESTINATION label IS the label.
+ * ============================================================ */
+
+function RouteEndItem({
+  label,
+  city,
+  tone,
+  showDivider = false,
+}: {
+  label: string;
+  city: string;
+  tone: "origin" | "current" | "destination";
+  showDivider?: boolean;
+}) {
+  const dotBg =
+    tone === "origin"
+      ? "#16a34a"
+      : tone === "current"
+        ? "#84cc16"
+        : "#0f172a";
+  const dotShadow = tone === "current" ? "0 0 0 4px #dcfce7" : "none";
+
+  return (
+    <div
+      className="flex items-start gap-2.5"
+      style={{
+        padding: "16px 22px",
+        borderRight: showDivider ? "1px solid #e2e8f0" : "none",
+      }}
+    >
+      <span
+        className="flex-shrink-0 rounded-full"
+        style={{
+          width: 10,
+          height: 10,
+          marginTop: 5,
+          background: dotBg,
+          boxShadow: dotShadow,
+        }}
+      />
+      <div className="min-w-0">
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#64748b",
+            marginBottom: 4,
+          }}
+        >
+          {label}
+        </div>
+        <div
+          className="truncate"
+          style={{
+            fontSize: 14,
+            fontWeight: 800,
+            lineHeight: 1.3,
+            color: "#020617",
+          }}
+        >
+          {city}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+ * (TransitTrustStrip + TrustStripItem removed 2026-06-09 — see main
+ *  composition comment. Below: MilestoneTimeline, MilestoneRow,
+ *  ExpectedDeliveryRow, photo components.)
+ * ============================================================ */
+
+// Stash the deprecated unused stub here, hoisted to keep diff small.
+// Will sweep in the next janitorial pass.
+function _JourneyStopUnusedShim({
   icon,
   label,
   sub,
@@ -358,7 +510,6 @@ function JourneyStop({
 
   return (
     <li className="relative flex items-start gap-4">
-      {/* Connector line (vertical) */}
       {showConnector && (
         <span
           aria-hidden
@@ -374,7 +525,6 @@ function JourneyStop({
           }}
         />
       )}
-      {/* Marker dot */}
       <span
         className="relative flex-shrink-0 grid place-items-center rounded-full border-2"
         style={{
@@ -438,8 +588,13 @@ function MilestoneTimeline({
         title={t("title")}
         sub={t(subKey, { count: sorted.length })}
       />
-      <div className="px-5 md:px-6 py-5">
-        <ol className="relative space-y-4">
+      {/* Tightened from py-5 / space-y-4 (20px body, 16px gap) to py-4 /
+          space-y-3 (16px body, 12px gap) 2026-06-09 — Eddie's read: the
+          timeline was visually heavier than the Team / Price cards next
+          to it for content that's mostly historical. Trim makes it sit
+          alongside the other cards instead of dominating. */}
+      <div className="px-5 md:px-6 py-4">
+        <ol className="relative space-y-3">
           {sorted.map((m, idx) => (
             <MilestoneRow
               key={m.id}
@@ -658,30 +813,47 @@ function PhotoTabsCard({
                 type="button"
                 disabled={tab.locked}
                 onClick={() => !tab.locked && setActive(tab.key)}
-                className="flex-1 rounded-lg px-3 py-2 text-[13px] font-bold transition-colors"
+                className="flex-1 rounded-lg px-3 py-2 text-[13px] transition-colors inline-flex items-center justify-center gap-2"
                 style={{
-                  background: isActive
-                    ? "var(--color-surface)"
-                    : "transparent",
+                  // Active: hard white card with a real shadow that lifts
+                  // off the elevated gray rail. Inactive: transparent.
+                  background: isActive ? "#ffffff" : "transparent",
                   color: tab.locked
-                    ? "var(--color-text-muted)"
+                    ? "#94a3b8" // slate-400 — clearly disabled
                     : isActive
-                      ? "var(--color-brand-ink)"
-                      : "var(--color-text-muted)",
+                      ? "#020617" // ink — bold and present
+                      : "#64748b", // slate-500 — quiet but readable
                   cursor: tab.locked ? "not-allowed" : "pointer",
-                  opacity: tab.locked ? 0.5 : 1,
+                  opacity: tab.locked ? 0.7 : 1,
+                  // Active gets a layered shadow so it lifts more
+                  // obviously off the gray rail. Inactive: no shadow.
                   boxShadow: isActive
-                    ? "0 1px 3px rgba(10,30,20,0.08)"
+                    ? "0 1px 3px rgba(15,23,42,0.12), 0 1px 2px rgba(15,23,42,0.06)"
                     : "none",
+                  fontWeight: isActive ? 700 : 600,
                 }}
               >
-                {tab.label}{" "}
+                <span>{tab.label}</span>
+                {/* Count is a real pill badge — quieter when inactive,
+                    brand-tinted when active, neutral when disabled. */}
                 <span
-                  className="ml-1 text-[11.5px] font-bold"
                   style={{
-                    color: isActive
-                      ? "var(--color-brand-primary)"
-                      : "var(--color-text-muted)",
+                    fontSize: 10.5,
+                    fontWeight: 700,
+                    padding: "1px 7px",
+                    borderRadius: 999,
+                    minWidth: 18,
+                    textAlign: "center",
+                    background: tab.locked
+                      ? "#f1f5f9" // slate-100
+                      : isActive
+                        ? "#dcfce7" // green-100 — brand tint on active
+                        : "#e2e8f0", // slate-200 — neutral resting badge
+                    color: tab.locked
+                      ? "#94a3b8" // slate-400
+                      : isActive
+                        ? "#047857" // green-700 — bold against tint
+                        : "#64748b", // slate-500
                   }}
                 >
                   {tab.count}

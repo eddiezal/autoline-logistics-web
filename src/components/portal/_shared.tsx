@@ -119,34 +119,57 @@ export function TrustPillar({
   icon,
   label,
   detail,
+  tone = "onLight",
 }: {
   icon: ReactNode;
   label: string;
   detail: string;
+  /**
+   * "onLight" (default) — for the soft-green Prep readiness summary.
+   * "onDark" — for the InTransit hero where pillars sit over a photo +
+   *   Pine gradient. Bumps icons + label to paper, detail to a softer
+   *   paper-tint, and lightens the divider lines.
+   */
+  tone?: "onLight" | "onDark";
 }) {
+  const isDark = tone === "onDark";
   return (
     <div
       className="flex items-center gap-3 px-4 py-3.5 border-r last:border-r-0 even:border-r-0 md:even:border-r md:last:border-r-0"
       style={{
-        borderColor: "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
+        borderColor: isDark
+          ? "rgba(255,255,255,0.12)"
+          : "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
       }}
     >
       <span
         className="flex-shrink-0"
-        style={{ color: "var(--color-brand-primary)" }}
+        style={{
+          color: isDark
+            ? "var(--color-brand-accent)"
+            : "var(--color-brand-primary)",
+        }}
       >
         {icon}
       </span>
       <div className="min-w-0">
         <div
           className="text-[12.5px] font-bold leading-tight truncate"
-          style={{ color: "var(--color-brand-ink)" }}
+          style={{
+            color: isDark
+              ? "var(--color-brand-paper)"
+              : "var(--color-brand-ink)",
+          }}
         >
           {label}
         </div>
         <div
           className="text-[11.5px] mt-0.5 truncate"
-          style={{ color: "var(--color-text-muted)" }}
+          style={{
+            color: isDark
+              ? "color-mix(in oklab, var(--color-brand-paper) 65%, transparent)"
+              : "var(--color-text-muted)",
+          }}
         >
           {detail}
         </div>
@@ -267,18 +290,36 @@ export function PickupTeamCard({
       )}
 
       {coordinator && (
-        <div
-          className="px-5 py-3 flex items-center gap-2 text-[12.5px] font-semibold border-t"
+        // Whole strip is the tap target — calls the coordinator's phone.
+        // Tel: opens the dialer on mobile, default phone app on desktop.
+        // During-transit urgency makes phone the right default action;
+        // email is still available on the coordinator's email line above.
+        <a
+          href={`tel:${coordinator.phone}`}
+          className="px-5 py-3 flex items-center gap-2 text-[12.5px] font-semibold border-t transition-colors hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
           style={{
             background: "color-mix(in oklab, var(--color-brand-primary) 6%, white)",
             borderColor:
               "color-mix(in oklab, var(--color-brand-primary) 22%, white)",
             color: "var(--color-brand-ink)",
+            textDecoration: "none",
+            cursor: "pointer",
           }}
         >
           <IconChat color="var(--color-brand-primary)" size={14} />
-          {helpText}
-        </div>
+          <span className="flex-1">{helpText}</span>
+          <span
+            aria-hidden
+            style={{
+              fontSize: 14,
+              color: "var(--color-brand-primary)",
+              fontWeight: 700,
+              opacity: 0.8,
+            }}
+          >
+            →
+          </span>
+        </a>
       )}
     </Card>
   );
@@ -293,17 +334,21 @@ export function LockedPriceCard({ amountCents }: { amountCents: number }) {
         color: "var(--color-brand-paper)",
       }}
     >
+      {/* Glow toned down 2026-06-09 — Eddie: card was visually competing
+          with tracking on the in-transit page where price is reassurance,
+          not the headline. Opacity 28% → 16%, size 140 → 110. Still reads
+          as a confident locked-price card, just less marketing-loud. */}
       <div
         aria-hidden
         className="absolute pointer-events-none"
         style={{
-          right: -30,
-          top: -30,
-          width: 140,
-          height: 140,
+          right: -24,
+          top: -24,
+          width: 110,
+          height: 110,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, color-mix(in oklab, var(--color-brand-accent) 28%, transparent), transparent 60%)",
+            "radial-gradient(circle, color-mix(in oklab, var(--color-brand-accent) 16%, transparent), transparent 60%)",
         }}
       />
       <div className="relative">
@@ -317,7 +362,9 @@ export function LockedPriceCard({ amountCents }: { amountCents: number }) {
           The price promise
         </div>
         <h3 className="text-[13px] font-bold mt-1">Your price is locked</h3>
-        <div className="text-[38px] font-black leading-none mt-1.5 tracking-tight">
+        {/* Price size 38px → 34px (10% reduction). Still the visual
+            anchor of the card but no longer dominates the sidebar. */}
+        <div className="text-[34px] font-black leading-none mt-1.5 tracking-tight">
           $
           <span style={{ color: "var(--color-brand-accent)" }}>
             {formatUSDNumber(amountCents)}
@@ -349,35 +396,113 @@ export function LockedPriceCard({ amountCents }: { amountCents: number }) {
  * existing marketing content so it ships fast and gives the sidebar a
  * "we've thought about everything you might need" finish.
  */
-export function HelpfulResourcesCard() {
+/**
+ * Resources are stage-aware. PREP customers are still digesting their
+ * booking and benefit from the brand-promise pages. IN-TRANSIT customers
+ * have already bought in — what they actually need is operational
+ * "what happens next" FAQ that reduces support calls and builds confidence.
+ * Eddie 2026-06-09: "Make this section practical, not generic."
+ */
+type ResourceLinkSpec = {
+  href: string;
+  icon: ReactNode;
+  title: string;
+  sub: string;
+};
+
+const PREP_RESOURCES: ResourceLinkSpec[] = [
+  {
+    href: "/price-promise",
+    icon: <IconLock />,
+    title: "Price Promise",
+    sub: "What the locked price means",
+  },
+  {
+    href: "/damage-promise",
+    icon: <IconShield />,
+    title: "Damage Promise",
+    sub: "$500K cargo coverage explained",
+  },
+  {
+    href: "/people-promise",
+    icon: <IconHeadset />,
+    title: "People Promise",
+    sub: "Why we name your coordinator",
+  },
+  {
+    href: "/anti-scam",
+    icon: <IconAlert />,
+    title: "Spot the scams",
+    sub: "What separates real brokers from the noise",
+  },
+];
+
+const IN_TRANSIT_RESOURCES: ResourceLinkSpec[] = [
+  {
+    href: "/resources/delivery-day",
+    icon: <IconFlag />,
+    title: "What happens at delivery",
+    sub: "Inspection, paperwork, photos, payment",
+  },
+  {
+    href: "/resources/inspection-photos",
+    icon: <IconCamera />,
+    title: "How inspection photos work",
+    sub: "What we capture, when, and why",
+  },
+  {
+    href: "/resources/reach-coordinator",
+    icon: <IconHeadset />,
+    title: "Reach your coordinator",
+    sub: "Phone, email, hours, languages",
+  },
+  {
+    href: "/resources/eta-changes",
+    icon: <IconClock />,
+    title: "What if my ETA changes?",
+    sub: "Causes, notifications, your options",
+  },
+  {
+    href: "/damage-promise#claim",
+    icon: <IconShield />,
+    title: "Damage claim process",
+    sub: "If something goes wrong — the path",
+  },
+];
+
+export function HelpfulResourcesCard({
+  variant = "prep",
+  orderNumber,
+}: {
+  variant?: "prep" | "inTransit";
+  /** When passed, IN-TRANSIT resource links carry `?order=` so the article
+   *  pages can resolve the customer's coordinator for a dynamic CTA. */
+  orderNumber?: string;
+} = {}) {
+  const resources =
+    variant === "inTransit" ? IN_TRANSIT_RESOURCES : PREP_RESOURCES;
+  // Append the order query for in-transit links so /resources/... pages
+  // can pull the actual coordinator. The hash anchor (#claim) on damage-
+  // promise needs the query BEFORE the hash to be a valid URL.
+  const withOrder = (href: string): string => {
+    if (variant !== "inTransit" || !orderNumber) return href;
+    const [path, hash] = href.split("#");
+    const query = `${path.includes("?") ? "&" : "?"}order=${encodeURIComponent(orderNumber)}`;
+    return `${path}${query}${hash ? `#${hash}` : ""}`;
+  };
   return (
     <Card>
       <CardHead title="Helpful resources" />
       <div className="px-5 py-4 space-y-3">
-        <ResourceLink
-          href="/price-promise"
-          icon={<IconLock />}
-          title="Price Promise"
-          sub="What the locked price means"
-        />
-        <ResourceLink
-          href="/damage-promise"
-          icon={<IconShield />}
-          title="Damage Promise"
-          sub="$500K cargo coverage explained"
-        />
-        <ResourceLink
-          href="/people-promise"
-          icon={<IconHeadset />}
-          title="People Promise"
-          sub="Why we name your coordinator"
-        />
-        <ResourceLink
-          href="/anti-scam"
-          icon={<IconAlert />}
-          title="Spot the scams"
-          sub="What separates real brokers from the noise"
-        />
+        {resources.map((r) => (
+          <ResourceLink
+            key={r.href}
+            href={withOrder(r.href)}
+            icon={r.icon}
+            title={r.title}
+            sub={r.sub}
+          />
+        ))}
       </div>
       <div
         className="px-5 py-3 border-t flex items-center justify-between"
@@ -440,6 +565,35 @@ function ResourceLink({
 }
 
 export function ShipmentDetailsCard({ shipment }: { shipment: Shipment }) {
+  // Header info (Order / Vehicle / Route) stays — duplicates page header,
+  // but this card is the canonical "look it up" reference for these.
+  // Logistics rows (Pickup / Delivery ETA / Trailer / Insurance) are what
+  // actually makes the card worth the sidebar slot — they're not shown
+  // anywhere else and answer questions a customer might have mid-transit.
+  // Eddie 2026-06-09: card was filler before; this gives it work to do.
+  const tierLabel =
+    shipment.tier.charAt(0).toUpperCase() + shipment.tier.slice(1);
+  const trailerLabel = shipment.vehicle.enclosedRequired ? "Enclosed" : "Open";
+
+  // Pickup row prefers actual pickedUpAt if set; otherwise shows the
+  // scheduled window. If neither exists, the row is skipped.
+  let pickupValue: string | null = null;
+  if (shipment.pickedUpAt) {
+    pickupValue = formatDateShort(shipment.pickedUpAt);
+  } else if (shipment.scheduledPickup) {
+    pickupValue = formatDateShort(shipment.scheduledPickup.start);
+  }
+
+  // Delivery row prefers actual deliveredAt; falls back to ETA.
+  let deliveryValue: string | null = null;
+  let deliveryKey = "Delivery ETA";
+  if (shipment.deliveredAt) {
+    deliveryValue = formatDateShort(shipment.deliveredAt);
+    deliveryKey = "Delivered";
+  } else if (shipment.eta) {
+    deliveryValue = formatDateShort(shipment.eta.at, "America/Denver");
+  }
+
   const rows: { k: string; v: string }[] = [
     { k: "Order", v: shipment.orderNumber },
     {
@@ -450,11 +604,16 @@ export function ShipmentDetailsCard({ shipment }: { shipment: Shipment }) {
       k: "Route",
       v: `${shipment.origin.city} → ${shipment.destination.city}`,
     },
-    {
-      k: "Tier",
-      v: shipment.tier.charAt(0).toUpperCase() + shipment.tier.slice(1),
-    },
+    { k: "Service tier", v: tierLabel },
+    { k: "Trailer", v: trailerLabel },
+    ...(pickupValue ? [{ k: "Pickup", v: pickupValue }] : []),
+    ...(deliveryValue ? [{ k: deliveryKey, v: deliveryValue }] : []),
+    // Triple Promise insurance — brand-level guarantee, same on every
+    // shipment. Hardcoded here; if Auto Line tiers later vary coverage
+    // by tier, move this to a per-tier lookup.
+    { k: "Insurance", v: "$500K cargo coverage" },
   ];
+
   return (
     <Card>
       <div className="px-5 py-4">
@@ -468,17 +627,36 @@ export function ShipmentDetailsCard({ shipment }: { shipment: Shipment }) {
           {rows.map((r) => (
             <div
               key={r.k}
-              className="flex items-center justify-between py-2 text-[13px]"
+              className="flex items-center justify-between gap-3 py-2 text-[13px]"
               style={{ borderColor: "var(--color-gray-200)" }}
             >
-              <span style={{ color: "var(--color-text-muted)" }}>{r.k}</span>
-              <span className="font-bold">{r.v}</span>
+              <span
+                className="flex-shrink-0"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                {r.k}
+              </span>
+              <span className="font-bold text-right truncate">{r.v}</span>
             </div>
           ))}
         </div>
       </div>
     </Card>
   );
+}
+
+/** Compact date format for the shipment-details rows.
+ *  Example: "Jun 7, 8:12 AM". When tz is provided, formats in that
+ *  timezone (used for delivery ETA which lives in destination's local). */
+function formatDateShort(iso: string, tz?: string): string {
+  const opts: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  };
+  if (tz) opts.timeZone = tz;
+  return new Intl.DateTimeFormat("en-US", opts).format(new Date(iso));
 }
 
 /* ============================================================

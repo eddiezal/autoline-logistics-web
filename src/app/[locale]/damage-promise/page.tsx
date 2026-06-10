@@ -131,8 +131,9 @@ export default function DamagePromisePage() {
           </Container>
         </section>
 
-        {/* Claim process */}
-        <section className="py-16 bg-gray-100">
+        {/* Claim process — anchor target for /damage-promise#claim links
+            from the portal IN-TRANSIT Helpful Resources card. */}
+        <section id="claim" className="py-16 bg-gray-100 scroll-mt-24">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
               {t("damagePromise.steps.eyebrow")}

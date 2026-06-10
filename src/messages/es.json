@@ -50,6 +50,242 @@
       "emailPlaceholder": "tu@email.com",
       "ctaButton": "Avíseme",
       "ctaFootnote": "Solo le escribiremos cuando se publique un nuevo artículo. Sin spam de boletín."
+    },
+    "common": {
+      "eyebrow": "Recurso útil",
+      "back": "Todos los recursos",
+      "backToShipment": "Volver a su envío",
+      "cta": "¿Tiene una pregunta?|Llamar a {firstName}",
+      "ctaFallback": "¿Tiene una pregunta? Hable con un coordinador."
+    },
+    "articles": {
+      "deliveryDay": {
+        "metadata": {
+          "title": "Qué pasa en la entrega — Auto Line Logistics",
+          "description": "La mayoría de las entregas duran 15–20 minutos. Esto es exactamente lo que debe esperar, en orden."
+        },
+        "title": "Qué pasa en la entrega",
+        "subtitle": "La mayoría de las entregas duran 15–20 minutos. Esto es exactamente lo que debe esperar, en orden.",
+        "sections": {
+          "before": {
+            "title": "Antes de que llegue el conductor",
+            "body": "El conductor lo llama unos 30 minutos antes. Confirmará la dirección y la calle accesible más cercana — muchas calles residenciales son demasiado estrechas para un transportador de 75 pies, así que el conductor puede sugerir una avenida más ancha, un estacionamiento de centro comercial, o el centro comercial más cercano como el punto real de entrega. Lleve una linterna si es después del atardecer. El conductor anota la hora de llegada en el conocimiento de embarque (BOL) antes que nada.",
+            "bullets": [
+              "El conductor llama unos 30 min antes",
+              "Confirme dirección + calle accesible (no callejones residenciales estrechos)",
+              "Lleve linterna si es de noche"
+            ]
+          },
+          "walkaround": {
+            "title": "La inspección conjunta",
+            "body": "Usted y el conductor inspeccionan el vehículo juntos, comparando lo que ven ahora con las fotos de la recogida. Le enviamos esas fotos a su teléfono en el momento en que llega el conductor, para que pueda contrastarlas con el auto real. Cualquier cosa nueva — un rayón fresco, una abolladura, un chip en el vidrio — se anota en el BOL antes de que firme. Tómese su tiempo. Camine alrededor dos veces si quiere. Este es el momento que cierra el ciclo de todo el tránsito.",
+            "bullets": [
+              "Inspeccionen juntos, sin prisa",
+              "Compare con las fotos de recogida enviadas a su teléfono",
+              "Anote cualquier cosa nueva en el BOL ANTES de firmar"
+            ]
+          },
+          "bol": {
+            "title": "El conocimiento de embarque (BOL)",
+            "body": "El BOL es el documento legal que registra la condición en la entrega. Su firma significa: «recibí mi vehículo en la condición documentada aquí». Si anota daños en el BOL, su firma sigue siendo necesaria — pero es firma con notación, lo que preserva totalmente sus derechos de reclamación. El conductor le deja una copia. Guárdela: es su prueba de entrega para el seguro, registro vehicular y cualquier disputa futura.",
+            "bullets": [
+              "Su firma = «la condición es lo que está documentado»",
+              "Anote daños ANTES de firmar (firma con notación preserva reclamaciones)",
+              "Guarde su copia — necesaria para seguro, registro, disputas"
+            ]
+          },
+          "payment": {
+            "title": "Pago final",
+            "body": "El saldo se debe en la entrega, pagadero con tarjeta, ACH o Zelle. El conductor no maneja efectivo. Si su nivel fue Estándar o Prioritario, puede haber pagado el monto completo en la reserva — revise la tarjeta de Su Equipo en el portal para el saldo real restante. El pago se procesa a través de nuestro portal, no del dispositivo del conductor, así que tendrá un recibo digital antes de que el conductor se vaya.",
+            "bullets": [
+              "Tarjeta / ACH / Zelle",
+              "Sin efectivo",
+              "Recibo digital antes de que el conductor se vaya"
+            ]
+          },
+          "wrong": {
+            "title": "Si algo está mal",
+            "body": "No firme sin anotarlo en el BOL. Fotografíe cada abolladura, rayón o daño nuevo desde múltiples ángulos — de frente, oblicuo, con algo para escala. Llame a su coordinador antes de que se vaya el conductor: pueden aconsejarle en tiempo real, y si amerita una reclamación, comenzarán el papeleo del transportista mientras usted aún está parado frente a su auto. Tiene 24 horas para presentar una reclamación formal, pero el momento de la entrega es cuando existe la evidencia más fuerte.",
+            "bullets": [
+              "No firme limpio si hay daños",
+              "Fotografíe todo desde múltiples ángulos",
+              "Llame a su coordinador ANTES de que se vaya el conductor",
+              "Ventana de reclamación formal de 24 horas — pero la entrega es cuando la evidencia es más fuerte"
+            ]
+          }
+        }
+      },
+      "inspectionPhotos": {
+        "metadata": {
+          "title": "Cómo funcionan las fotos de inspección — Auto Line Logistics",
+          "description": "Fotografiamos su vehículo en cada hito. Qué capturamos, cuándo, por qué, y dónde encontrarlas."
+        },
+        "title": "Cómo funcionan las fotos de inspección",
+        "subtitle": "Fotografiamos su vehículo en cada hito para que nunca tenga que demostrar que algo sucedió.",
+        "sections": {
+          "standard": {
+            "title": "El estándar de 12 fotos",
+            "body": "En la recogida y en la entrega, el conductor captura 12 fotos de referencia: frente, parte trasera, ambos lados, cuatro ángulos del tablero (millaje, combustible, luces, posición de cambio), y primeros planos de cualquier daño preexistente. Doce es el estándar de la industria para reclamaciones de carga — lo que los investigadores de seguros buscan al evaluar «¿este daño era preexistente o ocurrió en tránsito?». Cualquier cosa que NO esté en nuestras fotos de recogida pero SÍ esté en las de entrega ocurrió durante el tránsito. Esa es la matemática protectora.",
+            "bullets": [
+              "Frente, trasera, lado conductor, lado pasajero (4)",
+              "Ángulos de tablero — millaje, combustible, luces, cambio (4)",
+              "Primeros planos de daños preexistentes (hasta 4)",
+              "Estándar de la industria para documentación de reclamaciones de carga"
+            ]
+          },
+          "milestones": {
+            "title": "En cada hito",
+            "body": "Las fotos se toman en tres puntos de control: recogida (set completo de 12 fotos), cada punto de paso en tránsito (elección del conductor — típicamente 2–4 a lo largo del viaje), y entrega (set completo de 12 fotos). Cada foto tiene marca de tiempo y geoetiqueta automática mediante la app del conductor. Las fotos de paso no son registros legales — son fotos de tranquilidad «su auto sigue donde debería estar». A menudo es una foto de estacionamiento, o su auto en el remolque detrás del cartel de un descanso.",
+            "bullets": [
+              "Recogida: set completo de 12 fotos",
+              "Puntos de paso en tránsito: 2–4 a lo largo de la ruta",
+              "Entrega: set completo de 12 fotos",
+              "Todas con marca de tiempo + geoetiqueta automática"
+            ]
+          },
+          "where": {
+            "title": "Dónde encontrarlas",
+            "body": "Abra su portal, desplácese a Fotos de inspección, y toque Recogida, Tránsito o Entrega. Las fotos se almacenan permanentemente — su acceso al portal no expira después de la entrega. Si las quiere como una sola descarga para sus registros, el enlace «Descargar todas» en la parte superior de la galería las comprime y las envía por correo. El transportista y nosotros guardamos copias por 7 años según las reglas de documentación FMCSA.",
+            "bullets": [
+              "Portal → tarjeta de Fotos de inspección",
+              "Almacenadas permanentemente (acceso al portal no expira)",
+              "«Descargar todas» → ZIP por correo",
+              "Retención de 7 años por nuestra parte según reglas federales"
+            ]
+          },
+          "protect": {
+            "title": "Lo que realmente protegen",
+            "body": "Si aparece una abolladura en la entrega que no está en las fotos de recogida, es una reclamación — sin discusión. No estará en posición de «su palabra contra la mía» con un transportista, porque la documentación ES la posición. Por eso nuestra Promesa de Daños cubre la brecha entre lo que paga la fianza del transportista y el costo real de la reparación: confiamos en que las fotos resisten, así que cubrimos el resto si la aseguradora del transportista se resiste.",
+            "bullets": [
+              "Las fotos son la evidencia, no su palabra",
+              "Las disputas del transportista pierden contra un set documentado de 12",
+              "La Promesa de Daños cubre lo que la fianza del transportista no cubre"
+            ]
+          },
+          "after": {
+            "title": "Después de la entrega",
+            "body": "Guarde el BOL — es su prueba legal de condición. Guarde las fotos — son su prueba visual. Juntos son un registro completo. La mayoría de los clientes nunca necesitan volver a consultarlos. Los que sí lo necesitan, están muy agradecidos de que existan.",
+            "bullets": [
+              "BOL + fotos = registro completo",
+              "La mayoría nunca los vuelve a ver",
+              "Los que los necesitan están muy agradecidos"
+            ]
+          }
+        }
+      },
+      "reachCoordinator": {
+        "metadata": {
+          "title": "Contactar a su coordinador — Auto Line Logistics",
+          "description": "Su coordinador es una persona, no una cola de espera. Así puede contactarlo eficazmente."
+        },
+        "title": "Contactar a su coordinador",
+        "subtitle": "Su coordinador es una persona, no una cola de espera. Así puede contactarlo eficazmente.",
+        "sections": {
+          "phone": {
+            "title": "Teléfono, en horario de trabajo",
+            "body": "Toque la tira de contacto en la parte inferior de la tarjeta de Su Equipo — llama directamente al celular de su coordinador, no a una central. Durante sus horas establecidas (el portal las muestra), normalmente recibirá respuesta en 30 minutos si están en otra llamada. Fuera de horas, la línea se redirige a quien esté cubriendo su envío durante la noche, así que las llamadas urgentes siguen llegando a alguien en vivo.",
+            "bullets": [
+              "Tarjeta de Su Equipo → toque para llamar",
+              "Respuesta típica de ~30 minutos en horas establecidas",
+              "Fuera de horas: rota a cobertura nocturna regional"
+            ]
+          },
+          "email": {
+            "title": "Correo para no-urgente",
+            "body": "Respuesta dentro de cuatro horas hábiles, L–V 7 AM–7 PM hora Central. El correo es mejor para: preguntas sobre papeleo, solicitar una copia de algo, cambios de horario con más de 48 horas de anticipación, consultas de hora estimada que no son urgentes. El enlace de correo del portal pre-llena el asunto con su número de orden para que su coordinador pueda abrir su archivo al instante.",
+            "bullets": [
+              "Objetivo: cuatro horas hábiles de respuesta",
+              "L–V, 7 AM – 7 PM hora Central",
+              "Mejor para: papeleo, cambios de horario, ETAs no urgentes"
+            ]
+          },
+          "languages": {
+            "title": "Idiomas",
+            "body": "Asignamos coordinadores bilingües cuando es posible. Su coordinador habla los idiomas listados en su tarjeta de Su Equipo (típicamente inglés y español). Si su idioma materno no está cubierto y la conversación se complica, traemos un traductor — sin costo adicional, solo dígalo.",
+            "bullets": [
+              "Los coordinadores suelen ser EN/ES",
+              "Traductor a petición, sin costo",
+              "Conversaciones complejas siempre con voz fluida"
+            ]
+          },
+          "vsDriver": {
+            "title": "Coordinador vs. conductor",
+            "body": "El conductor es su contacto para los próximos 30 minutos — «¿dónde está?», «el código de la puerta», «cambio de dirección para la entrega». El coordinador es su contacto para todo lo demás — «mi ETA está 6 horas más tarde de lo esperado, ¿qué pasa?», «necesito cambiar mi contacto de entrega», «necesito iniciar una reclamación por daños». Los conductores están enfocados en el camino. Los coordinadores están enfocados en su envío como un todo. Use a ambos en los momentos correctos.",
+            "bullets": [
+              "Conductor: AHORA, los próximos 30 minutos",
+              "Coordinador: el panorama, el día de, reclamaciones",
+              "Ambos están de su lado — úselos en los momentos correctos"
+            ]
+          },
+          "afterHours": {
+            "title": "Fuera de horas y emergencias",
+            "body": "Para emergencias verdaderas — vehículo en un accidente, conductor inaccesible por 4+ horas cuando esperaba una actualización, cambio urgente de hora de entrega — llame a la línea fuera de horas. Tiene cobertura en vivo, 24/7. Para todo lo demás, dejar un mensaje de voz o enviar un correo le da una respuesta a la mañana siguiente.",
+            "bullets": [
+              "Emergencias verdaderas: línea 24/7 fuera de horas",
+              "No urgente: mensaje de voz o correo → respuesta al día siguiente",
+              "Defina su propia emergencia — no juzgamos"
+            ]
+          }
+        }
+      },
+      "etaChanges": {
+        "metadata": {
+          "title": "¿Y si mi ETA cambia? — Auto Line Logistics",
+          "description": "Las ETAs son estimaciones. Nuestro sistema le dice qué tan seguros estamos, y le decimos el momento en que cambia."
+        },
+        "title": "¿Y si mi ETA cambia?",
+        "subtitle": "Las ETAs son estimaciones. Nuestro sistema le dice qué tan seguros estamos, y le decimos el momento en que cambia.",
+        "sections": {
+          "confidence": {
+            "title": "Qué significa la confianza del ETA",
+            "body": "El porcentaje que ve junto a «En horario» en su módulo de seguimiento es nuestra probabilidad calculada de que el vehículo llegue dentro de cuatro horas de la hora establecida. 85% de confianza significa: de 100 envíos similares en este punto del tránsito, aproximadamente 85 llegaron dentro de la ventana de entrega de 4 horas. La confianza no es una garantía — es nuestra lectura honesta de las variables que podemos ver (ritmo del conductor, millas restantes, pronóstico del tiempo, patrones de tráfico, estado de horas de servicio). Se actualiza cada 30 minutos.",
+            "bullets": [
+              "Confianza = probabilidad de llegada dentro de ±4 horas del ETA",
+              "85% significa que 85 de 100 envíos similares llegaron en la ventana",
+              "Se actualiza cada 30 minutos"
+            ]
+          },
+          "shifts": {
+            "title": "Qué cambia el ETA",
+            "body": "Las cinco causas principales, aproximadamente: clima (~40% de todos los cambios de ETA — las tormentas frenan a todos), tráfico y construcción (~25% — especialmente segmentos urbanos cerca de recogida o entrega), mecánico (~15% — camión o remolque necesitando servicio), límites federales de horas de servicio del conductor (~10% — las regulaciones federales limitan a los conductores a 11 horas de conducción por día de 14 horas, así que cuando se «acaban las horas» tienen que parar), y otros (~10% — inspecciones estatales, paradas de combustible, reprogramación). De estos, solo los problemas mecánicos nos permiten reasignar la carga para evitar el problema.",
+            "bullets": [
+              "Clima (~40%)",
+              "Tráfico / construcción (~25%)",
+              "Mecánico (~15%)",
+              "Límites federales de horas de servicio del conductor (~10%)",
+              "Otros — inspecciones, combustible, reprogramación (~10%)"
+            ]
+          },
+          "notify": {
+            "title": "Cómo se enterará",
+            "body": "Para cambios menores a dos horas, actualizamos su portal en tiempo real sin notificarle — están dentro de la ventana de confianza original, así que no son sorpresas. Para cambios mayores a dos horas, recibe un SMS en el momento en que sabemos. Para cambios mayores a seis horas, lo llamamos personalmente antes de enviar el SMS, porque ese nivel de cambio afecta su día. El correo sale para cada cambio, sin importar el tamaño.",
+            "bullets": [
+              "Menos de 2 horas → solo portal (sin notificación)",
+              "Más de 2 horas → SMS",
+              "Más de 6 horas → llamada personal ANTES del SMS",
+              "Correo para cualquier cambio"
+            ]
+          },
+          "options": {
+            "title": "Sus opciones si cambia mucho",
+            "body": "Puede ajustar su ventana de entrega (una ventana más amplia a menudo mejora el próximo ETA), cambiar su contacto de entrega (¿si usted no puede estar, quién puede?), o reprogramar por completo. Reprogramar es gratis dentro de 24 horas de la recogida si las condiciones lo ameritan. No lo penalizamos por ser flexible — la flexibilidad usualmente ayuda a que todo el viaje se mantenga en curso.",
+            "bullets": [
+              "Ajuste su ventana de entrega (más amplia = mejores probabilidades)",
+              "Cambie su contacto de entrega",
+              "Reprograme por completo — gratis dentro de 24 horas de la recogida"
+            ]
+          },
+          "callUs": {
+            "title": "Cuándo llamarnos",
+            "body": "Cualquier momento en que el cambio le parezca raro, incluso si nuestra notificación dice que está dentro de la tolerancia. Su intuición sobre su propio horario suele ser mejor que nuestro modelo. Nunca nos molesta la llamada — y una conversación de cinco minutos a menudo detecta un problema que nuestro sistema automatizado habría señalado seis horas más tarde.",
+            "bullets": [
+              "Cualquier momento que el cambio parezca raro",
+              "Su intuición sobre su horario gana a nuestro modelo",
+              "Nunca nos molesta la llamada"
+            ]
+          }
+        }
+      }
     }
   },
   "common": {
@@ -2179,11 +2415,13 @@
         "titleNoDriver": "En camino a",
         "currentlyNear": "Actualmente cerca de",
         "expectedToDeliver": "Entrega prevista",
-        "etaUpdating": "Hora de llegada actualizándose.",
-        "confidenceChip": "{pct}% de confianza",
+        "etaUpdating": "Actualizando hora de llegada",
+        "confidenceChip": "{pct}%",
         "confidenceHigh": "En horario",
-        "confidenceMid": "Rastreando — variabilidad menor posible",
-        "confidenceLow": "Variabilidad significativa — el coordinador hará seguimiento"
+        "confidenceMid": "Variabilidad menor",
+        "confidenceLow": "El coordinador hará seguimiento",
+        "statusETA": "ETA <strong>{eta}</strong>",
+        "statusLastReported": "Último reporte cerca de {location}"
       },
       "trust": {
         "priceLocked": "Precio bloqueado",
@@ -2193,7 +2431,7 @@
         "coordinator": "Coordinador dedicado",
         "coordinatorFallback": "EN · ES",
         "photosProtect": "Las fotos lo protegen",
-        "photosProtectDetail": "Llegando en cada hito"
+        "photosProtectDetail": "En cada hito"
       },
       "team": {
         "title": "Su equipo",
@@ -2207,9 +2445,9 @@
         "lastReported": "Reportado {ago}"
       },
       "timeline": {
-        "title": "Línea de tiempo del viaje",
-        "sub": "{count, plural, one {# hito} other {# hitos}} hasta ahora.",
-        "subWithExpected": "{count, plural, one {# hito} other {# hitos}} hasta ahora · 1 esperado.",
+        "title": "Línea de tiempo de la entrega",
+        "sub": "{count, plural, one {# hito completado} other {# hitos completados}}.",
+        "subWithExpected": "{count, plural, one {# hito completado} other {# hitos completados}} · Entrega sigue",
         "expectedDelivery": "Entrega esperada",
         "expectedDeliveryDetail": "{eta} · {city}, {state}"
       },

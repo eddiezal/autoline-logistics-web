@@ -50,6 +50,242 @@
       "emailPlaceholder": "you@email.com",
       "ctaButton": "Notify me",
       "ctaFootnote": "We'll only email when a new article publishes. No newsletter spam."
+    },
+    "common": {
+      "eyebrow": "Helpful resource",
+      "back": "All resources",
+      "backToShipment": "Back to your shipment",
+      "cta": "Still have a question?|Call {firstName}",
+      "ctaFallback": "Still have a question? Talk to a coordinator."
+    },
+    "articles": {
+      "deliveryDay": {
+        "metadata": {
+          "title": "What happens at delivery — Auto Line Logistics",
+          "description": "Most deliveries take 15–20 minutes. Here's exactly what to expect at handoff, in the order it happens."
+        },
+        "title": "What happens at delivery",
+        "subtitle": "Most deliveries take 15–20 minutes. Here's exactly what to expect, in the order it happens.",
+        "sections": {
+          "before": {
+            "title": "Before the driver arrives",
+            "body": "The driver calls you about 30 minutes out. You'll confirm the address and the nearest accessible street — many residential streets are too tight for a 75-foot car carrier, so the driver may suggest a wider road, a shopping-center parking lot, or your nearest mall as the actual handoff spot. Bring a flashlight if it's after dark. The driver notes the time of arrival on the Bill of Lading (BOL) before anything else happens.",
+            "bullets": [
+              "Driver calls ~30 min out",
+              "Confirm address + accessible street (no tight residential cul-de-sacs)",
+              "Bring a flashlight if after dark"
+            ]
+          },
+          "walkaround": {
+            "title": "The walkaround",
+            "body": "You and the driver inspect the vehicle together, comparing what you see now to the pickup photos. We send those photos to your phone the moment the driver arrives so you can hold them up next to the actual car. Anything new — a fresh scratch, a panel ding, a glass chip — gets noted on the BOL before you sign. Take your time. Walk around twice if you want. This is the moment that closes the loop on the entire transit.",
+            "bullets": [
+              "Inspect together, no rush",
+              "Compare against pickup photos sent to your phone",
+              "Note anything new on the BOL BEFORE signing"
+            ]
+          },
+          "bol": {
+            "title": "The Bill of Lading",
+            "body": "The BOL is the legal document that records condition at delivery. Your signature means: \"I received my vehicle in the condition documented here.\" If you note damage on the BOL, your signature is still required — but it's signature with notation, which preserves your claim rights fully. The driver leaves you a copy. Keep it: it's your proof of delivery for insurance, vehicle registration, and any future dispute.",
+            "bullets": [
+              "Your signature = \"condition is what's documented\"",
+              "Note damage BEFORE signing (signature with notation preserves claims)",
+              "Keep your copy — needed for insurance, registration, disputes"
+            ]
+          },
+          "payment": {
+            "title": "Final payment",
+            "body": "Balance is due at delivery, payable by card, ACH, or Zelle. The driver does not handle cash. If your tier was Standard or Priority, you may have paid the full amount at booking — check Your Team card in the portal for the actual remaining balance. Payment processes through our portal, not the driver's own device, so you'll have a digital receipt before the driver leaves.",
+            "bullets": [
+              "Card / ACH / Zelle",
+              "No cash",
+              "Digital receipt before driver departs"
+            ]
+          },
+          "wrong": {
+            "title": "If something is wrong",
+            "body": "Don't sign without noting it on the BOL. Photograph every dent, scratch, or new piece of damage from multiple angles — straight-on, oblique, with something for scale. Call your coordinator before the driver leaves: they can advise in real time, and if it warrants a claim, they'll start the carrier paperwork while you're still standing in front of your car. You have 24 hours to file a formal claim, but the moment of handoff is when the strongest evidence exists.",
+            "bullets": [
+              "Don't sign clean if damage exists",
+              "Photo everything from multiple angles",
+              "Call your coordinator BEFORE the driver leaves",
+              "24-hour formal claim window — but handoff is when evidence is strongest"
+            ]
+          }
+        }
+      },
+      "inspectionPhotos": {
+        "metadata": {
+          "title": "How inspection photos work — Auto Line Logistics",
+          "description": "We photograph your vehicle at every milestone. What we capture, when, why, and where to find them."
+        },
+        "title": "How inspection photos work",
+        "subtitle": "We photograph your vehicle at every milestone so you never have to prove anything happened.",
+        "sections": {
+          "standard": {
+            "title": "The 12-photo standard",
+            "body": "At pickup and at delivery, the driver captures 12 reference photos: front, rear, both sides, four dashboard angles (mileage, fuel, dash lights, gear position), and close-ups of any pre-existing damage. Twelve is the cargo-claim industry standard — what insurance investigators look for when they assess \"was this damage pre-existing or did it happen in transit?\" Anything that's NOT in our pickup photos but IS in our delivery photos happened during transit. That's the protective math.",
+            "bullets": [
+              "Front, rear, driver side, passenger side (4)",
+              "Dashboard angles — mileage, fuel, lights, gear (4)",
+              "Pre-existing damage close-ups (up to 4)",
+              "Industry standard for cargo-claim documentation"
+            ]
+          },
+          "milestones": {
+            "title": "At every milestone",
+            "body": "Photos are taken at three checkpoints: pickup (full 12-photo set), each transit waypoint (driver's choice — typically 2–4 across the trip), and delivery (full 12-photo set). Every photo is timestamped and GPS-tagged automatically by the driver's app. The waypoint shots aren't legal records — they're \"your car is still where it should be\" peace-of-mind shots. Often it's a parking-lot photo, or your car on the trailer behind a rest stop sign.",
+            "bullets": [
+              "Pickup: full 12-photo set",
+              "Transit waypoints: 2–4 across the route",
+              "Delivery: full 12-photo set",
+              "All photos timestamped + GPS-tagged automatically"
+            ]
+          },
+          "where": {
+            "title": "Where to find them",
+            "body": "Open your portal, scroll to Inspection photos, and tap Pickup, Transit, or Delivery. Photos are stored permanently — your portal access doesn't expire after delivery. If you want them as a single download for your records, the \"Download all\" link at the top of the photo gallery zips and emails them to you. The carrier and we both keep copies for 7 years per FMCSA documentation rules.",
+            "bullets": [
+              "Portal → Inspection photos card",
+              "Stored permanently (portal access doesn't expire)",
+              "\"Download all\" → ZIP via email",
+              "7-year retention on our side per federal rules"
+            ]
+          },
+          "protect": {
+            "title": "What they actually protect",
+            "body": "If a panel ding shows up at delivery that isn't in the pickup photos, it's a claim — full stop. You won't be in a \"his word against mine\" position with a carrier, because the documentation IS the position. This is why our Damage Promise covers the gap between what the carrier's bond pays out and the actual repair cost: we're confident the photos hold up, so we'll cover the rest if the carrier's insurer fights it.",
+            "bullets": [
+              "Photos are the evidence, not your word",
+              "Carrier disputes lose against a documented 12-shot set",
+              "Damage Promise covers what the carrier's bond doesn't"
+            ]
+          },
+          "after": {
+            "title": "After delivery",
+            "body": "Keep the BOL — it's your legal proof of condition. Keep the photos — they're your visual proof. Together they're a complete record. Most customers never need to refer back to them. The ones who do are very glad they exist.",
+            "bullets": [
+              "BOL + photos = complete record",
+              "Most customers never look at them again",
+              "The customers who do are very glad they exist"
+            ]
+          }
+        }
+      },
+      "reachCoordinator": {
+        "metadata": {
+          "title": "Reach your coordinator — Auto Line Logistics",
+          "description": "Your coordinator is one person, not a queue. Here's how to use them effectively."
+        },
+        "title": "Reach your coordinator",
+        "subtitle": "Your coordinator is one person, not a queue. Here's how to use them effectively.",
+        "sections": {
+          "phone": {
+            "title": "Phone, during business hours",
+            "body": "Tap the contact strip at the bottom of Your Team card — it calls your coordinator directly on their cell line, not a switchboard. During their stated hours (the portal shows them), you'll typically hear back within 30 minutes if they're on another call. After business hours, the line forwards to whoever's covering your shipment overnight, so urgent calls still land somewhere live.",
+            "bullets": [
+              "Your Team card → tap to call",
+              "~30-minute response during stated hours",
+              "After hours: rotates to regional overnight coverage"
+            ]
+          },
+          "email": {
+            "title": "Email for non-urgent",
+            "body": "Reply within four business hours, M–F 7 AM–7 PM Central. Email is best for: questions about paperwork, requesting a copy of something, schedule changes more than 48 hours out, ETA inquiries that aren't time-pressured. The portal's email link pre-fills the subject line with your order number so your coordinator can pull up your file instantly.",
+            "bullets": [
+              "Four business hours target response",
+              "M–F, 7 AM – 7 PM Central",
+              "Best for: paperwork, schedule changes, non-urgent ETA questions"
+            ]
+          },
+          "languages": {
+            "title": "Languages",
+            "body": "We assign coordinators bilingual where possible. Your coordinator speaks the languages listed in their Your Team card (typically English and Spanish). If your home language isn't covered and the conversation gets complex, we'll bring in a translator — no additional cost, just say the word.",
+            "bullets": [
+              "Coordinators are usually EN/ES",
+              "Translator on request, no cost",
+              "Complex conversations always get a fluent voice"
+            ]
+          },
+          "vsDriver": {
+            "title": "Coordinator vs. driver",
+            "body": "The driver is your contact for the next 30 minutes — \"where are you,\" \"gate code,\" \"address change for delivery.\" The coordinator is your contact for everything beyond that — \"my ETA is 6 hours later than expected, what's going on,\" \"I need to change my delivery contact,\" \"I need a damage claim started.\" Drivers are focused on the road. Coordinators are focused on your shipment as a whole. Use both at the right moments.",
+            "bullets": [
+              "Driver: NOW, the next 30 minutes",
+              "Coordinator: the bigger picture, day-of, claims",
+              "Both have your back — use them at the right moments"
+            ]
+          },
+          "afterHours": {
+            "title": "After-hours and emergencies",
+            "body": "For true emergencies — vehicle in an accident, driver unreachable for 4+ hours when you expected an update, urgent delivery-time change — call the after-hours line. It's covered live, 24/7. For everything else, leaving a voicemail or sending an email gets you a response by the next business morning.",
+            "bullets": [
+              "True emergencies: 24/7 after-hours line",
+              "Non-urgent: voicemail or email → next-morning response",
+              "Define your own emergency — we don't second-guess"
+            ]
+          }
+        }
+      },
+      "etaChanges": {
+        "metadata": {
+          "title": "What if my ETA changes? — Auto Line Logistics",
+          "description": "ETAs are estimates. Our system tells you how confident we are, and we'll tell you the moment it shifts."
+        },
+        "title": "What if my ETA changes?",
+        "subtitle": "ETAs are estimates. Our system tells you how confident we are, and we'll tell you the moment it shifts.",
+        "sections": {
+          "confidence": {
+            "title": "What ETA confidence means",
+            "body": "The percentage you see next to \"On schedule\" in your tracking module is our calculated probability that the vehicle arrives within four hours of the stated time. 85% confidence means: of 100 similar shipments at this point in transit, about 85 arrived within the 4-hour delivery window. Confidence isn't a guarantee — it's our honest read of the variables we can see (driver pace, remaining miles, weather forecasts, traffic patterns, hours-of-service status). It updates every 30 minutes.",
+            "bullets": [
+              "Confidence = probability of arrival within ±4 hours of stated ETA",
+              "85% means 85 of 100 similar shipments hit the window",
+              "Updates every 30 minutes"
+            ]
+          },
+          "shifts": {
+            "title": "What shifts the ETA",
+            "body": "Five biggest causes, roughly: weather (~40% of all ETA changes — storms slow everyone down), traffic and construction (~25% — especially urban approach segments near pickup or delivery), mechanical (~15% — the truck or trailer needing service), driver hours-of-service limits (~10% — federal regs cap drivers at 11 driving hours per 14-hour day, so when a driver \"runs out of hours\" they have to stop), and other (~10% — state inspections, fuel stops, customer rescheduling). Of these, only mechanical issues let us route around the problem by reassigning the load.",
+            "bullets": [
+              "Weather (~40%)",
+              "Traffic / construction (~25%)",
+              "Mechanical (~15%)",
+              "Federal driver hours-of-service limits (~10%)",
+              "Other — inspections, fuel, rescheduling (~10%)"
+            ]
+          },
+          "notify": {
+            "title": "How you'll hear about it",
+            "body": "For shifts under two hours, we update your portal in real-time without notifying you — these are within the original confidence window, so they're not surprises. For shifts over two hours, you get an SMS the moment we know. For shifts over six hours, we call you personally before sending the SMS, because that's the level of change that affects your day. Email goes out for every change, regardless of size.",
+            "bullets": [
+              "Under 2 hours → portal only (no notification)",
+              "Over 2 hours → SMS",
+              "Over 6 hours → personal phone call BEFORE the SMS",
+              "Email goes out for any change"
+            ]
+          },
+          "options": {
+            "title": "Your options if it shifts a lot",
+            "body": "You can adjust your delivery window (a wider window often improves the next ETA), swap your delivery contact (if you can't be there, who can?), or reschedule entirely. Rescheduling is free within 24 hours of pickup if conditions warrant. We do not penalize you for being flexible — flexibility usually helps the whole trip stay on track.",
+            "bullets": [
+              "Adjust your delivery window (wider = better odds)",
+              "Swap your delivery contact",
+              "Reschedule entirely — free within 24 hours of pickup"
+            ]
+          },
+          "callUs": {
+            "title": "When to call us",
+            "body": "Any time the change feels off, even if our notification says it's within tolerance. Your gut about your own schedule is often better than our model. We never mind the call — and a five-minute conversation often catches an issue our automated system would have flagged six hours later.",
+            "bullets": [
+              "Any time the change feels off",
+              "Your gut about your schedule beats our model",
+              "We never mind the call"
+            ]
+          }
+        }
+      }
     }
   },
   "common": {
@@ -2179,11 +2415,13 @@
         "titleNoDriver": "On the way to",
         "currentlyNear": "Currently near",
         "expectedToDeliver": "Expected to deliver",
-        "etaUpdating": "ETA updating.",
-        "confidenceChip": "{pct}% confidence",
+        "etaUpdating": "ETA updating",
+        "confidenceChip": "{pct}%",
         "confidenceHigh": "On schedule",
-        "confidenceMid": "Tracking — minor variability possible",
-        "confidenceLow": "Significant variability — coordinator will follow up"
+        "confidenceMid": "Minor variability",
+        "confidenceLow": "Coordinator will follow up",
+        "statusETA": "ETA <strong>{eta}</strong>",
+        "statusLastReported": "Last reported near {location}"
       },
       "trust": {
         "priceLocked": "Price locked",
@@ -2193,7 +2431,7 @@
         "coordinator": "Dedicated coordinator",
         "coordinatorFallback": "EN · ES",
         "photosProtect": "Photos protect you",
-        "photosProtectDetail": "Arriving at each milestone"
+        "photosProtectDetail": "At each milestone"
       },
       "team": {
         "title": "Your team",
@@ -2207,9 +2445,9 @@
         "lastReported": "Last reported {ago}"
       },
       "timeline": {
-        "title": "Trip timeline",
-        "sub": "{count, plural, one {# milestone} other {# milestones}} so far.",
-        "subWithExpected": "{count, plural, one {# milestone} other {# milestones}} so far · 1 expected ahead.",
+        "title": "Delivery timeline",
+        "sub": "{count, plural, one {# milestone} other {# milestones}} completed.",
+        "subWithExpected": "{count, plural, one {# milestone} other {# milestones}} completed · Delivery is next",
         "expectedDelivery": "Expected delivery",
         "expectedDeliveryDetail": "{eta} · {city}, {state}"
       },

@@ -38,7 +38,7 @@ export default async function ShipmentPage({ params }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <Link
         href="/portal"
         className="text-sm hover:underline"

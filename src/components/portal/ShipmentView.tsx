@@ -29,7 +29,11 @@ type Props = {
 
 export function ShipmentView({ shipment }: Props) {
   return (
-    <div className="space-y-6">
+    // 20px gap between header (route line) and tracking module per
+    // Option B spec 2026-06-09. The tracking module now carries its own
+    // dark green status header which connects visually to the map; this
+    // outer gap lets the page header breathe without disconnecting them.
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <ShipmentHeader shipment={shipment} />
       <StageView shipment={shipment} />
     </div>
@@ -45,24 +49,40 @@ function ShipmentHeader({ shipment }: { shipment: Shipment }) {
   return (
     <header>
       <div
-        className="text-sm font-semibold uppercase tracking-wider mb-2"
-        style={{ color: "var(--color-text-muted)" }}
+        className="flex items-center gap-2 flex-wrap"
+        style={{
+          fontSize: 13,
+          fontWeight: 600,
+          letterSpacing: "0.04em",
+          textTransform: "uppercase",
+          color: "#64748b",
+          marginBottom: 8,
+        }}
       >
-        Order #{shipment.orderNumber} · <StatusBadge status={shipment.status} />
+        <span>Order #{shipment.orderNumber}</span>
+        <StatusBadge status={shipment.status} />
       </div>
       <h1
-        className="text-2xl md:text-3xl font-bold"
         style={{
-          color: "var(--color-text-default)",
+          fontSize: "clamp(28px, 4.5vw, 34px)",
+          lineHeight: 1.05,
+          fontWeight: 800,
+          letterSpacing: "-0.035em",
+          color: "#020617",
+          marginBottom: 6,
           fontFamily: "var(--font-brand-display)",
-          letterSpacing: "var(--letter-spacing-display)",
         }}
       >
         {shipment.vehicle.year} {shipment.vehicle.make} {shipment.vehicle.model}
       </h1>
       <p
-        className="text-base mt-1"
-        style={{ color: "var(--color-text-muted)" }}
+        style={{
+          fontSize: "clamp(15px, 1.6vw, 17px)",
+          lineHeight: 1.4,
+          fontWeight: 500,
+          color: "#475569",
+          marginBottom: 0,
+        }}
       >
         {shipment.origin.city}, {shipment.origin.state} →{" "}
         {shipment.destination.city}, {shipment.destination.state}
@@ -82,12 +102,23 @@ function StatusBadge({ status }: { status: ShipmentStatus }) {
     completed: "Completed",
     claimed: "Claim filed",
   };
+  // Soft green pill per the Option B spec (2026-06-09). The hero card
+  // ABOVE the map is dark green now (TrackingStatusHeader), so this
+  // light green chip no longer competes — they read as part of the
+  // same green visual system. Different shade, same brand language.
   return (
     <span
-      className="inline-block px-2 py-0.5 rounded-full text-xs font-bold"
+      className="inline-block"
       style={{
-        background: "color-mix(in oklab, var(--color-brand-primary) 12%, white)",
-        color: "var(--color-brand-primary-hover)",
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+        color: "#047857",
+        background: "#dcfce7",
+        border: "1px solid #bbf7d0",
+        borderRadius: 999,
+        padding: "3px 8px",
       }}
     >
       {labels[status]}

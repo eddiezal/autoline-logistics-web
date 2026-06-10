@@ -254,7 +254,7 @@ const MIKE_SHIPMENT: Shipment = {
     {
       id: "ph_transit_1",
       url: "/photography/placeholder-vehicle.webp",
-      capturedAt: "2026-05-26T22:30:00.000Z",
+      capturedAt: "2026-06-07T22:30:00.000Z",
       capturedBy: "driver",
       angle: "waypoint",
       caption: "Phoenix departure",
@@ -262,7 +262,7 @@ const MIKE_SHIPMENT: Shipment = {
     {
       id: "ph_transit_2",
       url: "/photography/placeholder-vehicle.webp",
-      capturedAt: "2026-05-27T18:45:00.000Z",
+      capturedAt: "2026-06-08T18:45:00.000Z",
       capturedBy: "driver",
       angle: "waypoint",
       caption: "Tucson check-in",
@@ -270,39 +270,45 @@ const MIKE_SHIPMENT: Shipment = {
   ],
 
   currentLocation: {
+    // Label is the place itself, not the modifier — the UI templates add
+    // "near" / "Last reported near" wording so we don't double up
+    // ("Last reported near Near Albuquerque" was the bug Eddie flagged
+    // 2026-06-09). For the demo, keep this within a few hours of "now"
+    // so the fresh-state branch renders. Stale-state branch kicks in at
+    // ~6h; bump these alongside if you want to demo it.
     lat: 35.0844,
     lng: -106.6504,
-    label: "Near Albuquerque, NM",
-    lastUpdatedAt: "2026-05-28T13:42:00.000Z",
+    label: "Albuquerque, NM",
+    lastUpdatedAt: "2026-06-09T13:42:00.000Z",
   },
 
   eta: {
-    at: "2026-05-29T14:00:00.000Z",     // 8:00 AM MT
+    at: "2026-06-10T14:00:00.000Z",     // tomorrow, 8:00 AM MT
     confidenceScore: 0.85,
-    computedAt: "2026-05-28T13:42:00.000Z",
+    computedAt: "2026-06-09T13:42:00.000Z",
   },
 
   milestones: [
     {
       id: "ms_101",
       type: "booked",
-      at: "2026-05-25T19:25:00.000Z",
+      at: "2026-06-06T19:25:00.000Z",
     },
     {
       id: "ms_102",
       type: "driverAssigned",
-      at: "2026-05-25T22:00:00.000Z",
+      at: "2026-06-06T22:00:00.000Z",
     },
     {
       id: "ms_103",
       type: "pickedUp",
-      at: "2026-05-26T15:12:00.000Z",
+      at: "2026-06-07T15:12:00.000Z",
       location: { lat: 33.4484, lng: -112.0740, label: "Phoenix, AZ" },
     },
     {
       id: "ms_104",
       type: "atWaypoint",
-      at: "2026-05-27T18:45:00.000Z",
+      at: "2026-06-08T18:45:00.000Z",
       location: { lat: 32.2226, lng: -110.9747, label: "Tucson, AZ" },
     },
   ],
