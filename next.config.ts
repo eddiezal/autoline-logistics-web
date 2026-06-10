@@ -51,6 +51,13 @@ const SECURITY_HEADERS: Array<{ key: string; value: string }> = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  // COOP: "same-origin-allow-popups" keeps us isolated from cross-origin
+  // documents we navigate to, BUT lets us be the opener for popups (Firebase
+  // Auth's Google sign-in flow). The strict "same-origin" default blocks
+  // window.closed / window.close() postMessage between our page and the
+  // accounts.google.com popup, killing signInWithPopup.
+  // See: https://firebase.google.com/docs/auth/web/redirect-best-practices
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
   // Lock down browser feature exposure to only what we actively use.
   {
     key: "Permissions-Policy",

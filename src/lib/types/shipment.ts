@@ -48,6 +48,14 @@ export interface Address {
   city: string;
   state: string;        // 'CA', 'TX', etc.
   street?: string;      // Often unknown at quote stage.
+  /**
+   * Optional geocoded coordinates — populated when known so the IN-TRANSIT
+   * map can pin origin + destination markers. When undefined the map
+   * falls back to centering on currentLocation only. Phase B: geocode at
+   * order-creation time via Mapbox or SD's lat/lng if returned.
+   */
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface Location {
@@ -241,6 +249,15 @@ export interface Shipment {
   id: string;
   orderNumber: string;          // "ALL-2026-04830" — used in URLs.
   status: ShipmentStatus;
+
+  /**
+   * Super Dispatch order GUID — set when the Shipment is mirrored to SD's
+   * Shipper TMS. The repository uses this to fetch live order details
+   * (driver photos, status, location) from SD per page load. Optional
+   * because Shipments may exist before they're posted to SD, and because
+   * during the early portal phase some shipments stay mock-only.
+   */
+  sdOrderGuid?: string;
 
   // ── Always present ─────────────────────────────────────────
   customer: Customer;

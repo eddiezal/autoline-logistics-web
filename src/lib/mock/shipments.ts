@@ -67,8 +67,20 @@ const SARAH_SHIPMENT: Shipment = {
     enclosedRequired: false,
   },
 
-  origin: { zip: "90210", city: "Beverly Hills", state: "CA" },
-  destination: { zip: "78701", city: "Austin", state: "TX" },
+  origin: {
+    zip: "90210",
+    city: "Beverly Hills",
+    state: "CA",
+    latitude: 34.0901,
+    longitude: -118.4065,
+  },
+  destination: {
+    zip: "78701",
+    city: "Austin",
+    state: "TX",
+    latitude: 30.2672,
+    longitude: -97.7431,
+  },
 
   tier: "priority",
   priceLockedCents: 142000,  // $1,420.00
@@ -190,31 +202,43 @@ const MIKE_SHIPMENT: Shipment = {
     enclosedRequired: false,
   },
 
-  origin: { zip: "85001", city: "Phoenix", state: "AZ" },
-  destination: { zip: "80202", city: "Denver", state: "CO" },
+  origin: {
+    zip: "85001",
+    city: "Phoenix",
+    state: "AZ",
+    latitude: 33.4484,
+    longitude: -112.0740,
+  },
+  destination: {
+    zip: "80202",
+    city: "Denver",
+    state: "CO",
+    latitude: 39.7392,
+    longitude: -104.9903,
+  },
 
   tier: "expedited",
   priceLockedCents: 189000,  // $1,890.00
 
-  createdAt: "2026-05-25T19:10:00.000Z",
-  bookedAt: "2026-05-25T19:25:00.000Z",
+  createdAt: "2026-06-06T19:10:00.000Z",
+  bookedAt: "2026-06-06T19:25:00.000Z",
 
   driver: DRIVER_MARCUS,
   coordinator: COORDINATOR_DANIELLE,
 
   scheduledPickup: {
-    start: "2026-05-26T14:00:00.000Z",
-    end: "2026-05-26T18:00:00.000Z",
+    start: "2026-06-07T14:00:00.000Z",
+    end: "2026-06-07T18:00:00.000Z",
     timezone: "America/Phoenix",
   },
 
-  pickedUpAt: "2026-05-26T15:12:00.000Z",
+  pickedUpAt: "2026-06-07T15:12:00.000Z",
 
   // Pickup photos (12 standard)
   pickupPhotos: Array.from({ length: 12 }, (_, i) => ({
     id: `ph_pickup_${i + 1}`,
     url: "/photography/placeholder-vehicle.webp",
-    capturedAt: "2026-05-26T15:18:00.000Z",
+    capturedAt: "2026-06-07T15:18:00.000Z",
     capturedBy: "driver" as const,
     angle: (
       [
