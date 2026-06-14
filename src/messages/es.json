@@ -2483,6 +2483,14 @@
         "tomorrow": "mañana",
         "atTime": "{prefix} a las {time} {tz}"
       }
+    },
+    "account": {
+      "backToDashboard": "Tablero",
+      "heading": "Cuenta",
+      "signedInAs": "Sesion iniciada como",
+      "signOut": "Cerrar sesion",
+      "comingSoonTitle": "Proximamente mas controles",
+      "comingSoonBody": "Los datos de perfil, metodos de pago y preferencias de notificacion viviran aqui en la proxima version. Por ahora, su coordinador puede actualizar cualquier cosa de su envio. Solo contactelo."
     }
   }
 }

@@ -5,20 +5,20 @@ import { ShipmentView } from "@/components/portal/ShipmentView";
 import { requireSession } from "@/lib/firebase/session";
 
 /**
- * Shipment detail view — `/portal/[orderNumber]`
+ * Shipment detail view at /portal/[orderNumber].
  *
- * Resolves a shipment from the repository (mock today, Firestore Monday)
- * and renders <ShipmentView>, which dispatches to the right stage
- * component based on shipment.status.
+ * Resolves a shipment from the repository (mock or Firestore depending
+ * on SHIPMENTS_SOURCE) and renders <ShipmentView>, which dispatches to
+ * the right stage component based on shipment.status.
  *
- * Try these in dev:
- * - /portal/ALL-2026-04830 → Sarah Chen, PREP stage (full UI)
- * - /portal/ALL-2026-04831 → Mike Johnson, IN_TRANSIT stage (full UI)
- * - /portal/ALL-XXXX        → not-found placeholder
- *
- * When Firebase Auth + Firestore are wired:
- * - Verify auth.uid matches shipment.customer.id before rendering
- * - Subscribe to Firestore listener for real-time updates (client comp)
+ * Auth model:
+ *   Layer 1 (Edge proxy): __session cookie must be present.
+ *   Layer 2 (Node):       cryptographically verify the session cookie
+ *                         (this page calls requireSession).
+ *   Layer 3 (Ownership):  the signed-in user's email must match the
+ *                         shipment's customer email. Mismatch renders
+ *                         NotFound (NOT Forbidden) so signed-in
+ *                         attackers cannot enumerate valid order numbers.
  */
 
 type Props = {
@@ -27,13 +27,19 @@ type Props = {
 
 export default async function ShipmentPage({ params }: Props) {
   const { orderNumber, locale } = await params;
-  // Layer 2: real session verification (Node). Redirects to login if invalid.
-  // TODO(#38/#39): also assert session.uid === shipment.customer.id (ownership)
-  // once shipments resolve from Firestore.
-  await requireSession(locale);
-  const shipment = await getShipmentByOrderNumber(orderNumber);
 
+  // Layer 2: real session verification. Redirects to login if invalid.
+  const session = await requireSession(locale);
+
+  const shipment = await getShipmentByOrderNumber(orderNumber);
   if (!shipment) {
+    return <ShipmentNotFound orderNumber={orderNumber} />;
+  }
+
+  // Layer 3: ownership check. Mirror repository normalization (lowercase + trim).
+  const sessionEmail = session.email?.trim().toLowerCase() ?? "";
+  const ownerEmail = shipment.customer.email.trim().toLowerCase();
+  if (sessionEmail !== ownerEmail) {
     return <ShipmentNotFound orderNumber={orderNumber} />;
   }
 

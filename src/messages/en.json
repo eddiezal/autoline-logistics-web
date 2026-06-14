@@ -2483,6 +2483,14 @@
         "tomorrow": "tomorrow",
         "atTime": "{prefix} at {time} {tz}"
       }
+    },
+    "account": {
+      "backToDashboard": "Dashboard",
+      "heading": "Account",
+      "signedInAs": "Signed in as",
+      "signOut": "Sign out",
+      "comingSoonTitle": "More controls coming soon",
+      "comingSoonBody": "Profile details, payment methods, and notification preferences will live here in the next release. For now, your coordinator can update anything on your shipment, just reach out."
     }
   }
 }
