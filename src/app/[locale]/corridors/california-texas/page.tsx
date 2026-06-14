@@ -30,34 +30,101 @@ export default function CaliforniaTexasCorridor() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero. Cost-anchored, dark green */}
+        {/* Hero. Cost-anchored. Two-column on desktop, stacked on mobile.
+            Left: price chip + H1 + subhead + CTAs.
+            Right: cost-comparison card showing the math up front. */}
         <section className="bg-charcoal text-white py-16 md:py-20">
           <Container>
-            <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
-              {t("corridors.californiaTexas.hero.eyebrow")}
-            </p>
-            <p className="inline-block bg-green-900/40 border border-green-700 text-green-300 text-sm font-semibold rounded-full px-4 py-1.5 mb-4">
-              {t("corridors.californiaTexas.hero.priceCallout")}
-            </p>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-4xl">
-              {t("corridors.californiaTexas.hero.title")}
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mt-4 max-w-2xl leading-relaxed">
-              {t("corridors.californiaTexas.hero.description")}
-            </p>
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link
-                href={{ pathname: "/quote", query: { from: "CA", to: "TX" } }}
-                className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-6 py-3 rounded-full transition"
-              >
-                {t("corridors.californiaTexas.hero.ctaPrimary")}
-              </Link>
-              <a
-                href="#math"
-                className="border border-white/30 hover:border-white text-white font-semibold px-6 py-3 rounded-full transition"
-              >
-                {t("corridors.californiaTexas.hero.ctaSecondary")}
-              </a>
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10 lg:gap-16 items-start">
+              {/* Left column: copy + CTAs */}
+              <div>
+                {/* Consolidated price chip. Replaces the small eyebrow + separate
+                    pill from V1. Brighter green, more pop, acts as the visual
+                    anchor above the H1. */}
+                <p className="inline-block bg-green-500/15 border border-green-400/50 text-green-300 text-sm md:text-base font-semibold rounded-full px-4 py-2 mb-6">
+                  {t("corridors.californiaTexas.hero.priceCallout")}
+                </p>
+
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                  {t("corridors.californiaTexas.hero.title")}
+                </h1>
+                <p className="text-lg md:text-xl text-gray-300 mt-5 max-w-xl leading-relaxed">
+                  {t("corridors.californiaTexas.hero.description")}
+                </p>
+
+                <div className="flex flex-wrap gap-3 mt-8">
+                  <Link
+                    href={{ pathname: "/quote", query: { from: "CA", to: "TX" } }}
+                    className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-6 py-3 rounded-full transition"
+                  >
+                    {t("corridors.californiaTexas.hero.ctaPrimary")}
+                  </Link>
+                  <a
+                    href="#math"
+                    className="border border-white/30 hover:border-white text-white font-semibold px-6 py-3 rounded-full transition"
+                  >
+                    {t("corridors.californiaTexas.hero.ctaSecondary")}
+                  </a>
+                </div>
+              </div>
+
+              {/* Right column: cost comparison card. Two stacked blocks (drive
+                  vs ship) with a small "vs" divider and a link to the full
+                  Ship vs Drive calculator for the skeptical buyer. */}
+              <aside className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                <p className="text-green-300 text-[11px] font-bold uppercase tracking-wider mb-4">
+                  {t("corridors.californiaTexas.hero.compare.eyebrow")}
+                </p>
+
+                {/* Drive block */}
+                <div className="border-l-2 border-gray-500/50 pl-4 mb-4">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                    {t("corridors.californiaTexas.hero.compare.driveLabel")}
+                  </p>
+                  <p className="text-xl font-bold text-white">
+                    {t("corridors.californiaTexas.hero.compare.driveCost")}
+                  </p>
+                  <p className="text-sm text-gray-300 mt-1">
+                    {t("corridors.californiaTexas.hero.compare.driveBreakdown")}
+                  </p>
+                  <p className="text-sm text-gray-400 italic mt-1">
+                    {t("corridors.californiaTexas.hero.compare.driveExtra")}
+                  </p>
+                </div>
+
+                {/* vs divider */}
+                <div className="flex items-center gap-3 my-4">
+                  <div className="flex-1 h-px bg-white/15"></div>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    {t("corridors.californiaTexas.hero.compare.vsLabel")}
+                  </span>
+                  <div className="flex-1 h-px bg-white/15"></div>
+                </div>
+
+                {/* Ship block */}
+                <div className="border-l-2 border-green-400 pl-4">
+                  <p className="text-xs font-semibold text-green-300 uppercase tracking-wider mb-1">
+                    {t("corridors.californiaTexas.hero.compare.shipLabel")}
+                  </p>
+                  <p className="text-xl font-bold text-white">
+                    {t("corridors.californiaTexas.hero.compare.shipCost")}
+                  </p>
+                  <p className="text-sm text-gray-300 mt-1">
+                    {t("corridors.californiaTexas.hero.compare.shipBreakdown")}
+                  </p>
+                  <p className="text-sm text-green-300/90 italic mt-1">
+                    {t("corridors.californiaTexas.hero.compare.shipExtra")}
+                  </p>
+                </div>
+
+                {/* Full calculator link */}
+                <Link
+                  href="/tools/ship-vs-drive"
+                  className="block text-center mt-5 pt-4 border-t border-white/10 text-green-300 hover:text-green-200 text-xs font-semibold uppercase tracking-wider transition"
+                >
+                  {t("corridors.californiaTexas.hero.compare.fullCalcLink")} →
+                </Link>
+              </aside>
             </div>
           </Container>
         </section>

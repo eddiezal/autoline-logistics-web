@@ -2060,11 +2060,24 @@
     "californiaTexas": {
       "hero": {
         "eyebrow": "California a Texas . Precio fijo todo incluido",
-        "priceCallout": "Desde $1,150 . CA a TX, sedan estandar, transporte abierto",
-        "title": "Envie su auto de California a Texas por menos de lo que cuesta manejarlo.",
-        "description": "Mil cuatrocientas millas. Tres dias al volante. O un envio de precio fijo con su auto esperandolo al llegar. Y su transmision aun tiene millas por delante.",
+        "priceCallout": "California a Texas . Precio fijo todo incluido desde $1,150",
+        "title": "Envie su auto de California a Texas por menos de lo que cuesta manejarlo usted mismo.",
+        "description": "1,400 millas. 3 dias al volante. Gasolina, hoteles, comidas y desgaste en su auto. O un envio de precio fijo con su auto esperandolo al llegar.",
         "ctaPrimary": "Obtener mi precio fijo",
-        "ctaSecondary": "Ver las cuentas"
+        "ctaSecondary": "Ver las cuentas",
+        "compare": {
+          "eyebrow": "Las cuentas, al frente",
+          "driveLabel": "Manejelo usted mismo",
+          "driveCost": "$1,100 a $1,400 tipico",
+          "driveBreakdown": "Gasolina + hoteles + comidas + desgaste",
+          "driveExtra": "Mas 3 dias de su tiempo",
+          "vsLabel": "frente a",
+          "shipLabel": "Envielo con nosotros",
+          "shipCost": "Desde $1,150 fijo",
+          "shipBreakdown": "Todo incluido. Su auto le espera al llegar.",
+          "shipExtra": "Recogida 2 a 3 dias. Entrega 5 a 7.",
+          "fullCalcLink": "Pruebe la calculadora completa Enviar vs Manejar"
+        }
       },
       "math": {
         "eyebrow": "Las cuentas",

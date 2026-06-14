@@ -2060,11 +2060,24 @@
     "californiaTexas": {
       "hero": {
         "eyebrow": "California to Texas . Locked all-in price",
-        "priceCallout": "From $1,150 . CA to TX standard sedan, open transport",
-        "title": "Ship your car from California to Texas for less than gas, hotels, and wear-and-tear cost to drive it.",
-        "description": "1,400 miles. 3 days behind the wheel. Or one locked-price shipment with your car waiting when you land. Plus your transmission still has miles left.",
+        "priceCallout": "California to Texas . Locked all-in price from $1,150",
+        "title": "Ship your car from California to Texas for less than driving it yourself.",
+        "description": "1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.",
         "ctaPrimary": "Get my locked price",
-        "ctaSecondary": "See the math"
+        "ctaSecondary": "See the math",
+        "compare": {
+          "eyebrow": "The math, up front",
+          "driveLabel": "Drive it yourself",
+          "driveCost": "$1,100-1,400 typical",
+          "driveBreakdown": "Gas + hotels + food + vehicle wear",
+          "driveExtra": "Plus 3 days of your time",
+          "vsLabel": "vs",
+          "shipLabel": "Ship with us",
+          "shipCost": "From $1,150 locked",
+          "shipBreakdown": "All-in. Your car waits when you land.",
+          "shipExtra": "Pickup 2-3 days. Delivery 5-7.",
+          "fullCalcLink": "Try the full Ship vs Drive calculator"
+        }
       },
       "math": {
         "eyebrow": "The math",
