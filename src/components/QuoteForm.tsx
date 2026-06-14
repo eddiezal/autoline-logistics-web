@@ -15,21 +15,21 @@ const VEHICLE_TYPE_KEYS = [
   "other",
 ] as const;
 
-// hCaptcha test site key — always passes. Replace via NEXT_PUBLIC_HCAPTCHA_SITE_KEY
-// once you provision a real hCaptcha account at https://hcaptcha.com.
+// hCaptcha test site key. Always passes. Replace via NEXT_PUBLIC_HCAPTCHA_SITE_KEY
+// once a real hCaptcha account is provisioned at https://hcaptcha.com.
 const HCAPTCHA_TEST_KEY = "10000000-ffff-ffff-ffff-000000000001";
 
 /**
  * /quote intake form (client component).
  *
- * Currently submits via mailto (browser opens user's email client). Once
- * Super Dispatch integration lands and we have a real server endpoint, this
- * will switch to a Server Action that validates the hCaptcha token
- * server-side and creates the SD shipment.
+ * Submits to POST /api/lead which validates the captcha server-side,
+ * round-robins to the next agent (Nelson/Renee/Ginger), calls SD pricing
+ * for the live estimate, saves the lead doc, and emails the agent via
+ * Resend.
  *
- * The captcha widget here gates the submit button — bot scripts can still
- * fill the form but can't trigger the mailto handoff without solving the
- * challenge. Real server-side validation comes with the Server Action.
+ * On success, the form is replaced with an inline SuccessCard showing
+ * the lead reference. On error, an inline message appears and the user
+ * can retry.
  */
 export function QuoteForm({
   fromCode,
@@ -45,16 +45,77 @@ export function QuoteForm({
   const usingTestKey = siteKey === HCAPTCHA_TEST_KEY;
 
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const captchaRef = useRef<HCaptcha>(null);
   const captchaId = useId();
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!captchaToken || pending) return;
+    setPending(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
+    const payload: Record<string, string> = {};
+    fd.forEach((v, k) => {
+      if (typeof v === "string") payload[k] = v;
+    });
+    payload.captchaToken = captchaToken;
+    payload.referrer = typeof document !== "undefined" ? document.referrer : "";
+
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json()) as { ok?: boolean; leadRef?: string; error?: string };
+
+      if (!res.ok || !data.ok) {
+        setError(data.error ?? "Something went wrong. Please try again.");
+        setPending(false);
+        captchaRef.current?.resetCaptcha();
+        setCaptchaToken(null);
+        return;
+      }
+
+      setSuccess(data.leadRef ?? "");
+    } catch (err) {
+      console.error("[QuoteForm] submit failed", err);
+      setError("Network error. Please check your connection and try again.");
+      setPending(false);
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken(null);
+    }
+  }
+
+  if (success !== null) {
+    return (
+      <div className="rounded-2xl border border-green-200 bg-green-50 p-6 sm:p-8">
+        <p className="text-green-700 text-sm font-semibold uppercase tracking-wider">
+          {t("quote.form.success.eyebrow")}
+        </p>
+        <h2 className="text-2xl font-bold text-charcoal mt-2">
+          {t("quote.form.success.title")}
+        </h2>
+        <p className="text-gray-700 mt-3 leading-relaxed">
+          {t("quote.form.success.body")}
+        </p>
+        {success && (
+          <p className="text-gray-600 text-sm mt-4">
+            <span className="font-semibold">{t("quote.form.success.refLabel")}:</span> {success}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <form
-      action="mailto:info@autolinelogistics.com"
-      method="post"
-      encType="text/plain"
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Origin */}
       <fieldset className="space-y-3">
         <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
@@ -134,9 +195,10 @@ export function QuoteForm({
         <Select
           label={t("quote.form.vehicle.type.label")}
           name="vehicle_type"
-          options={VEHICLE_TYPE_KEYS.map((k) =>
-            t(`quote.form.vehicle.type.options.${k}`)
-          )}
+          options={VEHICLE_TYPE_KEYS.map((k) => ({
+            value: k,
+            label: t("quote.form.vehicle.type.options." + k),
+          }))}
         />
       </fieldset>
 
@@ -222,14 +284,20 @@ export function QuoteForm({
         )}
       </fieldset>
 
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       {/* Submit */}
       <div className="pt-4">
         <button
           type="submit"
-          disabled={!captchaToken}
+          disabled={!captchaToken || pending}
           className="bg-brand-accent hover:bg-brand-accent-hover disabled:bg-gray-300 disabled:cursor-not-allowed text-brand-accent-ink font-semibold px-8 py-3 rounded-full transition"
         >
-          {t("quote.form.submit.button")}
+          {pending ? t("quote.form.submit.pending") : t("quote.form.submit.button")}
         </button>
         <p className="text-gray-500 text-xs mt-3">
           {t("quote.form.submit.footnote")}
@@ -296,7 +364,7 @@ function Select({
 }: {
   label: string;
   name: string;
-  options: string[];
+  options: Array<{ value: string; label: string }>;
 }) {
   return (
     <label className="block">
@@ -308,8 +376,8 @@ function Select({
         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange focus:ring-2 focus:ring-orange/20 text-charcoal bg-white"
       >
         {options.map((o) => (
-          <option key={o} value={o}>
-            {o}
+          <option key={o.value} value={o.value}>
+            {o.label}
           </option>
         ))}
       </select>
