@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA to TX V2 . Sub-variations</title>
+<style>
+  :root {
+    --cream: #faf6ef;
+    --charcoal: #1a1a1a;
+    --pine-deep: #052e1a;
+    --pine: #118647;
+    --pine-light: #16a34a;
+    --pine-bg: #f0faf3;
+    --orange: #ff6600;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--gray-100); color: var(--charcoal); line-height: 1.55; }
+  .page { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page-header { margin-bottom: 32px; }
+  .page-header h1 { margin: 0 0 8px; font-size: 28px; }
+  .page-header p { margin: 0; color: var(--gray-700); max-width: 800px; }
+  .var { background: var(--cream); border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .var-meta { background: var(--charcoal); color: #fff; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .var-meta h2 { margin: 0; font-size: 18px; font-weight: 700; }
+  .var-meta .sub { font-size: 12px; color: #d1d5db; margin-top: 4px; }
+  .var-tag { background: var(--orange); color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+  .hero { background: var(--pine-deep); color: #fff; padding: 48px 40px 40px; }
+  .hero .eyebrow { color: var(--pine-light); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 12px; }
+  .hero h1 { margin: 0 0 12px; font-size: 36px; line-height: 1.15; letter-spacing: -0.02em; max-width: 720px; }
+  .hero .sub { color: #d1fae5; font-size: 16px; max-width: 600px; margin: 0 0 24px; }
+  .price-callout { display: inline-block; background: rgba(22,163,74,0.18); border: 1px solid rgba(22,163,74,0.4); border-radius: 999px; padding: 6px 16px; color: var(--pine-light); font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+  .trust-signals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; max-width: 800px; }
+  .trust-pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 14px; }
+  .trust-pill .label { color: var(--pine-light); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 4px; }
+  .trust-pill .text { color: #fff; font-size: 13px; font-weight: 600; margin: 0; }
+  .route-finder { background: #fff; border-radius: 12px; padding: 20px; margin-top: 28px; border: 1px solid var(--gray-200); display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+  .rf-field label { display: block; font-size: 11px; color: var(--gray-700); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .rf-field input { width: 100%; padding: 10px 12px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 16px; color: var(--charcoal); background: #fff; }
+  .rf-btn { background: var(--orange); color: #fff; padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; white-space: nowrap; }
+  .context { padding: 40px 40px; background: #fff; }
+  .context p { color: var(--gray-700); font-size: 16px; max-width: 760px; margin: 0; line-height: 1.7; }
+  .types { padding: 40px 40px; background: var(--cream); }
+  .types h2 { font-size: 24px; margin: 0 0 20px; color: var(--charcoal); }
+  .types-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .type-card { background: #fff; border-radius: 12px; padding: 24px; border: 1px solid var(--gray-200); }
+  .type-card .icon { background: var(--pine-bg); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--pine); font-weight: 700; }
+  .type-card h3 { margin: 0 0 8px; font-size: 17px; color: var(--charcoal); }
+  .type-card p { margin: 0; color: var(--gray-700); font-size: 14px; }
+  .subdest { padding: 40px 40px; background: #fff; }
+  .subdest h2 { font-size: 24px; margin: 0 0 20px; color: var(--charcoal); }
+  .subdest-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .subdest-card { background: var(--cream); border-radius: 12px; padding: 20px; border: 1px solid var(--gray-200); }
+  .subdest-card .city { font-size: 18px; font-weight: 700; color: var(--charcoal); margin: 0 0 4px; }
+  .subdest-card .zip { font-size: 12px; color: var(--gray-500); margin: 0 0 8px; }
+  .subdest-card p { font-size: 13px; color: var(--gray-700); margin: 0; }
+  .faq { padding: 40px 40px; background: var(--cream); }
+  .faq h2 { font-size: 24px; margin: 0 0 20px; color: var(--charcoal); }
+  .faq-item { background: #fff; border-radius: 10px; padding: 18px 22px; margin-bottom: 10px; border: 1px solid var(--gray-200); }
+  .faq-item .q { font-size: 15px; font-weight: 700; color: var(--charcoal); margin: 0 0 6px; }
+  .faq-item .a { font-size: 14px; color: var(--gray-700); margin: 0; }
+  .final-cta { padding: 48px 40px; background: var(--pine-deep); color: #fff; text-align: center; }
+  .final-cta h2 { margin: 0 0 12px; font-size: 28px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .final-cta p { color: #d1fae5; margin: 0 0 24px; }
+  .final-cta a { background: var(--orange); color: #fff; padding: 14px 32px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-block; }
+  .matrix { background: #fff; border-radius: 16px; padding: 28px; margin-top: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .matrix h2 { margin: 0 0 12px; font-size: 20px; }
+  .matrix table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix th, .matrix td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .matrix th { color: var(--gray-700); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gray-50); }
+  .matrix td.col { font-weight: 700; min-width: 100px; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+  .pill-cost { background: #d1fae5; color: #065f46; }
+  .pill-speed { background: #dbeafe; color: #1e40af; }
+  .pill-trust { background: #fef3c7; color: #92400e; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>V2 sub-variations . Same broad audience, 3 different hooks</h1>
+    <p>All three hold the same target (general CA-to-TX movers: job transfers, family relocations, snowbirds) but lead with different value-prop angles. Same layout, sub-destinations, and structural rhythm. What changes: hero hook, trust-signal selection, customer-type emphasis, CTA copy.</p>
+  </header>
+
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>V2a . Cost-anchored ("cheaper than driving")</h2><p class="sub">Lead with the economic argument. Hits people who Googled "drive vs ship CA to TX." Strong against gas + hotel + wear-and-tear math.</p></div>
+      <span class="var-tag pill-cost">Cost</span>
+    </div>
+    <div class="hero">
+      <p class="eyebrow">California to Texas . Locked all-in price</p>
+      <span class="price-callout">From $1,150 . CA to TX standard sedan, open transport</span>
+      <h1>Ship your car from California to Texas for less than gas, hotels, and wear and tear cost to drive it.</h1>
+      <p class="sub">1,400 miles. 3 days behind the wheel. Or one locked-price shipment with your car waiting when you land. Plus your transmission still has miles left.</p>
+      <div class="trust-signals">
+        <div class="trust-pill"><p class="label">Locked price</p><p class="text">No fuel surcharge, no broker-up</p></div>
+        <div class="trust-pill"><p class="label">No deposit</p><p class="text">Pay nothing until pickup</p></div>
+        <div class="trust-pill"><p class="label">All-in quote</p><p class="text">Door-to-door, no hidden add-ons</p></div>
+      </div>
+      <div class="route-finder">
+        <div class="rf-field"><label>From ZIP</label><input value="90210" readonly></div>
+        <div class="rf-field"><label>To ZIP</label><input value="75201 (Dallas)" readonly></div>
+        <button class="rf-btn">Get my locked price</button>
+      </div>
+    </div>
+    <div class="context"><p>The math usually works out: a one-way CA to TX trip costs $400-600 in gas plus 2-3 hotel nights plus the wear-and-tear and depreciation of putting 1,400 hard freeway miles on your vehicle. A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose 3 days. We run the corridor weekly through our family fleet and partner network.</p></div>
+    <div class="types">
+      <h2>Who saves the most</h2>
+      <div class="types-grid">
+        <div class="type-card"><div class="icon">1</div><h3>Job relocators on a deadline</h3><p>Your start date is fixed. The 3 days you'd lose driving cost more than shipping. Locked price + 4-6 day delivery.</p></div>
+        <div class="type-card"><div class="icon">2</div><h3>Multi-vehicle households</h3><p>Two or three cars makes the math even more lopsided. Multi-car discount available. One coordinator, one delivery window.</p></div>
+        <div class="type-card"><div class="icon">3</div><h3>Older or higher-mile vehicles</h3><p>Adding 1,400 miles hits resale value more than the shipping cost. The math is especially clean for luxury, low-mile, and lease vehicles.</p></div>
+      </div>
+    </div>
+    <div class="subdest">
+      <h2>Top Texas destinations from CA</h2>
+      <div class="subdest-grid">
+        <div class="subdest-card"><p class="city">CA to Dallas-Fort Worth</p><p class="zip">75201 . 76101 . the metroplex</p><p>Tech, finance, headquarters. Our most-run TX corridor.</p></div>
+        <div class="subdest-card"><p class="city">CA to Houston</p><p class="zip">77001 . energy belt . Memorial</p><p>Energy + medical center moves. Open or enclosed.</p></div>
+        <div class="subdest-card"><p class="city">CA to Austin</p><p class="zip">78701 . hill country . South Congress</p><p>SF + LA tech transfers run this lane heavy.</p></div>
+        <div class="subdest-card"><p class="city">CA to San Antonio</p><p class="zip">78201 . Stone Oak . Alamo Heights</p><p>Family relocations, retirees, snowbirds.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h2>The cost math, explained</h2>
+      <div class="faq-item"><p class="q">Is shipping really cheaper than driving?</p><p class="a">Often yes when you count gas ($400-600), hotels (2-3 nights), food, and 1,400 miles of wear. Add the value of 3 days of your time and most people come out ahead.</p></div>
+      <div class="faq-item"><p class="q">What's the actual price range?</p><p class="a">CA to TX standard sedan on open transport runs $1,150-1,650 depending on origin/destination ZIP and timing. SUV $200-400 more. Truck $300-500 more. SD market estimate at quote time.</p></div>
+      <div class="faq-item"><p class="q">What does "locked price" mean?</p><p class="a">The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise.</p></div>
+      <div class="faq-item"><p class="q">Are there ever extra charges?</p><p class="a">No. The only thing that changes price is if you add a vehicle or change tier post-booking. Even then we quote the change up front.</p></div>
+      <div class="faq-item"><p class="q">What if the price changes after booking?</p><p class="a">It doesn't. Our Price Promise. The locked quote is what you pay.</p></div>
+    </div>
+    <div class="final-cta">
+      <h2>Locked-price CA to TX shipment. Run the math.</h2>
+      <p>Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.</p>
+      <a href="#">Get my locked price</a>
+    </div>
+  </section>
+
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>V2b . Speed/timing-anchored ("certainty + speed")</h2><p class="sub">Lead with operational reliability. Hits people on a job-start-date or school-start clock. Strong against open-ended estimates and "we'll see when we get there" brokers.</p></div>
+      <span class="var-tag pill-speed">Speed</span>
+    </div>
+    <div class="hero">
+      <p class="eyebrow">California to Texas . On-the-clock corridor</p>
+      <h1>Pickup in 2-3 days. Delivered in 5-7. California to Texas with a real schedule.</h1>
+      <p class="sub">Job starts Monday. School starts in two weeks. Lease ends Friday. We give you a pickup window at booking and a delivery window we keep. Real-time tracking the whole way.</p>
+      <div class="trust-signals">
+        <div class="trust-pill"><p class="label">2-3 day pickup</p><p class="text">Booked-window confirmed at quote</p></div>
+        <div class="trust-pill"><p class="label">5-7 day delivery</p><p class="text">Door-to-door, family fleet + partners</p></div>
+        <div class="trust-pill"><p class="label">Real-time portal</p><p class="text">Truck on the map, milestone alerts</p></div>
+      </div>
+      <div class="route-finder">
+        <div class="rf-field"><label>From ZIP</label><input value="90210" readonly></div>
+        <div class="rf-field"><label>To ZIP</label><input value="75201 (Dallas)" readonly></div>
+        <button class="rf-btn">Get my pickup window</button>
+      </div>
+    </div>
+    <div class="context"><p>Open-ended "we'll see" pickup dates are the most common complaint in auto transport. We work on a calendar, not a wishlist. At booking you get a specific pickup window. At pickup you get carrier name, USDOT, driver phone. In transit you see the truck on a map in your portal. At delivery you get pre-delivery notification 24 hours out. The whole way.</p></div>
+    <div class="types">
+      <h2>Who books for timing certainty</h2>
+      <div class="types-grid">
+        <div class="type-card"><div class="icon">1</div><h3>Job start date pressure</h3><p>You start Monday. Car needs to be in Dallas by Saturday. Our window-locked pickup makes the math work.</p></div>
+        <div class="type-card"><div class="icon">2</div><h3>School calendars</h3><p>Family relocation tied to school start. The vehicle has to land before the kids do. We hit calendar windows.</p></div>
+        <div class="type-card"><div class="icon">3</div><h3>Lease handoffs</h3><p>Old lease ends Friday. New residence opens Monday. We slot pickup to the gap.</p></div>
+      </div>
+    </div>
+    <div class="subdest">
+      <h2>Top Texas destinations from CA</h2>
+      <div class="subdest-grid">
+        <div class="subdest-card"><p class="city">CA to Dallas-Fort Worth</p><p class="zip">75201 . 76101 . the metroplex</p><p>3-5 day transit typical. Pickup-to-delivery window confirmed at booking.</p></div>
+        <div class="subdest-card"><p class="city">CA to Houston</p><p class="zip">77001 . energy belt . Memorial</p><p>4-6 day transit. Daily routes via the southern lane.</p></div>
+        <div class="subdest-card"><p class="city">CA to Austin</p><p class="zip">78701 . hill country . South Congress</p><p>3-5 day transit. Hub for tech-driven moves.</p></div>
+        <div class="subdest-card"><p class="city">CA to San Antonio</p><p class="zip">78201 . Stone Oak . Alamo Heights</p><p>4-6 day transit. Less common but routed via Houston.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h2>Timing questions</h2>
+      <div class="faq-item"><p class="q">How fast can you pick up?</p><p class="a">Standard window is 2-3 days from booking. Expedited tier brings it to 24-48 hours. We confirm the pickup window before you sign.</p></div>
+      <div class="faq-item"><p class="q">How long is transit?</p><p class="a">CA to TX runs 4-6 days door to door. Less for southern California to Austin/Houston. More for Northern California to Dallas/Fort Worth.</p></div>
+      <div class="faq-item"><p class="q">Can I see where my car is?</p><p class="a">Yes. Real-time map view in your customer portal. Plus milestone notifications by text and email at pickup, en route, and pre-delivery.</p></div>
+      <div class="faq-item"><p class="q">What if you miss the window?</p><p class="a">Our coordinator calls you proactively. Most issues resolve same-day. Locked price means we eat any delay cost, not you.</p></div>
+      <div class="faq-item"><p class="q">Will you coordinate with my moving company?</p><p class="a">Yes. Send us your moving company schedule and we sync vehicle pickup so they don't overlap.</p></div>
+    </div>
+    <div class="final-cta">
+      <h2>California to Texas. Pickup window confirmed at booking.</h2>
+      <p>No "we'll see." Real schedule, real coordinator, real-time tracking. Get your pickup window in 60 seconds.</p>
+      <a href="#">Get my pickup window</a>
+    </div>
+  </section>
+
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>V2c . Trust-anchored ("tired of broker scams?")</h2><p class="sub">Lead with the differentiation we already built into the home page. Hits people on their 2nd or 3rd quote, especially burned-once shoppers. Highest organic alignment with the rest of the site.</p></div>
+      <span class="var-tag pill-trust">Trust</span>
+    </div>
+    <div class="hero">
+      <p class="eyebrow">California to Texas . The Locked-Price Promise</p>
+      <h1>Tired of broker-scam quotes from California to Texas? We are the broker. Locked price. Named coordinator. Carrier name in writing.</h1>
+      <p class="sub">Most "quotes" you're getting are lead-gen sites reselling your number to 8+ brokers in 60 seconds. We arrange every shipment ourselves. Real coordinator, real phone number, real receipts.</p>
+      <div class="trust-signals">
+        <div class="trust-pill"><p class="label">We are the broker</p><p class="text">No reselling. No bait price.</p></div>
+        <div class="trust-pill"><p class="label">Carrier in writing</p><p class="text">Name + USDOT + driver phone at assignment</p></div>
+        <div class="trust-pill"><p class="label">Portal receipts</p><p class="text">See the truck on a map. Photos at every handoff.</p></div>
+      </div>
+      <div class="route-finder">
+        <div class="rf-field"><label>From ZIP</label><input value="90210" readonly></div>
+        <div class="rf-field"><label>To ZIP</label><input value="75201 (Dallas)" readonly></div>
+        <button class="rf-btn">Get my honest quote</button>
+      </div>
+    </div>
+    <div class="context"><p>Auto Line Logistics is the broker that arranges your CA to TX shipment. We don't resell your information, we don't disappear after booking, and we don't change the price between quote and invoice. The carrier name, USDOT number, and driver contact appear in your customer portal when we assign the load. Verifiable on FMCSA SAFER. Photos at every handoff. The portal is the receipts.</p></div>
+    <div class="types">
+      <h2>Who finds us after the wrong quote</h2>
+      <div class="types-grid">
+        <div class="type-card"><div class="icon">1</div><h3>Second-quote shoppers</h3><p>You got a "too good to be true" quote. Then a different price at pickup. You're done with that. Locked price is the answer.</p></div>
+        <div class="type-card"><div class="icon">2</div><h3>First-time movers</h3><p>You're researching what an honest quote looks like. The locked-price model is the answer. Our Anti-Scam Guide walks you through the 3 questions to ask any broker.</p></div>
+        <div class="type-card"><div class="icon">3</div><h3>Burned-once veterans</h3><p>You shipped before and didn't love it. Our coordinator stays with you start to finish. Portal updates the whole way.</p></div>
+      </div>
+    </div>
+    <div class="subdest">
+      <h2>Top Texas destinations from CA</h2>
+      <div class="subdest-grid">
+        <div class="subdest-card"><p class="city">CA to Dallas-Fort Worth</p><p class="zip">75201 . 76101 . the metroplex</p><p>Our most-run TX corridor. Family fleet + verified partners.</p></div>
+        <div class="subdest-card"><p class="city">CA to Houston</p><p class="zip">77001 . energy belt . Memorial</p><p>Energy + medical center moves. Verified carrier in writing.</p></div>
+        <div class="subdest-card"><p class="city">CA to Austin</p><p class="zip">78701 . hill country . South Congress</p><p>Tech-driven volume. Every shipment portal-tracked.</p></div>
+        <div class="subdest-card"><p class="city">CA to San Antonio</p><p class="zip">78201 . Stone Oak . Alamo Heights</p><p>Family relocations + retirees. Same coordinator start to finish.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h2>Three questions to ask any broker</h2>
+      <div class="faq-item"><p class="q">"Are you the broker, or did you buy my info?"</p><p class="a">We are the broker. We arrange every shipment ourselves. No reselling. Compare that with the "quote" you got from someone who never had the carrier to honor it.</p></div>
+      <div class="faq-item"><p class="q">"Will you tell me the carrier's name, USDOT, and driver contact in writing, before pickup?"</p><p class="a">Yes. The carrier name, USDOT, and driver contact appear in your customer portal as soon as we assign the load. Verifiable on the FMCSA SAFER database.</p></div>
+      <div class="faq-item"><p class="q">"What happens if I don't hear from anyone for 3 days during transit?"</p><p class="a">Your customer portal shows the truck on the map in real time. Milestone updates by text and email at pickup, en route, and pre-delivery. Your coordinator answers if you call between them.</p></div>
+      <div class="faq-item"><p class="q">"What does locked price mean?"</p><p class="a">The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup, no hidden door-to-door fees. Our Price Promise.</p></div>
+      <div class="faq-item"><p class="q">"What if you find a cheaper carrier mid-route?"</p><p class="a">It still costs you the locked price. No "we found a cheaper carrier, give us $200 more" call. That's not how we work.</p></div>
+    </div>
+    <div class="final-cta">
+      <h2>An honest California to Texas quote. The locked-price way.</h2>
+      <p>We are the broker. The carrier name comes to your portal. The price stays the price.</p>
+      <a href="#">Get my honest quote</a>
+    </div>
+  </section>
+
+  <div class="matrix">
+    <h2>What changes between V2 sub-variations</h2>
+    <table>
+      <thead><tr><th>Dimension</th><th><span class="pill pill-cost">V2a Cost</span></th><th><span class="pill pill-speed">V2b Speed</span></th><th><span class="pill pill-trust">V2c Trust</span></th></tr></thead>
+      <tbody>
+        <tr><td class="col">Hero hook</td><td>"Cheaper than driving"</td><td>"Pickup in 2-3 days, delivered 5-7"</td><td>"Tired of broker-scam quotes?"</td></tr>
+        <tr><td class="col">Trust signals lead</td><td>Locked price + No deposit + All-in quote</td><td>2-3 day pickup + 5-7 day delivery + Real-time portal</td><td>We are the broker + Carrier in writing + Portal receipts</td></tr>
+        <tr><td class="col">Customer types lead</td><td>Job relocators + multi-vehicle + lease/luxury</td><td>Job start date + school calendars + lease handoffs</td><td>Second-quote shoppers + first-timers + burned-once</td></tr>
+        <tr><td class="col">FAQ tone</td><td>Cost math (drive vs ship, price range, locked)</td><td>Timing (pickup window, transit, tracking)</td><td>Anti-scam (broker accountability, portal, locked price)</td></tr>
+        <tr><td class="col">CTA copy</td><td>"Get my locked price"</td><td>"Get my pickup window"</td><td>"Get my honest quote"</td></tr>
+        <tr><td class="col">Ad keywords</td><td>"ship car cheaper than drive", "CA to TX car cost", "drive vs ship Texas"</td><td>"fast car shipping CA to TX", "auto transport Texas timing", "guaranteed pickup date"</td><td>"honest car shipping broker", "locked price auto transport", "best CA to TX car shipping"</td></tr>
+        <tr><td class="col">Strongest against</td><td>"I'll just drive it"</td><td>"I need it by [date]"</td><td>"I already got 6 quotes"</td></tr>
+        <tr><td class="col">Highest organic alignment</td><td>Standalone landing page</td><td>Standalone landing page</td><td>Reuses anti-scam Q1+Q2+Q3 framing from the home page</td></tr>
+      </tbody>
+    </table>
+    <h2 style="margin-top: 28px;">My honest take</h2>
+    <p style="color: var(--gray-700); margin: 0 0 8px;"><strong>V2c Trust</strong> is the most defensible long-term because it doubles down on the differentiation Auto Line already owns on the home page (the anti-scam framing, the locked price, the portal). Ad copy writes itself. The page reinforces brand instead of competing on commodity hooks (cost, speed) that competitors will undercut on bid the second they see it work.</p>
+    <p style="color: var(--gray-700); margin: 0 0 8px;"><strong>V2a Cost</strong> probably wins highest CTR but lowest LTV. People comparing on price first will rebook on price next.</p>
+    <p style="color: var(--gray-700); margin: 0;"><strong>V2b Speed</strong> is the operational-trust angle for moves with calendar pressure. Best paid-test fit if Auto Line can actually hit those windows reliably (which depends on agent capacity + carrier availability, not just the page).</p>
+  </div>
+</div>
+</body>
+</html>

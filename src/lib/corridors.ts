@@ -1,28 +1,15 @@
 /**
- * Corridor catalog — single source of truth for corridor pages and the index.
+ * Corridor catalog. Single source of truth for corridor pages and the index.
  *
  * Each corridor has a `slug` (used as URL segment) and either lives at
  * /corridors/<slug>/page.tsx (status: "live") or appears as a "Coming soon"
  * card on the /corridors index (status: "coming-soon").
  *
  * COPY LIVES IN `src/messages/{en,es}.json`, NOT HERE.
- * - From/to state display names → `quote.states.{code}`
- * - Corridor shortDesc → `corridors.catalog.{camelKey}.shortDesc`
- * - Sub-destination fields (name, routing, timeline, note, customers) →
+ * - From/to state display names: `quote.states.{code}`
+ * - Corridor shortDesc: `corridors.catalog.{camelKey}.shortDesc`
+ * - Sub-destination fields (name, routing, timeline, note, customers):
  *   `corridors.catalog.{camelKey}.subDestinations.{subKey}.{field}`
- *
- * This file only holds the **structural** facts (which corridors exist, where
- * they go, what status they're in). All user-facing strings come from the i18n
- * catalog so they can be translated and edited in one place.
- *
- * Catalog key mapping:
- *   - corridor slug "california-hawaii" → catalog key "californiaHawaii"
- *   - corridor slug "florida-new-york" → catalog key "floridaNewYork"
- *
- * Sub-destination slug mapping (some catalog keys use short forms):
- *   - "big-island" → "bigIsland"
- *   - "mat-su-valley" → "matSu"
- *   - "southeast-alaska" → "southeast"
  */
 
 export interface SubDestination {
@@ -33,17 +20,9 @@ export interface SubDestination {
 export interface Corridor {
   /** URL segment under /corridors/<slug>. Also the join key for catalog lookups. */
   slug: string;
-  /** Origin state, ISO 2-letter (CA, HI, AK, etc.). */
   fromState: string;
-  /** Destination state, ISO 2-letter. */
   toState: string;
-  /**
-   * `"live"` corridors have their own dedicated /corridors/<slug>/page.tsx.
-   * `"coming-soon"` corridors render as cards on the /corridors index and
-   * link directly to /quote pre-filled with from/to.
-   */
   status: "live" | "coming-soon";
-  /** Only present for live corridors; structural list of sub-destination cards. */
   subDestinations?: SubDestination[];
 }
 
@@ -72,9 +51,20 @@ export const CORRIDORS: Corridor[] = [
       { slug: "southeast-alaska" },
     ],
   },
+  {
+    slug: "california-texas",
+    fromState: "CA",
+    toState: "TX",
+    status: "live",
+    subDestinations: [
+      { slug: "dallas-fort-worth" },
+      { slug: "houston" },
+      { slug: "austin" },
+      { slug: "san-antonio" },
+    ],
+  },
 
-  // Coming-soon corridors — sequenced by likely customer demand for B2C auto transport
-  { slug: "california-texas", fromState: "CA", toState: "TX", status: "coming-soon" },
+  // Coming-soon corridors, sequenced by likely customer demand for B2C auto transport
   { slug: "california-florida", fromState: "CA", toState: "FL", status: "coming-soon" },
   { slug: "california-new-york", fromState: "CA", toState: "NY", status: "coming-soon" },
   { slug: "california-arizona", fromState: "CA", toState: "AZ", status: "coming-soon" },
@@ -88,7 +78,7 @@ export const CORRIDORS: Corridor[] = [
 
 /**
  * Convert corridor slug ("california-hawaii") to the camelCase catalog key
- * used in `messages/{en,es}.json` under `corridors.catalog.{key}`.
+ * used in messages JSON under corridors.catalog.{key}.
  */
 export function corridorCatalogKey(slug: string): string {
   return slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
@@ -103,27 +93,20 @@ export function subDestCatalogKey(slug: string): string {
     "big-island": "bigIsland",
     "mat-su-valley": "matSu",
     "southeast-alaska": "southeast",
+    "dallas-fort-worth": "dallasFortWorth",
+    "san-antonio": "sanAntonio",
   };
   return SHORT_FORMS[slug] ?? slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 }
 
-/**
- * Helper to look up a single corridor by slug. Returns undefined if not found.
- */
 export function getCorridor(slug: string): Corridor | undefined {
   return CORRIDORS.find((c) => c.slug === slug);
 }
 
-/**
- * Helper to filter the live corridors (those with their own page).
- */
 export function getLiveCorridors(): Corridor[] {
   return CORRIDORS.filter((c) => c.status === "live");
 }
 
-/**
- * Helper to filter the coming-soon corridors.
- */
 export function getComingSoonCorridors(): Corridor[] {
   return CORRIDORS.filter((c) => c.status === "coming-soon");
 }

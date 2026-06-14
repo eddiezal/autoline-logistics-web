@@ -1650,7 +1650,37 @@
         }
       },
       "californiaTexas": {
-        "shortDesc": "California a Houston, Dallas, Austin y San Antonio. Transporte abierto y cerrado."
+        "shortDesc": "Corredor de precio fijo, a menudo mas barato que manejar.",
+        "subDestinations": {
+          "dallasFortWorth": {
+            "name": "CA a Dallas-Fort Worth",
+            "timeline": "3 a 5 dias",
+            "routing": "Recogida en SoCal, ruta a traves de I-10 / I-20 hasta el area metroplex.",
+            "note": "Nuestro corredor TX mas corrido. Tech, finanzas, sedes corporativas. Entrega tipica martes a sabado.",
+            "customers": "Reubicaciones laborales, traslados corporativos, mudanzas familiares."
+          },
+          "houston": {
+            "name": "CA a Houston",
+            "timeline": "4 a 6 dias",
+            "routing": "Lane sur via I-10. Recogida directa en area metropolitana de Houston o staging via Dallas en cargas mas grandes.",
+            "note": "Sector energetico y centro medico. Disponible abierto o cerrado para vehiculos de mas valor.",
+            "customers": "Trabajadores del sector energetico, profesionales medicos, reubicaciones familiares."
+          },
+          "austin": {
+            "name": "CA a Austin",
+            "timeline": "3 a 5 dias",
+            "routing": "Recogida en SoCal, entrega en el area metropolitana de Austin incluyendo Round Rock, Cedar Park, hill country.",
+            "note": "Volumen impulsado por tech. Vemos muchos traslados de tech de SF y LA correr este corredor.",
+            "customers": "Trabajadores tech, talento remoto que se reubica por costo de vida, familias que vuelven a Texas."
+          },
+          "sanAntonio": {
+            "name": "CA a San Antonio",
+            "timeline": "4 a 6 dias",
+            "routing": "Lane sur via I-10 hacia Stone Oak, Alamo Heights, area Dominion.",
+            "note": "Reubicaciones familiares, jubilados, snowbirds. El menor costo de vida atrae el volumen.",
+            "customers": "Familias, jubilados, militares retirados, snowbirds."
+          }
+        }
       },
       "californiaFlorida": {
         "shortDesc": "De costa a costa, el corredor de snowbirds más popular. Alta demanda de tráiler cerrado para vehículos de colección."
@@ -2025,6 +2055,79 @@
         "description": "Código postal de recogida, destino, tipo de vehículo. Cotizaremos ambas rutas y recomendaremos la correcta. Elija un nivel, fije el precio, y su coordinador toma el control desde ahí.",
         "primary": "Obtenga mi precio CA → AK",
         "secondary": "Vea California ↔ Hawái →"
+      }
+    },
+    "californiaTexas": {
+      "hero": {
+        "eyebrow": "California a Texas . Precio fijo todo incluido",
+        "priceCallout": "Desde $1,150 . CA a TX, sedan estandar, transporte abierto",
+        "title": "Envie su auto de California a Texas por menos de lo que cuesta manejarlo.",
+        "description": "Mil cuatrocientas millas. Tres dias al volante. O un envio de precio fijo con su auto esperandolo al llegar. Y su transmision aun tiene millas por delante.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver las cuentas"
+      },
+      "math": {
+        "eyebrow": "Las cuentas",
+        "title": "Por que enviar a menudo cuesta menos que manejar",
+        "body": {
+          "0": "Un viaje de ida de CA a TX cuesta de $400 a $600 en gasolina, mas 2 a 3 noches de hotel, comida, y poner 1,400 millas duras en su vehiculo. Sume el valor de 3 dias de su tiempo.",
+          "1": "Una cotizacion de transporte fija a menudo queda por DEBAJO del costo total de manejar, y usted no pierde los 3 dias. Corremos el corredor semanalmente a traves de nuestra flota familiar y nuestra red de transportistas socios verificados."
+        },
+        "punchline": "La cotizacion fija que acepta al reservar es la factura final. Sin recargo de combustible. Sin sobreprecio del intermediario. Sin sorpresas de tarifas puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quien ahorra mas",
+        "title": "Para algunos clientes las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Reubicaciones laborales con fecha limite",
+            "body": "Su fecha de inicio esta fijada. Los 3 dias que perderia manejando cuestan mas que enviar. Precio fijo mas entrega en 4 a 6 dias."
+          },
+          "multiVehicle": {
+            "title": "Hogares con varios vehiculos",
+            "body": "Dos o tres autos hacen las cuentas aun mas desiguales. Descuento por varios vehiculos disponible. Un solo coordinador, una sola ventana de entrega."
+          },
+          "highValue": {
+            "title": "Vehiculos mas viejos o con muchas millas",
+            "body": "Anadir 1,400 millas afecta el valor de reventa mas que el costo del envio. Las cuentas son especialmente limpias para vehiculos de lujo, de pocas millas, o en arrendamiento."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Destinos principales de Texas",
+        "title": "Donde aterrizan la mayoria de los envios de CA a TX",
+        "lead": "Dallas-Fort Worth, Houston, Austin, San Antonio. Corremos los cuatro corredores semanalmente. Su coordinador conoce su ZIP de destino y su ventana de tiempo."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "Las cuentas, explicadas",
+        "items": {
+          "0": {
+            "q": "?Realmente enviar es mas barato que manejar?",
+            "a": "A menudo si cuando cuenta la gasolina ($400 a $600), hoteles (2 a 3 noches), comida, y 1,400 millas de desgaste. Sume el valor de 3 dias de su tiempo y la mayoria de la gente sale ganando."
+          },
+          "1": {
+            "q": "?Cual es el rango de precio real?",
+            "a": "Un sedan estandar de CA a TX en transporte abierto cuesta de $1,150 a $1,650 segun el ZIP de origen/destino y los tiempos. SUV $200 a $400 mas. Camioneta $300 a $500 mas. Estimacion de mercado SD al momento de cotizar."
+          },
+          "2": {
+            "q": "?Que significa 'precio fijo'?",
+            "a": "La cotizacion que acepta al reservar es la factura final. Sin recargo de combustible. Sin sobreprecio del intermediario. Sin tarifas ocultas puerta a puerta. Nuestra Promesa de Precio."
+          },
+          "3": {
+            "q": "?Hay cargos adicionales alguna vez?",
+            "a": "No. Lo unico que cambia el precio es si anade un vehiculo o cambia el nivel despues de reservar. Incluso entonces cotizamos el cambio por adelantado."
+          },
+          "4": {
+            "q": "?Y si el precio cambia despues de reservar?",
+            "a": "No cambia. Nuestra Promesa de Precio. La cotizacion fija es lo que paga."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envio de CA a TX con precio fijo. Haga las cuentas.",
+        "body": "Cotizacion real todo incluido en 60 segundos. Sin deposito. Sin enganos. Luego decida si manejar todavia tiene sentido.",
+        "cta": "Obtener mi precio fijo"
       }
     }
   },

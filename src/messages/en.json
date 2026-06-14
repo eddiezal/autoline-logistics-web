@@ -1650,7 +1650,37 @@
         }
       },
       "californiaTexas": {
-        "shortDesc": "California to Houston, Dallas, Austin, and San Antonio. Open and enclosed transport."
+        "shortDesc": "Locked-price corridor, often cheaper than driving.",
+        "subDestinations": {
+          "dallasFortWorth": {
+            "name": "CA to Dallas-Fort Worth",
+            "timeline": "3-5 days",
+            "routing": "SoCal pickup, route through I-10 / I-20 to the metroplex area.",
+            "note": "Our most-run TX corridor. Tech, finance, corporate headquarters. Typical delivery Tue-Sat.",
+            "customers": "Job relocations, corporate transfers, family relocations."
+          },
+          "houston": {
+            "name": "CA to Houston",
+            "timeline": "4-6 days",
+            "routing": "Southern lane via I-10. Direct Houston metro pickup or staging via Dallas on larger loads.",
+            "note": "Energy sector and medical center. Open or enclosed available for higher-value vehicles.",
+            "customers": "Energy sector workers, medical professionals, family relocations."
+          },
+          "austin": {
+            "name": "CA to Austin",
+            "timeline": "3-5 days",
+            "routing": "SoCal pickup, delivery to the Austin metro including Round Rock, Cedar Park, hill country.",
+            "note": "Tech-driven volume. We see a lot of SF and LA tech transfers run this lane.",
+            "customers": "Tech workers, remote talent relocating for cost of living, families returning to Texas."
+          },
+          "sanAntonio": {
+            "name": "CA to San Antonio",
+            "timeline": "4-6 days",
+            "routing": "Southern lane via I-10 to Stone Oak, Alamo Heights, Dominion area.",
+            "note": "Family relocations, retirees, snowbirds. Lower cost of living draws the volume.",
+            "customers": "Families, retirees, military retirees, snowbirds."
+          }
+        }
       },
       "californiaFlorida": {
         "shortDesc": "Coast-to-coast, most popular snowbird corridor. Heavy enclosed-trailer demand for collector vehicles."
@@ -2025,6 +2055,79 @@
         "description": "Pickup ZIP, destination, vehicle type. We'll quote both routes and recommend the right one. Pick a tier, lock the price, and your coordinator takes it from there.",
         "primary": "Get my CA → AK price",
         "secondary": "See California ↔ Hawaii →"
+      }
+    },
+    "californiaTexas": {
+      "hero": {
+        "eyebrow": "California to Texas . Locked all-in price",
+        "priceCallout": "From $1,150 . CA to TX standard sedan, open transport",
+        "title": "Ship your car from California to Texas for less than gas, hotels, and wear-and-tear cost to drive it.",
+        "description": "1,400 miles. 3 days behind the wheel. Or one locked-price shipment with your car waiting when you land. Plus your transmission still has miles left.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping often costs less than driving",
+        "body": {
+          "0": "A one-way CA to TX trip costs $400-600 in gas, plus 2-3 hotel nights, food, and 1,400 hard freeway miles on your vehicle. Add the value of 3 days of your time.",
+          "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose 3 days. We run the corridor weekly through our family fleet and our vetted partner network."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Job relocators on a deadline",
+            "body": "Your start date is fixed. The 3 days you would lose driving cost more than shipping. Locked price plus 4-6 day delivery."
+          },
+          "multiVehicle": {
+            "title": "Multi-vehicle households",
+            "body": "Two or three cars make the math even more lopsided. Multi-car discount available. One coordinator, one delivery window."
+          },
+          "highValue": {
+            "title": "Older or higher-mile vehicles",
+            "body": "Adding 1,400 miles hits resale value more than the shipping cost. The math is especially clean for luxury, low-mile, and lease vehicles."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top Texas destinations",
+        "title": "Where CA-to-TX shipments land most",
+        "lead": "Dallas-Fort Worth, Houston, Austin, San Antonio. We run all four corridors weekly. Your coordinator knows your destination ZIP and timing window."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "Is shipping really cheaper than driving?",
+            "a": "Often yes when you count gas ($400-600), hotels (2-3 nights), food, and 1,400 miles of wear. Add the value of 3 days of your time and most people come out ahead."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "CA to TX standard sedan on open transport runs $1,150-1,650 depending on origin/destination ZIP and timing. SUV $200-400 more. Truck $300-500 more. SD market estimate at quote time."
+          },
+          "2": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          },
+          "3": {
+            "q": "Are there ever extra charges?",
+            "a": "No. The only thing that changes price is if you add a vehicle or change tier post-booking. Even then we quote the change up front."
+          },
+          "4": {
+            "q": "What if the price changes after booking?",
+            "a": "It doesn't. Our Price Promise. The locked quote is what you pay."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price CA to TX shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
       }
     }
   },

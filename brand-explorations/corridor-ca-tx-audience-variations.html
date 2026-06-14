@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA to TX corridor . Audience-framing variations</title>
+<style>
+  :root {
+    --cream: #faf6ef;
+    --charcoal: #1a1a1a;
+    --pine-deep: #052e1a;
+    --pine: #118647;
+    --pine-light: #16a34a;
+    --pine-bg: #f0faf3;
+    --orange: #ff6600;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--gray-100); color: var(--charcoal); line-height: 1.55; }
+  .page { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page-header { margin-bottom: 32px; }
+  .page-header h1 { margin: 0 0 8px; font-size: 28px; }
+  .page-header p { margin: 0; color: var(--gray-700); max-width: 800px; }
+  .var { background: var(--cream); border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .var-meta { background: var(--charcoal); color: #fff; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .var-meta h2 { margin: 0; font-size: 18px; font-weight: 700; }
+  .var-meta .sub { font-size: 12px; color: #d1d5db; margin-top: 4px; }
+  .var-tag { background: var(--orange); color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+  .hero { background: var(--pine-deep); color: #fff; padding: 48px 40px 40px; }
+  .hero .eyebrow { color: var(--pine-light); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 12px; }
+  .hero h1 { margin: 0 0 12px; font-size: 36px; line-height: 1.15; letter-spacing: -0.02em; max-width: 700px; }
+  .hero .sub { color: #d1fae5; font-size: 16px; max-width: 600px; margin: 0 0 24px; }
+  .trust-signals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; max-width: 800px; }
+  .trust-pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 14px; }
+  .trust-pill .label { color: var(--pine-light); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 4px; }
+  .trust-pill .text { color: #fff; font-size: 13px; font-weight: 600; margin: 0; }
+  .route-finder { background: #fff; border-radius: 12px; padding: 20px; margin-top: 28px; border: 1px solid var(--gray-200); display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+  .rf-field label { display: block; font-size: 11px; color: var(--gray-700); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .rf-field input { width: 100%; padding: 10px 12px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 16px; color: var(--charcoal); background: #fff; }
+  .rf-btn { background: var(--orange); color: #fff; padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; white-space: nowrap; }
+  .context { padding: 40px 40px; background: #fff; }
+  .context p { color: var(--gray-700); font-size: 16px; max-width: 760px; margin: 0; line-height: 1.7; }
+  .types { padding: 40px 40px; background: var(--cream); }
+  .types h2 { font-size: 24px; margin: 0 0 20px; color: var(--charcoal); }
+  .types-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .type-card { background: #fff; border-radius: 12px; padding: 24px; border: 1px solid var(--gray-200); }
+  .type-card .icon { background: var(--pine-bg); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--pine); font-weight: 700; }
+  .type-card h3 { margin: 0 0 8px; font-size: 17px; color: var(--charcoal); }
+  .type-card p { margin: 0; color: var(--gray-700); font-size: 14px; }
+  .subdest { padding: 40px 40px; background: #fff; }
+  .subdest h2 { font-size: 24px; margin: 0 0 20px; color: var(--charcoal); }
+  .subdest-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .subdest-card { background: var(--cream); border-radius: 12px; padding: 20px; border: 1px solid var(--gray-200); }
+  .subdest-card .city { font-size: 18px; font-weight: 700; color: var(--charcoal); margin: 0 0 4px; }
+  .subdest-card .zip { font-size: 12px; color: var(--gray-500); margin: 0 0 8px; }
+  .subdest-card p { font-size: 13px; color: var(--gray-700); margin: 0; }
+  .faq { padding: 40px 40px; background: var(--cream); }
+  .faq h2 { font-size: 24px; margin: 0 0 20px; color: var(--charcoal); }
+  .faq-item { background: #fff; border-radius: 10px; padding: 18px 22px; margin-bottom: 10px; border: 1px solid var(--gray-200); }
+  .faq-item .q { font-size: 15px; font-weight: 700; color: var(--charcoal); margin: 0 0 6px; }
+  .faq-item .a { font-size: 14px; color: var(--gray-700); margin: 0; }
+  .final-cta { padding: 48px 40px; background: var(--pine-deep); color: #fff; text-align: center; }
+  .final-cta h2 { margin: 0 0 12px; font-size: 28px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .final-cta p { color: #d1fae5; margin: 0 0 24px; }
+  .final-cta a { background: var(--orange); color: #fff; padding: 14px 32px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-block; }
+  .matrix { background: #fff; border-radius: 16px; padding: 28px; margin-top: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .matrix h2 { margin: 0 0 12px; font-size: 20px; }
+  .matrix table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix th, .matrix td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .matrix th { color: var(--gray-700); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gray-50); }
+  .matrix td.col { font-weight: 700; min-width: 100px; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+  .pill-mil { background: #fef3c7; color: #92400e; }
+  .pill-broad { background: #dbeafe; color: #1e40af; }
+  .pill-lux { background: #f3e8ff; color: #6b21a8; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>CA to TX corridor . 3 audience-framing variations</h1>
+    <p>Same V3 hybrid layout across all three (compact hero, route finder, trust signals, corridor context, 3 customer types, 4 sub-destinations, 5-Q FAQ, final CTA). What differs: which buyer persona the page leads with, which determines ad copy + keyword targeting + Quality Score economics for the $3K LA paid test.</p>
+  </header>
+
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>V1 . PCS Military lead</h2><p class="sub">Anchors on Texas-bound PCS orders. Targets Fort Hood, JBSA, Sheppard, Goodfellow, Dyess, and dependents. Highest conversion intent but narrower top-of-funnel.</p></div>
+      <span class="var-tag">Military</span>
+    </div>
+    <div class="hero">
+      <p class="eyebrow">California to Texas . PCS-friendly</p>
+      <h1>PCS orders to Texas? We move your car so you don't have to drive it twice.</h1>
+      <p class="sub">Fort Hood, JBSA, Sheppard, Goodfellow, Dyess, Ellington. Locked all-in price. Texas-area coordinator. Pickup that works with your TMO window.</p>
+      <div class="trust-signals">
+        <div class="trust-pill"><p class="label">Military rate</p><p class="text">Discount on file for PCS moves</p></div>
+        <div class="trust-pill"><p class="label">TMO-friendly</p><p class="text">Pickup windows aligned to your orders</p></div>
+        <div class="trust-pill"><p class="label">Verified photos</p><p class="text">Documentation for GTCC reimbursement</p></div>
+      </div>
+      <div class="route-finder">
+        <div class="rf-field"><label>From ZIP</label><input value="90210" readonly></div>
+        <div class="rf-field"><label>To ZIP</label><input value="75201 (Dallas)" readonly></div>
+        <button class="rf-btn">Get my PCS quote</button>
+      </div>
+    </div>
+    <div class="context"><p>Auto Line Logistics moves vehicles for service members on PCS orders to every major Texas duty station. We coordinate with your TMO window, document everything for GTCC reimbursement, and assign a coordinator who has handled hundreds of PCS moves. Your locked price doesn't change between booking and delivery.</p></div>
+    <div class="types">
+      <h2>Who we move for</h2>
+      <div class="types-grid">
+        <div class="type-card"><div class="icon">1</div><h3>PCS service members</h3><p>Active duty with orders to a Texas duty station. We handle the full route, photo-document pickup and delivery, time it to your port call.</p></div>
+        <div class="type-card"><div class="icon">2</div><h3>Military dependents</h3><p>Spouses and adult children moving the family vehicle ahead of or behind the service member. Same coordinator, same locked price.</p></div>
+        <div class="type-card"><div class="icon">3</div><h3>Veteran snowbirds</h3><p>Retired military relocating to Texas full-time or seasonally. Familiar with the process, expecting the discipline of how we run it.</p></div>
+      </div>
+    </div>
+    <div class="subdest">
+      <h2>Routes we run most</h2>
+      <div class="subdest-grid">
+        <div class="subdest-card"><p class="city">CA to Dallas-Fort Worth</p><p class="zip">75201 . 76101 . near Sheppard AFB</p><p>Most common military destination corridor. 3-4 day transit typical.</p></div>
+        <div class="subdest-card"><p class="city">CA to San Antonio</p><p class="zip">78201 . JBSA-Lackland . JBSA-Randolph</p><p>The biggest joint base in the country. We run this route weekly.</p></div>
+        <div class="subdest-card"><p class="city">CA to Austin</p><p class="zip">78701 . Fort Cavazos (former Hood)</p><p>Active-duty Army hub. Pickup SoCal Mon-Wed, delivery Thu-Sat.</p></div>
+        <div class="subdest-card"><p class="city">CA to Abilene</p><p class="zip">79601 . Dyess AFB</p><p>Air Force B-1B base. Less common but routed via our family fleet.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h2>PCS questions, answered</h2>
+      <div class="faq-item"><p class="q">Do you offer a military discount?</p><p class="a">Yes. We apply a flat military discount on every PCS move. Bring your CAC, orders, or DD-214 and we apply it at booking.</p></div>
+      <div class="faq-item"><p class="q">Can you time pickup to my TMO window?</p><p class="a">Yes. Give us your TMO window at booking and we slot pickup inside it. If your TMO shifts, we adjust without re-pricing.</p></div>
+      <div class="faq-item"><p class="q">What about GTCC reimbursement?</p><p class="a">Every shipment includes pickup and delivery photo documentation plus a paid invoice formatted to satisfy GTCC reimbursement requirements.</p></div>
+      <div class="faq-item"><p class="q">Will you coordinate with my household goods mover?</p><p class="a">If you tell us the household goods schedule at booking, our coordinator will sync vehicle pickup so they don't overlap.</p></div>
+      <div class="faq-item"><p class="q">What if my orders change?</p><p class="a">Standard cancellation is free up to 48 hours before pickup. If your orders change in transit, we re-route at our cost.</p></div>
+    </div>
+    <div class="final-cta">
+      <h2>Locked-price PCS move to Texas. Get your number in 60 seconds.</h2>
+      <p>No deposit. No bait-and-switch. Texas-area coordinator from day one.</p>
+      <a href="#">Get my PCS quote</a>
+    </div>
+  </section>
+
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>V2 . Broad relocation (balanced)</h2><p class="sub">Anchors on job transfers and life moves. Casts the widest net. Lower per-click intent but biggest addressable audience for the LA paid test.</p></div>
+      <span class="var-tag">Broad</span>
+    </div>
+    <div class="hero">
+      <p class="eyebrow">California to Texas . Locked-price corridor</p>
+      <h1>Shipping a vehicle from California to Texas? Get your locked all-in price in 60 seconds.</h1>
+      <p class="sub">Job transfers, family relocations, snowbirds. No deposit until pickup. Texas-area coordinator who knows your destination ZIP.</p>
+      <div class="trust-signals">
+        <div class="trust-pill"><p class="label">Locked price</p><p class="text">What you see is what you pay</p></div>
+        <div class="trust-pill"><p class="label">Texas coordinator</p><p class="text">One named person, start to finish</p></div>
+        <div class="trust-pill"><p class="label">No deposit</p><p class="text">Pay nothing until your car is on the truck</p></div>
+      </div>
+      <div class="route-finder">
+        <div class="rf-field"><label>From ZIP</label><input value="90210" readonly></div>
+        <div class="rf-field"><label>To ZIP</label><input value="75201 (Dallas)" readonly></div>
+        <button class="rf-btn">Get my locked price</button>
+      </div>
+    </div>
+    <div class="context"><p>The California-to-Texas corridor is one of the busiest auto-transport routes in the country. Job relocations, retirement moves, and family transfers run this route year-round. We run it weekly with our family fleet through Auto Line Express plus our vetted partner network. Locked all-in price, named coordinator, real-time tracking from pickup to delivery.</p></div>
+    <div class="types">
+      <h2>Who ships California to Texas</h2>
+      <div class="types-grid">
+        <div class="type-card"><div class="icon">1</div><h3>Job relocations</h3><p>Tech, finance, healthcare, energy. Texas hubs are absorbing California talent. We time pickup to your start date.</p></div>
+        <div class="type-card"><div class="icon">2</div><h3>Family relocations</h3><p>Multi-vehicle households moving for cost of living, schools, or family. Multi-car discounts available.</p></div>
+        <div class="type-card"><div class="icon">3</div><h3>Snowbirds</h3><p>Seasonal moves from coastal California to TX gulf coast or hill country. We do round-trip or one-way.</p></div>
+      </div>
+    </div>
+    <div class="subdest">
+      <h2>Top Texas destinations from CA</h2>
+      <div class="subdest-grid">
+        <div class="subdest-card"><p class="city">CA to Dallas-Fort Worth</p><p class="zip">75201 . 76101 . the metroplex</p><p>Tech, finance, headquarters. Our most-run TX corridor.</p></div>
+        <div class="subdest-card"><p class="city">CA to Houston</p><p class="zip">77001 . energy belt . Memorial</p><p>Energy sector and medical center moves. Open or enclosed available.</p></div>
+        <div class="subdest-card"><p class="city">CA to Austin</p><p class="zip">78701 . hill country . South Congress</p><p>Tech-driven. We see a lot of SF and LA tech transfers run this lane.</p></div>
+        <div class="subdest-card"><p class="city">CA to San Antonio</p><p class="zip">78201 . Stone Oak . Alamo Heights</p><p>Family relocations, retirees, snowbirds. Lower cost of living draws.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h2>Common questions</h2>
+      <div class="faq-item"><p class="q">How long does CA to TX take?</p><p class="a">Typical transit is 4-6 days door to door. Pickup window is 1-3 days from booking. Locked price means we eat any delay cost.</p></div>
+      <div class="faq-item"><p class="q">Will you tell me the exact carrier?</p><p class="a">Yes, in writing. Once we assign a carrier, you see the name, USDOT number, and driver contact in your customer portal. Verifiable on FMCSA SAFER.</p></div>
+      <div class="faq-item"><p class="q">Open or enclosed transport?</p><p class="a">Both available. Open is the standard and what most cars ship on. Enclosed is recommended for luxury, exotic, classic, or low-clearance vehicles.</p></div>
+      <div class="faq-item"><p class="q">Do you handle multiple cars?</p><p class="a">Yes. We coordinate multi-vehicle moves on a single load when possible. Multi-car discounts available.</p></div>
+      <div class="faq-item"><p class="q">What if the price changes after booking?</p><p class="a">It doesn't. Our Price Promise says the locked quote is what you pay. No bait-and-switch, no fuel surcharge surprises.</p></div>
+    </div>
+    <div class="final-cta">
+      <h2>California to Texas. Locked-price quote in 60 seconds.</h2>
+      <p>No deposit. Named coordinator. Real-time portal tracking from pickup to delivery.</p>
+      <a href="#">Get my locked price</a>
+    </div>
+  </section>
+
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>V3 . Premium / luxury angle</h2><p class="sub">Anchors on luxury, exotic, classic, dealer-network moves. Smallest audience but highest AOV per booking. Enclosed-trailer-led.</p></div>
+      <span class="var-tag">Premium</span>
+    </div>
+    <div class="hero">
+      <p class="eyebrow">California to Texas . Enclosed transport</p>
+      <h1>Moving a luxury, exotic, or classic vehicle from California to Texas?</h1>
+      <p class="sub">Enclosed-trailer expertise. $500K contingent cargo coverage. Verified-asset photo documentation. A coordinator who has moved this car before.</p>
+      <div class="trust-signals">
+        <div class="trust-pill"><p class="label">Enclosed fleet</p><p class="text">Climate-controlled, lift-gate, soft-tie</p></div>
+        <div class="trust-pill"><p class="label">$500K coverage</p><p class="text">Contingent cargo above carrier policy</p></div>
+        <div class="trust-pill"><p class="label">Concierge</p><p class="text">Senior coordinator, pickup-to-delivery</p></div>
+      </div>
+      <div class="route-finder">
+        <div class="rf-field"><label>From ZIP</label><input value="90210" readonly></div>
+        <div class="rf-field"><label>To ZIP</label><input value="75201 (Dallas)" readonly></div>
+        <button class="rf-btn">Get my enclosed quote</button>
+      </div>
+    </div>
+    <div class="context"><p>For high-value vehicles, the cheapest open-trailer quote isn't the right answer. Our enclosed corridor between California and Texas handles luxury, exotic, classic, and dealer-transfer moves with climate-controlled trailers, soft-tie tie-downs, and full photo documentation at every handoff. A senior coordinator owns your shipment from pickup to delivery.</p></div>
+    <div class="types">
+      <h2>Who we move for</h2>
+      <div class="types-grid">
+        <div class="type-card"><div class="icon">1</div><h3>Collectors</h3><p>Classic, exotic, and collector vehicles. Enclosed trailers only. Verified pickup and delivery photos for your insurance file.</p></div>
+        <div class="type-card"><div class="icon">2</div><h3>Dealer transfers</h3><p>Inter-dealer wholesale, auction wins, factory-to-floor moves. We handle the paperwork plus the photos.</p></div>
+        <div class="type-card"><div class="icon">3</div><h3>High-net-worth relocations</h3><p>Multi-vehicle moves where at least one car merits enclosed transport. We can stage open plus enclosed on the same booking.</p></div>
+      </div>
+    </div>
+    <div class="subdest">
+      <h2>Texas premium destinations</h2>
+      <div class="subdest-grid">
+        <div class="subdest-card"><p class="city">CA to Dallas / Highland Park</p><p class="zip">75205 . 75219 . Park Cities</p><p>Concentrated luxury delivery zone. Daily routes through DFW.</p></div>
+        <div class="subdest-card"><p class="city">CA to Houston / River Oaks</p><p class="zip">77019 . Memorial . Tanglewood</p><p>Climate-controlled enclosed only. We stage in Houston for delivery windows.</p></div>
+        <div class="subdest-card"><p class="city">CA to Austin / West Lake</p><p class="zip">78746 . Tarrytown . Lake Austin</p><p>Tech-money luxury, increasing volume. Our drivers know the access roads.</p></div>
+        <div class="subdest-card"><p class="city">CA to San Antonio / Dominion</p><p class="zip">78257 . The Dominion . Hill Country Village</p><p>Less common but enclosed-ready. Senior coordinator on every load.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h2>Enclosed transport questions</h2>
+      <div class="faq-item"><p class="q">What does enclosed actually mean?</p><p class="a">Hard-sided trailer (not soft-side), climate-controlled cabin, lift-gate loading, soft-tie tie-downs (not chains). The car never touches weather.</p></div>
+      <div class="faq-item"><p class="q">What does your $500K coverage mean?</p><p class="a">Contingent cargo coverage that sits above the carrier's primary policy. If a loss exceeds carrier limits, we cover up to $500K. Most brokers carry only bond minimum.</p></div>
+      <div class="faq-item"><p class="q">Will I get pickup and delivery photos?</p><p class="a">Yes. Pre-load, post-load, in-transit at every fuel stop, pre-delivery, post-delivery. Photos arrive in your portal in near real-time.</p></div>
+      <div class="faq-item"><p class="q">How is enclosed priced vs open?</p><p class="a">Roughly 40-60 percent more than open for the same lane. The price difference is the trailer, not the route. Coordinator confirms exact pricing at quote.</p></div>
+      <div class="faq-item"><p class="q">Do you handle dealer paperwork?</p><p class="a">Yes. We work with finance, leasing, and dealer titling. Send the dealer contact at booking and our coordinator owns the paperwork loop.</p></div>
+    </div>
+    <div class="final-cta">
+      <h2>Enclosed California to Texas. Quote in 60 seconds.</h2>
+      <p>Senior coordinator. $500K contingent coverage. Climate-controlled enclosed only.</p>
+      <a href="#">Get my enclosed quote</a>
+    </div>
+  </section>
+
+  <div class="matrix">
+    <h2>What changes between variations</h2>
+    <table>
+      <thead><tr><th>Dimension</th><th><span class="pill pill-mil">V1 Military</span></th><th><span class="pill pill-broad">V2 Broad</span></th><th><span class="pill pill-lux">V3 Premium</span></th></tr></thead>
+      <tbody>
+        <tr><td class="col">Audience size</td><td>Narrow</td><td>Widest</td><td>Smallest</td></tr>
+        <tr><td class="col">Intent / QS</td><td>Highest</td><td>Medium</td><td>High</td></tr>
+        <tr><td class="col">Avg booking value</td><td>$1,200-1,800</td><td>$1,200-1,800</td><td>$2,500-4,500</td></tr>
+        <tr><td class="col">Ad keywords</td><td>"PCS car shipping", "Fort Hood car ship", "JBSA POV transport"</td><td>"CA to TX car shipping", "ship car California Texas"</td><td>"enclosed car transport TX", "luxury auto transport"</td></tr>
+        <tr><td class="col">Trust signals lead</td><td>Military discount + TMO timing</td><td>Locked price + no deposit</td><td>Enclosed + $500K + concierge</td></tr>
+        <tr><td class="col">Customer types lead</td><td>PCS service member</td><td>Job relocation</td><td>Collector / dealer</td></tr>
+        <tr><td class="col">CTA copy</td><td>"Get my PCS quote"</td><td>"Get my locked price"</td><td>"Get my enclosed quote"</td></tr>
+        <tr><td class="col">Best for $3K LA test if . . .</td><td>You target military zips (Pendleton, 29 Palms, MCRD San Diego) for top-of-funnel</td><td>You want the most clicks to validate funnel mechanics + lead form</td><td>You want fewer, bigger bookings to test unit economics ($333 CAC works better on $2,500+ AOV)</td></tr>
+      </tbody>
+    </table>
+    <h2 style="margin-top: 28px;">My honest take</h2>
+    <p style="color: var(--gray-700); margin: 0 0 8px;">For a $3K test where you want fast signal on funnel mechanics, <strong>V2 Broad</strong> casts the widest net and produces enough lead volume to validate the /api/lead pipeline plus the agents' workflow. Lowest risk of "we don't know if the funnel works because we didn't get enough leads."</p>
+    <p style="color: var(--gray-700); margin: 0;">If you'd rather test unit economics (CAC, conversion rate, booking value), <strong>V3 Premium</strong> gives you fewer-but-bigger bookings that make the math clearer at lower volume. <strong>V1 Military</strong> is highest-intent niche but you need ZIP-targeted ads to make it efficient, which adds setup complexity for a 30-day test.</p>
+  </div>
+</div>
+</body>
+</html>
