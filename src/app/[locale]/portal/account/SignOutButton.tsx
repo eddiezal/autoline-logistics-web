@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { auth } from "@/lib/firebase/client";
+import { getClientAuth } from "@/lib/firebase/client";
 import { signOut as fbSignOut } from "firebase/auth";
 
 /**
@@ -27,7 +27,7 @@ export function SignOutButton({
     setPending(true);
     try {
       await Promise.allSettled([
-        fbSignOut(auth),
+        fbSignOut(getClientAuth()),
         fetch("/api/auth/session", { method: "DELETE" }),
       ]);
     } finally {
