@@ -373,7 +373,7 @@
         "insured": "Con fianza, licencia y seguro"
       },
       "stats": {
-        "shipments": "Más de 45,000 vehículos enviados el año pasado",
+        "shipments": "Mas de 45,000 vehiculos a traves de nuestra operacion familiar el ano pasado",
         "coverage": "Puerta a puerta en EE.UU., más HI + AK"
       },
       "shipmentCard": {
@@ -591,9 +591,9 @@
         },
         "volume": {
           "tag": "Credibilidad por volumen",
-          "stat": "45,000",
-          "title": "Vehículos transportados el año pasado",
-          "description": "Cuarenta y cinco mil familias y concesionarios confiaron en nosotros en 2025. El negocio recurrente construye la operación.",
+          "stat": "45,000+",
+          "title": "Vehiculos a traves de la operacion familiar",
+          "description": "Auto Line Express (transportista) y Auto Line Logistics (broker) juntos movieron mas de 45,000 vehiculos en 2025 a traves de la flota familiar y una red de transportistas socios verificados. Una operacion familiar, dos lados del transporte.",
           "linkText": "Ver nuestra historia"
         },
         "coverage": {
@@ -605,9 +605,9 @@
         },
         "bilingual": {
           "tag": "Promesa Personal",
-          "stat": "2",
-          "title": "Equipo bilingüe nativo",
-          "description": "Inglés y español manejados nativamente — sin servicio de traducción, sin enrutamiento de llamadas.",
+          "stat": "EN y ES",
+          "title": "Soporte bilingue de coordinadores",
+          "description": "Coordinadores hispanohablantes en plantilla. Sin servicio de traduccion, sin enrutamiento a terceros. Solicite atencion en ES al reservar.",
           "linkText": "Conozca al equipo"
         }
       }
@@ -629,12 +629,12 @@
         "carrier": {
           "question": "\"¿Me dirá el nombre del transportista, USDOT y contacto del conductor — antes de la recogida, por escrito?\"",
           "whyAsk": "Los corredores turbios ocultan al transportista real para que los clientes no puedan verificar al camionero, su seguro, o su historial DOT. El corredor cobra la comisión y desaparece si algo sale mal.",
-          "honestAnswer": "\"Sí — enviamos el nombre del transportista, número USDOT, y contacto del conductor en cuanto asignamos la carga. Verificable en la base de datos FMCSA SAFER.\""
+          "honestAnswer": "\"Si. El nombre del transportista, USDOT, y contacto del conductor aparecen en su portal de cliente en cuanto asignamos la carga. Verificable en la base de datos FMCSA SAFER.\""
         },
         "transit": {
           "question": "\"¿Qué pasa si no escucho de nadie durante 3 días en tránsito?\"",
           "whyAsk": "Muchos corredores desaparecen después de la reserva. Sin actualizaciones proactivas, sin punto de contacto, sin seguimiento. Para cuando se da cuenta de que algo anda mal, su auto está en algún lugar de Texas y nadie sabe dónde.",
-          "honestAnswer": "\"Nunca pasaría 3 días sin saber de nosotros — actualizaciones proactivas en la recogida, en ruta, y antes de la entrega, además de su coordinador que responde si llama entre actualizaciones.\""
+          "honestAnswer": "\"Su portal de cliente muestra el camion en el mapa en tiempo real. Notificaciones por texto y correo en la recogida, en transito y antes de la entrega. Su coordinador contesta si llama entre estas.\""
         }
       }
     },
@@ -1316,11 +1316,18 @@
       },
       "submit": {
         "button": "Enviar solicitud de cotización",
-        "footnote": "Obtenga su precio fijo al instante en línea. No se requiere depósito para recibir la cotización."
+        "footnote": "Obtenga su precio fijo al instante en línea. No se requiere depósito para recibir la cotización.",
+        "pending": "Enviando..."
       },
       "verification": {
         "legend": "Verificación",
         "testModeNote": "Modo de prueba — usando la clave pública de hCaptcha."
+      },
+      "success": {
+        "eyebrow": "Cotizacion solicitada",
+        "title": "Gracias. Un coordinador le contactara dentro de 1 hora habil.",
+        "body": "Recibimos sus datos y los enrutamos a un coordinador disponible. Recibira un precio fijo todo incluido por correo o telefono, sin deposito, sin compromiso.",
+        "refLabel": "Referencia"
       }
     },
     "reassurance": {

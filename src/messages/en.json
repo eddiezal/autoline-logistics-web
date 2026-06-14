@@ -373,7 +373,7 @@
         "insured": "Bonded, Licensed & Insured"
       },
       "stats": {
-        "shipments": "45,000+ vehicles shipped last year",
+        "shipments": "45,000+ vehicles across our family operation last year",
         "coverage": "Door-to-door across the U.S., plus HI + AK"
       },
       "shipmentCard": {
@@ -591,9 +591,9 @@
         },
         "volume": {
           "tag": "Volume credibility",
-          "stat": "45,000",
-          "title": "Vehicles moved last year",
-          "description": "Forty-five thousand families and dealers trusted us in 2025 alone. Repeat business builds the operation.",
+          "stat": "45,000+",
+          "title": "Vehicles across the family operation",
+          "description": "Auto Line Express (carrier) and Auto Line Logistics (broker) together moved 45,000+ vehicles in 2025 across the family fleet and a vetted partner network. One family operation, two sides of the move.",
           "linkText": "See our story"
         },
         "coverage": {
@@ -605,9 +605,9 @@
         },
         "bilingual": {
           "tag": "People Promise",
-          "stat": "2",
-          "title": "Native bilingual front line",
-          "description": "English and Spanish handled natively — no translation service, no call routing.",
+          "stat": "EN · ES",
+          "title": "Bilingual coordinator support",
+          "description": "Spanish-speaking coordinators on staff. No translation service, no call routing to a third party. Ask for ES at booking.",
           "linkText": "Meet the team"
         }
       }
@@ -629,12 +629,12 @@
         "carrier": {
           "question": "\"Will you tell me the carrier's name, USDOT, and driver contact — before pickup, in writing?\"",
           "whyAsk": "Shady brokers hide the actual carrier so customers can't verify the trucker, their insurance, or their DOT history. The broker collects the markup, then disappears if anything goes wrong.",
-          "honestAnswer": "\"Yes — we send the carrier name, USDOT number, and driver contact as soon as we assign the load. Verifiable on the FMCSA SAFER database.\""
+          "honestAnswer": "\"Yes. The carrier name, USDOT, and driver contact appear in your customer portal as soon as we assign the load. Verifiable on the FMCSA SAFER database.\""
         },
         "transit": {
           "question": "\"What happens if I don't hear from anyone for 3 days during transit?\"",
           "whyAsk": "Many brokers vanish after booking. No proactive updates, no point of contact, no tracking. By the time you realize something's off, your car is somewhere in Texas and nobody knows where.",
-          "honestAnswer": "\"You'd never go 3 days without hearing from us — proactive milestone updates at pickup, en route, and pre-delivery, plus your coordinator answers if you call between them.\""
+          "honestAnswer": "\"Your customer portal shows the truck on the map in real time. Milestone updates by text and email at pickup, en route, and pre-delivery. Your coordinator answers if you call between them.\""
         }
       }
     },
@@ -1316,11 +1316,18 @@
       },
       "submit": {
         "button": "Submit quote request",
-        "footnote": "Get your locked price instantly online. No deposit required to receive the quote."
+        "footnote": "Get your locked price instantly online. No deposit required to receive the quote.",
+        "pending": "Sending..."
       },
       "verification": {
         "legend": "Verification",
         "testModeNote": "Test mode — using hCaptcha's public test key."
+      },
+      "success": {
+        "eyebrow": "Locked-price quote requested",
+        "title": "Thanks. A coordinator will reach out within 1 business hour.",
+        "body": "We received your details and routed them to an available coordinator. You will get a locked all-in price by email or phone, no deposit required, no obligation.",
+        "refLabel": "Reference"
       }
     },
     "reassurance": {
