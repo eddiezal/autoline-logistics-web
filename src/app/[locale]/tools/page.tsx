@@ -23,11 +23,13 @@ export const metadata: Metadata = {
  *   3. Price Drop Alerts          — coming-soon (blocks on email service)
  *   4. Shipping Checklist         — coming-soon (part of customer prep portal)
  */
+// Shipping Checklist removed 2026-06-14: it was filler to round the grid to 4.
+// Real grid stays at 3 (one live + two coming-soon). i18n keys remain in
+// messages JSON for now in case we want to bring it back.
 type ToolKey =
   | "shipVsDrive"
   | "routePriceChecker"
-  | "priceDropAlerts"
-  | "shippingChecklist";
+  | "priceDropAlerts";
 
 const TOOLS: ReadonlyArray<{
   key: ToolKey;
@@ -37,7 +39,6 @@ const TOOLS: ReadonlyArray<{
   { key: "shipVsDrive", href: "/tools/ship-vs-drive", live: true },
   { key: "routePriceChecker", href: null, live: false },
   { key: "priceDropAlerts", href: null, live: false },
-  { key: "shippingChecklist", href: null, live: false },
 ];
 
 export default function ToolsIndex() {

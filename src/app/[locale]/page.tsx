@@ -553,7 +553,9 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Shipping Checklist card removed 2026-06-14. Grid drops from
+                4 cols to 3 cols on lg+ to keep cards comfortable. */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <ToolTeaser
                 title={t("tools.cards.shipVsDrive.title")}
                 summary={t("tools.cards.shipVsDrive.summary")}
@@ -572,13 +574,6 @@ export default function Home() {
               <ToolTeaser
                 title={t("tools.cards.priceDropAlerts.title")}
                 summary={t("tools.cards.priceDropAlerts.summary")}
-                live={false}
-                liveLabel={t("tools.liveLabel")}
-                soonLabel={t("tools.comingSoonLabel")}
-              />
-              <ToolTeaser
-                title={t("tools.cards.shippingChecklist.title")}
-                summary={t("tools.cards.shippingChecklist.summary")}
                 live={false}
                 liveLabel={t("tools.liveLabel")}
                 soonLabel={t("tools.comingSoonLabel")}
