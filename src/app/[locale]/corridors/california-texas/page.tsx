@@ -48,15 +48,12 @@ export default async function CaliforniaTexasCorridor({
         <section className="bg-charcoal text-white py-16 md:py-20">
           <Container>
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10 lg:gap-16 items-start">
-              {/* Left column: copy + CTAs */}
+              {/* Left column: copy + CTAs.
+                  Hero chip dropped 2026-06-14: the live pricing card to the
+                  right is the source of truth now. Keeping a "from $1,150"
+                  chip alongside live data ($900 sedan low) read as stale and
+                  contradicted the card. */}
               <div>
-                {/* Consolidated price chip. Replaces the small eyebrow + separate
-                    pill from V1. Brighter green, more pop, acts as the visual
-                    anchor above the H1. */}
-                <p className="inline-block bg-green-500/15 border border-green-400/50 text-green-300 text-sm md:text-base font-semibold rounded-full px-4 py-2 mb-6">
-                  {t("corridors.californiaTexas.hero.priceCallout")}
-                </p>
-
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                   {t("corridors.californiaTexas.hero.title")}
                 </h1>

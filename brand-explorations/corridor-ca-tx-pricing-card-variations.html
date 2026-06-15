@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA to TX corridor . Pricing card variations</title>
+<style>
+  :root {
+    --cream: #faf6ef;
+    --charcoal: #1a1a1a;
+    --charcoal-soft: #2a2a2a;
+    --pine-deep: #052e1a;
+    --pine: #118647;
+    --pine-light: #16a34a;
+    --pine-bg: #f0faf3;
+    --pine-bg-border: rgba(22,163,74,0.2);
+    --orange: #ff6600;
+    --orange-tint: #fff4ec;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--gray-100); color: var(--charcoal); line-height: 1.55; }
+  .page { max-width: 1280px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page-header { margin-bottom: 32px; }
+  .page-header h1 { margin: 0 0 8px; font-size: 28px; }
+  .page-header p { margin: 0; color: var(--gray-700); max-width: 880px; }
+  .page-header .data-note { background: var(--orange-tint); border: 1px solid var(--orange); border-radius: 8px; padding: 12px 16px; margin-top: 16px; font-size: 13px; color: var(--charcoal); }
+  .var { background: var(--cream); border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .var-meta { background: var(--charcoal); color: #fff; padding: 18px 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .var-meta h2 { margin: 0; font-size: 18px; font-weight: 700; }
+  .var-meta .sub { font-size: 12px; color: #d1d5db; margin-top: 4px; max-width: 720px; }
+  .var-tag { background: var(--orange); color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+
+  /* Shared hero shell. Mimics the live CA-TX hero so card sits in real context. */
+  .hero { background: var(--charcoal); color: #fff; padding: 48px 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 380px; gap: 48px; align-items: start; }
+  .hero h1 { margin: 0 0 16px; font-size: 36px; line-height: 1.1; letter-spacing: -0.02em; max-width: 540px; }
+  .hero .subh { color: #d1d5db; font-size: 15px; max-width: 480px; margin: 0 0 24px; line-height: 1.55; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary { background: var(--pine-light); color: #fff; padding: 12px 22px; border-radius: 999px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; }
+  .btn-secondary { border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 12px 22px; border-radius: 999px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; }
+  .chip { display: inline-block; background: rgba(34,197,94,0.15); border: 1px solid rgba(74,222,128,0.5); color: #86efac; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-bottom: 16px; }
+
+  /* Live (current) card — shown for reference */
+  .card-live { background: #fff; color: var(--charcoal); border-radius: 16px; padding: 24px; box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+  .card-live .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-200); }
+  .card-live .head .title { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-live .head .route { color: var(--gray-500); font-size: 12px; }
+  .card-live .row { display: flex; justify-content: space-between; padding: 8px 0; }
+  .card-live .row .label { color: var(--gray-700); font-size: 14px; }
+  .card-live .row .val { font-weight: 700; color: var(--charcoal); font-size: 14px; }
+  .card-live .verdict { background: var(--pine-bg); border: 1px solid var(--pine-bg-border); border-radius: 10px; padding: 16px; margin: 16px 0 0; text-align: center; }
+  .card-live .verdict .eyebrow { color: var(--pine); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 6px; }
+  .card-live .verdict .value { color: var(--charcoal); font-size: 22px; font-weight: 800; margin: 0 0 6px; }
+  .card-live .verdict .body { color: var(--gray-700); font-size: 12px; margin: 0; line-height: 1.45; }
+  .card-live + .link-below { text-align: center; margin-top: 12px; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; }
+
+  /* V1 — Tight Minimal */
+  .card-v1 { background: #fff; color: var(--charcoal); border-radius: 16px; padding: 20px; box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+  .card-v1 .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--gray-200); }
+  .card-v1 .head .title { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-v1 .head .route { color: var(--gray-500); font-size: 12px; }
+  .card-v1 .row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .card-v1 .row .label { color: var(--gray-700); font-size: 14px; }
+  .card-v1 .row.featured .label { color: var(--charcoal); font-weight: 700; }
+  .card-v1 .row .val { font-weight: 700; color: var(--charcoal); font-size: 14px; }
+  .card-v1 .transit { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding: 10px 12px; background: var(--pine-bg); border: 1px solid var(--pine-bg-border); border-radius: 8px; }
+  .card-v1 .transit .lbl { color: var(--pine); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card-v1 .transit .val { color: var(--charcoal); font-size: 14px; font-weight: 700; }
+  .card-v1 .footer { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--gray-200); text-align: center; }
+  .card-v1 .footer a { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; }
+
+  /* V2 — Horizontal 3-column grid */
+  .card-v2 { background: #fff; color: var(--charcoal); border-radius: 16px; padding: 20px; box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+  .card-v2 .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--gray-200); }
+  .card-v2 .head .title { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-v2 .head .route { color: var(--gray-500); font-size: 12px; }
+  .card-v2 .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+  .card-v2 .col { padding: 4px 8px; text-align: center; }
+  .card-v2 .col:not(:last-child) { border-right: 1px solid var(--gray-200); }
+  .card-v2 .col .v-label { color: var(--gray-500); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .card-v2 .col .v-price { color: var(--charcoal); font-size: 14px; font-weight: 700; }
+  .card-v2 .col .v-suffix { color: var(--gray-500); font-size: 11px; }
+  .card-v2 .footer-stripe { margin-top: 14px; padding: 8px 12px; background: var(--charcoal); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+  .card-v2 .footer-stripe .lbl { color: var(--pine-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; }
+  .card-v2 .footer-stripe .val { font-weight: 700; }
+
+  /* V3 — Hero number anchor (sedan FROM is THE number) */
+  .card-v3 { background: #fff; color: var(--charcoal); border-radius: 16px; padding: 22px; box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+  .card-v3 .eyebrow { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 6px; }
+  .card-v3 .anchor { display: flex; align-items: baseline; gap: 6px; margin: 0 0 4px; }
+  .card-v3 .anchor .prefix { color: var(--gray-500); font-size: 14px; font-weight: 500; }
+  .card-v3 .anchor .price { color: var(--charcoal); font-size: 38px; font-weight: 800; line-height: 1; }
+  .card-v3 .anchor .qual { color: var(--gray-500); font-size: 13px; }
+  .card-v3 .vehicle { color: var(--gray-600); font-size: 12px; margin: 0 0 14px; }
+  .card-v3 .also { padding: 10px 0; border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
+  .card-v3 .also .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .card-v3 .also .row .lbl { color: var(--gray-600); }
+  .card-v3 .also .row .val { color: var(--charcoal); font-weight: 700; }
+  .card-v3 .transit-line { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--gray-700); }
+  .card-v3 .transit-line .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pine-light); flex-shrink: 0; }
+  .card-v3 .transit-line b { color: var(--charcoal); }
+
+  /* V4 — Compact + Personalize link */
+  .card-v4 { background: #fff; color: var(--charcoal); border-radius: 16px; padding: 18px 20px; box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+  .card-v4 .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .card-v4 .head .title { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-v4 .head .route { color: var(--gray-500); font-size: 11px; }
+  .card-v4 .row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed var(--gray-200); }
+  .card-v4 .row:last-of-type { border-bottom: none; }
+  .card-v4 .row .label { color: var(--gray-700); font-size: 14px; }
+  .card-v4 .row.featured .label { color: var(--charcoal); font-weight: 700; }
+  .card-v4 .row .val { font-weight: 700; color: var(--charcoal); font-size: 14px; }
+  .card-v4 .meta { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--gray-200); font-size: 11px; }
+  .card-v4 .meta .transit { color: var(--gray-700); }
+  .card-v4 .meta .transit b { color: var(--charcoal); }
+  .card-v4 .meta .personalize { color: var(--orange); font-weight: 700; text-decoration: none; }
+  .card-v4 .meta .personalize:hover { text-decoration: underline; }
+
+  .matrix { background: #fff; border-radius: 16px; padding: 28px; margin-top: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .matrix h2 { margin: 0 0 12px; font-size: 20px; }
+  .matrix table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix th, .matrix td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .matrix th { color: var(--gray-700); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gray-50); }
+  .matrix td.dim { font-weight: 700; min-width: 140px; color: var(--charcoal); }
+  .take { background: #fff; border-radius: 16px; padding: 24px 28px; margin-top: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .take h3 { margin: 0 0 8px; font-size: 16px; }
+  .take p { margin: 0 0 8px; color: var(--gray-700); font-size: 14px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>CA to TX corridor . Pricing card variations</h1>
+    <p>Following the design critique on the live card. Same hero context across all four (charcoal background, H1, subhead, CTAs) so the card sits in real frame. Critical fixes already baked in: hero chip removed (was contradicting the live data at $1,150 vs actual $900 sedan low), padding tightened, transit verdict scoped.</p>
+    <div class="data-note">
+      <strong>Live data shown:</strong> Sedan $900–$1,100, SUV $914–$1,117, Pickup $1,260–$1,540. Pulled from SD Pricing Insights API 2026-06-14, will refresh via cron 2x daily.
+    </div>
+  </header>
+
+  <!-- =================== LIVE (reference) =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>LIVE . Currently deployed</h2>
+        <p class="sub">Card as it ships today. Tall (~650px). Massive transit verdict box. Stale hero chip ($1,150). "See today's locked price" link below the card competes with the main hero CTA. Shown here as the comparison baseline.</p>
+      </div>
+      <span class="var-tag">LIVE</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="chip">California to Texas . Locked all-in price from $1,150</span>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside>
+          <div class="card-live">
+            <div class="head">
+              <span class="title">TODAY'S PRICING</span>
+              <span class="route">CA → TX</span>
+            </div>
+            <div class="row"><span class="label">Sedan</span><span class="val">$900 – $1,100</span></div>
+            <div class="row"><span class="label">SUV</span><span class="val">$914 – $1,117</span></div>
+            <div class="row"><span class="label">Pickup</span><span class="val">$1,260 – $1,540</span></div>
+            <div class="verdict">
+              <p class="eyebrow">TRANSIT TIME</p>
+              <p class="value">3-5 days</p>
+              <p class="body">Typical carrier transit once your vehicle is picked up. Pickup availability changes by date and vehicle type.</p>
+            </div>
+          </div>
+          <p class="link-below">SEE TODAY'S LOCKED PRICE →</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== V1 — Tight Minimal =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V1 . Tight Minimal</h2>
+        <p class="sub">Same structure as live, just compressed: padding tightened (24→20px), row spacing halved, transit collapsed to a single horizontal bar, bottom link folded into card footer. Sedan emphasized as the entry tier. No hero chip (drop, since the card answers the same question with live data).</p>
+      </div>
+      <span class="var-tag">V1 . Tight</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside>
+          <div class="card-v1">
+            <div class="head">
+              <span class="title">TODAY'S PRICING</span>
+              <span class="route">CA → TX</span>
+            </div>
+            <div class="row featured"><span class="label">Sedan</span><span class="val">$900 – $1,100</span></div>
+            <div class="row"><span class="label">SUV</span><span class="val">$914 – $1,117</span></div>
+            <div class="row"><span class="label">Pickup</span><span class="val">$1,260 – $1,540</span></div>
+            <div class="transit">
+              <span class="lbl">Transit</span>
+              <span class="val">3–5 days</span>
+            </div>
+            <div class="footer">
+              <a href="#">Get today's locked price →</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== V2 — Horizontal 3-column =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V2 . Horizontal grid</h2>
+        <p class="sub">Vehicles laid out as 3 columns instead of 3 rows. Card is much shorter and wider, more dashboard-feeling. Transit time becomes a thin dark footer stripe attached to the card. Loses some scannability vs vertical list, gains visual density and proximity to the hero CTAs.</p>
+      </div>
+      <span class="var-tag">V2 . Grid</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside>
+          <div class="card-v2">
+            <div class="head">
+              <span class="title">TODAY'S PRICING</span>
+              <span class="route">CA → TX</span>
+            </div>
+            <div class="grid">
+              <div class="col">
+                <div class="v-label">Sedan</div>
+                <div class="v-price">$900–$1,100</div>
+              </div>
+              <div class="col">
+                <div class="v-label">SUV</div>
+                <div class="v-price">$914–$1,117</div>
+              </div>
+              <div class="col">
+                <div class="v-label">Pickup</div>
+                <div class="v-price">$1,260–$1,540</div>
+              </div>
+            </div>
+            <div class="footer-stripe">
+              <span class="lbl">Transit</span>
+              <span class="val">3–5 days typical</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== V3 — Hero number anchor =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V3 . Hero-number anchor</h2>
+        <p class="sub">One number does the work. Big sedan FROM as the visual anchor ($900), small "Also: SUV / Pickup" rows underneath. Transit a single inline line at the bottom. The boldest, most ad-friendly variation. Trade-off: visitors with non-sedan vehicles get a slightly smaller signal of their tier.</p>
+      </div>
+      <span class="var-tag">V3 . Anchor</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside>
+          <div class="card-v3">
+            <p class="eyebrow">TODAY'S PRICING . CA → TX</p>
+            <div class="anchor">
+              <span class="prefix">From</span>
+              <span class="price">$900</span>
+              <span class="qual">locked</span>
+            </div>
+            <p class="vehicle">Sedan, open transport. Range goes to $1,100.</p>
+            <div class="also">
+              <div class="row"><span class="lbl">SUV</span><span class="val">$914 – $1,117</span></div>
+              <div class="row"><span class="lbl">Pickup</span><span class="val">$1,260 – $1,540</span></div>
+            </div>
+            <div class="transit-line">
+              <span class="dot"></span>
+              <span><b>3–5 day transit</b> once your vehicle is picked up.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== V4 — Compact + Personalize hook =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V4 . Compact + Personalize hook</h2>
+        <p class="sub">Most compact of the four. Pricing rows on dashed dividers, transit + a "Personalize" link tucked into one footer row pointing at the Ship vs Drive calculator. Leverages the tool we already built; signals depth. Smallest visual footprint, lowest "loud sales" feel.</p>
+      </div>
+      <span class="var-tag">V4 . Compact</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside>
+          <div class="card-v4">
+            <div class="head">
+              <span class="title">TODAY'S PRICING</span>
+              <span class="route">CA → TX</span>
+            </div>
+            <div class="row featured"><span class="label">Sedan</span><span class="val">$900 – $1,100</span></div>
+            <div class="row"><span class="label">SUV</span><span class="val">$914 – $1,117</span></div>
+            <div class="row"><span class="label">Pickup</span><span class="val">$1,260 – $1,540</span></div>
+            <div class="meta">
+              <span class="transit">Transit: <b>3–5 days</b></span>
+              <a href="#" class="personalize">Personalize →</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="matrix">
+    <h2>Trade-off summary</h2>
+    <table>
+      <thead>
+        <tr><th>Dimension</th><th>V1 Tight</th><th>V2 Grid</th><th>V3 Anchor</th><th>V4 Compact</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="dim">Height vs current</td>
+          <td>~45% smaller</td>
+          <td>~60% smaller</td>
+          <td>~30% smaller</td>
+          <td>~55% smaller</td>
+        </tr>
+        <tr>
+          <td class="dim">Scannability per-vehicle</td>
+          <td>Excellent (vertical)</td>
+          <td>Good (horizontal)</td>
+          <td>Excellent for sedan, weaker for SUV/Pickup</td>
+          <td>Good (vertical with dashes)</td>
+        </tr>
+        <tr>
+          <td class="dim">Visual hierarchy</td>
+          <td>Sedan bolded</td>
+          <td>Equal weight all 3</td>
+          <td>Sedan dominates (38px price)</td>
+          <td>Sedan bolded</td>
+        </tr>
+        <tr>
+          <td class="dim">Transit treatment</td>
+          <td>Light pine bar</td>
+          <td>Dark charcoal stripe</td>
+          <td>Inline dot + sentence</td>
+          <td>Inline footer text</td>
+        </tr>
+        <tr>
+          <td class="dim">Compete with hero CTA</td>
+          <td>No (card-internal link)</td>
+          <td>No (no link)</td>
+          <td>No (no link)</td>
+          <td>Hook to /tools (not /quote)</td>
+        </tr>
+        <tr>
+          <td class="dim">Ad-friendliness</td>
+          <td>Strong</td>
+          <td>Mid</td>
+          <td>Strongest (one number)</td>
+          <td>Strong</td>
+        </tr>
+        <tr>
+          <td class="dim">Implementation effort</td>
+          <td>~30 min</td>
+          <td>~45 min</td>
+          <td>~30 min</td>
+          <td>~30 min</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="take">
+    <h3>My take</h3>
+    <p><b>V1 or V4.</b> V1 if you want to preserve the verdict-box visual language we built (just smaller). V4 if you want maximum compactness and the "Personalize →" link gets people into /tools/ship-vs-drive (which then funnels back to /quote).</p>
+    <p>V3 is the most aggressive for paid ads — one number does all the work. But it underweights SUV and Pickup, which are real buyer segments. Worth considering if the LA paid test ads target "California to Texas car shipping cost" and we want the number to be the headline.</p>
+    <p>V2 reads more like a dashboard than a marketing card. The 3-column layout is harder to scan when prices have different decimal lengths ($900–$1,100 vs $1,260–$1,540 don't align).</p>
+  </div>
+</div>
+</body>
+</html>
