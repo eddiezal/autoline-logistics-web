@@ -70,6 +70,25 @@ export default async function BlogArticleRoute({
     },
   };
 
+  // Optional FAQPage schema. When the article exposes a faq array, we emit
+  // FAQPage JSON-LD so Google can render rich snippets (each Q can show as
+  // its own search result tile). Schema content mirrors what's rendered in
+  // the article body so Google validates the markup.
+  const faqSchema = article.faq && article.faq.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: article.faq.map((pair) => ({
+          "@type": "Question",
+          name: pair.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: pair.a,
+          },
+        })),
+      }
+    : null;
+
   return (
     <>
       {/* JSON-LD article schema. Goes in <body> as a script tag, not <head>. */}
@@ -78,6 +97,13 @@ export default async function BlogArticleRoute({
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <BlogArticle
         article={article}
         publishedDateLabel={t("blog.article.publishedDateLabel")}

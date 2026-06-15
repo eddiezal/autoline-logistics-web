@@ -49,6 +49,9 @@ export interface Article {
     href: string;
     label: string;
   };
+  /** Optional Q&A pairs. When present, the route emits FAQPage JSON-LD
+   *  schema so Google can render rich snippets for the questions. */
+  faq?: ReadonlyArray<{ q: string; a: string }>;
 }
 
 export interface ArticleSummary {
