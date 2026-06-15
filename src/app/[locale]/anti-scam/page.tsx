@@ -30,7 +30,8 @@ export default async function AntiScamHubPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const articles = getAllArticleSummaries();
+  const lang = locale === "es" ? "es" : "en";
+  const articles = getAllArticleSummaries(lang);
 
   return (
     <>
@@ -171,4 +172,3 @@ export default async function AntiScamHubPage({
     </>
   );
 }
-

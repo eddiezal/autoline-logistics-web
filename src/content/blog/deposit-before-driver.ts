@@ -8,6 +8,7 @@ import type { Article } from "@/lib/blog/types";
 
 export const article: Article = {
   slug: "deposit-before-driver-assigned",
+  language: "en",
   title: "Should You Pay a Deposit Before a Driver Is Assigned?",
   subtitle:
     "A non-refundable deposit before any carrier is named is one of the most common red flags in auto transport. But not every deposit is a scam. Here is what separates a legitimate booking fee from a hook designed to lock you in.",

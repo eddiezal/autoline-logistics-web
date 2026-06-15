@@ -8,6 +8,7 @@ import type { Article } from "@/lib/blog/types";
 
 export const article: Article = {
   slug: "why-car-shipping-quotes-go-up",
+  language: "en",
   title: "Why Your Car Shipping Quote Went Up at the Last Minute",
   subtitle:
     "If a broker quoted you $629 then asked for $900, you are not alone. Here is what is actually happening in the industry, and how to make sure your quote is real before you pay.",

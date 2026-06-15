@@ -28,8 +28,14 @@ export type BlogCluster =
   | "understanding-industry"
   | "planning-shipment";
 
+/** Article language. Drives /[locale]/blog filtering + slug uniqueness. */
+export type ArticleLanguage = "en" | "es";
+
 export interface Article {
   slug: string;
+  /** Language this article was authored in. EN/ES versions of the same
+   *  topic are separate Article objects with separate slugs. */
+  language: ArticleLanguage;
   title: string;
   subtitle: string;
   metaDescription: string;
@@ -49,13 +55,13 @@ export interface Article {
     href: string;
     label: string;
   };
-  /** Optional Q&A pairs. When present, the route emits FAQPage JSON-LD
-   *  schema so Google can render rich snippets for the questions. */
+  /** Optional Q&A. When present the [slug] route emits FAQPage schema. */
   faq?: ReadonlyArray<{ q: string; a: string }>;
 }
 
 export interface ArticleSummary {
   slug: string;
+  language: ArticleLanguage;
   title: string;
   subtitle: string;
   publishedAt: string;

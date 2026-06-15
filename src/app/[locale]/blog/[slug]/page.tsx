@@ -2,14 +2,22 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BlogArticle } from "@/components/BlogArticle";
-import { getAllArticleSlugs, getArticleBySlug } from "@/lib/blog/articles";
+import {
+  getAllArticleSlugs,
+  getAllArticleSlugsAcrossLocales,
+  getArticleBySlug,
+} from "@/lib/blog/articles";
 
-// Statically generate all known article slugs at build time. The blog
-// catalog is small (3 today, ~8 at full Phase A+B). Pre-rendering is
-// strictly better than dynamic for SEO and LCP.
+// Statically generate every known article slug at build time. Slugs are
+// unique across locales (EN slugs are English, ES slugs are Spanish), and
+// the parent [locale] segment generates all locale prefixes per slug,
+// so unused locale x slug pairs would 404 on render unless we gate them.
+// For v1 simplicity, generate all slugs unfiltered by locale — Next.js
+// will produce {en, es} for each slug; the wrong-locale combinations
+// still load the right article (slugs are unique). Acceptable trade-off
+// vs setting up per-locale static params.
 export async function generateStaticParams() {
-  const slugs = getAllArticleSlugs();
-  return slugs.map((slug) => ({ slug }));
+  return getAllArticleSlugsAcrossLocales().map((slug) => ({ slug }));
 }
 
 export const dynamicParams = false;
@@ -45,6 +53,10 @@ export default async function BlogArticleRoute({
   const { slug, locale } = await params;
   const article = getArticleBySlug(slug);
   if (!article) notFound();
+  // 404 if the article was authored in a different locale than the URL.
+  // EN slugs only render under /en, ES slugs only render under /es.
+  const expectedLang = locale === "es" ? "es" : "en";
+  if (article.language !== expectedLang) notFound();
 
   const t = await getTranslations({ locale });
 

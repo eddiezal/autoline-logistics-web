@@ -13,6 +13,7 @@ import type { Article } from "@/lib/blog/types";
 
 export const article: Article = {
   slug: "broker-vs-carrier",
+  language: "en",
   title: "Broker vs Carrier: Who Actually Moves Your Car?",
   subtitle:
     "Most auto transport companies are brokers. Some own trucks. The customer almost always finds out which is which only after something goes wrong. Here is why it matters who is on the other end of your booking, and how a hybrid that runs both sides handles things differently.",

@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { getArticlesByCluster } from "@/lib/blog/articles";
 import { getLiveCorridors } from "@/lib/corridors";
-import type { ArticleSummary } from "@/lib/blog/types";
+import type { ArticleSummary, ArticleLanguage } from "@/lib/blog/types";
 
 export const metadata: Metadata = {
   title:
@@ -31,7 +31,8 @@ export default async function BlogIndex({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale });
-  const grouped = getArticlesByCluster();
+  const lang = (locale === "es" ? "es" : "en") as ArticleLanguage;
+  const grouped = getArticlesByCluster(lang);
   const corridors = getLiveCorridors();
 
   return (

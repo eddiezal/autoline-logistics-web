@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getLiveCorridors } from "@/lib/corridors";
-import { getAllArticleSlugs } from "@/lib/blog/articles";
+import { getAllArticleSlugs, getArticleBySlug } from "@/lib/blog/articles";
 import { routing } from "@/i18n/routing";
 
 /**
@@ -74,20 +74,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Coming-soon corridors aren't indexable (no dedicated pages); search
   // engines will find them via the /corridors index page crawl.
 
-  // Blog article pages — emit one entry per locale per article slug.
-  for (const slug of getAllArticleSlugs()) {
-    const path = `/blog/${slug}`;
-    for (const locale of routing.locales) {
+  // Blog article pages — each article exists in exactly one locale.
+  // Emit one sitemap entry per article in its authored locale only.
+  // Cross-locale combinations would 404 (the [slug] route gates on language).
+  for (const locale of routing.locales) {
+    const lang = locale === "es" ? "es" : "en";
+    for (const slug of getAllArticleSlugs(lang)) {
+      const article = getArticleBySlug(slug);
+      if (!article) continue;
+      const path = `/blog/${slug}`;
       entries.push({
         url: buildUrl(locale, path),
         lastModified,
         changeFrequency: "monthly",
         priority: 0.6,
-        alternates: {
-          languages: Object.fromEntries(
-            routing.locales.map((l) => [l, buildUrl(l, path)])
-          ),
-        },
       });
     }
   }
