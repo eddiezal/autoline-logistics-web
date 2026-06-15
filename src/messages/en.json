@@ -1815,10 +1815,70 @@
         }
       },
       "californiaFlorida": {
-        "shortDesc": "Coast-to-coast, most popular snowbird corridor. Heavy enclosed-trailer demand for collector vehicles."
+        "shortDesc": "Coast-to-coast, most popular snowbird corridor. Heavy enclosed-trailer demand for collector vehicles.",
+        "subDestinations": {
+          "miami": {
+            "name": "CA to Miami",
+            "timeline": "6-9 days",
+            "routing": "I-10 southern lane through TX, LA, FL panhandle to South Florida.",
+            "note": "Snowbird and luxury volume. Enclosed available year-round. Peak demand October-December.",
+            "customers": "Snowbirds, luxury and collector owners, family relocations."
+          },
+          "orlando": {
+            "name": "CA to Orlando",
+            "timeline": "6-9 days",
+            "routing": "I-10 to I-75 south. Orlando metro delivery.",
+            "note": "Family relocations, theme-park employees, vacation-home owners.",
+            "customers": "Family relocations, hospitality industry, second-home owners."
+          },
+          "tampa": {
+            "name": "CA to Tampa",
+            "timeline": "6-9 days",
+            "routing": "I-10 to I-75 to Tampa Bay.",
+            "note": "Strong snowbird and retiree volume. Tampa, St. Pete, Sarasota all common.",
+            "customers": "Snowbirds, retirees, family relocations, healthcare workers."
+          },
+          "jacksonville": {
+            "name": "CA to Jacksonville",
+            "timeline": "6-9 days",
+            "routing": "I-10 east to Jacksonville. Northern-most FL destination, often fastest leg.",
+            "note": "Military PCS to NAS Jacksonville and Mayport. Family relocations.",
+            "customers": "Military PCS (NAS Jacksonville, Mayport), families, retirees."
+          }
+        }
       },
       "californiaNewYork": {
-        "shortDesc": "Coast-to-coast. NYC metro and upstate destinations. Multi-vehicle relocation packages available."
+        "shortDesc": "Coast-to-coast. NYC metro and upstate destinations. Multi-vehicle relocation packages available.",
+        "subDestinations": {
+          "manhattan": {
+            "name": "CA to Manhattan",
+            "timeline": "7-10 days",
+            "routing": "I-80 northern lane. Manhattan delivery typically via meet-up point.",
+            "note": "Meet-up point usually required (Queens, Brooklyn, NJ) due to truck restrictions. Your coordinator confirms.",
+            "customers": "Finance and tech transfers, college students, multi-vehicle households."
+          },
+          "brooklyn": {
+            "name": "CA to Brooklyn",
+            "timeline": "7-10 days",
+            "routing": "I-80 to Brooklyn metro. Carrier delivery to brownstone or meet-up.",
+            "note": "Family relocations, creative industries. Parking and street access matter.",
+            "customers": "Family relocations, creative industries, multi-vehicle households."
+          },
+          "longIsland": {
+            "name": "CA to Long Island",
+            "timeline": "7-10 days",
+            "routing": "I-80 to Nassau and Suffolk counties.",
+            "note": "Easier truck access than NYC proper. Common for family relocations.",
+            "customers": "Family relocations, suburban moves, multi-vehicle households."
+          },
+          "upstate": {
+            "name": "CA to Upstate NY",
+            "timeline": "7-10 days",
+            "routing": "I-80 to Albany, Rochester, Buffalo, or Syracuse.",
+            "note": "College destinations (Cornell, Syracuse, Rochester). Often student vehicle shipments.",
+            "customers": "College students, family relocations, second homes."
+          }
+        }
       },
       "californiaArizona": {
         "shortDesc": "Phoenix, Scottsdale, Tucson. Strong snowbird and retiree relocation traffic."
@@ -1835,11 +1895,170 @@
       "californiaColorado": {
         "shortDesc": "Denver, Boulder, Colorado Springs. Mountain-state relocations and seasonal moves."
       },
-      "floridaNewYork": {
-        "shortDesc": "The classic snowbird corridor. Heavy seasonal patterns — northbound spring, southbound fall."
-      },
       "texasFlorida": {
-        "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Cross-Gulf corridor."
+        "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Cross-Gulf corridor.",
+        "subDestinations": {
+          "miami": {
+            "name": "TX to Miami",
+            "timeline": "3-5 days",
+            "routing": "I-10 east through LA, MS, AL, FL panhandle to South Florida.",
+            "note": "Common Houston and DFW snowbird and relocation route.",
+            "customers": "Snowbirds, family relocations, luxury vehicle owners."
+          },
+          "tampa": {
+            "name": "TX to Tampa",
+            "timeline": "3-5 days",
+            "routing": "I-10 to I-75 south to Tampa Bay.",
+            "note": "Strong retiree and snowbird volume.",
+            "customers": "Retirees, snowbirds, family relocations."
+          },
+          "orlando": {
+            "name": "TX to Orlando",
+            "timeline": "3-5 days",
+            "routing": "I-10 to I-75 to Orlando metro.",
+            "note": "Family relocations and theme-park employees.",
+            "customers": "Family relocations, hospitality industry, vacation-home owners."
+          },
+          "jacksonville": {
+            "name": "TX to Jacksonville",
+            "timeline": "3-5 days",
+            "routing": "I-10 east direct to Jacksonville. Often the fastest leg.",
+            "note": "Military PCS to NAS Jacksonville and Mayport common.",
+            "customers": "Military PCS, family relocations, retirees."
+          }
+        }
+      },
+      "newYorkFlorida": {
+        "shortDesc": "The classic East Coast snowbird corridor. Heavy seasonal volume southbound October-December, northbound April-May.",
+        "subDestinations": {
+          "miami": {
+            "name": "NY to Miami",
+            "timeline": "3-5 days",
+            "routing": "I-95 direct south. The classic snowbird run.",
+            "note": "Peak southbound October-December. Northbound peak April-May. High carrier density.",
+            "customers": "Snowbirds, second-home owners, retirees, family relocations."
+          },
+          "orlando": {
+            "name": "NY to Orlando",
+            "timeline": "3-5 days",
+            "routing": "I-95 to I-4 west. Orlando metro delivery.",
+            "note": "Family relocations, theme-park employees, vacation-home owners.",
+            "customers": "Family relocations, hospitality, second-home owners."
+          },
+          "tampa": {
+            "name": "NY to Tampa",
+            "timeline": "3-5 days",
+            "routing": "I-95 to I-4 to Tampa Bay.",
+            "note": "Strong snowbird and retiree volume.",
+            "customers": "Snowbirds, retirees, second-home owners."
+          },
+          "naples": {
+            "name": "NY to Naples",
+            "timeline": "3-5 days",
+            "routing": "I-95 to I-75 south to SW Florida.",
+            "note": "High-end snowbird and luxury vehicle volume. Enclosed common.",
+            "customers": "Snowbirds, luxury and collector owners, retirees."
+          }
+        }
+      },
+      "californiaGeorgia": {
+        "shortDesc": "Atlanta tech and corporate transfers, plus military and family relocations. I-10 and I-20 are the carrier-preferred lanes.",
+        "subDestinations": {
+          "atlanta": {
+            "name": "CA to Atlanta",
+            "timeline": "6-8 days",
+            "routing": "I-10 to I-20 east to Atlanta metro.",
+            "note": "Tech, fintech, and corporate HQ volume. Common transfer destination.",
+            "customers": "Tech transfers, corporate relocations, family moves."
+          },
+          "savannah": {
+            "name": "CA to Savannah",
+            "timeline": "6-8 days",
+            "routing": "I-10 to I-95 north to coastal Georgia.",
+            "note": "Military PCS, family relocations, retirees.",
+            "customers": "Military PCS, retirees, family relocations."
+          },
+          "macon": {
+            "name": "CA to Macon",
+            "timeline": "6-8 days",
+            "routing": "I-10 to I-75 north to central Georgia.",
+            "note": "Family relocations, college (Mercer), regional moves.",
+            "customers": "Family relocations, college students, retirees."
+          },
+          "augusta": {
+            "name": "CA to Augusta",
+            "timeline": "6-8 days",
+            "routing": "I-10 to I-20 east to Augusta metro.",
+            "note": "Family relocations, Fort Eisenhower military PCS.",
+            "customers": "Military PCS, family relocations, healthcare workers."
+          }
+        }
+      },
+      "californiaNorthCarolina": {
+        "shortDesc": "Charlotte banking, RTP tech, Asheville mountain second homes. Common corporate transfer destinations.",
+        "subDestinations": {
+          "charlotte": {
+            "name": "CA to Charlotte",
+            "timeline": "6-9 days",
+            "routing": "I-10 to I-20 to I-77 north to Charlotte metro.",
+            "note": "Banking and finance hub. Common corporate transfer destination.",
+            "customers": "Banking and finance transfers, family relocations, retirees."
+          },
+          "raleigh": {
+            "name": "CA to Raleigh",
+            "timeline": "6-9 days",
+            "routing": "I-10 to I-40 east to RTP metro.",
+            "note": "Research Triangle Park tech and biotech volume. NC State, Duke, UNC.",
+            "customers": "Tech and biotech transfers, college students, family relocations."
+          },
+          "durham": {
+            "name": "CA to Durham",
+            "timeline": "6-9 days",
+            "routing": "I-40 east to Durham metro.",
+            "note": "Duke University, RTP tech. Same general route as Raleigh.",
+            "customers": "Tech transfers, college students, healthcare workers."
+          },
+          "asheville": {
+            "name": "CA to Asheville",
+            "timeline": "6-9 days",
+            "routing": "I-40 east through TN to Blue Ridge mountains.",
+            "note": "Mountain routing on final leg. Retirees and second-home owners.",
+            "customers": "Retirees, second-home owners, family relocations."
+          }
+        }
+      },
+      "californiaIllinois": {
+        "shortDesc": "Chicago tech, finance, and family relocations. I-80 corridor with year-round carrier density.",
+        "subDestinations": {
+          "chicago": {
+            "name": "CA to Chicago",
+            "timeline": "5-7 days",
+            "routing": "I-80 north to Chicago metro.",
+            "note": "Tech, finance, family relocations. Downtown delivery often via meet-up.",
+            "customers": "Tech and finance transfers, family relocations, college students."
+          },
+          "naperville": {
+            "name": "CA to Naperville",
+            "timeline": "5-7 days",
+            "routing": "I-80 to Chicago western suburbs.",
+            "note": "Family relocations, corporate transfers. Easier truck access than downtown.",
+            "customers": "Family relocations, corporate transfers, multi-vehicle households."
+          },
+          "aurora": {
+            "name": "CA to Aurora",
+            "timeline": "5-7 days",
+            "routing": "I-80 to far west Chicago suburbs.",
+            "note": "Family relocations, manufacturing and corporate transfers.",
+            "customers": "Family relocations, corporate transfers, manufacturing workers."
+          },
+          "joliet": {
+            "name": "CA to Joliet",
+            "timeline": "5-7 days",
+            "routing": "I-80 to southwest Chicago suburbs.",
+            "note": "Family relocations, logistics and rail-corridor workers.",
+            "customers": "Family relocations, logistics workers, multi-vehicle households."
+          }
+        }
       }
     },
     "californiaHawaii": {
@@ -2271,6 +2490,510 @@
       },
       "finalCta": {
         "title": "Locked-price CA to TX shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
+      }
+    },
+    "californiaFlorida": {
+      "hero": {
+        "eyebrow": "California to Florida . Locked all-in price",
+        "title": "Ship your car from California to Florida without the 2,800-mile road trip.",
+        "description": "Coast to coast. 4-5 days behind the wheel. Hotels, gas, food, wear. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Jacksonville.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping California to Florida often costs less than driving",
+        "body": {
+          "0": "A one-way CA to FL drive runs $750-900 in gas, 4 hotel nights, food on the road, and 2,800 hard freeway miles on your vehicle. Add 40+ hours behind the wheel.",
+          "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose almost a week. Snowbird and relocation traffic keeps this corridor moving year-round."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Snowbirds on a calendar",
+            "body": "Florida is the #1 snowbird destination from California. Lock the price now, your car meets you in Miami or Naples. Skip the 5-day drive."
+          },
+          "multiVehicle": {
+            "title": "Multi-vehicle households",
+            "body": "Second cars, family fleets, RV-and-car combos. Multi-car discount available. One coordinator, one delivery window."
+          },
+          "highValue": {
+            "title": "Luxury and collector vehicles",
+            "body": "Enclosed trailer recommended for high-value, low-mile, or classic vehicles. 2,800 miles of road grime, rock chips, and salt air ages a finish fast. The math gets even cleaner for collectors."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top Florida destinations",
+        "title": "Where CA-to-FL shipments land most",
+        "lead": "Miami, Orlando, Tampa, Jacksonville. We run all four destinations weekly. Your coordinator knows your destination ZIP and timing window."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "How long does shipping a car from California to Florida take?",
+            "a": "Most CA to FL shipments are 6-9 days door-to-door on open transport. Enclosed runs slightly longer because the carrier pool is smaller. Your coordinator confirms the exact window at booking."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "Standard sedan on open transport from California to Florida runs roughly $1,200-1,800 depending on origin/destination ZIP and timing. SUV $200-400 more. Pickup $300-500 more. The live pricing card shows current SD-sourced numbers."
+          },
+          "2": {
+            "q": "Should I ship enclosed for a long route like this?",
+            "a": "If your vehicle is over ~$60K, low-mile, or has custom paint, enclosed is worth the upgrade. The price difference is typically $400-700 for this corridor. Open is fine for daily drivers."
+          },
+          "3": {
+            "q": "Can I time the delivery around my snowbird arrival?",
+            "a": "Yes. Most snowbird shipments are timed to land 1-2 days before or after the customer's flight. Your coordinator can hold or expedite within reasonable windows. Locked-price either way."
+          },
+          "4": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price CA to FL shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
+      }
+    },
+    "californiaNewYork": {
+      "hero": {
+        "eyebrow": "California to New York . Locked all-in price",
+        "title": "Ship your car from California to New York. Coast to coast. Locked price.",
+        "description": "2,900 miles. 5 days behind the wheel through winter passes. Or one locked-price shipment with your car ready in Manhattan, Brooklyn, Long Island, or Upstate.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping California to New York often costs less than driving",
+        "body": {
+          "0": "A one-way CA to NY drive runs $750-900 in gas, 4 hotel nights, food, and 2,900 miles of mostly interstate with weather risk through the Rockies and Midwest. Add 45+ hours of windshield time.",
+          "1": "A locked auto-transport quote regularly beats the all-in cost of driving once you count hotels, food, and time off work. East-coast finance and tech transfers run this corridor weekly."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Finance and tech transfers",
+            "body": "Wall Street, fintech, big tech. Your start date is fixed. The 5 days lost driving cost more than shipping. Locked price plus 7-10 day delivery."
+          },
+          "multiVehicle": {
+            "title": "Multi-vehicle households",
+            "body": "Family relocations with two or three cars make the math even more lopsided. Multi-car discount available. One coordinator, one delivery window."
+          },
+          "highValue": {
+            "title": "College students and second cars",
+            "body": "Upstate colleges, NYC dorm parking. The math is especially clean when the vehicle is going somewhere it will sit most of the year. Skip the 2,900 miles of wear."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top New York destinations",
+        "title": "Where CA-to-NY shipments land most",
+        "lead": "Manhattan, Brooklyn, Long Island, Upstate NY. NYC metro requires tight delivery coordination (parking, building access). Your coordinator handles the logistics."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "How long does shipping a car from California to New York take?",
+            "a": "7-10 days door-to-door on open transport. The route depends on weather: northern I-80 in summer, southern I-40 in winter. Your coordinator picks the faster lane based on season."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "Standard sedan on open transport from California to New York runs roughly $1,300-1,900 depending on origin/destination ZIP and timing. NYC metro delivery adds a small premium for parking and access constraints. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "Do you deliver to Manhattan?",
+            "a": "Yes, but with delivery coordination. Most NYC carriers prefer a meet-up point (Brooklyn, Queens, or Jersey) due to truck size, double-parking restrictions, and street access. Your coordinator confirms the meet point at booking."
+          },
+          "3": {
+            "q": "Should I ship in winter?",
+            "a": "Yes, the route stays reliable. Winter pricing is usually slightly lower (less competition). Carriers reroute around weather, transit can stretch 1-2 days. Locked price either way."
+          },
+          "4": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price CA to NY shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
+      }
+    },
+    "newYorkFlorida": {
+      "hero": {
+        "eyebrow": "New York to Florida . Locked all-in price",
+        "title": "Ship your car New York to Florida. The original snowbird run.",
+        "description": "1,200 miles. 2 days of I-95 traffic. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Naples.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping New York to Florida often costs less than driving",
+        "body": {
+          "0": "A one-way NY to FL drive runs $300-450 in gas, 1-2 hotel nights, food, tolls, and 1,200 miles of I-95 traffic. Add 18-20 hours behind the wheel.",
+          "1": "A locked auto-transport quote on this corridor often runs flat to slightly below the all-in cost of driving. The snowbird volume keeps prices competitive year-round, with peak demand October-December (southbound) and April-May (northbound)."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Snowbirds, both directions",
+            "body": "The classic East Coast snowbird corridor. Southbound in October-December, northbound in April-May. Lock the price now, your car meets you in Florida or back home."
+          },
+          "multiVehicle": {
+            "title": "Second-home owners",
+            "body": "Two-home families with cars at both addresses. Multi-car discount available. Schedule recurring runs with the same coordinator."
+          },
+          "highValue": {
+            "title": "Collector and classic vehicles",
+            "body": "Florida humidity is hard on northern-stored classics, and salt-air I-95 driving hits resale. Enclosed shipping recommended for high-value vehicles."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top Florida destinations",
+        "title": "Where NY-to-FL shipments land most",
+        "lead": "Miami, Orlando, Tampa, Naples. Snowbird volume keeps the corridor running year-round. Peak southbound is October to December."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "How long does shipping a car from New York to Florida take?",
+            "a": "3-5 days door-to-door on open transport. I-95 is a high-volume carrier corridor, so dispatch usually happens within 24-48 hours of booking, especially in peak snowbird season."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "Standard sedan on open transport from New York to Florida runs roughly $800-1,300 depending on origin/destination ZIP and timing. Peak southbound (October-December) sees the highest demand. SUV +$150-300. Pickup +$200-400."
+          },
+          "2": {
+            "q": "When is the best time to book a snowbird shipment?",
+            "a": "Two to three weeks ahead of your desired pickup date. Peak season fills up faster. Off-peak (January-September) is usually flexible same-week."
+          },
+          "3": {
+            "q": "Can I ship to a winter rental address?",
+            "a": "Yes. Most snowbird destinations are short-term rentals or seasonal homes. Your coordinator just needs the delivery address and contact info for the receiver."
+          },
+          "4": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price NY to FL shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
+      }
+    },
+    "texasFlorida": {
+      "hero": {
+        "eyebrow": "Texas to Florida . Locked all-in price",
+        "title": "Ship your car from Texas to Florida. I-10 corridor, locked price.",
+        "description": "1,200 miles. 2 days of Gulf-coast driving. Or one locked-price shipment with your car ready in Miami, Tampa, Orlando, or Jacksonville.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping Texas to Florida often costs less than driving",
+        "body": {
+          "0": "A one-way TX to FL drive runs $300-450 in gas, 1-2 hotel nights, food, and 1,200 miles of I-10 freeway. Add 18-20 hours behind the wheel through Louisiana and Mississippi.",
+          "1": "A locked auto-transport quote on this corridor often runs flat to slightly under the all-in cost of driving. Houston and Dallas snowbird traffic, military relocations from Fort Hood and Lackland, and family relocations keep the corridor competitive."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Military and snowbirds",
+            "body": "Houston and DFW snowbirds heading to Florida winter homes. Military PCS to or from Pensacola, Jacksonville, Tampa. Lock the price now, your car arrives in 3-5 days."
+          },
+          "multiVehicle": {
+            "title": "Multi-vehicle households",
+            "body": "Family relocations with two or three cars. Multi-car discount available. One coordinator, one delivery window."
+          },
+          "highValue": {
+            "title": "Collector vehicles and classics",
+            "body": "Texas dry-stored classics and Gulf-coast humidity is a known challenge. Enclosed shipping protects paint and interior from sun, salt, and rain on the I-10 run."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top Florida destinations",
+        "title": "Where TX-to-FL shipments land most",
+        "lead": "Miami, Tampa, Orlando, Jacksonville. I-10 is the carrier-friendly route. Your coordinator handles the destination ZIP."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "How long does shipping a car from Texas to Florida take?",
+            "a": "3-5 days door-to-door on open transport. The I-10 corridor has high carrier density, so dispatch usually happens within 24-48 hours of booking."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "Standard sedan on open transport from Texas to Florida runs roughly $700-1,200 depending on origin/destination ZIP and timing. Houston to Florida is typically slightly cheaper than DFW to Florida. SUV +$150-300. Pickup +$200-400."
+          },
+          "2": {
+            "q": "Do you handle military PCS shipments?",
+            "a": "Yes. Active-duty military with PCS orders qualify for our military rate (typically 5-10% below standard). Bring your orders to booking; the rate applies automatically."
+          },
+          "3": {
+            "q": "What about hurricane season?",
+            "a": "June through November. Carriers reroute around active storms, transit can stretch 1-2 days during named-storm windows. Locked price either way. Your coordinator gives realistic transit windows during active weather."
+          },
+          "4": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price TX to FL shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
+      }
+    },
+    "californiaGeorgia": {
+      "hero": {
+        "eyebrow": "California to Georgia . Locked all-in price",
+        "title": "Ship your car from California to Georgia for less than driving it yourself.",
+        "description": "2,400 miles. 4 days behind the wheel. Or one locked-price shipment with your car ready in Atlanta, Savannah, Macon, or Augusta.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping California to Georgia often costs less than driving",
+        "body": {
+          "0": "A one-way CA to GA drive runs $650-800 in gas, 3 hotel nights, food, and 2,400 miles of southern interstate. Add 35+ hours behind the wheel.",
+          "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Atlanta tech volume, southern relocations, and college runs keep the lane competitive."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Atlanta tech and corporate transfers",
+            "body": "Tech, fintech, corporate HQ relocations to Atlanta. Your start date is fixed. The 4 days lost driving cost more than shipping. Locked price plus 6-8 day delivery."
+          },
+          "multiVehicle": {
+            "title": "Multi-vehicle households",
+            "body": "Family relocations with two or three cars. Multi-car discount available. One coordinator, one delivery window."
+          },
+          "highValue": {
+            "title": "College students and second cars",
+            "body": "UGA, Georgia Tech, Emory. The math is especially clean when the vehicle is going somewhere it will sit on a campus most of the year. Skip the 2,400 miles of wear."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top Georgia destinations",
+        "title": "Where CA-to-GA shipments land most",
+        "lead": "Atlanta, Savannah, Macon, Augusta. Atlanta metro is the dominant volume. Your coordinator handles the destination ZIP and any military base coordination."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "How long does shipping a car from California to Georgia take?",
+            "a": "6-8 days door-to-door on open transport. The southern route via I-10 and I-20 is the carrier-preferred lane. Your coordinator confirms the exact window at booking."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "Standard sedan on open transport from California to Georgia runs roughly $1,100-1,700 depending on origin/destination ZIP and timing. Atlanta metro delivery is usually the cheapest of the four cities. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "Do you deliver to military bases like Fort Stewart or Fort Benning?",
+            "a": "Yes. Active-duty military with PCS orders qualify for our military rate (typically 5-10% below standard). Bring your orders to booking; the rate applies automatically."
+          },
+          "3": {
+            "q": "Is enclosed worth it for this distance?",
+            "a": "If your vehicle is over ~$60K, low-mile, or has custom paint, yes. The price difference is typically $300-600. Open is fine for daily drivers."
+          },
+          "4": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price CA to GA shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
+      }
+    },
+    "californiaNorthCarolina": {
+      "hero": {
+        "eyebrow": "California to North Carolina . Locked all-in price",
+        "title": "Ship your car from California to North Carolina without burning a week on the road.",
+        "description": "2,800 miles. 5 days behind the wheel. Or one locked-price shipment with your car ready in Charlotte, Raleigh, Durham, or Asheville.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping California to North Carolina often costs less than driving",
+        "body": {
+          "0": "A one-way CA to NC drive runs $750-900 in gas, 3-4 hotel nights, food, and 2,800 miles of mostly southern interstate. Add 40+ hours behind the wheel.",
+          "1": "A locked auto-transport quote on this corridor regularly beats the all-in cost of driving once you count hotels, food, and time off work. Charlotte banking and Research Triangle tech transfers run this lane weekly."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Charlotte banking and RTP tech transfers",
+            "body": "Bank of America, Truist, RTP tech, Duke, UNC. Your start date is fixed. The 5 days lost driving cost more than shipping. Locked price plus 6-9 day delivery."
+          },
+          "multiVehicle": {
+            "title": "Multi-vehicle households",
+            "body": "Family relocations with two or three cars make the math even more lopsided. Multi-car discount available. One coordinator, one delivery window."
+          },
+          "highValue": {
+            "title": "Asheville retirees and second-home owners",
+            "body": "Mountain second homes, retirement relocations to the Blue Ridge. The math is especially clean when the vehicle is going somewhere it will sit most of the year. Skip the cross-country wear."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top North Carolina destinations",
+        "title": "Where CA-to-NC shipments land most",
+        "lead": "Charlotte, Raleigh, Durham, Asheville. Charlotte and RTP are the dominant volume. Asheville requires hill-country routing on the final leg."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "How long does shipping a car from California to North Carolina take?",
+            "a": "6-9 days door-to-door on open transport. The southern route via I-10 and I-40 is the carrier-preferred lane. Asheville mountain destinations may add a day for final-leg routing."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "Standard sedan on open transport from California to North Carolina runs roughly $1,200-1,800 depending on origin/destination ZIP and timing. Charlotte and RTP metro are typically the cheapest. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "Do you deliver to Asheville or smaller mountain towns?",
+            "a": "Yes. Mountain routing may require a meet-up point depending on truck access and weather. Your coordinator confirms specifics at booking."
+          },
+          "3": {
+            "q": "Is enclosed worth it for this distance?",
+            "a": "If your vehicle is over ~$60K, low-mile, or has custom paint, yes. The price difference is typically $400-700. Open is fine for daily drivers."
+          },
+          "4": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price CA to NC shipment. Run the math.",
+        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "cta": "Get my locked price"
+      }
+    },
+    "californiaIllinois": {
+      "hero": {
+        "eyebrow": "California to Illinois . Locked all-in price",
+        "title": "Ship your car from California to Illinois for less than the cost of driving.",
+        "description": "2,000 miles. 3-4 days behind the wheel through plains and weather. Or one locked-price shipment with your car ready in Chicago, Naperville, Aurora, or Joliet.",
+        "ctaPrimary": "Get my locked price",
+        "ctaSecondary": "See the math"
+      },
+      "math": {
+        "eyebrow": "The math",
+        "title": "Why shipping California to Illinois often costs less than driving",
+        "body": {
+          "0": "A one-way CA to IL drive runs $550-700 in gas, 2-3 hotel nights, food, and 2,000 miles of I-80 freeway with weather sensitivity through the Rockies. Add 30+ hours behind the wheel.",
+          "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Chicago metro tech and finance transfers, plus Midwestern family relocations, keep the lane moving year-round."
+        },
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+      },
+      "customers": {
+        "eyebrow": "Who saves the most",
+        "title": "For some customers the math is obvious",
+        "items": {
+          "jobRelocators": {
+            "title": "Chicago tech and finance transfers",
+            "body": "Tech, fintech, Chicago Loop finance. Your start date is fixed. The 4 days lost driving cost more than shipping. Locked price plus 5-7 day delivery."
+          },
+          "multiVehicle": {
+            "title": "Multi-vehicle households",
+            "body": "Family relocations with two or three cars. Multi-car discount available. One coordinator, one delivery window."
+          },
+          "highValue": {
+            "title": "College students and second cars",
+            "body": "Northwestern, U of Chicago, UIUC. The math is especially clean when the vehicle is going somewhere it will sit on a campus most of the year. Skip the 2,000 miles of road grime and rock chips."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Top Illinois destinations",
+        "title": "Where CA-to-IL shipments land most",
+        "lead": "Chicago, Naperville, Aurora, Joliet. Chicago metro is the dominant volume. Your coordinator handles destination ZIP and any building or parking constraints downtown."
+      },
+      "faq": {
+        "eyebrow": "Frequently asked",
+        "title": "The math, explained",
+        "items": {
+          "0": {
+            "q": "How long does shipping a car from California to Illinois take?",
+            "a": "5-7 days door-to-door on open transport. The I-80 corridor is high-volume for carriers, so dispatch usually happens within 24-48 hours of booking. Winter weather can add 1-2 days through the Rockies."
+          },
+          "1": {
+            "q": "What is the actual price range?",
+            "a": "Standard sedan on open transport from California to Illinois runs roughly $1,000-1,500 depending on origin/destination ZIP and timing. Chicago metro is typical mid-range pricing. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "Do you deliver to downtown Chicago?",
+            "a": "Yes, with delivery coordination. Most downtown carriers prefer a meet-up point (suburb, parking lot) due to truck size and street access. Your coordinator confirms the meet point at booking."
+          },
+          "3": {
+            "q": "Should I ship in winter?",
+            "a": "Yes. The route stays reliable, but winter premium is small and transit may stretch 1-2 days through the Rockies during heavy weather. Locked price either way."
+          },
+          "4": {
+            "q": "What does 'locked price' mean?",
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Locked-price CA to IL shipment. Run the math.",
         "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }

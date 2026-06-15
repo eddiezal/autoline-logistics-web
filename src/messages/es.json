@@ -1815,10 +1815,70 @@
         }
       },
       "californiaFlorida": {
-        "shortDesc": "De costa a costa, el corredor de snowbirds más popular. Alta demanda de tráiler cerrado para vehículos de colección."
+        "shortDesc": "De costa a costa, el corredor de snowbirds más popular. Alta demanda de tráiler cerrado para vehículos de colección.",
+        "subDestinations": {
+          "miami": {
+            "name": "CA a Miami",
+            "timeline": "6-9 días",
+            "routing": "Carril sureño I-10 por TX, LA, el panhandle de FL hasta el sur de Florida.",
+            "note": "Volumen de snowbirds y lujo. Cerrado disponible todo el año. Demanda máxima de octubre a diciembre.",
+            "customers": "Snowbirds, propietarios de lujo y colección, reubicaciones familiares."
+          },
+          "orlando": {
+            "name": "CA a Orlando",
+            "timeline": "6-9 días",
+            "routing": "I-10 a I-75 sur. Entrega al área metropolitana de Orlando.",
+            "note": "Reubicaciones familiares, empleados de parques temáticos, propietarios de casas vacacionales.",
+            "customers": "Reubicaciones familiares, industria hotelera, propietarios de segunda residencia."
+          },
+          "tampa": {
+            "name": "CA a Tampa",
+            "timeline": "6-9 días",
+            "routing": "I-10 a I-75 a Tampa Bay.",
+            "note": "Fuerte volumen de snowbirds y jubilados. Tampa, St. Pete, Sarasota todos comunes.",
+            "customers": "Snowbirds, jubilados, reubicaciones familiares, trabajadores de la salud."
+          },
+          "jacksonville": {
+            "name": "CA a Jacksonville",
+            "timeline": "6-9 días",
+            "routing": "I-10 este a Jacksonville. Destino más al norte de FL, a menudo el tramo más rápido.",
+            "note": "PCS militar a NAS Jacksonville y Mayport. Reubicaciones familiares.",
+            "customers": "PCS militar (NAS Jacksonville, Mayport), familias, jubilados."
+          }
+        }
       },
       "californiaNewYork": {
-        "shortDesc": "De costa a costa. Destinos en el área metropolitana de Nueva York y el norte del estado. Paquetes de reubicación de múltiples vehículos disponibles."
+        "shortDesc": "De costa a costa. Destinos en el área metropolitana de Nueva York y el norte del estado. Paquetes de reubicación de múltiples vehículos disponibles.",
+        "subDestinations": {
+          "manhattan": {
+            "name": "CA a Manhattan",
+            "timeline": "7-10 días",
+            "routing": "Carril norteño I-80. Entrega a Manhattan típicamente vía punto de encuentro.",
+            "note": "Punto de encuentro usualmente requerido (Queens, Brooklyn, NJ) por restricciones de camión. Su coordinador confirma.",
+            "customers": "Transferencias de finanzas y tecnología, estudiantes universitarios, hogares con múltiples vehículos."
+          },
+          "brooklyn": {
+            "name": "CA a Brooklyn",
+            "timeline": "7-10 días",
+            "routing": "I-80 al área metropolitana de Brooklyn. Entrega de transportista a brownstone o punto de encuentro.",
+            "note": "Reubicaciones familiares, industrias creativas. Estacionamiento y acceso a la calle importan.",
+            "customers": "Reubicaciones familiares, industrias creativas, hogares con múltiples vehículos."
+          },
+          "longIsland": {
+            "name": "CA a Long Island",
+            "timeline": "7-10 días",
+            "routing": "I-80 a los condados de Nassau y Suffolk.",
+            "note": "Acceso más fácil para camiones que NYC propiamente. Común para reubicaciones familiares.",
+            "customers": "Reubicaciones familiares, mudanzas suburbanas, hogares con múltiples vehículos."
+          },
+          "upstate": {
+            "name": "CA al norte del estado de NY",
+            "timeline": "7-10 días",
+            "routing": "I-80 a Albany, Rochester, Buffalo o Syracuse.",
+            "note": "Destinos universitarios (Cornell, Syracuse, Rochester). A menudo envíos de vehículos estudiantiles.",
+            "customers": "Estudiantes universitarios, reubicaciones familiares, segundas residencias."
+          }
+        }
       },
       "californiaArizona": {
         "shortDesc": "Phoenix, Scottsdale, Tucson. Fuerte tráfico de snowbirds y reubicaciones de jubilados."
@@ -1835,11 +1895,170 @@
       "californiaColorado": {
         "shortDesc": "Denver, Boulder, Colorado Springs. Reubicaciones en estados montañosos y mudanzas estacionales."
       },
-      "floridaNewYork": {
-        "shortDesc": "El corredor clásico de snowbirds. Fuertes patrones estacionales — hacia el norte en primavera, hacia el sur en otoño."
-      },
       "texasFlorida": {
-        "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Corredor a través del Golfo."
+        "shortDesc": "Houston, Dallas → Miami, Tampa, Jacksonville. Corredor a través del Golfo.",
+        "subDestinations": {
+          "miami": {
+            "name": "TX a Miami",
+            "timeline": "3-5 días",
+            "routing": "I-10 este por LA, MS, AL, el panhandle de FL hasta el sur de Florida.",
+            "note": "Ruta común de snowbirds y reubicaciones de Houston y DFW.",
+            "customers": "Snowbirds, reubicaciones familiares, propietarios de vehículos de lujo."
+          },
+          "tampa": {
+            "name": "TX a Tampa",
+            "timeline": "3-5 días",
+            "routing": "I-10 a I-75 sur a Tampa Bay.",
+            "note": "Fuerte volumen de jubilados y snowbirds.",
+            "customers": "Jubilados, snowbirds, reubicaciones familiares."
+          },
+          "orlando": {
+            "name": "TX a Orlando",
+            "timeline": "3-5 días",
+            "routing": "I-10 a I-75 al área metropolitana de Orlando.",
+            "note": "Reubicaciones familiares y empleados de parques temáticos.",
+            "customers": "Reubicaciones familiares, industria hotelera, propietarios de casas vacacionales."
+          },
+          "jacksonville": {
+            "name": "TX a Jacksonville",
+            "timeline": "3-5 días",
+            "routing": "I-10 este directo a Jacksonville. A menudo el tramo más rápido.",
+            "note": "PCS militar a NAS Jacksonville y Mayport común.",
+            "customers": "PCS militar, reubicaciones familiares, jubilados."
+          }
+        }
+      },
+      "newYorkFlorida": {
+        "shortDesc": "El corredor clásico de snowbirds de la costa este. Fuerte volumen estacional hacia el sur en octubre-diciembre, hacia el norte en abril-mayo.",
+        "subDestinations": {
+          "miami": {
+            "name": "NY a Miami",
+            "timeline": "3-5 días",
+            "routing": "I-95 directo al sur. La carrera clásica de snowbirds.",
+            "note": "Pico hacia el sur octubre-diciembre. Pico hacia el norte abril-mayo. Alta densidad de transportistas.",
+            "customers": "Snowbirds, propietarios de segunda residencia, jubilados, reubicaciones familiares."
+          },
+          "orlando": {
+            "name": "NY a Orlando",
+            "timeline": "3-5 días",
+            "routing": "I-95 a I-4 oeste. Entrega al área metropolitana de Orlando.",
+            "note": "Reubicaciones familiares, empleados de parques temáticos, propietarios de casas vacacionales.",
+            "customers": "Reubicaciones familiares, hotelería, propietarios de segunda residencia."
+          },
+          "tampa": {
+            "name": "NY a Tampa",
+            "timeline": "3-5 días",
+            "routing": "I-95 a I-4 a Tampa Bay.",
+            "note": "Fuerte volumen de snowbirds y jubilados.",
+            "customers": "Snowbirds, jubilados, propietarios de segunda residencia."
+          },
+          "naples": {
+            "name": "NY a Naples",
+            "timeline": "3-5 días",
+            "routing": "I-95 a I-75 sur al suroeste de Florida.",
+            "note": "Alto volumen de snowbirds de alta gama y vehículos de lujo. Cerrado común.",
+            "customers": "Snowbirds, propietarios de lujo y colección, jubilados."
+          }
+        }
+      },
+      "californiaGeorgia": {
+        "shortDesc": "Transferencias tecnológicas y corporativas a Atlanta, más reubicaciones militares y familiares. I-10 e I-20 son los carriles preferidos por los transportistas.",
+        "subDestinations": {
+          "atlanta": {
+            "name": "CA a Atlanta",
+            "timeline": "6-8 días",
+            "routing": "I-10 a I-20 este al área metropolitana de Atlanta.",
+            "note": "Volumen tecnológico, fintech y de sedes corporativas. Destino común de transferencias.",
+            "customers": "Transferencias tecnológicas, reubicaciones corporativas, mudanzas familiares."
+          },
+          "savannah": {
+            "name": "CA a Savannah",
+            "timeline": "6-8 días",
+            "routing": "I-10 a I-95 norte a la costa de Georgia.",
+            "note": "PCS militar, reubicaciones familiares, jubilados.",
+            "customers": "PCS militar, jubilados, reubicaciones familiares."
+          },
+          "macon": {
+            "name": "CA a Macon",
+            "timeline": "6-8 días",
+            "routing": "I-10 a I-75 norte al centro de Georgia.",
+            "note": "Reubicaciones familiares, universidad (Mercer), mudanzas regionales.",
+            "customers": "Reubicaciones familiares, estudiantes universitarios, jubilados."
+          },
+          "augusta": {
+            "name": "CA a Augusta",
+            "timeline": "6-8 días",
+            "routing": "I-10 a I-20 este al área metropolitana de Augusta.",
+            "note": "Reubicaciones familiares, PCS militar de Fort Eisenhower.",
+            "customers": "PCS militar, reubicaciones familiares, trabajadores de la salud."
+          }
+        }
+      },
+      "californiaNorthCarolina": {
+        "shortDesc": "Banca en Charlotte, tecnología en RTP, segundas residencias de montaña en Asheville. Destinos comunes de transferencias corporativas.",
+        "subDestinations": {
+          "charlotte": {
+            "name": "CA a Charlotte",
+            "timeline": "6-9 días",
+            "routing": "I-10 a I-20 a I-77 norte al área metropolitana de Charlotte.",
+            "note": "Centro bancario y financiero. Destino común de transferencias corporativas.",
+            "customers": "Transferencias bancarias y financieras, reubicaciones familiares, jubilados."
+          },
+          "raleigh": {
+            "name": "CA a Raleigh",
+            "timeline": "6-9 días",
+            "routing": "I-10 a I-40 este al área metropolitana de RTP.",
+            "note": "Volumen tecnológico y biotecnológico de Research Triangle Park. NC State, Duke, UNC.",
+            "customers": "Transferencias tecnológicas y biotecnológicas, estudiantes universitarios, reubicaciones familiares."
+          },
+          "durham": {
+            "name": "CA a Durham",
+            "timeline": "6-9 días",
+            "routing": "I-40 este al área metropolitana de Durham.",
+            "note": "Universidad de Duke, tecnología de RTP. Misma ruta general que Raleigh.",
+            "customers": "Transferencias tecnológicas, estudiantes universitarios, trabajadores de la salud."
+          },
+          "asheville": {
+            "name": "CA a Asheville",
+            "timeline": "6-9 días",
+            "routing": "I-40 este por TN a las montañas Blue Ridge.",
+            "note": "Ruta de montaña en el tramo final. Jubilados y propietarios de segunda residencia.",
+            "customers": "Jubilados, propietarios de segunda residencia, reubicaciones familiares."
+          }
+        }
+      },
+      "californiaIllinois": {
+        "shortDesc": "Reubicaciones tecnológicas, financieras y familiares a Chicago. Corredor I-80 con densidad de transportistas todo el año.",
+        "subDestinations": {
+          "chicago": {
+            "name": "CA a Chicago",
+            "timeline": "5-7 días",
+            "routing": "I-80 norte al área metropolitana de Chicago.",
+            "note": "Tecnología, finanzas, reubicaciones familiares. La entrega en el centro a menudo es vía punto de encuentro.",
+            "customers": "Transferencias tecnológicas y financieras, reubicaciones familiares, estudiantes universitarios."
+          },
+          "naperville": {
+            "name": "CA a Naperville",
+            "timeline": "5-7 días",
+            "routing": "I-80 a los suburbios occidentales de Chicago.",
+            "note": "Reubicaciones familiares, transferencias corporativas. Acceso más fácil para camiones que el centro.",
+            "customers": "Reubicaciones familiares, transferencias corporativas, hogares con múltiples vehículos."
+          },
+          "aurora": {
+            "name": "CA a Aurora",
+            "timeline": "5-7 días",
+            "routing": "I-80 a los suburbios del oeste lejano de Chicago.",
+            "note": "Reubicaciones familiares, transferencias de manufactura y corporativas.",
+            "customers": "Reubicaciones familiares, transferencias corporativas, trabajadores de manufactura."
+          },
+          "joliet": {
+            "name": "CA a Joliet",
+            "timeline": "5-7 días",
+            "routing": "I-80 a los suburbios del suroeste de Chicago.",
+            "note": "Reubicaciones familiares, trabajadores de logística y corredor ferroviario.",
+            "customers": "Reubicaciones familiares, trabajadores de logística, hogares con múltiples vehículos."
+          }
+        }
       }
     },
     "californiaHawaii": {
@@ -2272,6 +2491,510 @@
       "finalCta": {
         "title": "Envio de CA a TX con precio fijo. Haga las cuentas.",
         "body": "Cotizacion real todo incluido en 60 segundos. Sin deposito. Sin enganos. Luego decida si manejar todavia tiene sentido.",
+        "cta": "Obtener mi precio fijo"
+      }
+    },
+    "californiaFlorida": {
+      "hero": {
+        "eyebrow": "California a Florida . Precio fijo todo incluido",
+        "title": "Envíe su auto de California a Florida sin el viaje de 2,800 millas.",
+        "description": "De costa a costa. 4-5 días al volante. Hoteles, gasolina, comida, desgaste. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Jacksonville.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver el cálculo"
+      },
+      "math": {
+        "eyebrow": "El cálculo",
+        "title": "Por qué enviar de California a Florida a menudo cuesta menos que conducir",
+        "body": {
+          "0": "Un viaje de ida de CA a FL cuesta $750-900 en gasolina, 4 noches de hotel, comida en el camino y 2,800 millas duras de autopista en su vehículo. Sume más de 40 horas al volante.",
+          "1": "Una cotización fija de transporte de autos a menudo termina POR DEBAJO del costo total de conducir, y no pierde casi una semana. El tráfico de snowbirds y reubicaciones mantiene este corredor activo todo el año."
+        },
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quiénes ahorran más",
+        "title": "Para algunos clientes, las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Snowbirds con calendario",
+            "body": "Florida es el destino #1 de snowbirds desde California. Asegure el precio hoy, su auto le espera en Miami o Naples. Evite los 5 días de manejo."
+          },
+          "multiVehicle": {
+            "title": "Hogares con múltiples vehículos",
+            "body": "Segundos autos, flotas familiares, combos auto-RV. Descuento por múltiples autos disponible. Un coordinador, una ventana de entrega."
+          },
+          "highValue": {
+            "title": "Vehículos de lujo y de colección",
+            "body": "Tráiler cerrado recomendado para vehículos de alto valor, bajo millaje o clásicos. 2,800 millas de mugre, piedras y aire salino envejecen rápido el acabado. El cálculo es aún más claro para coleccionistas."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Principales destinos en Florida",
+        "title": "Dónde aterrizan más los envíos CA-a-FL",
+        "lead": "Miami, Orlando, Tampa, Jacksonville. Cubrimos los cuatro destinos semanalmente. Su coordinador conoce su código postal de destino y ventana de tiempo."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "El cálculo, explicado",
+        "items": {
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de California a Florida?",
+            "a": "La mayoría de los envíos CA a FL son de 6-9 días puerta a puerta en transporte abierto. El cerrado tarda un poco más porque el grupo de transportistas es menor. Su coordinador confirma la ventana exacta al reservar."
+          },
+          "1": {
+            "q": "¿Cuál es el rango de precio real?",
+            "a": "Un sedán estándar en transporte abierto de California a Florida ronda los $1,200-$1,800 según código postal de origen/destino y tiempo. SUV $200-400 más. Pickup $300-500 más. La tarjeta de precios en vivo muestra los números actuales de SD."
+          },
+          "2": {
+            "q": "¿Debería enviar en tráiler cerrado para una ruta tan larga?",
+            "a": "Si su vehículo vale más de ~$60K, tiene poco millaje, o tiene pintura personalizada, el cerrado vale la pena. La diferencia de precio suele ser de $400-700 para este corredor. El abierto es suficiente para autos diarios."
+          },
+          "3": {
+            "q": "¿Puedo programar la entrega cerca de mi llegada como snowbird?",
+            "a": "Sí. La mayoría de los envíos de snowbirds se programan para llegar 1-2 días antes o después del vuelo del cliente. Su coordinador puede retener o agilizar dentro de ventanas razonables. Precio fijo en cualquier caso."
+          },
+          "4": {
+            "q": "¿Qué significa 'precio fijo'?",
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envío con precio fijo de CA a FL. Haga las cuentas.",
+        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "cta": "Obtener mi precio fijo"
+      }
+    },
+    "californiaNewYork": {
+      "hero": {
+        "eyebrow": "California a Nueva York . Precio fijo todo incluido",
+        "title": "Envíe su auto de California a Nueva York. Costa a costa. Precio fijo.",
+        "description": "2,900 millas. 5 días al volante por pasos invernales. O un envío con precio fijo y su auto listo en Manhattan, Brooklyn, Long Island o el norte del estado.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver el cálculo"
+      },
+      "math": {
+        "eyebrow": "El cálculo",
+        "title": "Por qué enviar de California a Nueva York a menudo cuesta menos que conducir",
+        "body": {
+          "0": "Un viaje de ida de CA a NY cuesta $750-900 en gasolina, 4 noches de hotel, comida y 2,900 millas mayormente de interestatal con riesgo climático por las Rocosas y el Medio Oeste. Sume más de 45 horas detrás del parabrisas.",
+          "1": "Una cotización fija de transporte de autos regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias de finanzas y tecnología de la costa este corren este corredor semanalmente."
+        },
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quiénes ahorran más",
+        "title": "Para algunos clientes, las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Transferencias de finanzas y tecnología",
+            "body": "Wall Street, fintech, big tech. Su fecha de inicio está fija. Los 5 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 7-10 días."
+          },
+          "multiVehicle": {
+            "title": "Hogares con múltiples vehículos",
+            "body": "Reubicaciones familiares con dos o tres autos hacen las cuentas aún más a favor. Descuento por múltiples autos disponible. Un coordinador, una ventana de entrega."
+          },
+          "highValue": {
+            "title": "Estudiantes universitarios y segundos autos",
+            "body": "Universidades en el norte del estado, estacionamiento de dormitorio en NYC. El cálculo es especialmente claro cuando el vehículo va a un lugar donde estará la mayoría del año. Evite las 2,900 millas de desgaste."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Principales destinos en Nueva York",
+        "title": "Dónde aterrizan más los envíos CA-a-NY",
+        "lead": "Manhattan, Brooklyn, Long Island, norte del estado de NY. El área metropolitana de NYC requiere coordinación estrecha de entrega (estacionamiento, acceso a edificios). Su coordinador maneja la logística."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "El cálculo, explicado",
+        "items": {
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de California a Nueva York?",
+            "a": "7-10 días puerta a puerta en transporte abierto. La ruta depende del clima: I-80 norte en verano, I-40 sur en invierno. Su coordinador elige el carril más rápido según la temporada."
+          },
+          "1": {
+            "q": "¿Cuál es el rango de precio real?",
+            "a": "Un sedán estándar en transporte abierto de California a Nueva York ronda los $1,300-$1,900 según código postal de origen/destino y tiempo. La entrega en el área metropolitana de NYC añade un pequeño premium por estacionamiento y restricciones de acceso. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "¿Hacen entrega en Manhattan?",
+            "a": "Sí, pero con coordinación de entrega. La mayoría de los transportistas de NYC prefieren un punto de encuentro (Brooklyn, Queens o Nueva Jersey) por el tamaño del camión, restricciones de doble estacionamiento y acceso a la calle. Su coordinador confirma el punto al reservar."
+          },
+          "3": {
+            "q": "¿Debería enviar en invierno?",
+            "a": "Sí, la ruta se mantiene confiable. Los precios de invierno suelen ser un poco más bajos (menos competencia). Los transportistas se desvían del clima, el tránsito puede extenderse 1-2 días. Precio fijo en cualquier caso."
+          },
+          "4": {
+            "q": "¿Qué significa 'precio fijo'?",
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envío con precio fijo de CA a NY. Haga las cuentas.",
+        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "cta": "Obtener mi precio fijo"
+      }
+    },
+    "newYorkFlorida": {
+      "hero": {
+        "eyebrow": "Nueva York a Florida . Precio fijo todo incluido",
+        "title": "Envíe su auto de Nueva York a Florida. La carrera original de snowbirds.",
+        "description": "1,200 millas. 2 días de tráfico en I-95. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Naples.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver el cálculo"
+      },
+      "math": {
+        "eyebrow": "El cálculo",
+        "title": "Por qué enviar de Nueva York a Florida a menudo cuesta menos que conducir",
+        "body": {
+          "0": "Un viaje de ida de NY a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida, peajes y 1,200 millas de tráfico en I-95. Sume 18-20 horas al volante.",
+          "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El volumen de snowbirds mantiene los precios competitivos todo el año, con demanda máxima de octubre a diciembre (sur) y abril a mayo (norte)."
+        },
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quiénes ahorran más",
+        "title": "Para algunos clientes, las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Snowbirds, en ambas direcciones",
+            "body": "El corredor clásico de snowbirds de la costa este. Hacia el sur en octubre-diciembre, hacia el norte en abril-mayo. Asegure el precio hoy, su auto le espera en Florida o de vuelta en casa."
+          },
+          "multiVehicle": {
+            "title": "Propietarios de segunda residencia",
+            "body": "Familias con dos casas y autos en ambas direcciones. Descuento por múltiples autos disponible. Programe corridas recurrentes con el mismo coordinador."
+          },
+          "highValue": {
+            "title": "Vehículos de colección y clásicos",
+            "body": "La humedad de Florida es dura con los clásicos almacenados en el norte, y el aire salado de I-95 afecta el valor de reventa. Envío cerrado recomendado para vehículos de alto valor."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Principales destinos en Florida",
+        "title": "Dónde aterrizan más los envíos NY-a-FL",
+        "lead": "Miami, Orlando, Tampa, Naples. El volumen de snowbirds mantiene el corredor activo todo el año. El pico hacia el sur es de octubre a diciembre."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "El cálculo, explicado",
+        "items": {
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de Nueva York a Florida?",
+            "a": "3-5 días puerta a puerta en transporte abierto. La I-95 es un corredor de alto volumen para transportistas, así que el despacho normalmente ocurre dentro de 24-48 horas de la reserva, especialmente en temporada alta de snowbirds."
+          },
+          "1": {
+            "q": "¿Cuál es el rango de precio real?",
+            "a": "Un sedán estándar en transporte abierto de Nueva York a Florida ronda los $800-$1,300 según código postal de origen/destino y tiempo. El pico hacia el sur (octubre-diciembre) ve la mayor demanda. SUV +$150-300. Pickup +$200-400."
+          },
+          "2": {
+            "q": "¿Cuándo es el mejor momento para reservar un envío de snowbird?",
+            "a": "De dos a tres semanas antes de la fecha de recogida deseada. La temporada alta se llena más rápido. Fuera de temporada (enero-septiembre) suele ser flexible en la misma semana."
+          },
+          "3": {
+            "q": "¿Puedo enviar a una dirección de alquiler de invierno?",
+            "a": "Sí. La mayoría de destinos de snowbirds son alquileres de corto plazo o casas estacionales. Su coordinador solo necesita la dirección de entrega y la información de contacto del receptor."
+          },
+          "4": {
+            "q": "¿Qué significa 'precio fijo'?",
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envío con precio fijo de NY a FL. Haga las cuentas.",
+        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "cta": "Obtener mi precio fijo"
+      }
+    },
+    "texasFlorida": {
+      "hero": {
+        "eyebrow": "Texas a Florida . Precio fijo todo incluido",
+        "title": "Envíe su auto de Texas a Florida. Corredor I-10, precio fijo.",
+        "description": "1,200 millas. 2 días manejando por la costa del Golfo. O un envío con precio fijo y su auto listo en Miami, Tampa, Orlando o Jacksonville.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver el cálculo"
+      },
+      "math": {
+        "eyebrow": "El cálculo",
+        "title": "Por qué enviar de Texas a Florida a menudo cuesta menos que conducir",
+        "body": {
+          "0": "Un viaje de ida de TX a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida y 1,200 millas de autopista I-10. Sume 18-20 horas al volante por Luisiana y Misisipi.",
+          "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El tráfico de snowbirds de Houston y Dallas, las reubicaciones militares desde Fort Hood y Lackland, y las mudanzas familiares mantienen el corredor competitivo."
+        },
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quiénes ahorran más",
+        "title": "Para algunos clientes, las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Militares y snowbirds",
+            "body": "Snowbirds de Houston y DFW dirigiéndose a casas de invierno en Florida. PCS militar desde o hacia Pensacola, Jacksonville, Tampa. Asegure el precio hoy, su auto llega en 3-5 días."
+          },
+          "multiVehicle": {
+            "title": "Hogares con múltiples vehículos",
+            "body": "Reubicaciones familiares con dos o tres autos. Descuento por múltiples autos disponible. Un coordinador, una ventana de entrega."
+          },
+          "highValue": {
+            "title": "Vehículos de colección y clásicos",
+            "body": "Los clásicos almacenados en seco en Texas y la humedad de la costa del Golfo es un desafío conocido. El envío cerrado protege la pintura y el interior del sol, sal y lluvia en la corrida por I-10."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Principales destinos en Florida",
+        "title": "Dónde aterrizan más los envíos TX-a-FL",
+        "lead": "Miami, Tampa, Orlando, Jacksonville. La I-10 es la ruta favorita de los transportistas. Su coordinador maneja el código postal de destino."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "El cálculo, explicado",
+        "items": {
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de Texas a Florida?",
+            "a": "3-5 días puerta a puerta en transporte abierto. El corredor I-10 tiene alta densidad de transportistas, así que el despacho normalmente ocurre dentro de 24-48 horas de la reserva."
+          },
+          "1": {
+            "q": "¿Cuál es el rango de precio real?",
+            "a": "Un sedán estándar en transporte abierto de Texas a Florida ronda los $700-$1,200 según código postal de origen/destino y tiempo. Houston a Florida suele ser un poco más barato que DFW a Florida. SUV +$150-300. Pickup +$200-400."
+          },
+          "2": {
+            "q": "¿Manejan envíos militares PCS?",
+            "a": "Sí. Militares en servicio activo con órdenes PCS califican para nuestra tarifa militar (típicamente 5-10% por debajo del estándar). Traiga sus órdenes a la reserva; la tarifa se aplica automáticamente."
+          },
+          "3": {
+            "q": "¿Qué pasa con la temporada de huracanes?",
+            "a": "De junio a noviembre. Los transportistas se desvían de las tormentas activas, el tránsito puede extenderse 1-2 días durante ventanas de tormenta nombrada. Precio fijo en cualquier caso. Su coordinador da ventanas de tránsito realistas durante el clima activo."
+          },
+          "4": {
+            "q": "¿Qué significa 'precio fijo'?",
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envío con precio fijo de TX a FL. Haga las cuentas.",
+        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "cta": "Obtener mi precio fijo"
+      }
+    },
+    "californiaGeorgia": {
+      "hero": {
+        "eyebrow": "California a Georgia . Precio fijo todo incluido",
+        "title": "Envíe su auto de California a Georgia por menos de lo que cuesta conducirlo.",
+        "description": "2,400 millas. 4 días al volante. O un envío con precio fijo y su auto listo en Atlanta, Savannah, Macon o Augusta.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver el cálculo"
+      },
+      "math": {
+        "eyebrow": "El cálculo",
+        "title": "Por qué enviar de California a Georgia a menudo cuesta menos que conducir",
+        "body": {
+          "0": "Un viaje de ida de CA a GA cuesta $650-800 en gasolina, 3 noches de hotel, comida y 2,400 millas de interestatal sureña. Sume más de 35 horas al volante.",
+          "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. El volumen tecnológico de Atlanta, las reubicaciones sureñas y los traslados universitarios mantienen el carril competitivo."
+        },
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quiénes ahorran más",
+        "title": "Para algunos clientes, las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Transferencias tecnológicas y corporativas a Atlanta",
+            "body": "Tecnología, fintech, reubicaciones a sedes corporativas en Atlanta. Su fecha de inicio está fija. Los 4 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 6-8 días."
+          },
+          "multiVehicle": {
+            "title": "Hogares con múltiples vehículos",
+            "body": "Reubicaciones familiares con dos o tres autos. Descuento por múltiples autos disponible. Un coordinador, una ventana de entrega."
+          },
+          "highValue": {
+            "title": "Estudiantes universitarios y segundos autos",
+            "body": "UGA, Georgia Tech, Emory. El cálculo es especialmente claro cuando el vehículo va a un campus donde estará la mayoría del año. Evite las 2,400 millas de desgaste."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Principales destinos en Georgia",
+        "title": "Dónde aterrizan más los envíos CA-a-GA",
+        "lead": "Atlanta, Savannah, Macon, Augusta. El área metropolitana de Atlanta es el volumen dominante. Su coordinador maneja el código postal de destino y cualquier coordinación con bases militares."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "El cálculo, explicado",
+        "items": {
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de California a Georgia?",
+            "a": "6-8 días puerta a puerta en transporte abierto. La ruta sureña por I-10 e I-20 es el carril preferido de los transportistas. Su coordinador confirma la ventana exacta al reservar."
+          },
+          "1": {
+            "q": "¿Cuál es el rango de precio real?",
+            "a": "Un sedán estándar en transporte abierto de California a Georgia ronda los $1,100-$1,700 según código postal de origen/destino y tiempo. La entrega en el área metropolitana de Atlanta suele ser la más económica de las cuatro ciudades. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "¿Hacen entrega a bases militares como Fort Stewart o Fort Benning?",
+            "a": "Sí. Militares en servicio activo con órdenes PCS califican para nuestra tarifa militar (típicamente 5-10% por debajo del estándar). Traiga sus órdenes a la reserva; la tarifa se aplica automáticamente."
+          },
+          "3": {
+            "q": "¿Vale la pena el cerrado para esta distancia?",
+            "a": "Si su vehículo vale más de ~$60K, tiene poco millaje o tiene pintura personalizada, sí. La diferencia de precio suele ser de $300-600. El abierto es suficiente para autos diarios."
+          },
+          "4": {
+            "q": "¿Qué significa 'precio fijo'?",
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envío con precio fijo de CA a GA. Haga las cuentas.",
+        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "cta": "Obtener mi precio fijo"
+      }
+    },
+    "californiaNorthCarolina": {
+      "hero": {
+        "eyebrow": "California a Carolina del Norte . Precio fijo todo incluido",
+        "title": "Envíe su auto de California a Carolina del Norte sin perder una semana en la carretera.",
+        "description": "2,800 millas. 5 días al volante. O un envío con precio fijo y su auto listo en Charlotte, Raleigh, Durham o Asheville.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver el cálculo"
+      },
+      "math": {
+        "eyebrow": "El cálculo",
+        "title": "Por qué enviar de California a Carolina del Norte a menudo cuesta menos que conducir",
+        "body": {
+          "0": "Un viaje de ida de CA a NC cuesta $750-900 en gasolina, 3-4 noches de hotel, comida y 2,800 millas mayormente de interestatal sureña. Sume más de 40 horas al volante.",
+          "1": "Una cotización fija de transporte de autos en este corredor regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias bancarias en Charlotte y tecnológicas en RTP corren este carril semanalmente."
+        },
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quiénes ahorran más",
+        "title": "Para algunos clientes, las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Transferencias bancarias en Charlotte y tecnológicas en RTP",
+            "body": "Bank of America, Truist, RTP tecnología, Duke, UNC. Su fecha de inicio está fija. Los 5 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 6-9 días."
+          },
+          "multiVehicle": {
+            "title": "Hogares con múltiples vehículos",
+            "body": "Reubicaciones familiares con dos o tres autos hacen las cuentas aún más a favor. Descuento por múltiples autos disponible. Un coordinador, una ventana de entrega."
+          },
+          "highValue": {
+            "title": "Jubilados en Asheville y propietarios de segunda residencia",
+            "body": "Segundas residencias en la montaña, reubicaciones de jubilación a Blue Ridge. El cálculo es especialmente claro cuando el vehículo va a un lugar donde estará la mayoría del año. Evite el desgaste cruzando el país."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Principales destinos en Carolina del Norte",
+        "title": "Dónde aterrizan más los envíos CA-a-NC",
+        "lead": "Charlotte, Raleigh, Durham, Asheville. Charlotte y RTP son el volumen dominante. Asheville requiere ruta de montaña en el tramo final."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "El cálculo, explicado",
+        "items": {
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de California a Carolina del Norte?",
+            "a": "6-9 días puerta a puerta en transporte abierto. La ruta sureña por I-10 e I-40 es el carril preferido de los transportistas. Los destinos de montaña en Asheville pueden añadir un día por la ruta del tramo final."
+          },
+          "1": {
+            "q": "¿Cuál es el rango de precio real?",
+            "a": "Un sedán estándar en transporte abierto de California a Carolina del Norte ronda los $1,200-$1,800 según código postal de origen/destino y tiempo. Charlotte y RTP suelen ser las más económicas. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "¿Hacen entrega a Asheville o pueblos pequeños de montaña?",
+            "a": "Sí. La ruta de montaña puede requerir un punto de encuentro según acceso del camión y clima. Su coordinador confirma los detalles al reservar."
+          },
+          "3": {
+            "q": "¿Vale la pena el cerrado para esta distancia?",
+            "a": "Si su vehículo vale más de ~$60K, tiene poco millaje o tiene pintura personalizada, sí. La diferencia de precio suele ser de $400-700. El abierto es suficiente para autos diarios."
+          },
+          "4": {
+            "q": "¿Qué significa 'precio fijo'?",
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envío con precio fijo de CA a NC. Haga las cuentas.",
+        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "cta": "Obtener mi precio fijo"
+      }
+    },
+    "californiaIllinois": {
+      "hero": {
+        "eyebrow": "California a Illinois . Precio fijo todo incluido",
+        "title": "Envíe su auto de California a Illinois por menos del costo de conducir.",
+        "description": "2,000 millas. 3-4 días al volante por las llanuras y el clima. O un envío con precio fijo y su auto listo en Chicago, Naperville, Aurora o Joliet.",
+        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaSecondary": "Ver el cálculo"
+      },
+      "math": {
+        "eyebrow": "El cálculo",
+        "title": "Por qué enviar de California a Illinois a menudo cuesta menos que conducir",
+        "body": {
+          "0": "Un viaje de ida de CA a IL cuesta $550-700 en gasolina, 2-3 noches de hotel, comida y 2,000 millas de autopista I-80 con sensibilidad climática por las Rocosas. Sume más de 30 horas al volante.",
+          "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. Las transferencias tecnológicas y financieras al área metropolitana de Chicago, más las reubicaciones familiares del Medio Oeste, mantienen el carril activo todo el año."
+        },
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+      },
+      "customers": {
+        "eyebrow": "Quiénes ahorran más",
+        "title": "Para algunos clientes, las cuentas son obvias",
+        "items": {
+          "jobRelocators": {
+            "title": "Transferencias tecnológicas y financieras a Chicago",
+            "body": "Tecnología, fintech, finanzas del Chicago Loop. Su fecha de inicio está fija. Los 4 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 5-7 días."
+          },
+          "multiVehicle": {
+            "title": "Hogares con múltiples vehículos",
+            "body": "Reubicaciones familiares con dos o tres autos. Descuento por múltiples autos disponible. Un coordinador, una ventana de entrega."
+          },
+          "highValue": {
+            "title": "Estudiantes universitarios y segundos autos",
+            "body": "Northwestern, U de Chicago, UIUC. El cálculo es especialmente claro cuando el vehículo va a un campus donde estará la mayoría del año. Evite las 2,000 millas de mugre y piedras."
+          }
+        }
+      },
+      "subDest": {
+        "eyebrow": "Principales destinos en Illinois",
+        "title": "Dónde aterrizan más los envíos CA-a-IL",
+        "lead": "Chicago, Naperville, Aurora, Joliet. El área metropolitana de Chicago es el volumen dominante. Su coordinador maneja el código postal de destino y cualquier restricción de edificio o estacionamiento en el centro."
+      },
+      "faq": {
+        "eyebrow": "Preguntas frecuentes",
+        "title": "El cálculo, explicado",
+        "items": {
+          "0": {
+            "q": "¿Cuánto tarda enviar un auto de California a Illinois?",
+            "a": "5-7 días puerta a puerta en transporte abierto. El corredor I-80 es de alto volumen para los transportistas, así que el despacho normalmente ocurre dentro de 24-48 horas de la reserva. El clima invernal puede añadir 1-2 días por las Rocosas."
+          },
+          "1": {
+            "q": "¿Cuál es el rango de precio real?",
+            "a": "Un sedán estándar en transporte abierto de California a Illinois ronda los $1,000-$1,500 según código postal de origen/destino y tiempo. El área metropolitana de Chicago es típica de precio medio. SUV +$200-400. Pickup +$300-500."
+          },
+          "2": {
+            "q": "¿Hacen entrega al centro de Chicago?",
+            "a": "Sí, con coordinación de entrega. La mayoría de los transportistas del centro prefieren un punto de encuentro (suburbio, estacionamiento) por el tamaño del camión y acceso a la calle. Su coordinador confirma el punto al reservar."
+          },
+          "3": {
+            "q": "¿Debería enviar en invierno?",
+            "a": "Sí. La ruta se mantiene confiable, pero el premium de invierno es pequeño y el tránsito puede extenderse 1-2 días por las Rocosas durante clima fuerte. Precio fijo en cualquier caso."
+          },
+          "4": {
+            "q": "¿Qué significa 'precio fijo'?",
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Envío con precio fijo de CA a IL. Haga las cuentas.",
+        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     }
