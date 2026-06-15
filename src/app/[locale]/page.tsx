@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { HeroRouteFinder } from "@/components/HeroRouteFinder";
+import { PortalPreviewCard } from "@/components/PortalPreviewCard";
 
 export default function Home() {
   const t = useTranslations();
@@ -375,21 +376,22 @@ export default function Home() {
 
             {/* 2-col grid: laptop mockup left, 3 callouts right. Stacks at lg- */}
             <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 lg:gap-14 items-center">
-              <LaptopPortalMockup
-                brand={t("home.portalPreview.mockup.brand")}
-                shipmentId={t("home.portalPreview.mockup.shipmentId")}
-                status={t("home.portalPreview.mockup.status")}
-                pickupLabel={t("home.portalPreview.mockup.pickupLabel")}
-                destLabel={t("home.portalPreview.mockup.destLabel")}
-                etaLabel={t("home.portalPreview.mockup.etaLabel")}
-                etaTime={t("home.portalPreview.mockup.etaTime")}
-                etaSub={t("home.portalPreview.mockup.etaSub")}
-                confidence={t("home.portalPreview.mockup.confidence")}
-                photosLabel={t("home.portalPreview.mockup.photosLabel")}
-                photosCount={t("home.portalPreview.mockup.photosCount")}
-                coordName={t("home.portalPreview.mockup.coordName")}
-                coordRole={t("home.portalPreview.mockup.coordRole")}
-                messageBtn={t("home.portalPreview.mockup.messageBtn")}
+              <PortalPreviewCard
+                urlBar={t("home.portalPreview.mockup.urlBar")}
+                driverFirstName={t("home.portalPreview.mockup.driverFirstName")}
+                titlePrefix={t("home.portalPreview.mockup.titlePrefix")}
+                destCityHeadline={t("home.portalPreview.mockup.destCityHeadline")}
+                statusConfidence={t("home.portalPreview.mockup.statusConfidence")}
+                statusEta={t("home.portalPreview.mockup.statusEta")}
+                statusLocation={t("home.portalPreview.mockup.statusLocation")}
+                originEyebrow={t("home.portalPreview.mockup.originEyebrow")}
+                currentEyebrow={t("home.portalPreview.mockup.currentEyebrow")}
+                destEyebrow={t("home.portalPreview.mockup.destEyebrow")}
+                originCity={t("home.portalPreview.mockup.originCity")}
+                currentCity={t("home.portalPreview.mockup.currentCity")}
+                currentTime={t("home.portalPreview.mockup.currentTime")}
+                destCityFull={t("home.portalPreview.mockup.destCityFull")}
+                destEtaLabel={t("home.portalPreview.mockup.destEtaLabel")}
               />
 
               <div className="flex flex-col gap-7">
@@ -1280,160 +1282,6 @@ function PortalCallout({
           {text}
         </p>
       </div>
-    </div>
-  );
-}
-
-/** LaptopPortalMockup — stylized "browser-in-laptop" mockup of the
- *  in-transit customer portal. Renders a static representation of:
- *    - Header (Auto Line brand · shipment ID · status pill)
- *    - Map area with pickup pin, animated truck location, destination pin
- *    - ETA card with confidence badge
- *    - Photo evidence grid (6 thumbnails — pickup + transit)
- *    - Coordinator card with avatar + Message action
- *  All labels driven by i18n props for full EN/ES coverage. The shipment
- *  ID, city names, date strings, and coordinator name are illustrative
- *  (translated minimally — names + IDs stay constant across locales).
- *  Production note: replace with a real portal screenshot once the
- *  in-transit UI is polished. */
-function LaptopPortalMockup({
-  brand,
-  shipmentId,
-  status,
-  pickupLabel,
-  destLabel,
-  etaLabel,
-  etaTime,
-  etaSub,
-  confidence,
-  photosLabel,
-  photosCount,
-  coordName,
-  coordRole,
-  messageBtn,
-}: {
-  brand: string;
-  shipmentId: string;
-  status: string;
-  pickupLabel: string;
-  destLabel: string;
-  etaLabel: string;
-  etaTime: string;
-  etaSub: string;
-  confidence: string;
-  photosLabel: string;
-  photosCount: string;
-  coordName: string;
-  coordRole: string;
-  messageBtn: string;
-}) {
-  return (
-    <div className="relative">
-      {/* Laptop frame — dark slab with portal mockup inside */}
-      <div className="bg-[#1a1a1a] rounded-t-2xl rounded-b-sm p-2.5 shadow-2xl shadow-black/15">
-        <div className="bg-[#fafafa] rounded-lg overflow-hidden">
-          {/* Portal header */}
-          <div className="bg-white border-b border-gray-200 px-3.5 py-2.5 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black text-orange tracking-wider">
-                {brand}
-              </span>
-              <span className="text-gray-300">·</span>
-              <span className="text-[10px] text-gray-700 font-mono">
-                {shipmentId}
-              </span>
-            </div>
-            <span className="bg-[#d1fae5] text-[#065f46] text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-              ● {status}
-            </span>
-          </div>
-
-          {/* Map area with pins + truck */}
-          <div className="relative h-[130px] overflow-hidden"
-               style={{
-                 background:
-                   "radial-gradient(ellipse at 30% 70%, rgba(180,220,200,0.5) 0%, transparent 50%), linear-gradient(135deg, #c8e6f0 0%, #a7c8d8 60%, #8eb1c2 100%)",
-               }}>
-            {/* Road */}
-            <div
-              className="absolute top-1/2 -left-[5%] -right-[5%] h-[5px] -translate-y-1/2"
-              style={{
-                background:
-                  "repeating-linear-gradient(90deg, rgba(255,255,255,0.5) 0 14px, transparent 14px 22px)",
-                transform: "rotate(-6deg) translateY(-2px)",
-                boxShadow: "0 0 0 3px rgba(255,255,255,0.15)",
-              }}
-            />
-            {/* Pickup pin */}
-            <div className="absolute top-[68%] left-[14%] w-2.5 h-2.5 rounded-full bg-white border-[2.5px] border-orange shadow-sm" />
-            <span className="absolute top-[calc(68%+14px)] left-2 bg-white text-charcoal text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap z-10">
-              {pickupLabel}
-            </span>
-            {/* Truck */}
-            <div className="absolute top-[38%] left-[55%] w-7 h-[18px] bg-orange rounded shadow-lg shadow-orange/45 z-[2]">
-              <div className="absolute top-[3px] right-[3px] w-2 h-3 bg-white/40 rounded-sm" />
-            </div>
-            {/* Destination pin */}
-            <div className="absolute top-[32%] right-[10%] w-2.5 h-2.5 rounded-full bg-white border-[2.5px] border-orange shadow-sm" />
-            <span className="absolute top-[calc(32%-22px)] right-2 bg-white text-charcoal text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap z-10">
-              {destLabel}
-            </span>
-          </div>
-
-          {/* ETA section */}
-          <div className="bg-white px-3.5 py-3 border-b border-gray-200 flex justify-between items-center">
-            <div>
-              <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">
-                {etaLabel}
-              </p>
-              <p className="text-[17px] font-extrabold text-charcoal leading-tight my-0.5 tracking-tight">
-                {etaTime}
-              </p>
-              <p className="text-[10px] text-gray-500">{etaSub}</p>
-            </div>
-            <span className="bg-orange-tint text-orange-dark text-[10px] font-black px-2.5 py-1 rounded-md">
-              {confidence}
-            </span>
-          </div>
-
-          {/* Photo grid */}
-          <div className="bg-white px-3.5 py-3 border-b border-gray-200">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-[11px] font-bold text-charcoal">
-                {photosLabel}
-              </span>
-              <span className="text-[10px] text-gray-500">{photosCount}</span>
-            </div>
-            <div className="grid grid-cols-6 gap-[5px]">
-              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #b8b8b8, #707070)" }} />
-              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #404040, #1f1f1f)" }} />
-              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #b8b8b8, #707070)" }} />
-              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #8b6f47, #5a4830)" }} />
-              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #8b6f47, #5a4830)" }} />
-              <div className="aspect-square rounded" style={{ background: "linear-gradient(135deg, #8b6f47, #5a4830)" }} />
-            </div>
-          </div>
-
-          {/* Coordinator card */}
-          <div className="bg-white px-3.5 py-3 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange to-orange-dark text-white flex items-center justify-center text-sm font-black flex-shrink-0">
-              D
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-charcoal">{coordName}</p>
-              <p className="text-[10px] text-gray-500">{coordRole}</p>
-            </div>
-            <span className="text-[10px] font-bold text-orange-dark uppercase tracking-wider bg-orange-tint px-2.5 py-1.5 rounded-md">
-              {messageBtn}
-            </span>
-          </div>
-        </div>
-      </div>
-      {/* Laptop base — subtle dark slab below the screen for "laptop" silhouette */}
-      <div
-        className="h-2.5 -mx-6 mt-1.5 bg-gradient-to-b from-[#2d2d2d] to-[#1a1a1a]"
-        style={{ borderRadius: "0 0 50% 50% / 0 0 100% 100%", transform: "scaleX(1.05)" }}
-      />
     </div>
   );
 }
