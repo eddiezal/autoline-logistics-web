@@ -1449,6 +1449,15 @@
           "rate100": "$100 / hr",
           "dontCount": "Don't count"
         }
+      },
+      "hotelTier": {
+        "label": "Hotels along the way",
+        "options": {
+          "budget": "Budget ($75)",
+          "standard": "Standard ($110)",
+          "comfort": "Comfort ($170)",
+          "dontCount": "Don't count"
+        }
       }
     },
     "ship": {
@@ -2068,14 +2077,14 @@
         "compare": {
           "eyebrow": "The math, up front",
           "driveLabel": "Drive it yourself",
-          "driveCost": "$1,100-1,400 typical",
-          "driveBreakdown": "Gas + hotels + food + vehicle wear",
-          "driveExtra": "Plus 3 days of your time",
+          "driveCost": "~$1,650 typical",
+          "driveBreakdown": "Gas + standard hotels + food + vehicle wear",
+          "driveExtra": "Plus 25 hours behind the wheel",
           "vsLabel": "vs",
           "shipLabel": "Ship with us",
-          "shipCost": "From $1,150 locked",
+          "shipCost": "From $1,140 locked",
           "shipBreakdown": "All-in. Your car waits when you land.",
-          "shipExtra": "Pickup 2-3 days. Delivery 5-7.",
+          "shipExtra": "Saves ~$510 + 25 hrs. Try the calculator yourself.",
           "fullCalcLink": "Try the full Ship vs Drive calculator"
         }
       },

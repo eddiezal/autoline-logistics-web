@@ -67,7 +67,17 @@ const SHIP_VEHICLE_MULTIPLIER: Record<VehicleType, number> = {
 };
 
 // ── Math constants ────────────────────────────────────────────────────────
-const HOTEL_NIGHTLY_USD = 150;
+// HOTEL_TIERS replaces the previous single-constant default.
+// Reviewed 2026-Q2 against typical I-10/I-40 corridor hotels.
+// Standard is the realistic mid-tier for the actual road-tripper.
+const HOTEL_TIERS = {
+  budget: 75,    // Motel 6, Super 8, Days Inn
+  standard: 110, // Hampton Inn, La Quinta, Holiday Inn Express
+  comfort: 170,  // Marriott Courtyard, Hilton Garden Inn
+  dontCount: 0,  // Sleep in car, one-shot drive, or stay with family
+} as const;
+type HotelTier = keyof typeof HOTEL_TIERS;
+const HOTEL_OPTIONS: ReadonlyArray<HotelTier> = ["budget", "standard", "comfort", "dontCount"];
 const FOOD_PER_DRIVER_PER_DAY_USD = 50;
 const WEAR_PER_MILE_USD = 0.2; // real marginal cost, not IRS depreciation
 const DRIVE_MILES_PER_DAY = 500;
@@ -111,6 +121,7 @@ export function ShipVsDriveCalculator() {
   );
   const [vehicleType, setVehicleType] = useState<VehicleType>("sedan");
   const [ratePreset, setRatePreset] = useState<RatePreset>("rate50");
+  const [hotelTier, setHotelTier] = useState<HotelTier>("standard");
 
   const calc = useMemo(
     () =>
@@ -119,8 +130,9 @@ export function ShipVsDriveCalculator() {
         toZip,
         vehicleType,
         hourlyRate: RATE_VALUES[ratePreset],
+        hotelTier,
       }),
-    [fromZip, toZip, vehicleType, ratePreset]
+    [fromZip, toZip, vehicleType, ratePreset, hotelTier]
   );
 
   const quoteHref = useMemo(() => {
@@ -140,6 +152,7 @@ export function ShipVsDriveCalculator() {
           fromMeta={calc.fromMeta} toMeta={calc.toMeta}
           vehicleType={vehicleType} setVehicleType={setVehicleType}
           ratePreset={ratePreset} setRatePreset={setRatePreset}
+          hotelTier={hotelTier} setHotelTier={setHotelTier}
         />
         <div className="flex flex-col gap-4">
           <ResultsView calc={calc} quoteHref={quoteHref} />
@@ -162,6 +175,7 @@ function InputsPanel(props: {
   fromMeta: ZipMeta; toMeta: ZipMeta;
   vehicleType: VehicleType; setVehicleType: (v: VehicleType) => void;
   ratePreset: RatePreset;   setRatePreset:   (v: RatePreset) => void;
+  hotelTier: HotelTier;     setHotelTier:    (v: HotelTier) => void;
 }) {
   const t = useTranslations();
   return (
@@ -222,6 +236,35 @@ function InputsPanel(props: {
                 ].join(" ")}
               >
                 {t(`shipVsDrive.inputs.hourlyRate.options.${r}`)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Hotel tier selector. Lets users pick their realistic comfort level
+          rather than locking in a single hotel assumption that biases the
+          drive cost up or down. */}
+      <div className="mt-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1.5">
+          {t("shipVsDrive.inputs.hotelTier.label")}
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {HOTEL_OPTIONS.map((h) => {
+            const selected = props.hotelTier === h;
+            return (
+              <button
+                type="button"
+                key={h}
+                onClick={() => props.setHotelTier(h)}
+                className={[
+                  "px-2.5 py-2 rounded-lg text-sm font-medium border transition text-left",
+                  selected
+                    ? "bg-orange-tint border-orange text-charcoal"
+                    : "bg-white border-gray-200 text-gray-700 hover:border-gray-300",
+                ].join(" ")}
+              >
+                {t(`shipVsDrive.inputs.hotelTier.options.${h}`)}
               </button>
             );
           })}
@@ -682,6 +725,7 @@ interface CalcInput {
   toZip: string;
   vehicleType: VehicleType;
   hourlyRate: number;
+  hotelTier: HotelTier;
 }
 
 interface Calc {
@@ -726,7 +770,7 @@ function computeComparison(input: CalcInput): Calc {
   if (!fromEntry || !toEntry) return invalidResult(fromMeta, toMeta);
 
   const distance = Math.round(roadDistanceMiles(fromEntry, toEntry));
-  const drive = computeDrive(distance, input.vehicleType, input.hourlyRate);
+  const drive = computeDrive(distance, input.vehicleType, input.hourlyRate, input.hotelTier);
   const shipPrice = Math.round(
     Math.max(
       SHIP_SHORT_HAUL_FLOOR_USD,
@@ -755,11 +799,11 @@ function computeComparison(input: CalcInput): Calc {
   };
 }
 
-function computeDrive(distance: number, vt: VehicleType, hourlyRate: number) {
+function computeDrive(distance: number, vt: VehicleType, hourlyRate: number, hotelTier: HotelTier) {
   const fuel = (distance / MPG_BY_VEHICLE[vt]) * DEFAULT_FUEL_PRICE_USD;
   const days = Math.max(1, Math.ceil(distance / DRIVE_MILES_PER_DAY));
   const hotelNights = Math.max(0, days - 1);
-  const hotels = hotelNights * HOTEL_NIGHTLY_USD;
+  const hotels = hotelNights * HOTEL_TIERS[hotelTier];
   const tollsFood = days * (FOOD_PER_DRIVER_PER_DAY_USD + MIN_TOLLS_FOOD_PER_DAY);
   const wear = distance * WEAR_PER_MILE_USD;
   const drivingHours = distance / 60;
@@ -787,7 +831,7 @@ function hawaiiResult(fromMeta: ZipMeta, toMeta: ZipMeta, input: CalcInput): Cal
 
 function alaskaResult(fromMeta: ZipMeta, toMeta: ZipMeta, input: CalcInput): Calc {
   const distance = 3400;
-  const drive = computeDrive(distance, input.vehicleType, input.hourlyRate);
+  const drive = computeDrive(distance, input.vehicleType, input.hourlyRate, input.hotelTier);
   const shipPrice = Math.round(SHIP_ALASKA_BASE_USD * SHIP_VEHICLE_MULTIPLIER[input.vehicleType]);
   return {
     branch: "alaska",
