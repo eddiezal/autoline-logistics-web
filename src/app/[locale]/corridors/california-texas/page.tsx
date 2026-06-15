@@ -15,6 +15,12 @@ export const metadata: Metadata = {
     "Auto transport from California to Texas. Often cheaper than driving once you count gas, hotels, and wear-and-tear. Locked all-in price. No deposit. Real-time portal tracking. Dallas, Houston, Austin, San Antonio.",
 };
 
+// Re-read Firestore pricing snapshot at most every 5 minutes. The cron only
+// writes 2x daily so this is more than fresh enough, and it keeps the page
+// statically cacheable for SEO. Without this, Next.js would bake the page at
+// build time and serve stale (or empty) Firestore data forever.
+export const revalidate = 300;
+
 const CUSTOMER_KEYS = ["jobRelocators", "multiVehicle", "highValue"] as const;
 const FAQ_INDEXES = [0, 1, 2, 3, 4] as const;
 
