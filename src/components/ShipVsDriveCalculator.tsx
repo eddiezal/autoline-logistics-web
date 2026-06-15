@@ -92,6 +92,7 @@ const SHIP_ALASKA_BASE_USD = 2200;
 
 const SHORT_HAUL_THRESHOLD_MI = 200;
 const WASH_THRESHOLD_USD = 50;
+const CLOSE_THRESHOLD_USD = 300;
 
 // ── Hourly-rate presets ───────────────────────────────────────────────────
 type RatePreset = "rate25" | "rate50" | "rate100" | "dontCount";
@@ -634,21 +635,31 @@ function VerdictBox({ calc }: { calc: Calc }) {
       sub = t("shipVsDrive.verdict.invalidSub");
       break;
     case "ok": {
-      const diff = Math.abs(calc.savings);
+      // 5-state branching grounded in the actual delta.
+      // savings = drive.total - ship.price (positive = ship wins on cost)
+      const s = calc.savings;
+      const diff = Math.abs(s);
       if (diff < WASH_THRESHOLD_USD) {
         headline = t("shipVsDrive.verdict.wash");
-        sub = t("shipVsDrive.verdict.washSub");
-      } else if (calc.winner === "ship") {
-        headline = t("shipVsDrive.verdict.shipWins", {
+        sub = t("shipVsDrive.verdict.washSub", { hours: drivingHours });
+      } else if (s >= CLOSE_THRESHOLD_USD) {
+        headline = t("shipVsDrive.verdict.shipBig", {
           savings: formatMoney(diff),
-          hours: drivingHours,
         });
-        sub = t("shipVsDrive.verdict.shipWinsSub");
+        sub = t("shipVsDrive.verdict.shipBigSub", { hours: drivingHours });
+      } else if (s > 0) {
+        headline = t("shipVsDrive.verdict.shipClose", {
+          savings: formatMoney(diff),
+        });
+        sub = t("shipVsDrive.verdict.shipCloseSub", { hours: drivingHours });
+      } else if (s > -CLOSE_THRESHOLD_USD) {
+        headline = t("shipVsDrive.verdict.driveClose", {
+          savings: formatMoney(diff),
+        });
+        sub = t("shipVsDrive.verdict.driveCloseSub", { hours: drivingHours });
       } else {
-        headline = t("shipVsDrive.verdict.driveWins", {
-          savings: formatMoney(diff),
-        });
-        sub = t("shipVsDrive.verdict.driveWinsSub");
+        headline = t("shipVsDrive.verdict.driveBig");
+        sub = t("shipVsDrive.verdict.driveBigSub", { hours: drivingHours });
       }
       break;
     }
@@ -864,20 +875,4 @@ function emptyDrive(hourlyRate: number) {
 }
 
 // ── ZIP resolution ────────────────────────────────────────────────────────
-function resolveZip(zip: string): ZipMeta {
-  if (!/^\d{5}$/.test(zip)) return { status: "invalid" };
-
-  // 1. Exact OR 3-digit-prefix match in the table → "ok"
-  //    (92107 → 92101 San Diego, 90211 → 90210 Beverly Hills)
-  const approx = lookupZipApprox(zip);
-  if (approx) {
-    return { status: "ok", city: approx.entry.city, state: approx.entry.state };
-  }
-
-  // 2. Hawaii or Alaska detected by prefix range
-  const prefixState = zipPrefixToState(zip);
-  if (prefixState) return { status: "unknown", state: prefixState };
-
-  // 3. Plausible 5-digit ZIP but no metro / no recognized state
-  return { status: "unknown" };
-}
+function resolveZip

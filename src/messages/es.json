@@ -1521,12 +1521,16 @@
       "invalidMsg": "Verifique el código postal destino, o use la búsqueda por nombre de ciudad (próximamente en v2)."
     },
     "verdict": {
-      "shipWins": "Enviar le ahorra ~${savings} y {hours} horas de manejar.",
-      "shipWinsSub": "Más se ahorra el hotel, las paradas de camión, y la posibilidad de una piedra en el parabrisas en alguna parte del camino.",
-      "driveWins": "Para este viaje, manejar le ahorra ~${savings}.",
-      "driveWinsSub": "Bajo 200 millas, usualmente vence al camión — y esa es la respuesta honesta. Estamos aquí cuando necesite el lado de envío.",
-      "wash": "El costo es prácticamente similar.",
-      "washSub": "Dentro de $50 en cualquier dirección. Elija la experiencia que quiera — maneje si es una historia de carretera, envíelo si prefiere ahorrarse el tiempo al volante.",
+      "shipBig": "Enviar le ahorra ~${savings} en este viaje.",
+      "shipBigSub": "Se ahorra {hours} horas al volante. Obtenga el precio fijo abajo.",
+      "shipClose": "Enviar sale adelante por ~${savings}.",
+      "shipCloseSub": "Además se ahorra {hours} horas al volante. Vale la pena si su tiempo importa.",
+      "wash": "Prácticamente un empate en dinero.",
+      "washSub": "La pregunta real es si quiere pasar {hours} horas al volante. Si no, envíelo.",
+      "driveClose": "Para este viaje, manejar sale unos ~${savings} más barato en dinero directo.",
+      "driveCloseSub": "Vale la pena enviarlo si su tiempo es facturable, o si prefiere no pasar {hours} horas en la carretera.",
+      "driveBig": "Para este viaje, manejar es la respuesta honesta.",
+      "driveBigSub": "Enviar tiene más sentido a distancias mayores, cuando mueve varios vehículos, o cuando {hours} horas al volante no son opción. Aún podemos enviárselo si prefiere saltarse el viaje.",
       "hawaii": "Hawái significa enviar — es pura geografía.",
       "hawaiiSub": "Hemos hecho el traspaso terrestre-marítimo lo más sencillo posible. Usted ve un precio y un cronograma.",
       "alaska": "SE PUEDE manejar la Autopista de Alaska. La mayoría no lo hace.",
@@ -1538,7 +1542,7 @@
       "primary": "Obtenga su precio fijo →",
       "secondary": "Active alerta de bajada de precio (próximamente)"
     },
-    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote — ahí corremos el precio real del transportista. Estimado de manejar usa hoteles a $150/noche, comida a $50/persona/día, desgaste a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS). Distancia tomada de nuestra tabla de 80 corredores principales — integración con Google Maps API próximamente."
+    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS). Distancia tomada de nuestra tabla de 80 corredores principales. Integración con Google Maps API próximamente."
   },
   "corridors": {
     "index": {
@@ -2613,9 +2617,9 @@
       "backToDashboard": "Tablero",
       "heading": "Cuenta",
       "signedInAs": "Sesion iniciada como",
-      "signOut": "Cerrar sesion",
-      "comingSoonTitle": "Proximamente mas controles",
-      "comingSoonBody": "Los datos de perfil, metodos de pago y preferencias de notificacion viviran aqui en la proxima version. Por ahora, su coordinador puede actualizar cualquier cosa de su envio. Solo contactelo."
+      "signOut": "Cerrar sesión",
+      "comingSoonTitle": "Más controles próximamente",
+      "comingSoonBody": "Detalles del perfil, métodos de pago y preferencias de notificación vivirán aquí en el próximo lanzamiento. Por ahora, su coordinador puede actualizar cualquier cosa en su envío, solo contáctenos."
     }
   }
 }

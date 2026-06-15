@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA to TX hero . Card options A1/A2/B/C</title>
+<style>
+  :root {
+    --charcoal: #1a1a1a;
+    --pine-deep: #052e1a;
+    --pine: #118647;
+    --pine-light: #16a34a;
+    --pine-bg: #f0faf3;
+    --orange: #ff6600;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--gray-100); color: var(--charcoal); line-height: 1.55; }
+  .page { max-width: 1280px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page-header { margin-bottom: 32px; }
+  .page-header h1 { margin: 0 0 8px; font-size: 28px; }
+  .page-header p { margin: 0; color: var(--gray-700); max-width: 800px; }
+  .var { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .var-meta { padding: 18px 28px; background: var(--charcoal); color: #fff; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .var-meta h2 { margin: 0; font-size: 18px; font-weight: 700; }
+  .var-meta .sub { font-size: 12px; color: #d1d5db; margin-top: 4px; }
+  .var-tag { background: var(--orange); color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+
+  /* Hero shell shared by all variations */
+  .hero { background: var(--charcoal); color: #fff; padding: 56px 48px; }
+  .hero-grid-2col { display: grid; grid-template-columns: 1fr 380px; gap: 56px; align-items: start; }
+  .hero-grid-1col { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  .hero .chip {
+    display: inline-block; background: rgba(34,197,94,0.15); border: 1px solid rgba(74,222,128,0.5);
+    color: #86efac; font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 999px; margin-bottom: 20px;
+  }
+  .hero h1 { margin: 0 0 16px; font-size: 44px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; max-width: 640px; }
+  .hero .subh { font-size: 18px; color: #d1d5db; max-width: 560px; margin: 0 0 24px; line-height: 1.55; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary { background: var(--orange); color: #fff; padding: 12px 22px; border-radius: 999px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; }
+  .btn-secondary { border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 12px 22px; border-radius: 999px; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-block; }
+
+  /* ─── A1: Light card on dark hero, mirrors tool's actual design ─── */
+  .card-a1 {
+    background: #fff; border-radius: 18px; padding: 20px; color: var(--charcoal); box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+  }
+  .card-a1 .eyebrow { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px; }
+  .card-a1 .block { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .card-a1 .block.ship { background: var(--pine-bg); border-color: rgba(22,163,74,0.2); }
+  .card-a1 .block-label { color: var(--gray-500); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 2px; }
+  .card-a1 .block.ship .block-label { color: var(--pine); }
+  .card-a1 .block-value { color: var(--charcoal); font-size: 22px; font-weight: 800; margin: 0; line-height: 1; }
+  .card-a1 .block-detail { color: var(--gray-700); font-size: 12.5px; margin: 4px 0 0; }
+  .card-a1 .block-extra { color: var(--gray-500); font-size: 12px; font-style: italic; margin: 3px 0 0; }
+  .card-a1 .vs-row { text-align: center; margin: 4px 0 4px; color: var(--gray-400); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+  .card-a1 .calc-link { display: block; text-align: center; margin: 12px 0 0; padding: 10px 0 0; border-top: 1px solid var(--gray-200); color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; }
+
+  /* ─── A2: Dark glass card (current deployed version) ─── */
+  .card-a2 { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 24px; backdrop-filter: blur(6px); }
+  .card-a2 .eyebrow { color: #86efac; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 14px; }
+  .card-a2 .block { padding-left: 16px; border-left: 2px solid rgba(107,114,128,0.5); margin-bottom: 16px; }
+  .card-a2 .block.ship { border-left-color: #4ade80; }
+  .card-a2 .block-label { color: var(--gray-400); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 2px; }
+  .card-a2 .block.ship .block-label { color: #86efac; }
+  .card-a2 .block-value { color: #fff; font-size: 20px; font-weight: 700; margin: 0; }
+  .card-a2 .block-detail { color: #d1d5db; font-size: 13px; margin: 4px 0 0; }
+  .card-a2 .block-extra { color: var(--gray-400); font-size: 13px; font-style: italic; margin: 3px 0 0; }
+  .card-a2 .block.ship .block-extra { color: rgba(134,239,172,0.9); }
+  .card-a2 .vs-row { display: flex; align-items: center; gap: 12px; margin: 14px 0; }
+  .card-a2 .vs-row .line { flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
+  .card-a2 .vs-row span { color: var(--gray-400); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+  .card-a2 .calc-link { display: block; text-align: center; margin: 18px 0 0; padding: 14px 0 0; border-top: 1px solid rgba(255,255,255,0.1); color: #86efac; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; }
+
+  /* ─── B: Compact embedded calculator results panel ─── */
+  .card-b { background: #fff; border-radius: 18px; padding: 22px; color: var(--charcoal); box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+  .card-b .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-200); }
+  .card-b .head .title { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-b .head .route { color: var(--gray-500); font-size: 12px; }
+  .card-b .row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; }
+  .card-b .row .label { color: var(--gray-700); font-size: 13px; }
+  .card-b .row .val { font-weight: 700; color: var(--charcoal); font-size: 13px; }
+  .card-b .total { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--gray-200); display: flex; justify-content: space-between; align-items: baseline; }
+  .card-b .total .label { color: var(--gray-500); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card-b .total .val { font-weight: 800; font-size: 24px; color: var(--charcoal); }
+  .card-b .verdict { background: var(--pine-bg); border: 1px solid rgba(22,163,74,0.2); border-radius: 10px; padding: 12px 14px; margin: 12px 0 6px; text-align: center; }
+  .card-b .verdict .save { color: var(--pine); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 4px; }
+  .card-b .verdict .save-val { color: var(--pine); font-size: 22px; font-weight: 800; margin: 0; }
+  .card-b .verdict .save-detail { color: var(--gray-700); font-size: 12px; margin: 4px 0 0; }
+  .card-b .compact-cta { display: block; text-align: center; margin: 10px 0 0; color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; }
+  .card-b .real-tool-note { font-size: 11px; color: var(--gray-500); text-align: center; margin: 6px 0 0; font-style: italic; }
+
+  /* ─── C: Promoted link card (drop the comparison entirely) ─── */
+  .promo-card { background: linear-gradient(135deg, rgba(22,163,74,0.16) 0%, rgba(5,46,26,0.5) 100%); border: 1px solid rgba(74,222,128,0.3); border-radius: 18px; padding: 24px 28px; margin-top: 24px; display: flex; align-items: center; gap: 24px; }
+  .promo-card .info { flex: 1; }
+  .promo-card .eyebrow { color: #86efac; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 6px; }
+  .promo-card .lead { color: #fff; font-size: 18px; font-weight: 700; margin: 0 0 4px; line-height: 1.3; }
+  .promo-card .desc { color: #d1d5db; font-size: 13px; margin: 0; max-width: 480px; }
+  .promo-card .btn { background: #fff; color: var(--charcoal); padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; text-decoration: none; white-space: nowrap; }
+
+  /* Decision matrix */
+  .matrix { background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-top: 24px; }
+  .matrix h2 { margin: 0 0 12px; font-size: 20px; }
+  .matrix table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix th, .matrix td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .matrix th { color: var(--gray-700); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gray-50); }
+  .matrix td.col { font-weight: 700; min-width: 100px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>CA → TX hero . Four card options</h1>
+    <p>Same hero copy across all four (post-Bucket 1 tighten). Only the right-column card differs. Option A1 mirrors the actual /tools/ship-vs-drive design (orange eyebrow, white card on dark hero, looks like a preview of the tool). Option A2 is the dark glass card currently deployed. Option B is a compact "Results-only" embed showing the actual calculator's verdict. Option C drops the card and replaces it with a promoted link card after the CTAs.</p>
+  </header>
+
+  <!-- ============================================== A1 ============================================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>A1 . Static teaser card, restyled to match the tool</h2><p class="sub">Light card on the dark hero. Mirrors /tools/ship-vs-drive design language (orange eyebrows, charcoal numbers, gray-50/pine-bg blocks). Feels like a preview of the same product, so the click-through to the full tool feels continuous instead of a different page.</p></div>
+      <span class="var-tag">A1 . Match tool</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid-2col">
+        <div>
+          <span class="chip">California to Texas . Locked all-in price from $1,150</span>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside class="card-a1">
+          <p class="eyebrow">The math, up front</p>
+          <div class="block">
+            <p class="block-label">Drive it yourself</p>
+            <p class="block-value">$1,100-1,400</p>
+            <p class="block-detail">Gas + hotels + food + vehicle wear</p>
+            <p class="block-extra">Plus 3 days of your time</p>
+          </div>
+          <div class="vs-row">vs</div>
+          <div class="block ship">
+            <p class="block-label">Ship with us</p>
+            <p class="block-value">From $1,150</p>
+            <p class="block-detail">Locked all-in. Car waits when you land.</p>
+            <p class="block-extra">Pickup 2-3 days. Delivery 5-7.</p>
+          </div>
+          <a href="#" class="calc-link">Try the full Ship vs Drive calculator →</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== A2 ============================================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>A2 . Dark glass card (currently deployed)</h2><p class="sub">Stays inside the dark hero palette. Glass-morphism aesthetic. More cohesive with the hero color story, but visually disconnected from the actual tool's design (white card with orange accents). Risk: feels like a different product than what the user lands on if they click through.</p></div>
+      <span class="var-tag">A2 . Glass</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid-2col">
+        <div>
+          <span class="chip">California to Texas . Locked all-in price from $1,150</span>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside class="card-a2">
+          <p class="eyebrow">The math, up front</p>
+          <div class="block">
+            <p class="block-label">Drive it yourself</p>
+            <p class="block-value">$1,100-1,400</p>
+            <p class="block-detail">Gas + hotels + food + vehicle wear</p>
+            <p class="block-extra">Plus 3 days of your time</p>
+          </div>
+          <div class="vs-row"><div class="line"></div><span>vs</span><div class="line"></div></div>
+          <div class="block ship">
+            <p class="block-label">Ship with us</p>
+            <p class="block-value">From $1,150 locked</p>
+            <p class="block-detail">All-in. Car waits when you land.</p>
+            <p class="block-extra">Pickup 2-3 days. Delivery 5-7.</p>
+          </div>
+          <a href="#" class="calc-link">Try the full Ship vs Drive calculator →</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== B ============================================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>B . Pre-rendered Results-View snapshot</h2><p class="sub">Mimics the actual tool's ResultsView card, pre-rendered server-side with CA → TX / sedan / "Don't count" time value defaults. Same visual language as the tool. Below, "Customize for your vehicle" links to the full tool with the same defaults prefilled. Feels like the tool, just summarized.</p></div>
+      <span class="var-tag">B . Results snapshot</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid-2col">
+        <div>
+          <span class="chip">California to Texas . Locked all-in price from $1,150</span>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+        </div>
+        <aside class="card-b">
+          <div class="head">
+            <span class="title">Ship vs Drive . Sedan</span>
+            <span class="route">CA → TX . 1,400 mi</span>
+          </div>
+          <div class="row"><span class="label">Fuel</span><span class="val">$197</span></div>
+          <div class="row"><span class="label">Hotels (3 nights)</span><span class="val">$450</span></div>
+          <div class="row"><span class="label">Food (3 days)</span><span class="val">$150</span></div>
+          <div class="row"><span class="label">Vehicle wear</span><span class="val">$280</span></div>
+          <div class="total"><span class="label">Drive total</span><span class="val">$1,077</span></div>
+          <div class="verdict">
+            <p class="save">You save by shipping</p>
+            <p class="save-val">3 days + the wear</p>
+            <p class="save-detail">Locked ship quote from <strong>$1,150</strong> (carrier markup included). Roughly even on dollars; you keep the time and the miles.</p>
+          </div>
+          <a href="#" class="compact-cta">Customize for your vehicle →</a>
+          <p class="real-tool-note">Sedan defaults shown. Numbers update for SUV / truck / lifted.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== C ============================================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div><h2>C . Drop card, replace with one promoted link card</h2><p class="sub">No side card. Single-column hero. Below the CTAs, a wide promo card invites the user to use the actual calculator with their own ZIP/vehicle. Lightest hero, single source of truth (the tool), but trades away the at-a-glance proof above the fold that the critic specifically pushed for.</p></div>
+      <span class="var-tag">C . Link only</span>
+    </div>
+    <div class="hero">
+      <div class="hero-grid-1col">
+        <div>
+          <span class="chip">California to Texas . Locked all-in price from $1,150</span>
+          <h1>Ship your car from California to Texas for less than driving it yourself.</h1>
+          <p class="subh">1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.</p>
+          <div class="cta-row">
+            <a href="#" class="btn-primary">Get my locked price</a>
+            <a href="#" class="btn-secondary">See the math</a>
+          </div>
+          <div class="promo-card">
+            <div class="info">
+              <p class="eyebrow">The real math</p>
+              <p class="lead">Run the numbers with your ZIP, your vehicle, and your hourly rate.</p>
+              <p class="desc">Our Ship vs Drive calculator factors gas, hotels, food, wear, and the value of your time. CA→TX defaults pre-filled.</p>
+            </div>
+            <a href="#" class="btn">Open calculator →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Decision matrix -->
+  <div class="matrix">
+    <h2>Trade-off summary</h2>
+    <table>
+      <thead>
+        <tr><th>Dimension</th><th>A1 Match tool</th><th>A2 Glass</th><th>B Results snapshot</th><th>C Link only</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="col">Hero proof above fold</td><td>Strong (numbers + breakdown)</td><td>Strong (numbers + breakdown)</td><td>Strongest (full math)</td><td>None (no card)</td></tr>
+        <tr><td class="col">Cohesion with /tools/ship-vs-drive</td><td>High (same design language)</td><td>Low (visual disconnect)</td><td>Highest (same UI)</td><td>Highest (no duplication)</td></tr>
+        <tr><td class="col">Build complexity</td><td>Low (static)</td><td>Already built</td><td>Medium (mirror real UI)</td><td>Low (just a link card)</td></tr>
+        <tr><td class="col">Risk if numbers change</td><td>Medium (i18n strings)</td><td>Medium (i18n strings)</td><td>Low (mirrors tool constants)</td><td>None (defers to tool)</td></tr>
+        <tr><td class="col">Visual weight</td><td>Light, professional</td><td>Heavy, glass aesthetic</td><td>Densest (full breakdown)</td><td>Lightest hero</td></tr>
+        <tr><td class="col">Click-through to tool</td><td>Likely (link at bottom)</td><td>Likely (link at bottom)</td><td>Very likely ("customize")</td><td>Highest (only path)</td></tr>
+        <tr><td class="col">Best for $3K LA test if . . .</td><td>You want fast, defensible above-fold proof + design continuity</td><td>You want what's already shipped (no further build)</td><td>You want maximum trust by showing actual tool math up front</td><td>You want lightest hero, tool is the single source of truth</td></tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top: 28px;">My take</h2>
+    <p style="color: var(--gray-700); margin: 0 0 8px;"><strong>A1</strong> is the right Phase A play. It preserves the at-a-glance proof the critic asked for, mirrors the actual tool's design so the click-through feels like a continuation, and is the lowest-build of the four (mostly a restyle of what's already deployed).</p>
+    <p style="color: var(--gray-700); margin: 0 0 8px;"><strong>B</strong> is the highest-trust option but adds ~30 min of mirroring the actual ResultsView. Worth it later if A1 underperforms.</p>
+    <p style="color: var(--gray-700); margin: 0;"><strong>C</strong> is the cleanest but loses the critic's biggest point. <strong>A2</strong> is what's deployed but visually doesn't match the tool, which is the issue you flagged.</p>
+  </div>
+</div>
+</body>
+</html>

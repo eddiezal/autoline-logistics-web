@@ -1521,12 +1521,16 @@
       "invalidMsg": "Check the destination ZIP, or use the city-name fallback (v2 upgrade)."
     },
     "verdict": {
-      "shipWins": "Shipping saves you ~${savings} and {hours} hours of driving.",
-      "shipWinsSub": "Plus you skip the hotel, the truck stops, and the chance of a rock chip on your windshield somewhere along the way.",
-      "driveWins": "For this trip, driving saves you ~${savings}.",
-      "driveWinsSub": "Under 200 miles, you'll usually beat the truck — and that's the honest answer. We're here when you need the ship side.",
-      "wash": "Cost is about a wash.",
-      "washSub": "Within $50 either way. Pick the experience you want — drive if it's a road-trip story, ship if you'd rather skip the windshield time.",
+      "shipBig": "Shipping saves you ~${savings} on this trip.",
+      "shipBigSub": "You skip {hours} hours behind the wheel. Get the locked price below.",
+      "shipClose": "Shipping comes out ahead by ~${savings}.",
+      "shipCloseSub": "Plus you skip {hours} hours behind the wheel. Worth it if your time matters.",
+      "wash": "Pretty much a tie on dollars.",
+      "washSub": "The real question is whether you want {hours} hours behind the wheel. If not, ship.",
+      "driveClose": "For this trip, driving comes out about ~${savings} cheaper on raw dollars.",
+      "driveCloseSub": "Worth shipping if your time is billable, or you'd rather not spend {hours} hours on the road.",
+      "driveBig": "For this trip, driving is the honest answer.",
+      "driveBigSub": "Shipping makes more sense at longer distances, when you're moving multiple vehicles, or when {hours} hours behind the wheel isn't an option. We can still ship it if you'd rather skip the trip.",
       "hawaii": "Hawaii means shipping — that's just geography.",
       "hawaiiSub": "We've made the inland-to-ocean handoff as turnkey as possible. You see one price and one timeline.",
       "alaska": "You CAN drive the Alaska Highway. Most customers don't.",
@@ -1538,7 +1542,7 @@
       "primary": "Get my locked price →",
       "secondary": "Set a price-drop alert (coming soon)"
     },
-    "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote — that's where we run actual carrier pricing. Drive-side estimate uses $150/night hotels, $50/person/day food, $0.20/mi for vehicle wear (real marginal cost, not the IRS depreciation rate). Distance pulled from our top-80 corridor table — Google Maps API integration coming next."
+    "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate). Distance pulled from our top-80 corridor table. Google Maps API integration coming next."
   },
   "corridors": {
     "index": {
