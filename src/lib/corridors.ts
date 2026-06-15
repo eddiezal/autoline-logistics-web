@@ -110,4 +110,39 @@ export const CORRIDORS: Corridor[] = [
  * Convert corridor slug ("california-hawaii") to the camelCase catalog key
  * used in messages JSON under corridors.catalog.{key}.
  */
-exp
+export function corridorCatalogKey(slug: string): string {
+  return slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+}
+
+/**
+ * Convert a sub-destination slug to its catalog key. Some entries use shorter
+ * keys in the catalog than their URL slugs.
+ */
+export function subDestCatalogKey(slug: string): string {
+  const SHORT_FORMS: Record<string, string> = {
+    "big-island": "bigIsland",
+    "mat-su-valley": "matSu",
+    "southeast-alaska": "southeast",
+    "dallas-fort-worth": "dallasFortWorth",
+    "san-antonio": "sanAntonio",
+  };
+  return SHORT_FORMS[slug] ?? slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+}
+
+export function getCorridor(slug: string): Corridor | undefined {
+  return CORRIDORS.find((c) => c.slug === slug);
+}
+
+export function getLiveCorridors(): Corridor[] {
+  return CORRIDORS.filter((c) => c.status === "live");
+}
+
+export function getComingSoonCorridors(): Corridor[] {
+  return CORRIDORS.filter((c) => c.status === "coming-soon");
+}
+
+/** Corridors whose pricing should be synced by the daily cron.
+ *  Returns only live corridors with a `pricing` config set. */
+export function getPricingCorridors(): Corridor[] {
+  return CORRIDORS.filter((c) => c.status === "live" && c.pricing);
+}
