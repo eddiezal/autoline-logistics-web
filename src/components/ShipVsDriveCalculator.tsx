@@ -875,4 +875,20 @@ function emptyDrive(hourlyRate: number) {
 }
 
 // ── ZIP resolution ────────────────────────────────────────────────────────
-function resolveZip
+function resolveZip(zip: string): ZipMeta {
+  if (!/^\d{5}$/.test(zip)) return { status: "invalid" };
+
+  // 1. Exact OR 3-digit-prefix match in the table → "ok"
+  //    (92107 → 92101 San Diego, 90211 → 90210 Beverly Hills)
+  const approx = lookupZipApprox(zip);
+  if (approx) {
+    return { status: "ok", city: approx.entry.city, state: approx.entry.state };
+  }
+
+  // 2. Hawaii or Alaska detected by prefix range
+  const prefixState = zipPrefixToState(zip);
+  if (prefixState) return { status: "unknown", state: prefixState };
+
+  // 3. Plausible 5-digit ZIP but no metro / no recognized state
+  return { status: "unknown" };
+}
