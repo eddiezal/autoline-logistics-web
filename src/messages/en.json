@@ -1548,10 +1548,34 @@
   "blog": {
     "hero": {
       "eyebrow": "Buyer guides",
-      "title": "Plain-English answers to the scary questions.",
-      "lead": "If you are searching to find out whether your auto transport quote is real, whether your deposit is at risk, or whether the company you booked is the company driving, you are in the right place. Honest explainers, no upsell."
+      "title": "Car Shipping Buyer Guides: Avoid Scams, Fake Quotes, and Deposit Traps",
+      "subtitle": "Plain-English answers to the scary questions before you book auto transport. Honest explainers before you book, plus realistic quotes when you're ready."
     },
-    "listHeading": "Latest guides",
+    "checkQuote": {
+      "eyebrow": "Got a quote that feels too low?",
+      "title": "We'll tell you whether the price looks realistic before you book.",
+      "body": "Send us your route and vehicle. We'll show you what our carrier network is actually accepting today, so you can spot a bait-and-switch before it costs you.",
+      "cta": "Check my quote"
+    },
+    "clusters": {
+      "avoiding-scams": {
+        "title": "Avoiding scams",
+        "lead": "How brokers use fake-low quotes, last-minute price hikes, and pre-driver deposits to lock customers in. The mechanics, the warning signs, and what a real quote process looks like."
+      },
+      "understanding-industry": {
+        "title": "Understanding the industry",
+        "lead": "How auto transport actually works. Brokers, carriers, load boards, locked prices. Why the company you book is often not the company driving, and what that means for your shipment."
+      },
+      "planning-shipment": {
+        "title": "Planning your shipment",
+        "lead": "Practical questions you'll have once you're ready to book. Timing, transport type, what you can pack, and what to expect on pickup day."
+      },
+      "popular-routes": {
+        "title": "Popular routes",
+        "lead": "Locked-price corridors with live pricing pulled from our carrier network. Today's range, transit window, and the route-specific things to know before you book.",
+        "routeTag": "Live route"
+      }
+    },
     "minRead": "min read",
     "article": {
       "publishedDateLabel": "Published",

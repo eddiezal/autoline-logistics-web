@@ -1548,10 +1548,34 @@
   "blog": {
     "hero": {
       "eyebrow": "Guías para compradores",
-      "title": "Respuestas claras a las preguntas que dan miedo.",
-      "lead": "Si está buscando saber si su cotización de transporte de auto es real, si su depósito está en riesgo, o si la empresa que contrató es la que realmente maneja, llegó al lugar correcto. Explicaciones honestas, sin venta forzada."
+      "title": "Guías de transporte de autos: evite estafas, cotizaciones falsas y trampas de depósito",
+      "subtitle": "Respuestas claras a las preguntas que dan miedo antes de reservar transporte de autos. Explicaciones honestas antes de reservar, y cotizaciones realistas cuando esté listo."
     },
-    "listHeading": "Últimas guías",
+    "checkQuote": {
+      "eyebrow": "¿Tiene una cotización que se ve demasiado baja?",
+      "title": "Le diremos si el precio se ve realista antes de que reserve.",
+      "body": "Mándenos su ruta y vehículo. Le mostraremos lo que nuestra red de transportistas está aceptando hoy, para que pueda detectar un cebo-y-cambio antes de que le cueste.",
+      "cta": "Verificar mi cotización"
+    },
+    "clusters": {
+      "avoiding-scams": {
+        "title": "Cómo evitar estafas",
+        "lead": "Cómo los brokers usan cotizaciones falsamente bajas, aumentos de último minuto y depósitos antes de asignar conductor para atrapar al cliente. La mecánica, las señales de alarma, y cómo se ve un proceso de cotización real."
+      },
+      "understanding-industry": {
+        "title": "Entendiendo la industria",
+        "lead": "Cómo funciona realmente el transporte de autos. Brokers, transportistas, tableros de carga, precios fijos. Por qué la empresa que contrata a menudo no es la que maneja, y qué significa eso para su envío."
+      },
+      "planning-shipment": {
+        "title": "Planificando su envío",
+        "lead": "Preguntas prácticas que tendrá cuando esté listo para reservar. Tiempos, tipo de transporte, qué puede empacar, y qué esperar el día de recogida."
+      },
+      "popular-routes": {
+        "title": "Rutas populares",
+        "lead": "Corredores con precio fijo y datos en vivo de nuestra red de transportistas. El rango de hoy, ventana de tránsito, y lo que debe saber antes de reservar.",
+        "routeTag": "Ruta en vivo"
+      }
+    },
     "minRead": "min de lectura",
     "article": {
       "publishedDateLabel": "Publicado",

@@ -19,6 +19,7 @@ export const article: Article = {
   author: "Auto Line Logistics",
   readMinutes: 6,
   category: "Buyer guide",
+  cluster: "avoiding-scams",
   hubLink: { label: "Anti-scam guide", href: "/anti-scam" },
   sections: [
     {
