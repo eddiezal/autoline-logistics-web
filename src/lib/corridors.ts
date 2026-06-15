@@ -17,6 +17,22 @@ export interface SubDestination {
   slug: string;
 }
 
+export interface PricingConfig {
+  /** Representative origin ZIP for cron pricing lookups. */
+  originZip: string;
+  originCity: string;
+  originState: string;
+  /** Representative destination ZIP for cron pricing lookups. */
+  destZip: string;
+  destCity: string;
+  destState: string;
+  /** Display-side transit window for the snapshot card.
+   *  Derived from corridor-typical carrier transit, not SD response
+   *  (Pricing Insights API doesn't return transit days). */
+  transitMinDays: number;
+  transitMaxDays: number;
+}
+
 export interface Corridor {
   /** URL segment under /corridors/<slug>. Also the join key for catalog lookups. */
   slug: string;
@@ -24,6 +40,10 @@ export interface Corridor {
   toState: string;
   status: "live" | "coming-soon";
   subDestinations?: SubDestination[];
+  /** Optional. If present, the daily pricing cron will log SD prices for this
+   *  corridor. Only continental-US corridors qualify (SD Pricing Insights API
+   *  excludes AK/HI/PR). */
+  pricing?: PricingConfig;
 }
 
 export const CORRIDORS: Corridor[] = [
@@ -62,6 +82,16 @@ export const CORRIDORS: Corridor[] = [
       { slug: "austin" },
       { slug: "san-antonio" },
     ],
+    pricing: {
+      originZip: "90210",
+      originCity: "Los Angeles",
+      originState: "CA",
+      destZip: "78701",
+      destCity: "Austin",
+      destState: "TX",
+      transitMinDays: 3,
+      transitMaxDays: 5,
+    },
   },
 
   // Coming-soon corridors, sequenced by likely customer demand for B2C auto transport
@@ -80,33 +110,4 @@ export const CORRIDORS: Corridor[] = [
  * Convert corridor slug ("california-hawaii") to the camelCase catalog key
  * used in messages JSON under corridors.catalog.{key}.
  */
-export function corridorCatalogKey(slug: string): string {
-  return slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-}
-
-/**
- * Convert a sub-destination slug to its catalog key. Some entries use shorter
- * keys in the catalog than their URL slugs.
- */
-export function subDestCatalogKey(slug: string): string {
-  const SHORT_FORMS: Record<string, string> = {
-    "big-island": "bigIsland",
-    "mat-su-valley": "matSu",
-    "southeast-alaska": "southeast",
-    "dallas-fort-worth": "dallasFortWorth",
-    "san-antonio": "sanAntonio",
-  };
-  return SHORT_FORMS[slug] ?? slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-}
-
-export function getCorridor(slug: string): Corridor | undefined {
-  return CORRIDORS.find((c) => c.slug === slug);
-}
-
-export function getLiveCorridors(): Corridor[] {
-  return CORRIDORS.filter((c) => c.status === "live");
-}
-
-export function getComingSoonCorridors(): Corridor[] {
-  return CORRIDORS.filter((c) => c.status === "coming-soon");
-}
+exp

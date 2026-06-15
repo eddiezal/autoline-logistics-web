@@ -1544,6 +1544,29 @@
     },
     "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS)."
   },
+  "corridorPricing": {
+    "eyebrow": {
+      "todays": "Precios de hoy",
+      "recent": "Precios recientes"
+    },
+    "routeLabel": "{from} → {to}",
+    "vehicleLabels": {
+      "sedan": "Sedán",
+      "suv": "SUV",
+      "pickup": "Pickup"
+    },
+    "transit": {
+      "eyebrow": "Tiempo en tránsito",
+      "value": "{min} a {max} días",
+      "body": "Tránsito típico del transportista una vez que su vehículo es recogido. La disponibilidad de recolección cambia según la fecha y el tipo de vehículo."
+    },
+    "quietLink": "Vea el precio fijo de hoy",
+    "fallback": {
+      "eyebrow": "Precios en vivo",
+      "body": "El rango de hoy aún no se ha actualizado. Obtenga un precio fijo real en menos de un minuto. Sin depósito para recibir la cotización.",
+      "cta": "Obtener el precio fijo de hoy"
+    }
+  },
   "corridors": {
     "index": {
       "metadata": {

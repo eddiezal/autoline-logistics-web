@@ -1544,6 +1544,29 @@
     },
     "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
   },
+  "corridorPricing": {
+    "eyebrow": {
+      "todays": "Today's pricing",
+      "recent": "Recent pricing"
+    },
+    "routeLabel": "{from} → {to}",
+    "vehicleLabels": {
+      "sedan": "Sedan",
+      "suv": "SUV",
+      "pickup": "Pickup"
+    },
+    "transit": {
+      "eyebrow": "Transit time",
+      "value": "{min}-{max} days",
+      "body": "Typical carrier transit once your vehicle is picked up. Pickup availability changes by date and vehicle type."
+    },
+    "quietLink": "See today's locked price",
+    "fallback": {
+      "eyebrow": "Live pricing",
+      "body": "Today's range hasn't refreshed yet. Get a real locked price in under a minute. No deposit to receive the quote.",
+      "cta": "Get today's locked price"
+    }
+  },
   "corridors": {
     "index": {
       "metadata": {

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
+import { CorridorPricingCard } from "@/components/CorridorPricingCard";
 import { getCorridor } from "@/lib/corridors";
 
 export const metadata: Metadata = {
@@ -17,8 +18,13 @@ export const metadata: Metadata = {
 const CUSTOMER_KEYS = ["jobRelocators", "multiVehicle", "highValue"] as const;
 const FAQ_INDEXES = [0, 1, 2, 3, 4] as const;
 
-export default function CaliforniaTexasCorridor() {
-  const t = useTranslations();
+export default async function CaliforniaTexasCorridor({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
   const corridor = getCorridor("california-texas")!;
   const faqs: FAQItem[] = FAQ_INDEXES.map((i) => ({
     q: t(`corridors.californiaTexas.faq.items.${i}.q`),
@@ -68,63 +74,11 @@ export default function CaliforniaTexasCorridor() {
                 </div>
               </div>
 
-              {/* Right column: cost comparison card. Two stacked blocks (drive
-                  vs ship) with a small "vs" divider and a link to the full
-                  Ship vs Drive calculator for the skeptical buyer. */}
-              <aside className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-                <p className="text-green-300 text-[11px] font-bold uppercase tracking-wider mb-4">
-                  {t("corridors.californiaTexas.hero.compare.eyebrow")}
-                </p>
-
-                {/* Drive block */}
-                <div className="border-l-2 border-gray-500/50 pl-4 mb-4">
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                    {t("corridors.californiaTexas.hero.compare.driveLabel")}
-                  </p>
-                  <p className="text-xl font-bold text-white">
-                    {t("corridors.californiaTexas.hero.compare.driveCost")}
-                  </p>
-                  <p className="text-sm text-gray-300 mt-1">
-                    {t("corridors.californiaTexas.hero.compare.driveBreakdown")}
-                  </p>
-                  <p className="text-sm text-gray-400 italic mt-1">
-                    {t("corridors.californiaTexas.hero.compare.driveExtra")}
-                  </p>
-                </div>
-
-                {/* vs divider */}
-                <div className="flex items-center gap-3 my-4">
-                  <div className="flex-1 h-px bg-white/15"></div>
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    {t("corridors.californiaTexas.hero.compare.vsLabel")}
-                  </span>
-                  <div className="flex-1 h-px bg-white/15"></div>
-                </div>
-
-                {/* Ship block */}
-                <div className="border-l-2 border-green-400 pl-4">
-                  <p className="text-xs font-semibold text-green-300 uppercase tracking-wider mb-1">
-                    {t("corridors.californiaTexas.hero.compare.shipLabel")}
-                  </p>
-                  <p className="text-xl font-bold text-white">
-                    {t("corridors.californiaTexas.hero.compare.shipCost")}
-                  </p>
-                  <p className="text-sm text-gray-300 mt-1">
-                    {t("corridors.californiaTexas.hero.compare.shipBreakdown")}
-                  </p>
-                  <p className="text-sm text-green-300/90 italic mt-1">
-                    {t("corridors.californiaTexas.hero.compare.shipExtra")}
-                  </p>
-                </div>
-
-                {/* Full calculator link */}
-                <Link
-                  href="/tools/ship-vs-drive"
-                  className="block text-center mt-5 pt-4 border-t border-white/10 text-green-300 hover:text-green-200 text-xs font-semibold uppercase tracking-wider transition"
-                >
-                  {t("corridors.californiaTexas.hero.compare.fullCalcLink")} →
-                </Link>
-              </aside>
+              {/* Right column: corridor pricing snapshot. Reads from Firestore
+                  (populated by /api/cron/sync-pricing). Per the cached-vs-quoted
+                  rule, this card is display-only. The quiet link below sends
+                  visitors to /quote, which hits SD live for the real lock. */}
+              <CorridorPricingCard corridorSlug="california-texas" locale={locale} />
             </div>
           </Container>
         </section>
