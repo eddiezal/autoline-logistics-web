@@ -286,6 +286,29 @@
           }
         }
       }
+    },
+    "buyerGuides": {
+      "eyebrow": "Guías para compradores",
+      "title": "Respuestas honestas antes de reservar.",
+      "lead": "Preguntas reales de envíos reales. Sin relleno, sin tácticas de miedo. Actualizamos el blog cada mes con nuevas guías.",
+      "articles": {
+        "1": {
+          "title": "Por qué subió su cotización a último momento",
+          "slug": "por-que-subio-cotizacion-envio-auto",
+          "excerpt": "El esquema de cebo y cambio que algunos brokers usan. Cómo detectarlo antes de pagar un depósito."
+        },
+        "2": {
+          "title": "¿Debería pagar depósito antes de tener conductor asignado?",
+          "slug": "pagar-deposito-envio-auto-conductor",
+          "excerpt": "Cuándo un depósito es legítimo, cuándo es una señal de alarma, y qué preguntar antes de pagar."
+        },
+        "3": {
+          "title": "Broker vs. transportista. ¿Cuál es la diferencia?",
+          "slug": "broker-vs-carrier",
+          "excerpt": "Los dos roles, las matemáticas, y por qué la mayoría de los envíos B2C usan brokers (incluidos nosotros)."
+        }
+      },
+      "cta": "Leer todas las guías →"
     }
   },
   "common": {
@@ -329,7 +352,8 @@
       "services": "Servicios",
       "promises": "Promesas",
       "resources": "Recursos",
-      "about": "Nosotros"
+      "about": "Nosotros",
+      "blog": "Blog"
     },
     "menu": {
       "open": "Abrir menú",

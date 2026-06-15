@@ -90,66 +90,49 @@ export default function ResourcesPage() {
           </Container>
         </section>
 
-        {/* Coming-soon strip — 3 article previews + email capture.
-            Amber background signals "this is upcoming content."
-            The email form is currently non-functional (no backend wired);
-            wire to Resend or similar once service accounts land. */}
+        {/* Buyer guides — live blog cluster. Replaces the original
+            "Coming Soon" strip 2026-06-15 once the first 3 articles
+            shipped to /blog. Each card links direct to its article;
+            footer CTA goes to the full /blog index. */}
         <section className="pb-20 md:pb-24">
           <Container>
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-[1.6fr_1fr] gap-6 md:gap-8 items-center">
-              <div>
-                <p className="text-amber-800 text-xs font-extrabold uppercase tracking-[0.1em] mb-2">
-                  {t("resources.comingSoon.eyebrow")}
-                </p>
-                <h2 className="text-xl md:text-2xl font-extrabold text-charcoal mb-4 leading-tight tracking-tight">
-                  {t("resources.comingSoon.title")}
-                </h2>
-                <ul className="space-y-2 text-sm md:text-base text-gray-700 leading-relaxed">
-                  <li>
-                    <span className="font-bold text-charcoal">
-                      {t("resources.comingSoon.articles.1.month")}:
-                    </span>{" "}
-                    {t("resources.comingSoon.articles.1.title")}
-                  </li>
-                  <li>
-                    <span className="font-bold text-charcoal">
-                      {t("resources.comingSoon.articles.2.month")}:
-                    </span>{" "}
-                    {t("resources.comingSoon.articles.2.title")}
-                  </li>
-                  <li>
-                    <span className="font-bold text-charcoal">
-                      {t("resources.comingSoon.articles.3.month")}:
-                    </span>{" "}
-                    {t("resources.comingSoon.articles.3.title")}
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <label
-                  htmlFor="resources-notify-email"
-                  className="block text-xs font-bold uppercase tracking-[0.08em] text-gray-700 mb-2"
+            <div className="max-w-3xl mb-8">
+              <p className="text-orange text-xs font-bold uppercase tracking-[0.12em] mb-3">
+                {t("resources.buyerGuides.eyebrow")}
+              </p>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-charcoal leading-tight tracking-tight mb-3">
+                {t("resources.buyerGuides.title")}
+              </h2>
+              <p className="text-base text-gray-700 leading-relaxed">
+                {t("resources.buyerGuides.lead")}
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+              {[1, 2, 3].map((i) => (
+                <Link
+                  key={i}
+                  href={`/blog/${t(`resources.buyerGuides.articles.${i}.slug`)}`}
+                  className="group bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3 transition hover:border-orange hover:shadow-lg hover:-translate-y-0.5"
                 >
-                  {t("resources.comingSoon.ctaLabel")}
-                </label>
-                <div className="flex flex-col gap-2">
-                  <input
-                    id="resources-notify-email"
-                    type="email"
-                    placeholder={t("resources.comingSoon.emailPlaceholder")}
-                    className="px-3.5 py-3 border border-gray-300 rounded-lg bg-white text-charcoal text-sm focus:outline-2 focus:outline-orange focus:border-orange"
-                  />
-                  <button
-                    type="button"
-                    className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-sm px-5 py-3 rounded-lg transition"
-                  >
-                    {t("resources.comingSoon.ctaButton")}
-                  </button>
-                  <p className="text-[11px] text-gray-500 italic leading-snug mt-1">
-                    {t("resources.comingSoon.ctaFootnote")}
+                  <h3 className="text-lg md:text-xl font-extrabold text-charcoal leading-tight tracking-tight">
+                    {t(`resources.buyerGuides.articles.${i}.title`)}
+                  </h3>
+                  <p className="text-sm text-gray-700 leading-relaxed flex-1">
+                    {t(`resources.buyerGuides.articles.${i}.excerpt`)}
                   </p>
-                </div>
-              </div>
+                  <span className="text-sm font-bold text-orange-dark group-hover:underline mt-1">
+                    {t("resources.buyerGuides.cta")}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-6">
+              <Link
+                href="/blog"
+                className="inline-block text-sm font-bold text-orange-dark hover:underline"
+              >
+                {t("resources.buyerGuides.cta")}
+              </Link>
             </div>
           </Container>
         </section>

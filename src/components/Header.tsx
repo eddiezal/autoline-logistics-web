@@ -115,6 +115,9 @@ export function Header() {
             <Link href="/resources" className="hover:text-orange transition">
               {t("header.nav.resources")}
             </Link>
+            <Link href="/blog" className="hover:text-orange transition">
+              {t("header.nav.blog")}
+            </Link>
             <Link href="/about" className="hover:text-orange transition">
               {t("header.nav.about")}
             </Link>
@@ -203,6 +206,13 @@ export function Header() {
                   className="text-base font-semibold text-charcoal hover:text-orange transition py-3 border-b border-gray-100"
                 >
                   {t("header.nav.resources")}
+                </Link>
+                <Link
+                  href="/blog"
+                  onClick={closeMenu}
+                  className="text-base font-semibold text-charcoal hover:text-orange transition py-3 border-b border-gray-100"
+                >
+                  {t("header.nav.blog")}
                 </Link>
                 <Link
                   href="/about"

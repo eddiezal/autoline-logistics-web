@@ -286,6 +286,29 @@
           }
         }
       }
+    },
+    "buyerGuides": {
+      "eyebrow": "From the buyer guides",
+      "title": "Honest answers before you book.",
+      "lead": "Real questions from real shippers. No fluff, no scare tactics. We update the blog every month with new guides.",
+      "articles": {
+        "1": {
+          "title": "Why your quote went up at the last minute",
+          "slug": "why-quotes-go-up",
+          "excerpt": "The bait-and-switch playbook some brokers run. How to spot it before you hand over a deposit."
+        },
+        "2": {
+          "title": "Should you pay a deposit before a driver is assigned?",
+          "slug": "deposit-before-driver",
+          "excerpt": "When a deposit is legitimate, when it's a warning sign, and what to ask before paying."
+        },
+        "3": {
+          "title": "Broker vs. carrier — what is the difference?",
+          "slug": "broker-vs-carrier",
+          "excerpt": "The two roles, the math, and why most B2C shippers work with brokers (including us)."
+        }
+      },
+      "cta": "Read all guides →"
     }
   },
   "common": {
@@ -329,7 +352,8 @@
       "services": "Services",
       "promises": "Promises",
       "resources": "Resources",
-      "about": "About"
+      "about": "About",
+      "blog": "Blog"
     },
     "menu": {
       "open": "Open menu",
