@@ -1542,7 +1542,7 @@
       "primary": "Get my locked price →",
       "secondary": "Set a price-drop alert (coming soon)"
     },
-    "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate). Distance pulled from our top-80 corridor table. Google Maps API integration coming next."
+    "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
   },
   "corridors": {
     "index": {

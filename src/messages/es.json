@@ -1542,7 +1542,7 @@
       "primary": "Obtenga su precio fijo →",
       "secondary": "Active alerta de bajada de precio (próximamente)"
     },
-    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS). Distancia tomada de nuestra tabla de 80 corredores principales. Integración con Google Maps API próximamente."
+    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS)."
   },
   "corridors": {
     "index": {
