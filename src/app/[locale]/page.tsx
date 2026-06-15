@@ -569,7 +569,8 @@ export default function Home() {
               <ToolTeaser
                 title={t("tools.cards.routePriceChecker.title")}
                 summary={t("tools.cards.routePriceChecker.summary")}
-                live={false}
+                href="/tools/route-price-checker"
+                live
                 liveLabel={t("tools.liveLabel")}
                 soonLabel={t("tools.comingSoonLabel")}
               />
@@ -1296,7 +1297,7 @@ function ToolTeaser({
 }: {
   title: string;
   summary: string;
-  href?: "/tools/ship-vs-drive";
+  href?: "/tools/ship-vs-drive" | "/tools/route-price-checker";
   live: boolean;
   liveLabel: string;
   soonLabel: string;

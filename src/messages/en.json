@@ -1545,6 +1545,62 @@
     },
     "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
   },
+  "routePriceChecker": {
+    "hero": {
+      "eyebrow": "Route price checker",
+      "title": "What's a fair price for your route?",
+      "lead": "Real-time pricing from our carrier network. No email gate. No signup. Just a number."
+    },
+    "form": {
+      "fromZipLabel": "From ZIP",
+      "fromZipPlaceholder": "90210",
+      "toZipLabel": "To ZIP",
+      "toZipPlaceholder": "78701",
+      "vehicleLabel": "Your vehicle",
+      "vehicleSedan": "Sedan",
+      "vehicleSuv": "SUV",
+      "vehiclePickup": "Pickup truck",
+      "submit": "Get price",
+      "submitting": "Pricing...",
+      "errorInvalidZip": "Please enter a valid 5-digit ZIP for both locations.",
+      "errorService": "Couldn't get a live price for that route right now. Try again, or get a quote and we'll handle it."
+    },
+    "result": {
+      "eyebrow": "Route price",
+      "route": "{from} → {to}",
+      "headerVehicle": "Vehicle",
+      "headerToday": "Today's range",
+      "headerThirtyDay": "30-day average",
+      "rowSedan": "Sedan",
+      "rowSuv": "SUV",
+      "rowPickup": "Pickup",
+      "thirtyDayPlaceholder": "Tracking",
+      "thirtyDayNote": "30-day average available once we have 30 days of price history. Tracking started 2026-06-14.",
+      "transitLabel": "Transit",
+      "transitValue": "3-7 days typical",
+      "cta": "Lock this price",
+      "unsupportedTitle": "Hawaii and Alaska routes need a custom quote",
+      "unsupportedBody": "Ocean transit pricing isn't part of our live carrier-network data. Get a quote and we'll match you with a port partner.",
+      "unsupportedCta": "Get my quote"
+    },
+    "callouts": {
+      "1": {
+        "eyebrow": "Real data",
+        "title": "Live carrier pricing",
+        "body": "Numbers pulled from our carrier network in real time. No bait-and-switch."
+      },
+      "2": {
+        "eyebrow": "No friction",
+        "title": "No signup, no email",
+        "body": "Browse as much as you want. The price you see is the price we work with."
+      },
+      "3": {
+        "eyebrow": "Locked when you book",
+        "title": "Quote turns into a contract",
+        "body": "Click 'Lock this price' when you're ready. We honor what we showed you."
+      }
+    }
+  },
   "corridorPricing": {
     "eyebrow": {
       "todays": "Today's pricing",

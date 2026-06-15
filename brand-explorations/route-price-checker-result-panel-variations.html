@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Route Price Checker . Result panel variations</title>
+<style>
+  :root {
+    --cream: #faf6ef;
+    --charcoal: #1a1a1a;
+    --charcoal-soft: #2a2a2a;
+    --pine-deep: #052e1a;
+    --pine: #118647;
+    --pine-light: #16a34a;
+    --pine-bg: #f0faf3;
+    --pine-bg-border: rgba(22,163,74,0.2);
+    --orange: #ff6600;
+    --orange-tint: #fff4ec;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--gray-100); color: var(--charcoal); line-height: 1.55; }
+  .page { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page-header { margin-bottom: 32px; }
+  .page-header h1 { margin: 0 0 8px; font-size: 28px; }
+  .page-header p { margin: 0; color: var(--gray-700); max-width: 800px; }
+  .page-header .data-note { background: var(--orange-tint); border: 1px solid var(--orange); border-radius: 8px; padding: 12px 16px; margin-top: 16px; font-size: 13px; color: var(--charcoal); }
+  .var { background: var(--cream); border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .var-meta { background: var(--charcoal); color: #fff; padding: 18px 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .var-meta h2 { margin: 0; font-size: 18px; font-weight: 700; }
+  .var-meta .sub { font-size: 12px; color: #d1d5db; margin-top: 4px; max-width: 720px; }
+  .var-tag { background: var(--orange); color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+
+  /* Shared form preview — appears above each result panel for context */
+  .frame { padding: 32px 40px; background: #fff; }
+  .form-preview { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px; margin-bottom: 20px; max-width: 720px; }
+  .form-preview .grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
+  .form-preview label { display: block; font-size: 11px; color: var(--gray-700); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .form-preview input, .form-preview select { width: 100%; padding: 9px 11px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 14px; color: var(--charcoal); background: #fff; }
+  .form-preview button { background: var(--orange); color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; white-space: nowrap; }
+  .form-preview .submitted { font-size: 11px; color: var(--gray-500); font-weight: 600; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* V1 — Side-by-side comparison */
+  .panel-v1 { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; overflow: hidden; max-width: 720px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+  .panel-v1 .head { padding: 14px 20px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: baseline; justify-content: space-between; }
+  .panel-v1 .head .eyebrow { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .panel-v1 .head .route { color: var(--gray-700); font-size: 13px; font-weight: 600; }
+  .panel-v1 .cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .panel-v1 .col { padding: 18px 22px; }
+  .panel-v1 .col-right { background: var(--gray-50); border-left: 1px solid var(--gray-200); }
+  .panel-v1 .col-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin: 0 0 12px; }
+  .panel-v1 .col-left .col-label { color: var(--pine); }
+  .panel-v1 .col-right .col-label { color: var(--gray-500); }
+  .panel-v1 .row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 13px; }
+  .panel-v1 .row.featured { font-weight: 700; color: var(--charcoal); }
+  .panel-v1 .row .lbl { color: var(--gray-700); }
+  .panel-v1 .row.featured .lbl { color: var(--charcoal); }
+  .panel-v1 .row .val { font-weight: 700; color: var(--charcoal); }
+  .panel-v1 .row .placeholder { color: var(--gray-400); font-style: italic; font-weight: 500; font-size: 12px; }
+  .panel-v1 .tracking-note { color: var(--gray-500); font-size: 11px; font-style: italic; margin-top: 8px; }
+  .panel-v1 .footer { padding: 14px 20px; border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; background: var(--gray-50); }
+  .panel-v1 .footer .transit { color: var(--gray-700); font-size: 13px; }
+  .panel-v1 .footer .transit b { color: var(--charcoal); }
+  .panel-v1 .footer .cta { background: var(--pine-light); color: #fff; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; text-decoration: none; }
+
+  /* V2 — Big number + delta hint */
+  .panel-v2 { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 24px; max-width: 720px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+  .panel-v2 .top-eyebrow { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 8px; }
+  .panel-v2 .anchor-row { display: flex; align-items: baseline; gap: 12px; margin: 0 0 4px; }
+  .panel-v2 .anchor-row .prefix { color: var(--gray-500); font-size: 14px; font-weight: 500; }
+  .panel-v2 .anchor-row .price { color: var(--charcoal); font-size: 36px; font-weight: 800; line-height: 1; letter-spacing: -0.01em; }
+  .panel-v2 .vehicle-line { color: var(--gray-600); font-size: 13px; margin: 0 0 6px; }
+  .panel-v2 .delta-chip { display: inline-block; background: var(--gray-100); color: var(--gray-700); font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .panel-v2 .delta-chip.placeholder { background: var(--gray-100); color: var(--gray-500); font-weight: 500; font-style: italic; }
+  .panel-v2 .also { margin: 18px 0 4px; padding: 12px 0; border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
+  .panel-v2 .also h4 { margin: 0 0 8px; font-size: 11px; color: var(--gray-500); font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; }
+  .panel-v2 .also .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .panel-v2 .also .row .lbl { color: var(--gray-700); }
+  .panel-v2 .also .row .val { color: var(--charcoal); font-weight: 700; }
+  .panel-v2 .also .row .placeholder { color: var(--gray-400); font-style: italic; font-size: 11px; }
+  .panel-v2 .transit-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-700); margin-top: 14px; }
+  .panel-v2 .transit-row .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pine-light); }
+  .panel-v2 .transit-row b { color: var(--charcoal); }
+  .panel-v2 .cta { display: inline-block; background: var(--pine-light); color: #fff; padding: 11px 22px; border-radius: 999px; font-weight: 700; font-size: 14px; text-decoration: none; margin-top: 16px; }
+
+  /* V3 — Range bar visualization */
+  .panel-v3 { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 22px; max-width: 720px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+  .panel-v3 .top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; }
+  .panel-v3 .top .eyebrow { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .panel-v3 .top .route { color: var(--gray-700); font-size: 13px; font-weight: 600; }
+  .panel-v3 .vehicle-block { padding: 10px 0; }
+  .panel-v3 .vehicle-block + .vehicle-block { border-top: 1px solid var(--gray-200); }
+  .panel-v3 .vehicle-block .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .panel-v3 .vehicle-block .head .vehicle { font-size: 13px; font-weight: 700; color: var(--charcoal); }
+  .panel-v3 .vehicle-block .head .price-today { font-size: 14px; font-weight: 800; color: var(--charcoal); }
+  .panel-v3 .vehicle-block .bar-track { position: relative; height: 10px; background: var(--gray-200); border-radius: 6px; margin: 6px 0; }
+  .panel-v3 .vehicle-block .bar-today { position: absolute; top: 0; height: 100%; background: var(--pine-light); border-radius: 6px; }
+  .panel-v3 .vehicle-block .bar-30d { position: absolute; top: -3px; bottom: -3px; border: 2px dashed var(--gray-400); border-radius: 8px; opacity: 0.4; pointer-events: none; }
+  .panel-v3 .vehicle-block .scale { display: flex; justify-content: space-between; font-size: 10px; color: var(--gray-500); margin-top: 4px; }
+  .panel-v3 .vehicle-block .placeholder { font-size: 11px; color: var(--gray-400); font-style: italic; margin-top: 4px; }
+  .panel-v3 .footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gray-200); }
+  .panel-v3 .footer .transit { color: var(--gray-700); font-size: 13px; }
+  .panel-v3 .footer .transit b { color: var(--charcoal); }
+  .panel-v3 .footer .cta { background: var(--pine-light); color: #fff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; text-decoration: none; }
+  .panel-v3 .legend { display: flex; gap: 14px; font-size: 11px; color: var(--gray-500); margin-bottom: 12px; }
+  .panel-v3 .legend .swatch-today { display: inline-block; width: 12px; height: 6px; background: var(--pine-light); border-radius: 3px; vertical-align: middle; margin-right: 4px; }
+  .panel-v3 .legend .swatch-30d { display: inline-block; width: 12px; height: 0; border: 2px dashed var(--gray-400); border-radius: 4px; vertical-align: middle; margin-right: 4px; opacity: 0.5; }
+
+  /* V4 — Stacked table with delta column */
+  .panel-v4 { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; overflow: hidden; max-width: 720px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+  .panel-v4 .head { padding: 14px 20px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: baseline; justify-content: space-between; }
+  .panel-v4 .head .eyebrow { color: var(--orange); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .panel-v4 .head .route { color: var(--gray-700); font-size: 13px; font-weight: 600; }
+  .panel-v4 table { width: 100%; border-collapse: collapse; }
+  .panel-v4 th, .panel-v4 td { text-align: left; padding: 12px 20px; font-size: 13px; }
+  .panel-v4 thead th { background: var(--gray-50); color: var(--gray-500); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 10px; border-bottom: 1px solid var(--gray-200); }
+  .panel-v4 thead th.right, .panel-v4 tbody td.right { text-align: right; }
+  .panel-v4 tbody td.vehicle { font-weight: 700; color: var(--charcoal); }
+  .panel-v4 tbody td.featured.vehicle { color: var(--charcoal); }
+  .panel-v4 tbody tr.featured { background: rgba(132,204,22,0.04); }
+  .panel-v4 tbody td.today { font-weight: 700; color: var(--charcoal); }
+  .panel-v4 tbody td.thirty { color: var(--gray-400); font-style: italic; font-size: 12px; }
+  .panel-v4 tbody tr + tr td { border-top: 1px solid var(--gray-200); }
+  .panel-v4 .footer { padding: 14px 20px; border-top: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; background: var(--gray-50); }
+  .panel-v4 .footer .transit { color: var(--gray-700); font-size: 13px; }
+  .panel-v4 .footer .transit b { color: var(--charcoal); }
+  .panel-v4 .footer .cta { background: var(--pine-light); color: #fff; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; text-decoration: none; }
+
+  .matrix { background: #fff; border-radius: 16px; padding: 28px; margin-top: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .matrix h2 { margin: 0 0 12px; font-size: 20px; }
+  .matrix table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix th, .matrix td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .matrix th { color: var(--gray-700); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: var(--gray-50); }
+  .matrix td.dim { font-weight: 700; min-width: 140px; color: var(--charcoal); }
+  .take { background: #fff; border-radius: 16px; padding: 24px 28px; margin-top: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .take h3 { margin: 0 0 8px; font-size: 16px; }
+  .take p { margin: 0 0 8px; color: var(--gray-700); font-size: 14px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>Route Price Checker . Result panel variations</h1>
+    <p>The form is standard (From ZIP / To ZIP / Vehicle / Submit) — borrowed from HeroRouteFinder. The conversion moment is the RESULT PANEL: what appears below the form after submit. All 4 variations have the comparison structure you picked (today + 30-day) baked in. Day-1 honesty: the 30-day column shows "Tracking" placeholders until the cron has 30 days of data. Same SD-live data used across all variations: LA → Austin, sedan range $900-$1,100.</p>
+    <div class="data-note">
+      <strong>Day-1 reality:</strong> Cron started writing Firestore snapshots 2026-06-14. 30-day comparison data ships ~2026-07-14. Until then, 30-day column shows "Tracking" placeholders. Once we have data, copy switches to real averages with delta arrows.
+    </div>
+  </header>
+
+  <!-- =================== V1 — Side-by-side comparison =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V1 . Side-by-side comparison</h2>
+        <p class="sub">Two columns: TODAY (live SD data, green eyebrow) and 30-DAY AVERAGE (placeholder until we have data). Most explicit comparison frame. The "Tracking" placeholder honestly signals where the data will live. Transit + CTA in the footer. Best at-a-glance "are today's prices fair?" answer when 30-day data lands.</p>
+      </div>
+      <span class="var-tag">V1 . Side-by-side</span>
+    </div>
+    <div class="frame">
+      <div class="form-preview">
+        <div class="grid">
+          <div><label>From ZIP</label><input value="90210"></div>
+          <div><label>To ZIP</label><input value="78701"></div>
+          <div><label>Vehicle</label><select><option>Sedan</option></select></div>
+          <button>Get price</button>
+        </div>
+        <p class="submitted">Submitted just now</p>
+      </div>
+      <div class="panel-v1">
+        <div class="head">
+          <span class="eyebrow">Route price</span>
+          <span class="route">Beverly Hills, CA → Austin, TX</span>
+        </div>
+        <div class="cols">
+          <div class="col col-left">
+            <p class="col-label">Today's range</p>
+            <div class="row featured"><span class="lbl">Sedan</span><span class="val">$900 – $1,100</span></div>
+            <div class="row"><span class="lbl">SUV</span><span class="val">$914 – $1,117</span></div>
+            <div class="row"><span class="lbl">Pickup</span><span class="val">$1,260 – $1,540</span></div>
+          </div>
+          <div class="col col-right">
+            <p class="col-label">30-day average</p>
+            <div class="row featured"><span class="lbl">Sedan</span><span class="placeholder">Tracking</span></div>
+            <div class="row"><span class="lbl">SUV</span><span class="placeholder">Tracking</span></div>
+            <div class="row"><span class="lbl">Pickup</span><span class="placeholder">Tracking</span></div>
+            <p class="tracking-note">Comparison available after 30 days of price history.</p>
+          </div>
+        </div>
+        <div class="footer">
+          <span class="transit">Transit: <b>3–5 days</b></span>
+          <a href="#" class="cta">Lock this price →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== V2 — Big number + delta chip =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V2 . Hero anchor with delta chip</h2>
+        <p class="sub">Sedan FROM ($900) is the visual anchor (38px). Below it: a small chip ("Tracking 30-day average" placeholder today; "$3 above 30-day avg" once data exists). SUV and Pickup as smaller "Also" rows. The boldest ad-friendly variant. Trade-off: SUV and Pickup get smaller signal.</p>
+      </div>
+      <span class="var-tag">V2 . Anchor</span>
+    </div>
+    <div class="frame">
+      <div class="form-preview">
+        <div class="grid">
+          <div><label>From ZIP</label><input value="90210"></div>
+          <div><label>To ZIP</label><input value="78701"></div>
+          <div><label>Vehicle</label><select><option>Sedan</option></select></div>
+          <button>Get price</button>
+        </div>
+        <p class="submitted">Submitted just now</p>
+      </div>
+      <div class="panel-v2">
+        <p class="top-eyebrow">Route price . Beverly Hills, CA → Austin, TX</p>
+        <div class="anchor-row">
+          <span class="prefix">From</span>
+          <span class="price">$900</span>
+        </div>
+        <p class="vehicle-line">Sedan, open transport. Range goes to $1,100.</p>
+        <span class="delta-chip placeholder">Tracking 30-day average</span>
+        <div class="also">
+          <h4>Also</h4>
+          <div class="row"><span class="lbl">SUV</span><span class="val">$914 – $1,117</span></div>
+          <div class="row"><span class="lbl">Pickup</span><span class="val">$1,260 – $1,540</span></div>
+        </div>
+        <div class="transit-row">
+          <span class="dot"></span>
+          <span><b>3–5 day transit</b> once your vehicle is picked up.</span>
+        </div>
+        <a href="#" class="cta">Lock this price →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== V3 — Range bar visualization =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V3 . Range bars with 30-day overlay</h2>
+        <p class="sub">Each vehicle gets a horizontal bar. Today's range = solid lime fill. 30-day range = dashed outline overlay (appears once data exists). Visual "is today's price low/high vs typical?" answer at a glance. Most differentiated design but trickier to render at small sizes (mobile risk).</p>
+      </div>
+      <span class="var-tag">V3 . Range bars</span>
+    </div>
+    <div class="frame">
+      <div class="form-preview">
+        <div class="grid">
+          <div><label>From ZIP</label><input value="90210"></div>
+          <div><label>To ZIP</label><input value="78701"></div>
+          <div><label>Vehicle</label><select><option>Sedan</option></select></div>
+          <button>Get price</button>
+        </div>
+        <p class="submitted">Submitted just now</p>
+      </div>
+      <div class="panel-v3">
+        <div class="top">
+          <span class="eyebrow">Route price</span>
+          <span class="route">Beverly Hills, CA → Austin, TX</span>
+        </div>
+        <div class="legend">
+          <span><span class="swatch-today"></span>Today's range</span>
+          <span><span class="swatch-30d"></span>30-day range (tracking)</span>
+        </div>
+        <div class="vehicle-block">
+          <div class="head"><span class="vehicle">Sedan</span><span class="price-today">$900 – $1,100</span></div>
+          <div class="bar-track">
+            <div class="bar-today" style="left: 25%; width: 32%;"></div>
+          </div>
+          <div class="scale"><span>$700</span><span>$1,000</span><span>$1,400</span></div>
+          <p class="placeholder">30-day overlay appears once cron has 30 days of data.</p>
+        </div>
+        <div class="vehicle-block">
+          <div class="head"><span class="vehicle">SUV</span><span class="price-today">$914 – $1,117</span></div>
+          <div class="bar-track">
+            <div class="bar-today" style="left: 26%; width: 31%;"></div>
+          </div>
+          <div class="scale"><span>$700</span><span>$1,000</span><span>$1,400</span></div>
+        </div>
+        <div class="vehicle-block">
+          <div class="head"><span class="vehicle">Pickup</span><span class="price-today">$1,260 – $1,540</span></div>
+          <div class="bar-track">
+            <div class="bar-today" style="left: 50%; width: 32%;"></div>
+          </div>
+          <div class="scale"><span>$800</span><span>$1,200</span><span>$1,600</span></div>
+        </div>
+        <div class="footer">
+          <span class="transit">Transit: <b>3–5 days</b></span>
+          <a href="#" class="cta">Lock this price →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== V4 — Stacked table with delta column =================== -->
+  <section class="var">
+    <div class="var-meta">
+      <div>
+        <h2>V4 . Table with delta column</h2>
+        <p class="sub">3 vehicle rows × 3 columns: Vehicle | Today | 30-day average. Sedan row tinted lime for entry-tier signal. Cleanest information density. Adds a 4th "delta arrow" column post 30-day data (↑ $3 / ↓ $12 / etc) without restructuring. Best for visitors comparing across multiple corridors back-to-back.</p>
+      </div>
+      <span class="var-tag">V4 . Table</span>
+    </div>
+    <div class="frame">
+      <div class="form-preview">
+        <div class="grid">
+          <div><label>From ZIP</label><input value="90210"></div>
+          <div><label>To ZIP</label><input value="78701"></div>
+          <div><label>Vehicle</label><select><option>Sedan</option></select></div>
+          <button>Get price</button>
+        </div>
+        <p class="submitted">Submitted just now</p>
+      </div>
+      <div class="panel-v4">
+        <div class="head">
+          <span class="eyebrow">Route price</span>
+          <span class="route">Beverly Hills, CA → Austin, TX</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Vehicle</th><th class="right">Today's range</th><th class="right">30-day average</th></tr>
+          </thead>
+          <tbody>
+            <tr class="featured">
+              <td class="vehicle featured">Sedan</td>
+              <td class="today right">$900 – $1,100</td>
+              <td class="thirty right">Tracking</td>
+            </tr>
+            <tr>
+              <td class="vehicle">SUV</td>
+              <td class="today right">$914 – $1,117</td>
+              <td class="thirty right">Tracking</td>
+            </tr>
+            <tr>
+              <td class="vehicle">Pickup</td>
+              <td class="today right">$1,260 – $1,540</td>
+              <td class="thirty right">Tracking</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="footer">
+          <span class="transit">Transit: <b>3–5 days</b></span>
+          <a href="#" class="cta">Lock this price →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="matrix">
+    <h2>Trade-off summary</h2>
+    <table>
+      <thead>
+        <tr><th>Dimension</th><th>V1 Side-by-side</th><th>V2 Anchor</th><th>V3 Range bars</th><th>V4 Table</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="dim">Comparison structure clarity</td>
+          <td>Strongest (two named columns)</td>
+          <td>Subtle (small chip)</td>
+          <td>Visual (bars + dashed overlay)</td>
+          <td>Strong (table columns)</td>
+        </tr>
+        <tr>
+          <td class="dim">Per-vehicle scan</td>
+          <td>Equal weight all 3</td>
+          <td>Sedan dominates</td>
+          <td>Equal, bars draw eye</td>
+          <td>Equal, table grid</td>
+        </tr>
+        <tr>
+          <td class="dim">Ad-friendliness (paid LP)</td>
+          <td>Strong</td>
+          <td>Strongest (one big number)</td>
+          <td>Mid (more to parse)</td>
+          <td>Mid (table reads dense)</td>
+        </tr>
+        <tr>
+          <td class="dim">Mobile rendering</td>
+          <td>OK (cols stack)</td>
+          <td>Best (single column)</td>
+          <td>Risky (bars cramped)</td>
+          <td>OK (table can squish)</td>
+        </tr>
+        <tr>
+          <td class="dim">Day-1 honesty (no 30d data yet)</td>
+          <td>Explicit "Tracking" col</td>
+          <td>Subtle chip placeholder</td>
+          <td>Below-bar placeholder</td>
+          <td>Explicit "Tracking" col</td>
+        </tr>
+        <tr>
+          <td class="dim">Future delta arrow integration</td>
+          <td>Replace "Tracking" with avg + arrow</td>
+          <td>Replace chip with arrow chip</td>
+          <td>Add dashed overlay</td>
+          <td>Add 4th column for arrow</td>
+        </tr>
+        <tr>
+          <td class="dim">Implementation effort</td>
+          <td>~30 min</td>
+          <td>~25 min</td>
+          <td>~45 min (SVG bars)</td>
+          <td>~30 min</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="take">
+    <h3>My take</h3>
+    <p><b>V1 or V4.</b> Both have explicit "Today / 30-day average" columns that respect the comparison structure you picked. V1 reads more like a card; V4 reads more like a data product. V4 wins slightly on future-proofing (adds delta arrow column without restructure).</p>
+    <p>V2 is the most ad-friendly today, but the comparison structure is the WHOLE POINT of the picker (vs the corridor pricing card, which is single-corridor). The chip placeholder undersells the future feature.</p>
+    <p>V3 is the most visually differentiated but adds rendering complexity (mobile bars look cramped) and the 30-day dashed overlay is harder to explain at small sizes.</p>
+    <p>My pick: <b>V4 (Table)</b>. Information density, easy mobile collapse, explicit "Tracking" → "avg ± delta" upgrade path. The cleanest data product feel for a researcher who's comparing multiple routes back-to-back.</p>
+  </div>
+</div>
+</body>
+</html>

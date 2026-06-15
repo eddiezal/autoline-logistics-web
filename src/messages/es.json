@@ -1545,6 +1545,62 @@
     },
     "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS)."
   },
+  "routePriceChecker": {
+    "hero": {
+      "eyebrow": "Calculador de precio por ruta",
+      "title": "¿Cuál es un precio justo para su ruta?",
+      "lead": "Precios en tiempo real de nuestra red de transportistas. Sin email. Sin registro. Solo un número."
+    },
+    "form": {
+      "fromZipLabel": "Código postal origen",
+      "fromZipPlaceholder": "90210",
+      "toZipLabel": "Código postal destino",
+      "toZipPlaceholder": "78701",
+      "vehicleLabel": "Su vehículo",
+      "vehicleSedan": "Sedán",
+      "vehicleSuv": "SUV",
+      "vehiclePickup": "Camioneta pickup",
+      "submit": "Ver precio",
+      "submitting": "Calculando...",
+      "errorInvalidZip": "Ingrese un código postal válido de 5 dígitos para ambos puntos.",
+      "errorService": "No pudimos obtener un precio en vivo para esa ruta ahora. Inténtelo de nuevo, u obtenga una cotización."
+    },
+    "result": {
+      "eyebrow": "Precio de la ruta",
+      "route": "{from} → {to}",
+      "headerVehicle": "Vehículo",
+      "headerToday": "Rango de hoy",
+      "headerThirtyDay": "Promedio de 30 días",
+      "rowSedan": "Sedán",
+      "rowSuv": "SUV",
+      "rowPickup": "Pickup",
+      "thirtyDayPlaceholder": "Registrando",
+      "thirtyDayNote": "El promedio de 30 días estará disponible cuando tengamos 30 días de historial. El registro comenzó el 2026-06-14.",
+      "transitLabel": "Tránsito",
+      "transitValue": "3 a 7 días típicos",
+      "cta": "Fijar este precio",
+      "unsupportedTitle": "Las rutas a Hawái y Alaska necesitan una cotización personalizada",
+      "unsupportedBody": "El precio de tránsito marítimo no está en nuestros datos en vivo. Obtenga una cotización y le conectaremos con un socio portuario.",
+      "unsupportedCta": "Obtener mi cotización"
+    },
+    "callouts": {
+      "1": {
+        "eyebrow": "Datos reales",
+        "title": "Precios reales del transportista",
+        "body": "Números de nuestra red de transportistas en tiempo real. Sin trucos."
+      },
+      "2": {
+        "eyebrow": "Sin fricción",
+        "title": "Sin registro, sin email",
+        "body": "Investigue todo lo que quiera. El precio que ve es con el que trabajamos."
+      },
+      "3": {
+        "eyebrow": "Fijo al reservar",
+        "title": "La cotización se vuelve un contrato",
+        "body": "Cuando esté listo, presione 'Fijar este precio'. Cumplimos lo que le mostramos."
+      }
+    }
+  },
   "corridorPricing": {
     "eyebrow": {
       "todays": "Precios de hoy",

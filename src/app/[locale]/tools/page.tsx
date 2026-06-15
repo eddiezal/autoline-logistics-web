@@ -33,11 +33,11 @@ type ToolKey =
 
 const TOOLS: ReadonlyArray<{
   key: ToolKey;
-  href: "/tools/ship-vs-drive" | null;
+  href: "/tools/ship-vs-drive" | "/tools/route-price-checker" | null;
   live: boolean;
 }> = [
   { key: "shipVsDrive", href: "/tools/ship-vs-drive", live: true },
-  { key: "routePriceChecker", href: null, live: false },
+  { key: "routePriceChecker", href: "/tools/route-price-checker", live: true },
   { key: "priceDropAlerts", href: null, live: false },
 ];
 
@@ -127,7 +127,7 @@ function ToolCard({
 }: {
   title: string;
   summary: string;
-  href: "/tools/ship-vs-drive" | null;
+  href: "/tools/ship-vs-drive" | "/tools/route-price-checker" | null;
   live: boolean;
   liveLabel: string;
   soonLabel: string;
