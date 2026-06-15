@@ -1573,7 +1573,8 @@
       "popular-routes": {
         "title": "Rutas populares",
         "lead": "Corredores con precio fijo y datos en vivo de nuestra red de transportistas. El rango de hoy, ventana de tránsito, y lo que debe saber antes de reservar.",
-        "routeTag": "Ruta en vivo"
+        "routeTag": "Ruta en vivo",
+        "routeBlurb": "Precio en vivo del transportista para sedán, SUV y pickup. Fijo al cotizar."
       }
     },
     "minRead": "min de lectura",

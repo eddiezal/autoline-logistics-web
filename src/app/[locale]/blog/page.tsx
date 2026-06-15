@@ -123,10 +123,13 @@ export default async function BlogIndex({
                         <p className="text-[10px] font-bold uppercase tracking-wider text-orange-dark bg-orange-tint px-2.5 py-1 rounded-full inline-block mb-3">
                           {t("blog.clusters.popular-routes.routeTag")}
                         </p>
-                        <h3 className="text-charcoal font-bold text-base leading-snug group-hover:text-orange transition">
+                        <h3 className="text-charcoal font-bold text-base md:text-lg leading-snug mb-2 group-hover:text-orange transition">
                           {t(`quote.states.${c.fromState}`)} to{" "}
                           {t(`quote.states.${c.toState}`)}
                         </h3>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          {t("blog.clusters.popular-routes.routeBlurb")}
+                        </p>
                       </Link>
                     ))}
                   </div>
@@ -161,7 +164,16 @@ function ClusterSection({
       <p className="text-gray-700 text-base leading-relaxed mb-6 max-w-2xl">
         {lead}
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div
+        className={
+          // Single-article clusters render in one column so the lone card
+          // doesn't sit in an empty 2-col grid. 2+ articles use the 2-col
+          // grid for scan density.
+          articles.length === 1
+            ? "grid grid-cols-1 max-w-xl gap-4"
+            : "grid grid-cols-1 md:grid-cols-2 gap-4"
+        }
+      >
         {articles.map((a) => (
           <Link
             key={a.slug}

@@ -1573,7 +1573,8 @@
       "popular-routes": {
         "title": "Popular routes",
         "lead": "Locked-price corridors with live pricing pulled from our carrier network. Today's range, transit window, and the route-specific things to know before you book.",
-        "routeTag": "Live route"
+        "routeTag": "Live route",
+        "routeBlurb": "Live carrier pricing for sedan, SUV, and pickup. Locked at quote time."
       }
     },
     "minRead": "min read",
