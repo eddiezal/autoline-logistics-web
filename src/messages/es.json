@@ -1545,6 +1545,20 @@
     },
     "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Obtenga un precio fijo real al instante en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS)."
   },
+  "blog": {
+    "hero": {
+      "eyebrow": "Guías para compradores",
+      "title": "Respuestas claras a las preguntas que dan miedo.",
+      "lead": "Si está buscando saber si su cotización de transporte de auto es real, si su depósito está en riesgo, o si la empresa que contrató es la que realmente maneja, llegó al lugar correcto. Explicaciones honestas, sin venta forzada."
+    },
+    "listHeading": "Últimas guías",
+    "minRead": "min de lectura",
+    "article": {
+      "publishedDateLabel": "Publicado",
+      "backToHubLabel": "Volver a",
+      "relatedHeading": "Guías relacionadas"
+    }
+  },
   "routePriceChecker": {
     "hero": {
       "eyebrow": "Calculador de precio por ruta",
@@ -2253,31 +2267,10 @@
       "title": "Tres preguntas que exponen el 95% de las estafas de corredores.",
       "lead": "Estas son las preguntas para hacer a cualquier corredor antes de reservar. Úselas con nosotros. Úselas con cualquiera."
     },
-    "coming": {
-      "eyebrow": "Próximamente",
-      "title": "Un nuevo artículo cada mes.",
-      "lead": "Publicamos el día 1 de cada mes. Tres ya en el calendario:",
-      "comingSoonLabel": "Próximamente",
-      "articles": {
-        "1": {
-          "month": "Junio 2026",
-          "tag": "Artículo principal",
-          "title": "Cómo detectar a un mal corredor en 60 segundos",
-          "summary": "La lista de 8 preguntas, las señales del sitio web, y las banderas rojas en la llamada. La hoja de trampas que ojalá alguien nos hubiera dado la primera vez."
-        },
-        "2": {
-          "month": "Julio 2026",
-          "tag": "Análisis profundo",
-          "title": "Cebo y cambio — anatomía de la estafa",
-          "summary": "Cómo la cotización más barata que jamás verá se convierte en el envío más caro que jamás pagará. Paso a paso, con ejemplos reales."
-        },
-        "3": {
-          "month": "Agosto 2026",
-          "tag": "Realidad",
-          "title": "Cómo suena realmente una buena llamada de corredor",
-          "summary": "Un desglose de conversación real — qué esperar, qué cuestionar, y el lenguaje que indica que está hablando con un corredor honesto."
-        }
-      }
+    "guides": {
+      "eyebrow": "Lea las guías",
+      "title": "Respuestas claras a las preguntas que dan miedo.",
+      "lead": "Artículos largos sobre los juegos que hacen los brokers, cómo funcionan las cotizaciones en la práctica, y cómo saber si la empresa que contrató es la que realmente maneja."
     },
     "cta": {
       "eyebrow": "¿Listo para una cotización real?",

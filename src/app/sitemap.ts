@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getLiveCorridors } from "@/lib/corridors";
+import { getAllArticleSlugs } from "@/lib/blog/articles";
 import { routing } from "@/i18n/routing";
 
 /**
@@ -23,6 +24,11 @@ const STATIC_PATHS = [
   "/damage-promise",
   "/people-promise",
   "/corridors",
+  "/anti-scam",
+  "/blog",
+  "/tools",
+  "/tools/ship-vs-drive",
+  "/tools/route-price-checker",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -67,6 +73,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Coming-soon corridors aren't indexable (no dedicated pages); search
   // engines will find them via the /corridors index page crawl.
+
+  // Blog article pages — emit one entry per locale per article slug.
+  for (const slug of getAllArticleSlugs()) {
+    const path = `/blog/${slug}`;
+    for (const locale of routing.locales) {
+      entries.push({
+        url: buildUrl(locale, path),
+        lastModified,
+        changeFrequency: "monthly",
+        priority: 0.6,
+        alternates: {
+          languages: Object.fromEntries(
+            routing.locales.map((l) => [l, buildUrl(l, path)])
+          ),
+        },
+      });
+    }
+  }
 
   return entries;
 }

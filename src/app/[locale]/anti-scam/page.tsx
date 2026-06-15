@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { AntiScamCard } from "@/components/AntiScamCard";
+import { getAllArticleSummaries } from "@/lib/blog/articles";
 
 /**
  * Anti-Scam Hub — destination page for the homepage's Anti-Scam Educator
@@ -22,10 +23,14 @@ export const metadata: Metadata = {
     "Three questions every customer should ask any broker before booking — plus monthly articles on the games brokers play.",
 };
 
-const ARTICLE_KEYS: ReadonlyArray<"1" | "2" | "3"> = ["1", "2", "3"];
-
-export default function AntiScamHubPage() {
-  const t = useTranslations();
+export default async function AntiScamHubPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+  const articles = getAllArticleSummaries();
 
   return (
     <>
@@ -100,29 +105,39 @@ export default function AntiScamHubPage() {
           </Container>
         </section>
 
-        {/* ── Coming next: monthly article queue ───────────────────────── */}
+        {/* ── Live blog cluster: links to the published anti-scam guides ─
+            This section is the hub-side of the topical cluster. Each card
+            links to a long-form blog article. New articles drop in
+            automatically as they're added to src/content/blog/. */}
         <section className="py-16 md:py-20 bg-gray-100">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
-              {t("antiScamHub.coming.eyebrow")}
+              {t("antiScamHub.guides.eyebrow")}
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-charcoal max-w-3xl leading-tight">
-              {t("antiScamHub.coming.title")}
+              {t("antiScamHub.guides.title")}
             </h2>
             <p className="text-gray-700 text-lg mt-4 max-w-2xl leading-relaxed">
-              {t("antiScamHub.coming.lead")}
+              {t("antiScamHub.guides.lead")}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-              {ARTICLE_KEYS.map((k) => (
-                <ComingArticleCard
-                  key={k}
-                  month={t(`antiScamHub.coming.articles.${k}.month`)}
-                  tag={t(`antiScamHub.coming.articles.${k}.tag`)}
-                  title={t(`antiScamHub.coming.articles.${k}.title`)}
-                  summary={t(`antiScamHub.coming.articles.${k}.summary`)}
-                  comingSoonLabel={t("antiScamHub.coming.comingSoonLabel")}
-                />
+              {articles.map((a) => (
+                <Link
+                  key={a.slug}
+                  href={`/blog/${a.slug}` as "/blog/why-car-shipping-quotes-go-up"}
+                  className="block bg-white border border-gray-200 hover:border-orange hover:shadow-md rounded-2xl p-6 transition group"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-orange-dark bg-orange-tint px-2.5 py-1 rounded-full inline-block mb-4">
+                    {a.category} · {a.readMinutes} {t("blog.minRead")}
+                  </p>
+                  <h3 className="text-lg font-bold text-charcoal leading-snug mb-2 group-hover:text-orange transition">
+                    {a.title}
+                  </h3>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {a.subtitle}
+                  </p>
+                </Link>
               ))}
             </div>
           </Container>
@@ -157,34 +172,3 @@ export default function AntiScamHubPage() {
   );
 }
 
-// ── Coming article placeholder card ──────────────────────────────────────
-function ComingArticleCard({
-  month,
-  tag,
-  title,
-  summary,
-  comingSoonLabel,
-}: {
-  month: string;
-  tag: string;
-  title: string;
-  summary: string;
-  comingSoonLabel: string;
-}) {
-  return (
-    <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 flex flex-col opacity-90">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-orange-dark bg-orange-tint px-2.5 py-1 rounded-full">
-          {tag}
-        </span>
-        <span className="text-[11px] font-semibold text-gray-500">
-          {comingSoonLabel} {month}
-        </span>
-      </div>
-      <h3 className="text-lg font-bold text-charcoal leading-snug mb-2">
-        {title}
-      </h3>
-      <p className="text-sm text-gray-700 leading-relaxed flex-1">{summary}</p>
-    </div>
-  );
-}

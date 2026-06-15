@@ -1545,6 +1545,20 @@
     },
     "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
   },
+  "blog": {
+    "hero": {
+      "eyebrow": "Buyer guides",
+      "title": "Plain-English answers to the scary questions.",
+      "lead": "If you are searching to find out whether your auto transport quote is real, whether your deposit is at risk, or whether the company you booked is the company driving, you are in the right place. Honest explainers, no upsell."
+    },
+    "listHeading": "Latest guides",
+    "minRead": "min read",
+    "article": {
+      "publishedDateLabel": "Published",
+      "backToHubLabel": "Back to",
+      "relatedHeading": "Related guides"
+    }
+  },
   "routePriceChecker": {
     "hero": {
       "eyebrow": "Route price checker",
@@ -2253,31 +2267,10 @@
       "title": "Three questions that expose 95% of broker scams.",
       "lead": "These are the questions to ask any broker before you book. Use them on us. Use them on anyone."
     },
-    "coming": {
-      "eyebrow": "Coming next",
-      "title": "A new article every month.",
-      "lead": "We publish on the 1st of each month. Three already on the calendar:",
-      "comingSoonLabel": "Coming",
-      "articles": {
-        "1": {
-          "month": "June 2026",
-          "tag": "Anchor article",
-          "title": "How to spot a bad broker in 60 seconds",
-          "summary": "The 8-question checklist, the website tells, and the call red flags. The cheat sheet we wish someone had given us our first time."
-        },
-        "2": {
-          "month": "July 2026",
-          "tag": "Deep dive",
-          "title": "Bait-and-switch — anatomy of the scam",
-          "summary": "How the cheapest quote you'll ever see becomes the most expensive shipment you'll ever pay for. Step-by-step, with real examples."
-        },
-        "3": {
-          "month": "August 2026",
-          "tag": "Reality check",
-          "title": "What a good broker call actually sounds like",
-          "summary": "A real conversation breakdown — what to expect, what to push back on, and the language that signals you're talking to an honest broker."
-        }
-      }
+    "guides": {
+      "eyebrow": "Read the guides",
+      "title": "Plain-English answers to the scary questions.",
+      "lead": "Long-form articles on the games brokers play, how quotes work in practice, and how to tell whether the company you booked is the company driving."
     },
     "cta": {
       "eyebrow": "Ready for a real quote?",
