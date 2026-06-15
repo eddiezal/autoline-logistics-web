@@ -1527,7 +1527,7 @@
       "shipCloseSub": "Además se ahorra {hours} horas al volante. Vale la pena si su tiempo importa.",
       "wash": "Prácticamente un empate en dinero.",
       "washSub": "La pregunta real es si quiere pasar {hours} horas al volante. Si no, envíelo.",
-      "driveClose": "Para este viaje, manejar sale unos ~${savings} más barato en dinero directo.",
+      "driveClose": "Para este viaje, manejar sale unos ~${savings} más barato.",
       "driveCloseSub": "Vale la pena enviarlo si su tiempo es facturable, o si prefiere no pasar {hours} horas en la carretera.",
       "driveBig": "Para este viaje, manejar es la respuesta honesta.",
       "driveBigSub": "Enviar tiene más sentido a distancias mayores, cuando mueve varios vehículos, o cuando {hours} horas al volante no son opción. Aún podemos enviárselo si prefiere saltarse el viaje.",
