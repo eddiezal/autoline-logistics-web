@@ -3,6 +3,7 @@
 import { useRef, useState, useId } from "react";
 import { useTranslations } from "next-intl";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { track, captureGclid } from "@/lib/analytics/events";
 
 const VEHICLE_TYPE_KEYS = [
   "sedan",
@@ -84,6 +85,30 @@ export function QuoteForm({
       }
 
       setSuccess(data.leadRef ?? "");
+
+      // Track the conversion. Two events fire: the funnel event
+      // (quote_submitted) for GA4 reporting + the conversion event
+      // (lead_form_submit) for Google Ads optimization. Same trigger,
+      // different consumers.
+      const gclid = captureGclid();
+      const vehicleType = payload.vehicleType ?? "unknown";
+      track({
+        name: "quote_submitted",
+        props: {
+          from_state: fromCode,
+          to_state: toCode,
+          vehicle_type: vehicleType,
+          gclid,
+        },
+      });
+      track({
+        name: "lead_form_submit",
+        props: {
+          from_state: fromCode,
+          to_state: toCode,
+          gclid,
+        },
+      });
     } catch (err) {
       console.error("[QuoteForm] submit failed", err);
       setError("Network error. Please check your connection and try again.");
