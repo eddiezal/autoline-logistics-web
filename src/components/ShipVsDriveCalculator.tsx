@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -9,6 +9,7 @@ import {
   zipPrefixToState,
   roadDistanceMiles,
 } from "@/data/zip-metros";
+import { track } from "@/lib/analytics/events";
 
 /**
  * Ship vs Drive Calculator — §1 named deliverable.
@@ -620,6 +621,8 @@ function VerdictBox({ calc }: { calc: Calc }) {
 
   let headline = "";
   let sub = "";
+  let verdictState: "SHIP_BIG" | "SHIP_CLOSE" | "WASH" | "DRIVE_CLOSE" | "DRIVE_BIG" | null = null;
+  let deltaUsd: number | null = null;
 
   switch (calc.branch) {
     case "hawaii":
@@ -635,35 +638,53 @@ function VerdictBox({ calc }: { calc: Calc }) {
       sub = t("shipVsDrive.verdict.invalidSub");
       break;
     case "ok": {
-      // 5-state branching grounded in the actual delta.
-      // savings = drive.total - ship.price (positive = ship wins on cost)
       const s = calc.savings;
       const diff = Math.abs(s);
       if (diff < WASH_THRESHOLD_USD) {
         headline = t("shipVsDrive.verdict.wash");
         sub = t("shipVsDrive.verdict.washSub", { hours: drivingHours });
+        verdictState = "WASH";
       } else if (s >= CLOSE_THRESHOLD_USD) {
         headline = t("shipVsDrive.verdict.shipBig", {
           savings: formatMoney(diff),
         });
         sub = t("shipVsDrive.verdict.shipBigSub", { hours: drivingHours });
+        verdictState = "SHIP_BIG";
       } else if (s > 0) {
         headline = t("shipVsDrive.verdict.shipClose", {
           savings: formatMoney(diff),
         });
         sub = t("shipVsDrive.verdict.shipCloseSub", { hours: drivingHours });
+        verdictState = "SHIP_CLOSE";
       } else if (s > -CLOSE_THRESHOLD_USD) {
         headline = t("shipVsDrive.verdict.driveClose", {
           savings: formatMoney(diff),
         });
         sub = t("shipVsDrive.verdict.driveCloseSub", { hours: drivingHours });
+        verdictState = "DRIVE_CLOSE";
       } else {
         headline = t("shipVsDrive.verdict.driveBig");
         sub = t("shipVsDrive.verdict.driveBigSub", { hours: drivingHours });
+        verdictState = "DRIVE_BIG";
       }
+      deltaUsd = Math.round(s);
       break;
     }
   }
+
+  // Fire calculator_completed when a usable verdict renders.
+  useEffect(() => {
+    if (verdictState && deltaUsd !== null) {
+      track({
+        name: "calculator_completed",
+        props: {
+          verdict_state: verdictState,
+          delta_usd: deltaUsd,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verdictState, deltaUsd]);
 
   return (
     <div className="bg-orange-tint border border-orange/30 rounded-2xl px-5 py-4">

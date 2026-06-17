@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
+import { track } from "@/lib/analytics/events";
 
 /**
  * RoutePriceCheckerForm. Client component for /tools/route-price-checker.
@@ -121,6 +122,14 @@ export function RoutePriceCheckerForm({
         setError(i18n.errorService);
       } else {
         setResult(data);
+        track({
+          name: "route_price_checked",
+          props: {
+            from_zip: fromZip,
+            to_zip: toZip,
+            vehicle_type: vehicle,
+          },
+        });
       }
     } catch {
       setError(i18n.errorService);
