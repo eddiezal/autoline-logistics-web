@@ -32,6 +32,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { getClientAuth } from "@/lib/firebase/client";
+import { track } from "@/lib/analytics/events";
 
 type EmailStatus = "idle" | "sending" | "sent" | "error";
 type GoogleStatus = "idle" | "signing-in" | "error";
@@ -75,6 +76,7 @@ export default function PortalLogin() {
       const returnTo = window.localStorage.getItem("returnTo");
       window.localStorage.removeItem("returnTo");
       // Hard navigation so the proxy sees the freshly-set __session cookie.
+      track({ name: "lead_portal_signin", props: { method: "google" } });
       window.location.assign(returnTo || `/${locale}/portal`);
     } catch {
       setGoogleStatus("error");

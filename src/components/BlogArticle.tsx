@@ -17,6 +17,7 @@
 import type { ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
+import { BlogReadTracker } from "@/components/BlogReadTracker";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import type { Article, ArticleSection } from "@/lib/blog/types";
@@ -174,6 +175,7 @@ export function BlogArticle({
   return (
     <>
       <Header />
+      <BlogReadTracker slug={article.slug} cluster={article.cluster} />
 
       <main className="flex-1 bg-white">
         <Container>

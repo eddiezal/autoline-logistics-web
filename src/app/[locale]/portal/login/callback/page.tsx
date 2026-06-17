@@ -24,6 +24,7 @@ import {
   signInWithEmailLink,
 } from "firebase/auth";
 import { getClientAuth } from "@/lib/firebase/client";
+import { track } from "@/lib/analytics/events";
 
 type Phase = "verifying" | "needEmail" | "error";
 
@@ -51,6 +52,7 @@ export default function PortalLoginCallback() {
       const returnTo = window.localStorage.getItem("returnTo");
       window.localStorage.removeItem("returnTo");
       // Hard navigation so the proxy sees the freshly-set __session cookie.
+      track({ name: "lead_portal_signin", props: { method: "magic_link" } });
       window.location.assign(returnTo || `/${locale}/portal`);
     } catch {
       setPhase("error");

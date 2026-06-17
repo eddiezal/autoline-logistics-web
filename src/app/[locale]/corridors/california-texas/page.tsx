@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
+import { CorridorAnalytics } from "@/components/CorridorAnalytics";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
@@ -40,6 +41,7 @@ export default async function CaliforniaTexasCorridor({
   return (
     <>
       <Header />
+      <CorridorAnalytics corridorSlug="california-texas" fromState="CA" toState="TX" />
 
       <main className="flex-1">
         {/* Hero. Cost-anchored. Two-column on desktop, stacked on mobile.

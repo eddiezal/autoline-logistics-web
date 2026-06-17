@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
+import { CorridorAnalytics } from "@/components/CorridorAnalytics";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
@@ -28,6 +29,7 @@ export default function CaliforniaHawaiiCorridor() {
   return (
     <>
       <Header />
+      <CorridorAnalytics corridorSlug="california-hawaii" fromState="CA" toState="HI" />
 
       <main className="flex-1">
         {/* Hero */}
