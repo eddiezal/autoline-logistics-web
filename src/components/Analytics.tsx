@@ -3,32 +3,49 @@ import Script from "next/script";
 /**
  * Google Analytics 4 + dataLayer bootstrap.
  *
- * Loaded once in the root layout. Renders nothing visible. Loads
- * the GA4 gtag.js library after page interactivity (afterInteractive)
- * so it doesn't block first paint or Core Web Vitals.
+ * Loaded once in the root locale layout. Renders nothing visible. Loads
+ * the gtag.js library after page interactivity (afterInteractive) so it
+ * doesn't block first paint or Core Web Vitals.
  *
- * Phase 1 (today): direct gtag firing. GA4 receives events via
- * Google's CDN.
+ * Phase E swap (2026-06-18): when NEXT_PUBLIC_SGTM_URL is set, gtag.js
+ * loads from the server-side GTM container instead of googletagmanager.com,
+ * and gtag's transport_url is set to the same endpoint so all subsequent
+ * events route through sGTM. When unset, falls back to direct gtag.js
+ * loading from Google's CDN (no sGTM in the path).
  *
- * Phase 2 (sGTM deployed): swap the src to tags.autolinelogistics.com
- * so events route through our server-side container instead. The
- * dataLayer pattern in src/lib/analytics/events.ts already
- * supports this; only this component changes.
+ * Phase 1 (when NEXT_PUBLIC_SGTM_URL is empty):
+ *   Browser → gtag.js (from googletagmanager.com) → google-analytics.com/g/collect
  *
- * No-renders without NEXT_PUBLIC_GA_MEASUREMENT_ID set (e.g. in
- * dev or on PR previews without env vars). Production has it.
+ * Phase E (when NEXT_PUBLIC_SGTM_URL is set):
+ *   Browser → gtag.js (from sGTM endpoint) → sGTM endpoint → GA4 (via
+ *   the GA4 Event Forwarder tag inside the GTM container)
+ *
+ * The dataLayer pattern in src/lib/analytics/events.ts already supports
+ * both modes — no code change needed there.
+ *
+ * No-renders without NEXT_PUBLIC_GA_MEASUREMENT_ID set (e.g. in dev or
+ * on PR previews without env vars). Production has it.
  */
 export function Analytics() {
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const sgtmUrl = process.env.NEXT_PUBLIC_SGTM_URL;
 
   if (!measurementId) return null;
 
+  // When sGTM URL is set, load gtag.js from there and configure
+  // transport_url to route all subsequent /g/collect hits through sGTM.
+  // Otherwise fall back to direct Google CDN load (no sGTM in the path).
+  const gtagSrc = sgtmUrl
+    ? `${sgtmUrl}/gtag/js?id=${measurementId}`
+    : `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+
+  const transportConfigLine = sgtmUrl
+    ? `transport_url: '${sgtmUrl}',`
+    : "";
+
   return (
     <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-        strategy="afterInteractive"
-      />
+      <Script src={gtagSrc} strategy="afterInteractive" />
       <Script id="ga4-init" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
@@ -48,6 +65,7 @@ export function Analytics() {
           });
 
           gtag('config', '${measurementId}', {
+            ${transportConfigLine}
             send_page_view: true,
             anonymize_ip: true,
           });
