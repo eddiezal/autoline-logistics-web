@@ -7,24 +7,30 @@ import Script from "next/script";
  * the gtag.js library after page interactivity (afterInteractive) so it
  * doesn't block first paint or Core Web Vitals.
  *
- * Phase E swap (2026-06-18): when NEXT_PUBLIC_SGTM_URL is set, gtag.js
- * loads from the server-side GTM container instead of googletagmanager.com,
- * and gtag's transport_url is set to the same endpoint so all subsequent
- * events route through sGTM. When unset, falls back to direct gtag.js
- * loading from Google's CDN (no sGTM in the path).
+ * Architecture (standard sGTM pattern):
  *
- * Phase 1 (when NEXT_PUBLIC_SGTM_URL is empty):
- *   Browser → gtag.js (from googletagmanager.com) → google-analytics.com/g/collect
+ *   1. gtag.js LIBRARY loads from googletagmanager.com (Google's CDN).
+ *      Google's sGTM image doesn't natively serve the gtag.js library
+ *      without setting up a Web container client. We don't need that;
+ *      loading the library from Google is fine.
  *
- * Phase E (when NEXT_PUBLIC_SGTM_URL is set):
- *   Browser → gtag.js (from sGTM endpoint) → sGTM endpoint → GA4 (via
- *   the GA4 Event Forwarder tag inside the GTM container)
+ *   2. Event data POSTs go through transport_url. When NEXT_PUBLIC_SGTM_URL
+ *      is set, gtag sends every /g/collect hit to our Cloud Run sGTM
+ *      service. sGTM forwards to GA4 via the published GA4 Event
+ *      Forwarder tag.
  *
- * The dataLayer pattern in src/lib/analytics/events.ts already supports
- * both modes — no code change needed there.
+ *   Phase 1 (when NEXT_PUBLIC_SGTM_URL is empty):
+ *     Browser → gtag.js (from Google) → google-analytics.com/g/collect
  *
- * No-renders without NEXT_PUBLIC_GA_MEASUREMENT_ID set (e.g. in dev or
- * on PR previews without env vars). Production has it.
+ *   Phase E (when NEXT_PUBLIC_SGTM_URL is set):
+ *     Browser → gtag.js (from Google) → sGTM endpoint → GA4
+ *
+ * Net effect of Phase E: ad blocker recognition drops (your sGTM
+ * subdomain isn't a known analytics endpoint), data quality improves
+ * (no third-party cookie restrictions on your own domain), and
+ * Enhanced Conversions + OCI become possible server-side.
+ *
+ * No-renders without NEXT_PUBLIC_GA_MEASUREMENT_ID set.
  */
 export function Analytics() {
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -32,20 +38,18 @@ export function Analytics() {
 
   if (!measurementId) return null;
 
-  // When sGTM URL is set, load gtag.js from there and configure
-  // transport_url to route all subsequent /g/collect hits through sGTM.
-  // Otherwise fall back to direct Google CDN load (no sGTM in the path).
-  const gtagSrc = sgtmUrl
-    ? `${sgtmUrl}/gtag/js?id=${measurementId}`
-    : `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-
+  // Always load gtag.js from Google's CDN. Set transport_url to route
+  // events through sGTM when configured.
   const transportConfigLine = sgtmUrl
     ? `transport_url: '${sgtmUrl}',`
     : "";
 
   return (
     <>
-      <Script src={gtagSrc} strategy="afterInteractive" />
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+        strategy="afterInteractive"
+      />
       <Script id="ga4-init" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
