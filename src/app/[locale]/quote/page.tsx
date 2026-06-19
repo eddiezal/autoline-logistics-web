@@ -100,9 +100,19 @@ function QuoteContent({ fromCode, toCode }: { fromCode: string; toCode: string }
 }
 
 // safeT — try to read a key, fall back to empty string if missing.
+// Two failure modes to handle:
+// 1. Dev mode: next-intl throws on missing key (caught by try/catch).
+// 2. Prod mode: next-intl returns the raw key as fallback (NOT thrown).
+//    We detect this by comparing the result to the key itself.
+// Bug observed 2026-06-19: /quote?from=90217&to=33126 (ZIP codes, not
+// state codes) was rendering "quote.states.90217 → quote.states.33126"
+// in the headline. Calculator/Hero CTAs pass ZIPs here; the quote page
+// expects state codes. Until that's fixed upstream, this prevents the
+// raw key from leaking into the UI.
 function safeT(t: ReturnType<typeof useTranslations>, key: string): string {
   try {
-    return t(key);
+    const value = t(key);
+    return value === key ? "" : value;
   } catch {
     return "";
   }
