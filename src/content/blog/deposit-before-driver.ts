@@ -183,7 +183,7 @@ export const article: Article = {
   ],
   related: [
     {
-      slug: "why-car-shipping-quotes-go-up",
+      slug: "why-quotes-go-up",
       title: "Why Your Car Shipping Quote Went Up at the Last Minute",
       blurb:
         "How the bait-and-switch works once a broker has your deposit, and how to tell a real quote from a hook.",

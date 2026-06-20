@@ -204,7 +204,7 @@ export const article: Article = {
   ],
   related: [
     {
-      slug: "deposit-before-driver-assigned",
+      slug: "deposit-before-driver",
       title: "Should You Pay a Deposit Before a Driver Is Assigned?",
       blurb:
         "Most brokers ask. Here is what is normal versus when a deposit becomes a red flag.",

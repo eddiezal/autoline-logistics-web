@@ -200,13 +200,13 @@ export const article: Article = {
   ],
   related: [
     {
-      slug: "why-car-shipping-quotes-go-up",
+      slug: "why-quotes-go-up",
       title: "Why Your Car Shipping Quote Went Up at the Last Minute",
       blurb:
         "The broker-carrier handoff is where most price-hike trouble starts. Here is the mechanic of how the bait pattern actually plays out.",
     },
     {
-      slug: "deposit-before-driver-assigned",
+      slug: "deposit-before-driver",
       title: "Should You Pay a Deposit Before a Driver Is Assigned?",
       blurb:
         "Why brokers want your deposit before they have a carrier, when that timing is reasonable, and when it is a setup.",
