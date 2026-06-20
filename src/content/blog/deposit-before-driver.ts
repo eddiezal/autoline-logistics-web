@@ -7,7 +7,7 @@
 import type { Article } from "@/lib/blog/types";
 
 export const article: Article = {
-  slug: "deposit-before-driver-assigned",
+  slug: "deposit-before-driver",
   language: "en",
   title: "Should You Pay a Deposit Before a Driver Is Assigned?",
   subtitle:

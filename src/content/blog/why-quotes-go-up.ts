@@ -7,7 +7,7 @@
 import type { Article } from "@/lib/blog/types";
 
 export const article: Article = {
-  slug: "why-car-shipping-quotes-go-up",
+  slug: "why-quotes-go-up",
   language: "en",
   title: "Why Your Car Shipping Quote Went Up at the Last Minute",
   subtitle:
