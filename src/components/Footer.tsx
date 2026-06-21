@@ -99,10 +99,23 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-12 pt-6 flex flex-col md:flex-row justify-between gap-3 text-xs text-gray-500">
+        <div className="border-t border-gray-700 mt-12 pt-6 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-gray-500">
           <span>
             © {year} Auto Line Logistics, Inc. {t("footer.rights")}
           </span>
+          <nav className="flex flex-wrap gap-x-4 gap-y-2" aria-label="Legal">
+            <Link href="/terms-conditions" className="hover:text-orange">
+              {t("footer.legal.terms")}
+            </Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/privacy-policy" className="hover:text-orange">
+              {t("footer.legal.privacy")}
+            </Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/accessibility" className="hover:text-orange">
+              {t("footer.legal.accessibility")}
+            </Link>
+          </nav>
           <span>{t("footer.credentials")}</span>
         </div>
       </Container>

@@ -379,7 +379,12 @@
       "people": "Promesa Personal"
     },
     "rights": "Todos los derechos reservados.",
-    "credentials": "USDOT 3961864 · MC 1477788 · Fianza BMC-84 registrada"
+    "credentials": "USDOT 3961864 · MC 1477788 · Fianza BMC-84 registrada",
+    "legal": {
+      "terms": "Términos y Condiciones",
+      "privacy": "Política de Privacidad",
+      "accessibility": "Accesibilidad"
+    }
   },
   "home": {
     "hero": {

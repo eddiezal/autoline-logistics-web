@@ -379,7 +379,12 @@
       "people": "People Promise"
     },
     "rights": "All rights reserved.",
-    "credentials": "USDOT 3961864 · MC 1477788 · BMC-84 Bond on file"
+    "credentials": "USDOT 3961864 · MC 1477788 · BMC-84 Bond on file",
+    "legal": {
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "accessibility": "Accessibility"
+    }
   },
   "home": {
     "hero": {
