@@ -313,7 +313,7 @@
   },
   "common": {
     "phone": "714-660-7558",
-    "email": "info@autolinelogistics.com",
+    "email": "admin@autolinelogistics.com",
     "address": {
       "street": "10073 Valley View St, Ste 120",
       "city": "Cypress, CA 90630"
@@ -1209,7 +1209,7 @@
       "title": "Reseñas de envíos reales.",
       "description": "No publicamos testimonios fabricados. La sección de reseñas se llenará una vez que hayamos recopilado citas verificables de clientes — con nombres de pila, ruta, y fecha — que podamos atribuir honestamente.",
       "emptyState": "Reseñas de clientes próximamente. Preferimos dejar este espacio vacío antes que llenarlo con citas falsas.",
-      "footnote": "¿Envió recientemente con nosotros? Escriba a info@autolinelogistics.com — nos encantaría destacar su experiencia."
+      "footnote": "¿Envió recientemente con nosotros? Escriba a admin@autolinelogistics.com — nos encantaría destacar su experiencia."
     },
     "faq": {
       "title": "Preguntas sobre la empresa",
@@ -3265,7 +3265,7 @@
       "account": "Cuenta",
       "signOut": "Cerrar sesión",
       "back": "Atrás",
-      "needHelp": "¿Necesita ayuda? Escríbanos a info@autolinelogistics.com o llame a su coordinador."
+      "needHelp": "¿Necesita ayuda? Escríbanos a admin@autolinelogistics.com o llame a su coordinador."
     },
     "login": {
       "title": "Bienvenido de vuelta",
