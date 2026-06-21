@@ -8,7 +8,14 @@ import type { LegalPageContent, LegalSection } from "@/content/legal/types";
  * Renders a structured content object with intro paragraphs + sections.
  * Section headings get anchor IDs for deep-linking from external refs.
  */
-export function LegalPage({ content }: { content: LegalPageContent }) {
+export function LegalPage({
+  content,
+  locale = "en",
+}: {
+  content: LegalPageContent;
+  locale?: "en" | "es";
+}) {
+  const effectiveLabel = locale === "es" ? "Vigente desde el" : "Effective";
   return (
     <>
       <Header />
@@ -19,7 +26,7 @@ export function LegalPage({ content }: { content: LegalPageContent }) {
               {content.title}
             </h1>
             <p className="text-sm text-gray-500 mb-8">
-              Effective {content.effectiveDate}
+              {effectiveLabel} {content.effectiveDate}
             </p>
 
             <div className="space-y-4 text-gray-800 leading-relaxed mb-10">
