@@ -297,6 +297,11 @@
           "slug": "why-quotes-go-up",
           "excerpt": "The bait-and-switch playbook some brokers run. How to spot a bait quote before you book."
         },
+        "2": {
+          "title": "Why your auto transport quote might not hold",
+          "slug": "why-quotes-dont-hold",
+          "excerpt": "Three reasons quotes get raised after booking, plus four questions to ask any broker before paying."
+        },
         "3": {
           "title": "Broker vs. carrier — what is the difference?",
           "slug": "broker-vs-carrier",
@@ -821,6 +826,10 @@
         "5": {
           "q": "Why don't other brokers do this?",
           "a": "Most brokers operate on a bid model: they post your shipment to a carrier marketplace and accept whichever bid wins. The original quote is just a guess — when actual costs come in higher, you eat the difference or your shipment gets stuck. We pre-negotiate carrier rates and absorb price variance ourselves. It's a different business model, not a different industry."
+        },
+        "6": {
+          "q": "Do you charge a booking deposit?",
+          "a": "Yes. Like many established brokers, we collect a small booking deposit when you choose to move forward. The deposit goes toward your final invoice. The difference is what happens next: we do not use your deposit as leverage for a price change. Bad brokers use the deposit as a hostage to renegotiate the price up after you have committed. We use ours to cover the dispatch work, and the locked price holds because it was based on today's actual market in the first place. If a carrier cannot be confirmed at your locked price (rare on our active corridors), we tell you upfront. You decide what happens next: hold, adjust, or refund your deposit."
         }
       }
     },
@@ -829,6 +838,15 @@
       "description": "Enter your origin, destination, and vehicle. We'll show three tiered prices instantly. Pick one, lock it, done.",
       "primary": "Get my locked price",
       "secondary": "See how the People Promise works →"
+    },
+    "whyHolds": {
+      "eyebrow": "How our pricing works",
+      "title": "Why our locked price holds",
+      "body": {
+        "0": "Our quote is based on what carriers are actually accepting today on your route, not old averages or wishful thinking. We check the current market, add a fair margin, and give you a locked price before you book. The number you see is the number you pay.",
+        "1": "Some brokers price your shipment using averages from past loads. Others post your car on a broker-only marketplace and wait to see what offers come in. Both can produce a number that looks good on the page but does not survive contact with reality. When the broker cannot get a carrier at that number, they call you for more money.",
+        "2": "We avoid that problem at the source. By using today's actual carrier prices, our locked price is built to hold."
+      }
     }
   },
   "damagePromise": {

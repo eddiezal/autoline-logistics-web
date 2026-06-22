@@ -204,6 +204,11 @@ export const article: Article = {
   ],
   related: [
     {
+      slug: "why-quotes-dont-hold",
+      title: "Why your auto transport quote might not hold (and what to look for)",
+      blurb: "Three reasons quotes get raised after booking + four questions to ask any broker.",
+    },
+    {
       slug: "broker-vs-carrier",
       title: "Broker vs Carrier: Who Actually Moves Your Car?",
       blurb:

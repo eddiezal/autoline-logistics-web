@@ -12,12 +12,16 @@ import type {
 
 import { article as whyQuotesGoUp } from "@/content/blog/why-quotes-go-up";
 import { article as brokerVsCarrier } from "@/content/blog/broker-vs-carrier";
+import { article as whyQuotesDontHold } from "@/content/blog/why-quotes-dont-hold";
 import { article as porQueSubioCotizacion } from "@/content/blog/por-que-subio-cotizacion-envio-auto";
+import { article as porQueNoAguantan } from "@/content/blog/por-que-las-cotizaciones-no-aguantan";
 
 const ALL_ARTICLES: ReadonlyArray<Article> = [
   whyQuotesGoUp,
   brokerVsCarrier,
+  whyQuotesDontHold,
   porQueSubioCotizacion,
+  porQueNoAguantan,
 ];
 
 const BY_SLUG: ReadonlyMap<string, Article> = new Map(

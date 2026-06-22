@@ -297,6 +297,11 @@
           "slug": "por-que-subio-cotizacion-envio-auto",
           "excerpt": "El esquema de cebo y cambio que algunos brokers usan. Cómo detectar una cotización cebo antes de reservar."
         },
+        "2": {
+          "title": "Por qué su cotización de transporte de auto puede no aguantar",
+          "slug": "por-que-las-cotizaciones-no-aguantan",
+          "excerpt": "Tres razones por las que las cotizaciones se suben después de reservar, más cuatro preguntas que hacerle a cualquier broker antes de pagar."
+        },
         "3": {
           "title": "Broker vs. transportista. ¿Cuál es la diferencia?",
           "slug": "broker-vs-carrier",
@@ -821,6 +826,10 @@
         "5": {
           "q": "¿Por qué otros corredores no hacen esto?",
           "a": "La mayoría de los corredores operan con un modelo de subasta: publican su envío en un mercado de transportistas y aceptan la oferta ganadora. La cotización original es solo una suposición — cuando los costos reales salen más altos, usted paga la diferencia o su envío se queda atascado. Nosotros negociamos las tarifas con los transportistas por adelantado y absorbemos la variación de precio nosotros mismos. Es un modelo de negocio diferente, no una industria diferente."
+        },
+        "6": {
+          "q": "¿Cobran un depósito de reserva?",
+          "a": "Sí. Como muchos brokers establecidos, cobramos un pequeño depósito de reserva cuando usted decide avanzar. El depósito va hacia su factura final. La diferencia es lo que pasa después: no usamos su depósito como apalancamiento para un cambio de precio. Los brokers malos usan el depósito como rehén para renegociar el precio hacia arriba después de que usted se ha comprometido. Nosotros usamos el nuestro para cubrir el trabajo de despacho, y el precio fijo aguanta porque se basó en el mercado real de hoy en primer lugar. Si un transportista no puede ser confirmado a su precio fijo (poco común en los corredores que operamos activamente), se lo decimos por adelantado. Usted decide qué pasa después: mantenerse, ajustar, o reembolsar su depósito."
         }
       }
     },
@@ -829,6 +838,15 @@
       "description": "Ingrese su origen, destino y vehículo. Le mostraremos tres precios escalonados al instante. Elija uno, fíjelo, listo.",
       "primary": "Obtenga su precio fijo",
       "secondary": "Vea cómo funciona la Promesa Personal →"
+    },
+    "whyHolds": {
+      "eyebrow": "Cómo funciona nuestro precio",
+      "title": "Por qué nuestro precio fijo aguanta",
+      "body": {
+        "0": "Nuestra cotización se basa en lo que los transportistas realmente están aceptando hoy en su ruta, no en promedios viejos ni suposiciones. Verificamos el mercado actual, agregamos un margen justo, y le damos un precio fijo antes de que reserve. El número que ve es el número que paga.",
+        "1": "Algunos brokers cotizan su envío usando promedios de cargas pasadas. Otros publican su auto en una plataforma exclusiva para brokers y esperan a ver qué ofertas llegan. Ambos pueden producir un número que se ve bien en la página pero que no sobrevive el contacto con la realidad. Cuando el broker no puede conseguir un transportista a ese número, le llaman para pedir más dinero.",
+        "2": "Evitamos ese problema desde el origen. Al usar los precios reales de transportistas de hoy, nuestro precio fijo está construido para aguantar."
+      }
     }
   },
   "damagePromise": {

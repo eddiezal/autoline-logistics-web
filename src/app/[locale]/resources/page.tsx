@@ -107,8 +107,8 @@ export default function ResourcesPage() {
                 {t("resources.buyerGuides.lead")}
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-              {[1, 3].map((i) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+              {[1, 2, 3].map((i) => (
                 <Link
                   key={i}
                   href={`/blog/${t(`resources.buyerGuides.articles.${i}.slug`)}`}

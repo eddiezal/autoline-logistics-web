@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function PricePromisePage() {
   const t = useTranslations();
-  const faqs: FAQItem[] = [0, 1, 2, 3, 4, 5].map((i) => ({
+  const faqs: FAQItem[] = [0, 1, 2, 3, 4, 5, 6].map((i) => ({
     q: t(`pricePromise.faq.items.${i}.q`),
     a: t(`pricePromise.faq.items.${i}.a`),
   }));
@@ -55,6 +55,27 @@ export default function PricePromisePage() {
                 <p>{t("pricePromise.antiPattern.body.1")}</p>
                 <p className="font-semibold text-charcoal">
                   {t("pricePromise.antiPattern.punchline")}
+                </p>
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        {/* Why our locked price holds — the live-pricing mechanism */}
+        <section className="py-16 bg-white border-t border-gray-100">
+          <Container>
+            <div className="max-w-3xl">
+              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                {t("pricePromise.whyHolds.eyebrow")}
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-charcoal mb-6">
+                {t("pricePromise.whyHolds.title")}
+              </h2>
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p>{t("pricePromise.whyHolds.body.0")}</p>
+                <p>{t("pricePromise.whyHolds.body.1")}</p>
+                <p className="font-semibold text-charcoal">
+                  {t("pricePromise.whyHolds.body.2")}
                 </p>
               </div>
             </div>
