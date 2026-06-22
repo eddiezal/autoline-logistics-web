@@ -671,13 +671,13 @@
     "finalCta": {
       "eyebrow": "¿Listo para enviar?",
       "title": "Fije su precio al instante.",
-      "lead": "Escriba su origen, destino, y vehículo. Obtenga su precio fijo todo incluido al instante. Su coordinador asignado toma el control desde la reserva — sin depósito para fijar el precio, sin obligación hasta que reserve.",
+      "lead": "Escriba su origen, destino, y vehículo. Obtenga su precio fijo todo incluido al instante. Su coordinador asignado toma el control desde la reserva. El precio queda fijado por 7 días, sin obligación hasta que reserve.",
       "button": "Obtenga su precio fijo",
       "trustLine": "Cotización al instante · Cotización = factura final · Sin depósito para cotizar"
     },
     "heroRouteFinder": {
       "title": "Obtenga su precio fijo.",
-      "subtitle": "Precios instantáneos de nuestra red de transportistas. Sin depósito para reservar su número.",
+      "subtitle": "Precios instantáneos de nuestra red de transportistas. Fijado por 7 días, sin obligación.",
       "fromZip": {
         "label": "Código postal origen",
         "placeholder": "ej. 90210"
@@ -722,7 +722,7 @@
         }
       },
       "lockedLabel": "Su precio fijo",
-      "validityBadge": "Fijado por 7 días · Sin depósito para reservar",
+      "validityBadge": "Fijado por 7 días · Sin obligación hasta reservar",
       "rangeSeparator": "–",
       "ctaContinue": "Continuar",
       "ctaLock": "Fijar este precio",
@@ -1247,7 +1247,7 @@
     },
     "cta": {
       "title": "¿Listo para fijar un precio?",
-      "description": "Escriba su origen, destino y vehículo. Obtenga su precio fijo al instante. Su coordinador asignado toma el control desde la reserva — sin depósito, sin obligación.",
+      "description": "Escriba su origen, destino y vehículo. Obtenga su precio fijo al instante. Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
       "primary": "Obtenga su precio fijo",
       "secondary": "Hable con un coordinador"
     }
@@ -1355,7 +1355,7 @@
       "success": {
         "eyebrow": "Cotizacion solicitada",
         "title": "Gracias. Un coordinador le contactara dentro de 1 hora habil.",
-        "body": "Recibimos sus datos y los enrutamos a un coordinador disponible. Recibira un precio fijo todo incluido por correo o telefono, sin deposito, sin compromiso.",
+        "body": "Recibimos sus datos y los enrutamos a un coordinador disponible. Recibira un precio fijo todo incluido por correo o telefono. Sin compromiso hasta que reserve.",
         "refLabel": "Referencia"
       }
     },
@@ -2518,7 +2518,7 @@
       },
       "finalCta": {
         "title": "Envio de CA a TX con precio fijo. Haga las cuentas.",
-        "body": "Cotizacion real todo incluido en 60 segundos. Sin deposito. Sin enganos. Luego decida si manejar todavia tiene sentido.",
+        "body": "Cotizacion real todo incluido en 60 segundos. La cotizacion es el contrato. Sin enganos. Luego decida si manejar todavia tiene sentido.",
         "cta": "Obtener mi precio fijo"
       }
     },
@@ -2590,7 +2590,7 @@
       },
       "finalCta": {
         "title": "Envío con precio fijo de CA a FL. Haga las cuentas.",
-        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     },
@@ -2662,7 +2662,7 @@
       },
       "finalCta": {
         "title": "Envío con precio fijo de CA a NY. Haga las cuentas.",
-        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     },
@@ -2734,7 +2734,7 @@
       },
       "finalCta": {
         "title": "Envío con precio fijo de NY a FL. Haga las cuentas.",
-        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     },
@@ -2806,7 +2806,7 @@
       },
       "finalCta": {
         "title": "Envío con precio fijo de TX a FL. Haga las cuentas.",
-        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     },
@@ -2878,7 +2878,7 @@
       },
       "finalCta": {
         "title": "Envío con precio fijo de CA a GA. Haga las cuentas.",
-        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     },
@@ -2950,7 +2950,7 @@
       },
       "finalCta": {
         "title": "Envío con precio fijo de CA a NC. Haga las cuentas.",
-        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     },
@@ -3022,7 +3022,7 @@
       },
       "finalCta": {
         "title": "Envío con precio fijo de CA a IL. Haga las cuentas.",
-        "body": "Cotización real todo incluido en 60 segundos. Sin depósito. Sin engaños. Después decide si vale la pena conducir.",
+        "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
     }

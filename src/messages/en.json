@@ -671,13 +671,13 @@
     "finalCta": {
       "eyebrow": "Ready to ship?",
       "title": "Lock your price instantly.",
-      "lead": "Type your origin, destination, and vehicle. Get your locked all-in price instantly. Your named coordinator takes over from booking — no deposit to lock the price, no obligation until you book.",
+      "lead": "Type your origin, destination, and vehicle. Get your locked all-in price instantly. Your named coordinator takes over from booking. The price stays locked for 7 days, no obligation until you book.",
       "button": "Get my locked price",
       "trustLine": "Instant quote · Price = final invoice · No deposit to quote"
     },
     "heroRouteFinder": {
       "title": "Get your locked price.",
-      "subtitle": "Instant pricing from our carrier network. No deposit required to hold your number.",
+      "subtitle": "Instant pricing from our carrier network. Locked for 7 days, no obligation.",
       "fromZip": {
         "label": "From ZIP",
         "placeholder": "e.g. 90210"
@@ -722,7 +722,7 @@
         }
       },
       "lockedLabel": "Your locked price",
-      "validityBadge": "Locked for 7 days · No deposit required to hold",
+      "validityBadge": "Locked for 7 days · No obligation until you book",
       "rangeSeparator": "–",
       "ctaContinue": "Continue",
       "ctaLock": "Lock this price",
@@ -1247,7 +1247,7 @@
     },
     "cta": {
       "title": "Ready to lock a price?",
-      "description": "Type your origin, destination, and vehicle. Get your locked price instantly. Your named coordinator takes over from booking — no deposit, no obligation.",
+      "description": "Type your origin, destination, and vehicle. Get your locked price instantly. Your named coordinator takes over from booking. No obligation until you book.",
       "primary": "Get my locked price",
       "secondary": "Talk to a coordinator"
     }
@@ -1355,7 +1355,7 @@
       "success": {
         "eyebrow": "Locked-price quote requested",
         "title": "Thanks. A coordinator will reach out within 1 business hour.",
-        "body": "We received your details and routed them to an available coordinator. You will get a locked all-in price by email or phone, no deposit required, no obligation.",
+        "body": "We received your details and routed them to an available coordinator. You will get a locked all-in price by email or phone. No obligation until you book.",
         "refLabel": "Reference"
       }
     },
@@ -2518,7 +2518,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to TX shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2590,7 +2590,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to FL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2662,7 +2662,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to NY shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2734,7 +2734,7 @@
       },
       "finalCta": {
         "title": "Locked-price NY to FL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2806,7 +2806,7 @@
       },
       "finalCta": {
         "title": "Locked-price TX to FL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2878,7 +2878,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to GA shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2950,7 +2950,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to NC shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -3022,7 +3022,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to IL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. No deposit. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     }
