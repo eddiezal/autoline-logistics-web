@@ -171,7 +171,13 @@ export async function POST(req: Request) {
     }
   }
 
-  let estimate: { source: "sd" | "unavailable"; price?: number; confidence?: number } | null = null;
+  let estimate: {
+    source: "sd" | "unavailable";
+    price?: number;
+    low?: number;
+    high?: number;
+    confidence?: number;
+  } | null = null;
   try {
     const sd = await getSdPriceEstimate({
       pickup: { state: originState!, zip: originZip! },
@@ -181,7 +187,13 @@ export async function POST(req: Request) {
       trailerType: "open",
     });
     estimate = sd
-      ? { source: "sd", price: sd.price, confidence: sd.confidence ?? undefined }
+      ? {
+          source: "sd",
+          price: sd.price,
+          low: sd.low,
+          high: sd.high,
+          confidence: sd.confidence ?? undefined,
+        }
       : { source: "unavailable" };
   } catch (err) {
     console.error("[/api/lead] SD pricing failed (non-fatal)", err);

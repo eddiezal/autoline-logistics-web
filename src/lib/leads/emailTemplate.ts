@@ -16,7 +16,13 @@ export interface BuildLeadEmailInput {
   destination: { city: string; state: string; zip: string };
   vehicle: { year: string; make: string; model: string; type: string };
   tier: "standby" | "priority" | "expedited";
-  estimate: { source: "sd" | "unavailable"; price?: number; confidence?: number } | null;
+  estimate: {
+    source: "sd" | "unavailable";
+    price?: number;
+    low?: number;
+    high?: number;
+    confidence?: number;
+  } | null;
   attribution: {
     utmSource?: string;
     utmMedium?: string;
@@ -52,6 +58,24 @@ function priceLabel(estimate: BuildLeadEmailInput["estimate"]): string {
   return "estimate pending";
 }
 
+/** "Market range $1,400 to $1,700" or null when low/high not available. */
+function rangeLabel(estimate: BuildLeadEmailInput["estimate"]): string | null {
+  if (
+    estimate?.source === "sd" &&
+    typeof estimate.low === "number" &&
+    typeof estimate.high === "number" &&
+    estimate.low < estimate.high
+  ) {
+    return (
+      "Market range $" +
+      estimate.low.toLocaleString("en-US") +
+      " to $" +
+      estimate.high.toLocaleString("en-US")
+    );
+  }
+  return null;
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -79,6 +103,8 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
     "Tier: " + tier,
     "Estimate: " + price + (input.estimate?.confidence ? " (confidence " + input.estimate.confidence + "%)" : ""),
   ];
+  const range = rangeLabel(input.estimate);
+  if (range) textLines.push(range);
   if (input.customer.notes) textLines.push("Notes: " + input.customer.notes);
   textLines.push("");
   textLines.push("Submitted: " + input.submittedAt);
@@ -123,6 +149,9 @@ function renderHtml(
     + '<div style="background:#f0faf3;border-left:3px solid ' + ACCENT + ';padding:16px 18px;border-radius:0 8px 8px 0;margin-bottom:20px;">'
     + '<div style="font-size:11px;color:' + ACCENT + ';font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Estimated quote shown to customer</div>'
     + '<div style="font-size:28px;font-weight:800;color:#052e1a;margin-top:4px;">' + escapeHtml(price) + '</div>'
+    + (rangeLabel(input.estimate)
+        ? '<div style="font-size:13px;color:' + GRAY + ';margin-top:6px;">' + escapeHtml(rangeLabel(input.estimate) ?? "") + '</div>'
+        : "")
     + confidenceRow
     + '</div>'
     + '<h3 style="margin:0 0 8px;font-size:14px;color:' + PINE + ';text-transform:uppercase;letter-spacing:0.05em;">Customer</h3>'
