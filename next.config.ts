@@ -104,6 +104,35 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    // Pre-DNS-cutover safety net. The live Squarespace site uses paths that
+    // don't 1:1 map to our Next.js routes. These 301s catch the realistic
+    // Google Ads landing pages + common deep links so post-cutover traffic
+    // lands on the right page instead of 404'ing.
+    // Note: Next.js redirects fire BEFORE next-intl middleware, so these
+    // work at the root regardless of locale.
+    return [
+      // Quote variations
+      { source: "/get-a-quote", destination: "/quote", permanent: true },
+      { source: "/get-quote", destination: "/quote", permanent: true },
+      { source: "/quote-request", destination: "/quote", permanent: true },
+      { source: "/request-quote", destination: "/quote", permanent: true },
+      { source: "/free-quote", destination: "/quote", permanent: true },
+      { source: "/instant-quote", destination: "/quote", permanent: true },
+      // Contact (no equivalent page, route to quote which is the conversion point)
+      { source: "/contact", destination: "/quote", permanent: true },
+      { source: "/contact-us", destination: "/quote", permanent: true },
+      // Generic transport keywords (often used as Squarespace landing slugs)
+      { source: "/auto-transport", destination: "/", permanent: true },
+      { source: "/car-shipping", destination: "/", permanent: true },
+      { source: "/vehicle-transport", destination: "/", permanent: true },
+      { source: "/vehicle-shipping", destination: "/", permanent: true },
+      { source: "/shipping", destination: "/", permanent: true },
+      // Squarespace defaults
+      { source: "/home", destination: "/", permanent: true },
+      { source: "/index", destination: "/", permanent: true },
+    ];
+  },
 };
 
 // Only apply Sentry's webpack wrapper when source-map upload is actually
