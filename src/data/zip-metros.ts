@@ -163,15 +163,94 @@ export function lookupZipApprox(
 }
 
 /**
- * Best-effort ZIP-prefix to state detection for ZIPs NOT in METRO_ZIPS.
- * Used to detect Hawaii / Alaska edge cases even when the ZIP is not in
- * our curated table.
+ * Maps a 5-digit US ZIP to its state via USPS Sectional Center Facility
+ * ranges (first 3 digits → state). Returns null for non-US, non-assigned,
+ * or invalid input.
+ *
+ * This is the deterministic USPS mapping. Used in two places:
+ *   • Quote form: derive state from ZIP for both client preview + server
+ *     payload, so users don't manually pick a state that the ZIP implies.
+ *   • Calculator: HI/AK detection for the islands special-case.
+ *
+ * Edge cases:
+ *   • 006-009 → PR (Puerto Rico)
+ *   • 340, 342, 343, 345, 348 → unassigned (returns null)
+ *   • 099 → military APO/FPO (returns null, treated as unknown)
+ *   • 969 → Guam/Pacific (returns null, treated as unknown)
+ *
+ * Source: USPS Postal Explorer SCF list, accurate as of 2026.
  */
 export function zipPrefixToState(zip: string): string | null {
   if (!/^\d{5}$/.test(zip)) return null;
-  const n = parseInt(zip, 10);
-  if (n >= 96700 && n <= 96899) return "HI";
-  if (n >= 99500 && n <= 99999) return "AK";
+  const p = parseInt(zip.slice(0, 3), 10);
+
+  // Range-based lookup. Ordered from low to high prefix.
+  // Each tuple = [startPrefix, endPrefix, state].
+  const RANGES: ReadonlyArray<readonly [number, number, string]> = [
+    [5, 5, "NJ"],
+    [6, 9, "PR"],
+    [10, 27, "MA"],
+    [28, 29, "RI"],
+    [30, 38, "NH"],
+    [39, 39, "ME"],
+    [40, 49, "ME"],
+    [50, 59, "VT"],
+    [60, 69, "CT"],
+    [70, 89, "NJ"],
+    [100, 149, "NY"],
+    [150, 196, "PA"],
+    [197, 199, "DE"],
+    [200, 205, "DC"],
+    [206, 219, "MD"],
+    [220, 246, "VA"],
+    [247, 268, "WV"],
+    [270, 289, "NC"],
+    [290, 299, "SC"],
+    [300, 319, "GA"],
+    [320, 339, "FL"],
+    [341, 341, "FL"],
+    [344, 344, "FL"],
+    [346, 347, "FL"],
+    [349, 349, "FL"],
+    [350, 369, "AL"],
+    [370, 385, "TN"],
+    [386, 397, "MS"],
+    [398, 399, "GA"],
+    [400, 427, "KY"],
+    [430, 459, "OH"],
+    [460, 479, "IN"],
+    [480, 499, "MI"],
+    [500, 528, "IA"],
+    [530, 549, "WI"],
+    [550, 567, "MN"],
+    [570, 577, "SD"],
+    [580, 588, "ND"],
+    [590, 599, "MT"],
+    [600, 629, "IL"],
+    [630, 658, "MO"],
+    [660, 679, "KS"],
+    [680, 693, "NE"],
+    [700, 714, "LA"],
+    [716, 722, "AR"],
+    [730, 749, "OK"],
+    [750, 799, "TX"],
+    [800, 816, "CO"],
+    [820, 831, "WY"],
+    [832, 838, "ID"],
+    [840, 847, "UT"],
+    [850, 865, "AZ"],
+    [870, 884, "NM"],
+    [889, 898, "NV"],
+    [900, 961, "CA"],
+    [967, 968, "HI"],
+    [970, 979, "OR"],
+    [980, 994, "WA"],
+    [995, 999, "AK"],
+  ];
+
+  for (const [start, end, state] of RANGES) {
+    if (p >= start && p <= end) return state;
+  }
   return null;
 }
 

@@ -24,6 +24,7 @@ import { pickNextAgent, AGENTS, QA_BCC_EMAIL } from "@/lib/leads/agents";
 import { buildLeadEmail } from "@/lib/leads/emailTemplate";
 import { getSdPriceEstimate } from "@/lib/superdispatch/pricing";
 import { sendLeadEmail } from "@/lib/email/resend";
+import { zipPrefixToState, lookupZipApprox } from "@/data/zip-metros";
 
 export const runtime = "nodejs";
 
@@ -108,9 +109,15 @@ export async function POST(req: Request) {
   }
 
   const originZip = requireStr(body.origin_zip, 10);
-  const originState = requireStr(body.origin_state, 4);
   const destinationZip = requireStr(body.destination_zip, 10);
-  const destinationState = requireStr(body.destination_state, 4);
+  // State is derived from ZIP server-side (USPS prefix mapping).
+  // No longer trust user-supplied state — see 2026-06-22 form refactor.
+  const originState = originZip
+    ? (lookupZipApprox(originZip)?.entry.state ?? zipPrefixToState(originZip) ?? "")
+    : "";
+  const destinationState = destinationZip
+    ? (lookupZipApprox(destinationZip)?.entry.state ?? zipPrefixToState(destinationZip) ?? "")
+    : "";
   const vehicleYear = requireStr(body.vehicle_year, 4);
   const vehicleMake = requireStr(body.vehicle_make, 60);
   const vehicleModel = requireStr(body.vehicle_model, 60);
@@ -127,9 +134,7 @@ export async function POST(req: Request) {
 
   const missing: string[] = [];
   if (!originZip) missing.push("origin_zip");
-  if (!originState) missing.push("origin_state");
   if (!destinationZip) missing.push("destination_zip");
-  if (!destinationState) missing.push("destination_state");
   if (!vehicleYear) missing.push("vehicle_year");
   if (!vehicleMake) missing.push("vehicle_make");
   if (!vehicleModel) missing.push("vehicle_model");

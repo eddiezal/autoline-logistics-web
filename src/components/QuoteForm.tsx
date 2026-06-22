@@ -4,6 +4,7 @@ import { useRef, useState, useId } from "react";
 import { useTranslations } from "next-intl";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { track, captureGclid } from "@/lib/analytics/events";
+import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
 
 const VEHICLE_TYPE_KEYS = [
   "sedan",
@@ -45,6 +46,8 @@ export function QuoteForm({
     process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY ?? HCAPTCHA_TEST_KEY;
   const usingTestKey = siteKey === HCAPTCHA_TEST_KEY;
 
+  const [originZip, setOriginZip] = useState("");
+  const [destinationZip, setDestinationZip] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -146,22 +149,17 @@ export function QuoteForm({
         <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
           {t("quote.form.origin.legend")}
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-[1fr_180px] gap-3">
+        <div>
           <Field
             label={t("quote.form.origin.zip.label")}
             requiredMark={required}
             name="origin_zip"
             required
             placeholder={t("quote.form.origin.zip.placeholder")}
+            value={originZip}
+            onChange={(e) => setOriginZip(e.target.value)}
           />
-          <Field
-            label={t("quote.form.origin.state.label")}
-            requiredMark={required}
-            name="origin_state"
-            required
-            defaultValue={fromCode}
-            placeholder={t("quote.form.origin.state.placeholder")}
-          />
+          <ZipPreview zip={originZip} />
         </div>
       </fieldset>
 
@@ -170,22 +168,17 @@ export function QuoteForm({
         <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
           {t("quote.form.destination.legend")}
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-[1fr_180px] gap-3">
+        <div>
           <Field
             label={t("quote.form.destination.zip.label")}
             requiredMark={required}
             name="destination_zip"
             required
             placeholder={t("quote.form.destination.zip.placeholder")}
+            value={destinationZip}
+            onChange={(e) => setDestinationZip(e.target.value)}
           />
-          <Field
-            label={t("quote.form.destination.state.label")}
-            requiredMark={required}
-            name="destination_state"
-            required
-            defaultValue={toCode}
-            placeholder={t("quote.form.destination.state.placeholder")}
-          />
+          <ZipPreview zip={destinationZip} />
         </div>
       </fieldset>
 
@@ -340,6 +333,8 @@ function Field({
   required = false,
   placeholder,
   defaultValue,
+  value,
+  onChange,
   multiline = false,
 }: {
   label: string;
@@ -349,6 +344,8 @@ function Field({
   required?: boolean;
   placeholder?: string;
   defaultValue?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   multiline?: boolean;
 }) {
   const baseClass =
@@ -364,7 +361,9 @@ function Field({
           name={name}
           required={required}
           placeholder={placeholder}
-          defaultValue={defaultValue}
+          defaultValue={value === undefined ? defaultValue : undefined}
+          value={value}
+          onChange={onChange}
           rows={3}
           className={baseClass}
         />
@@ -374,7 +373,9 @@ function Field({
           name={name}
           required={required}
           placeholder={placeholder}
-          defaultValue={defaultValue}
+          defaultValue={value === undefined ? defaultValue : undefined}
+          value={value}
+          onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
           className={baseClass}
         />
       )}
@@ -439,3 +440,37 @@ function Radio({
     </label>
   );
 }
+
+
+// ZipPreview — small gray "City, State" hint rendered below the ZIP input.
+// Derives from the curated metro table first (gets city + state), then falls
+// back to the USPS prefix→state map (state only) for ZIPs not in the metro
+// table. Stays hidden until at least 3 digits are typed.
+function ZipPreview({ zip }: { zip: string }) {
+  if (!zip || zip.length < 3) return null;
+  const cityState = (() => {
+    if (/^\d{5}$/.test(zip)) {
+      const approx = lookupZipApprox(zip);
+      if (approx) return `${approx.entry.city}, ${approx.entry.state}`;
+      const state = zipPrefixToState(zip);
+      if (state) return state;
+    }
+    return null;
+  })();
+  if (!cityState) {
+    if (zip.length >= 5) {
+      return (
+        <p className="mt-1.5 text-xs text-gray-500">
+          Coordinator will confirm your location.
+        </p>
+      );
+    }
+    return null;
+  }
+  return (
+    <p className="mt-1.5 text-xs text-gray-600">
+      {cityState}
+    </p>
+  );
+}
+
