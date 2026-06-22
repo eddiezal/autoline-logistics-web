@@ -1258,7 +1258,6 @@
       "titleDefault": "Cuéntenos a dónde, qué y cuándo.",
       "description": "La cotización es el contrato. Cualquier número que le enviemos es el número en su factura. Sin trampa ni cambio."
     },
-    "buildStatus": "🚧 Estado de construcción: la herramienta de cotización en vivo se conecta cuando nuestras integraciones con Super Dispatch + Authorize.Net estén listas (aprox. Semana 6 de la Fase A). Hasta entonces, envíe el formulario abajo y su coordinador fijará un precio por correo de respuesta dentro de 1 hora hábil. Sin depósito en esta etapa.",
     "form": {
       "requiredMark": " *",
       "origin": {

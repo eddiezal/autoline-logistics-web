@@ -1258,7 +1258,6 @@
       "titleDefault": "Tell us where, what, and when.",
       "description": "The quote is the contract. Whatever number we send back is the number on your invoice. No bait-and-switch."
     },
-    "buildStatus": "🚧 Build status: the live quote tool wires up when our Super Dispatch + Authorize.Net integrations land (~Week 6 of Phase A). Until then, submit the form below and your coordinator will lock in a price by reply email within 1 business hour. No deposit at this stage.",
     "form": {
       "requiredMark": " *",
       "origin": {

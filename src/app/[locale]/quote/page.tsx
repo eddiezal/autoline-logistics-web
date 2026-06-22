@@ -51,13 +51,6 @@ function QuoteContent({ fromCode, toCode }: { fromCode: string; toCode: string }
           </Container>
         </section>
 
-        {/* Build status callout */}
-        <section className="py-6 bg-orange-tint border-b border-orange/30">
-          <Container>
-            <p className="text-charcoal text-sm">{t("quote.buildStatus")}</p>
-          </Container>
-        </section>
-
         {/* Form */}
         <section className="py-16 bg-white">
           <Container>
