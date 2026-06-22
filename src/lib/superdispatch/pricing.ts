@@ -16,6 +16,7 @@
  */
 
 import "server-only";
+import { applyCustomerMarkup } from "@/lib/pricing/markup";
 
 export interface PriceQuery {
   pickup: { city?: string; state?: string; zip: string };
@@ -84,8 +85,16 @@ function parseResponse(json: Record<string, unknown>): PriceEstimate | null {
   return { price, low, high, confidence, source: "sd" };
 }
 
+/**
+ * Fetch a price estimate from Super Dispatch.
+ *
+ * By default the customer-facing markup is applied (see
+ * src/lib/pricing/markup.ts). For calibration / internal tools that need
+ * the raw SD market number, pass { markup: false }.
+ */
 export async function getSdPriceEstimate(
   q: PriceQuery,
+  opts: { markup?: boolean } = {},
 ): Promise<PriceEstimate | null> {
   if (!isConfigured()) return null;
   try {
@@ -104,7 +113,9 @@ export async function getSdPriceEstimate(
       return null;
     }
     const json = (await res.json()) as Record<string, unknown>;
-    return parseResponse(json);
+    const raw = parseResponse(json);
+    if (!raw) return null;
+    return opts.markup === false ? raw : applyCustomerMarkup(raw);
   } catch (err) {
     console.warn("SD pricing error:", err);
     return null;

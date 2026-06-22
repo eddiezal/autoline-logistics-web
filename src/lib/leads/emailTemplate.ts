@@ -121,7 +121,7 @@ function renderHtml(
     + '<div style="font-size:14px;opacity:0.85;margin-top:4px;">' + escapeHtml(vehicle) + ' . ' + escapeHtml(input.vehicle.type) + '</div>'
     + '</td></tr><tr><td style="padding:24px;">'
     + '<div style="background:#f0faf3;border-left:3px solid ' + ACCENT + ';padding:16px 18px;border-radius:0 8px 8px 0;margin-bottom:20px;">'
-    + '<div style="font-size:11px;color:' + ACCENT + ';font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">SD market estimate</div>'
+    + '<div style="font-size:11px;color:' + ACCENT + ';font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Estimated quote shown to customer</div>'
     + '<div style="font-size:28px;font-weight:800;color:#052e1a;margin-top:4px;">' + escapeHtml(price) + '</div>'
     + confidenceRow
     + '</div>'
