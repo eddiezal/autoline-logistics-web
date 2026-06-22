@@ -173,7 +173,7 @@ export const article: Article = {
     { kind: "h3", text: "What does Auto Line Logistics do differently?" },
     {
       kind: "p",
-      text: "We do not charge a deposit to give you a price. The number you see is the price our carrier network is actually accepting on the day we quote you. Our Logistics side matches you to vetted carriers across the network. Our sister carrier Auto Line Express owns 35 trucks that we run on select routes ourselves. The number you see at quote time is the number on your invoice.",
+      text: "We check what carriers are actually accepting today, right when you ask. Not last year's averages, not a posted-and-hope guess. The number you see is the price a real carrier is taking on your route this week. Our Logistics side matches you to vetted carriers across the network. Our sister carrier Auto Line Express owns 35 trucks we run on select routes ourselves. The number you see at quote time is the locked price, and we collect a small booking deposit only when you choose to move forward.",
     },
   ],
   faq: [
@@ -204,12 +204,6 @@ export const article: Article = {
   ],
   related: [
     {
-      slug: "deposit-before-driver",
-      title: "Should You Pay a Deposit Before a Driver Is Assigned?",
-      blurb:
-        "Most brokers ask. Here is what is normal versus when a deposit becomes a red flag.",
-    },
-    {
       slug: "broker-vs-carrier",
       title: "Broker vs Carrier: Who Actually Moves Your Car?",
       blurb:
@@ -219,7 +213,7 @@ export const article: Article = {
   primaryCta: {
     eyebrow: "Already have a quote that feels too low?",
     title: "Check your quote against our carrier network",
-    body: "Send us your route and vehicle. We will show you what our carrier network is actually accepting today, so you can spot a bait before it costs you. No deposit, no signup.",
+    body: "Send us your route and vehicle. We will show you what our carrier network is actually accepting today, so you can spot a bait quote before it costs you. No commitment, no signup.",
     href: "/tools/route-price-checker",
     label: "Check my quote",
   },

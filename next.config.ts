@@ -131,6 +131,9 @@ const nextConfig: NextConfig = {
       // Squarespace defaults
       { source: "/home", destination: "/", permanent: true },
       { source: "/index", destination: "/", permanent: true },
+      // Deleted blog articles (2026-06-22 deposit positioning sweep) -> blog index
+      { source: "/blog/deposit-before-driver", destination: "/blog", permanent: true },
+      { source: "/blog/pagar-deposito-envio-auto-conductor", destination: "/blog", permanent: true },
     ];
   },
 };

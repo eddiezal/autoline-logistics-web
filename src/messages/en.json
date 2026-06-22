@@ -295,12 +295,7 @@
         "1": {
           "title": "Why your quote went up at the last minute",
           "slug": "why-quotes-go-up",
-          "excerpt": "The bait-and-switch playbook some brokers run. How to spot it before you hand over a deposit."
-        },
-        "2": {
-          "title": "Should you pay a deposit before a driver is assigned?",
-          "slug": "deposit-before-driver",
-          "excerpt": "When a deposit is legitimate, when it's a warning sign, and what to ask before paying."
+          "excerpt": "The bait-and-switch playbook some brokers run. How to spot a bait quote before you book."
         },
         "3": {
           "title": "Broker vs. carrier — what is the difference?",
@@ -758,8 +753,8 @@
     "antiPattern": {
       "title": "The dirty open secret of auto transport pricing",
       "body": {
-        "0": "Most brokers will quote you a price, take your deposit, then call you back two weeks later with a higher number when they actually go to find a carrier. The industry has a name for this: “the bid-and-bump.”",
-        "1": "It's the reason auto transport reviews online are full of customers feeling burned. The original quote was bait. The real number was always going to be higher — the broker just needed your deposit first."
+        "0": "Many brokers quote low to win your business. Then they try to find a carrier willing to move your car at that price. If no one accepts it, they call you back asking for more money. That's the bait-and-bump: the first quote gets you in, the second quote is the real price.",
+        "1": "It's the reason auto transport reviews online are full of customers feeling burned. The original quote was bait. The real number was always going to be higher, but the broker needed to lock you in before showing it."
       },
       "punchline": "We don't do that. The price you book is the price you pay. Period."
     },
@@ -971,7 +966,7 @@
     "antiPattern": {
       "title": "What faceless brokering actually looks like",
       "body": {
-        "0": "You call a 1-800 number. You get a sales rep. They book your shipment, take your deposit, then hand you off to dispatch. Dispatch hands off to a driver. The driver doesn't speak to you. Something goes wrong, you call back, get a different sales rep, who has to read the file from scratch.",
+        "0": "You call a 1-800 number. A sales rep books your shipment based on a quote they can't yet guarantee. They take your deposit, hand you to scheduling, scheduling hands you to a carrier. The carrier doesn't speak to you. Something goes wrong, you call back, get a different sales rep, who has to read the file from scratch.",
         "1": "By the time you've explained your situation three times, your car is somewhere in Texas and nobody on the phone knows where."
       },
       "punchline": "Auto transport got broken when it became faceless. We're rebuilding the operator-customer relationship the way it should have always worked: one named person, one phone number, one point of accountability."
@@ -1077,7 +1072,7 @@
       "eyebrow": "Our story",
       "title": "We started Auto Line Logistics because the industry had earned its bad reputation.",
       "body": {
-        "0": "Most auto transport companies in this country are brokers — they take your deposit, post your car to a load board, and hope someone picks it up at the lowest bid. When a carrier finally accepts the load, they raise the price. And if your car shows up damaged? You're on your own with the carrier's insurance.",
+        "0": "Many auto transport companies are middlemen. They quote you a price they hope a carrier will take, post your shipment to a broker-only marketplace, and wait for offers. When no carrier accepts at the quoted price, they call you to ask for more money. And if your car shows up damaged? You're on your own with the carrier's barebones insurance.",
         "1": "We do this differently. We're a family operation based in Southern California. Our sister carrier company, Auto Line Express, runs a 35-truck fleet that handles routes where it makes operational sense. For everywhere else, we contract with a vetted network of partner carriers — every one of them held to the same standards.",
         "2": "The number on your quote is the number on your invoice. Your coordinator is a real person whose name you'll know. And your car is covered above and beyond the carrier's minimums — because cars get damaged, and pretending otherwise is how customers get burned."
       },
@@ -1576,7 +1571,7 @@
   "blog": {
     "hero": {
       "eyebrow": "Buyer guides",
-      "title": "Car Shipping Buyer Guides: Avoid Scams, Fake Quotes, and Deposit Traps",
+      "title": "Car Shipping Buyer Guides: Avoid Bait Quotes, Last-Minute Price Hikes, and Hidden Damage",
       "subtitle": "Plain-English answers to the scary questions before you book auto transport. Honest explainers before you book, plus realistic quotes when you're ready."
     },
     "checkQuote": {
@@ -1588,7 +1583,7 @@
     "clusters": {
       "avoiding-scams": {
         "title": "Avoiding scams",
-        "lead": "How brokers use fake-low quotes, last-minute price hikes, and pre-driver deposits to lock customers in. The mechanics, the warning signs, and what a real quote process looks like."
+        "lead": "How some brokers use fake-low quotes, last-minute price hikes, and stale pricing data to trap customers in shipments that cost more than promised. The mechanics, the warning signs, and what a real quote process looks like."
       },
       "understanding-industry": {
         "title": "Understanding the industry",
@@ -2106,7 +2101,7 @@
         "title": "It's not auto transport. It's logistics.",
         "body": {
           "0": "Most mainland auto-transport corridors are one truck, one driver, one straight shot. Hawaii is different. Your vehicle has to clear two truck legs, an ocean voyage, port paperwork at both ends, and (for outer islands) an inter-island barge. Six handoffs. Six chances for something to go sideways if nobody's coordinating.",
-          "1": "Most brokers don't set up to coordinate ocean shipping. They quote you a price, take a deposit, then hand you a phone number for a port agent who has never heard of you. We don't."
+          "1": "Many brokers aren't set up to coordinate ocean shipping. They quote a price based on what they hope it costs, take a deposit, then hand you a phone number for a port agent who has never heard of you. We don't."
         },
         "punchline": "Your coordinator owns the entire chain — from California pickup to your driveway in Honolulu, Hilo, Kahului, or Lihue. One phone number, one accountable point of contact."
       },

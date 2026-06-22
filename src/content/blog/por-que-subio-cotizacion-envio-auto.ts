@@ -175,7 +175,7 @@ export const article: Article = {
     { kind: "h3", text: "¿Qué hace Auto Line Logistics de manera diferente?" },
     {
       kind: "p",
-      text: "No cobramos depósito para darle un precio. El número que ve es el precio que nuestra red de transportistas realmente está aceptando el día que le cotizamos. Nuestro lado Logistics lo conecta con transportistas verificados a través de la red. Nuestro transportista hermano Auto Line Express posee 35 camiones que operamos en rutas seleccionadas. El número que ve al cotizar es el número en su factura.",
+      text: "Verificamos lo que los transportistas realmente están aceptando hoy, en el momento en que pregunta. No promedios del año pasado, no una suposición publicada en un tablón. El número que ve es el precio que un transportista real está tomando en su ruta esta semana. Nuestro lado Logistics lo conecta con transportistas verificados a través de la red. Nuestro transportista hermano Auto Line Express posee 35 camiones que operamos en rutas seleccionadas. El número que ve al cotizar es el precio fijo, y cobramos un pequeño depósito de reserva solo cuando usted decide avanzar.",
     },
   ],
   faq: [
@@ -205,17 +205,11 @@ export const article: Article = {
     },
   ],
   related: [
-    {
-      slug: "pagar-deposito-envio-auto-conductor",
-      title: "¿Debería pagar un depósito antes de que asignen un conductor?",
-      blurb:
-        "La mayoría de los brokers piden uno. Aquí explicamos cuándo es normal y cuándo se vuelve una señal de alarma.",
-    },
   ],
   primaryCta: {
     eyebrow: "¿Ya tiene una cotización que parece demasiado baja?",
     title: "Compare su cotización contra nuestra red de transportistas",
-    body: "Mándenos su ruta y vehículo. Le mostraremos lo que nuestra red de transportistas está aceptando hoy, para que pueda detectar un cebo antes de que le cueste. Sin depósito, sin registro.",
+    body: "Mándenos su ruta y vehículo. Le mostraremos lo que nuestra red de transportistas está aceptando hoy, para que pueda detectar una cotización cebo antes de que le cueste. Sin compromiso, sin registro.",
     href: "/tools/route-price-checker",
     label: "Verificar mi cotización",
   },

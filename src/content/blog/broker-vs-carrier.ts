@@ -205,12 +205,6 @@ export const article: Article = {
       blurb:
         "The broker-carrier handoff is where most price-hike trouble starts. Here is the mechanic of how the bait pattern actually plays out.",
     },
-    {
-      slug: "deposit-before-driver",
-      title: "Should You Pay a Deposit Before a Driver Is Assigned?",
-      blurb:
-        "Why brokers want your deposit before they have a carrier, when that timing is reasonable, and when it is a setup.",
-    },
   ],
   primaryCta: {
     eyebrow: "See how a hybrid handles your route",

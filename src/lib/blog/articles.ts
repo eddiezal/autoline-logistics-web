@@ -11,17 +11,13 @@ import type {
 } from "./types";
 
 import { article as whyQuotesGoUp } from "@/content/blog/why-quotes-go-up";
-import { article as depositBeforeDriver } from "@/content/blog/deposit-before-driver";
 import { article as brokerVsCarrier } from "@/content/blog/broker-vs-carrier";
 import { article as porQueSubioCotizacion } from "@/content/blog/por-que-subio-cotizacion-envio-auto";
-import { article as depositoAntesDeConductor } from "@/content/blog/pagar-deposito-envio-auto-conductor";
 
 const ALL_ARTICLES: ReadonlyArray<Article> = [
   whyQuotesGoUp,
-  depositBeforeDriver,
   brokerVsCarrier,
   porQueSubioCotizacion,
-  depositoAntesDeConductor,
 ];
 
 const BY_SLUG: ReadonlyMap<string, Article> = new Map(

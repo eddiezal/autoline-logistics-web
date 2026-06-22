@@ -295,12 +295,7 @@
         "1": {
           "title": "Por qué subió su cotización a último momento",
           "slug": "por-que-subio-cotizacion-envio-auto",
-          "excerpt": "El esquema de cebo y cambio que algunos brokers usan. Cómo detectarlo antes de pagar un depósito."
-        },
-        "2": {
-          "title": "¿Debería pagar depósito antes de tener conductor asignado?",
-          "slug": "pagar-deposito-envio-auto-conductor",
-          "excerpt": "Cuándo un depósito es legítimo, cuándo es una señal de alarma, y qué preguntar antes de pagar."
+          "excerpt": "El esquema de cebo y cambio que algunos brokers usan. Cómo detectar una cotización cebo antes de reservar."
         },
         "3": {
           "title": "Broker vs. transportista. ¿Cuál es la diferencia?",
@@ -758,7 +753,7 @@
     "antiPattern": {
       "title": "El secreto a voces del transporte de autos",
       "body": {
-        "0": "La mayoría de los corredores le dan una cotización, le cobran un depósito, y dos semanas después lo llaman con un número más alto cuando van realmente a buscar un transportista. La industria tiene un nombre para esto: «la oferta y el aumento» (en inglés, “bid-and-bump”).",
+        "0": "Muchos brokers dan una cotización baja para ganar su negocio. Después tratan de encontrar un transportista dispuesto a mover su auto a ese precio. Si nadie acepta, le llaman para pedir más dinero. Eso es el bait-and-bump (cebo y aumento): la primera cotización lo enganchó, la segunda es el precio real.",
         "1": "Es la razón por la que las reseñas de transporte de autos en línea están llenas de clientes que se sienten estafados. La cotización original era un anzuelo. El número real siempre iba a ser más alto — el corredor solo necesitaba su depósito primero."
       },
       "punchline": "Nosotros no hacemos eso. El precio que reserva es el precio que paga. Punto."
@@ -971,7 +966,7 @@
     "antiPattern": {
       "title": "Cuando nadie da la cara",
       "body": {
-        "0": "Llama a un número 1-800. Le contesta un vendedor. Reserva su envío, toma su depósito, y luego lo transfiere a despacho. Despacho lo transfiere a un conductor. El conductor no le habla. Algo sale mal, usted llama de vuelta, le contesta un vendedor diferente, que tiene que leer el archivo desde cero.",
+        "0": "Llama a un número 1-800. Un vendedor reserva su envío basado en una cotización que aún no puede garantizar. Toma su depósito, lo transfiere al equipo de programación, y programación lo transfiere a un transportista. El transportista no le habla. Algo sale mal, usted llama de vuelta, le contesta un vendedor diferente, que tiene que leer el archivo desde cero.",
         "1": "Para cuando ha explicado su situación tres veces, su auto está en algún lugar de Texas y nadie en el teléfono sabe dónde."
       },
       "punchline": "El transporte de autos se rompió cuando se quedó sin rostro. Estamos reconstruyendo la relación operador-cliente como siempre debió funcionar: una persona con nombre, un número de teléfono, un punto de responsabilidad."
@@ -1077,7 +1072,7 @@
       "eyebrow": "Nuestra historia",
       "title": "Empezamos Auto Line Logistics porque la industria se había ganado su mala reputación.",
       "body": {
-        "0": "La mayoría de las empresas de transporte de autos en este país son corredores — toman su depósito, publican su auto en un tablón de cargas, y esperan que alguien lo recoja al precio más bajo. Cuando un transportista finalmente acepta la carga, suben el precio. ¿Y si su auto llega dañado? Está solo con el seguro del transportista.",
+        "0": "Muchas empresas de transporte de autos en este país son intermediarios. Le cotizan un precio que esperan que un transportista acepte, publican su envío en una plataforma exclusiva para brokers, y esperan ofertas. Cuando ningún transportista acepta al precio cotizado, le llaman para pedir más dinero. ¿Y si su auto llega dañado? Está solo con el seguro básico del transportista.",
         "1": "Nosotros lo hacemos diferente. Somos una operación familiar basada en el sur de California. Nuestra compañía hermana, Auto Line Express, opera una flota de 35 camiones que cubre las rutas donde tiene sentido operativo. Para el resto, trabajamos con una red verificada de transportistas asociados — cada uno de ellos sometido a los mismos estándares.",
         "2": "El número en su cotización es el número en su factura. Su coordinador es una persona real cuyo nombre conocerá. Y su auto está cubierto más allá de los mínimos del transportista — porque los autos se dañan, y pretender lo contrario es como los clientes terminan estafados."
       },
@@ -1576,7 +1571,7 @@
   "blog": {
     "hero": {
       "eyebrow": "Guías para compradores",
-      "title": "Guías de transporte de autos: evite estafas, cotizaciones falsas y trampas de depósito",
+      "title": "Guías de transporte de autos: evite cotizaciones cebo, aumentos de precio de último minuto, y daños ocultos",
       "subtitle": "Respuestas claras a las preguntas que dan miedo antes de reservar transporte de autos. Explicaciones honestas antes de reservar, y cotizaciones realistas cuando esté listo."
     },
     "checkQuote": {
@@ -2106,7 +2101,7 @@
         "title": "No es transporte de autos. Es logística.",
         "body": {
           "0": "La mayoría de los corredores continentales de transporte de autos son un camión, un conductor, un solo trayecto. Hawái es diferente. Su vehículo tiene que pasar dos tramos terrestres, una travesía oceánica, papeleo portuario en ambos extremos, y (para las islas externas) una barcaza inter-isla. Seis transferencias. Seis oportunidades para que algo salga mal si nadie está coordinando.",
-          "1": "La mayoría de los corredores no están preparados para coordinar el envío marítimo. Le dan una cotización, toman un depósito, y le entregan el número de un agente portuario que nunca ha oído de usted. Nosotros no."
+          "1": "Muchos brokers no están preparados para coordinar envío marítimo. Cotizan un precio basado en lo que esperan que cueste, toman un depósito, y le entregan el número de un agente portuario que nunca ha oído de usted. Nosotros no."
         },
         "punchline": "Su coordinador es responsable de toda la cadena — desde la recogida en California hasta su entrada en Honolulu, Hilo, Kahului, o Lihue. Un número de teléfono, un punto de contacto responsable."
       },
