@@ -101,7 +101,7 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
     "Route: " + o + " -> " + d,
     "Vehicle: " + vehicle + " (" + input.vehicle.type + ")",
     "Tier: " + tier,
-    "Estimate: " + price + (input.estimate?.confidence ? " (confidence " + input.estimate.confidence + "%)" : ""),
+    "Estimate: " + price,
   ];
   const range = rangeLabel(input.estimate);
   if (range) textLines.push(range);
@@ -132,10 +132,6 @@ function renderHtml(
     ? '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Notes</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.customer.notes) + '</td></tr>'
     : "";
 
-  const confidenceRow = input.estimate?.confidence
-    ? '<div style="font-size:12px;color:' + GRAY + ';margin-top:2px;">Confidence ' + input.estimate.confidence + '%</div>'
-    : "";
-
   const attribution = renderAttribution(input.attribution);
 
   return '<!doctype html><html><body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Roboto,sans-serif;">'
@@ -152,7 +148,6 @@ function renderHtml(
     + (rangeLabel(input.estimate)
         ? '<div style="font-size:13px;color:' + GRAY + ';margin-top:6px;">' + escapeHtml(rangeLabel(input.estimate) ?? "") + '</div>'
         : "")
-    + confidenceRow
     + '</div>'
     + '<h3 style="margin:0 0 8px;font-size:14px;color:' + PINE + ';text-transform:uppercase;letter-spacing:0.05em;">Customer</h3>'
     + '<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">'
