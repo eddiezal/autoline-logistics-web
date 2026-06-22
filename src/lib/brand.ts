@@ -12,15 +12,15 @@
 
 export const BRAND = {
   colors: {
-    orange: "#15803D",      // legacy key -- now Operator green (primary)
-    orangeDark: "#166534",  // deeper green (hover)
+    orange: "#128A3A",      // legacy key -- now Deep Trust Green (CTA primary)
+    orangeDark: "#0B6F2E",  // deeper green (hover)
     orangeLight: "#86EFAC", // light green
     orangeTint: "#DCFCE7",  // green tint
-    accent: "#84CC16",      // hi-vis lime -- CTAs / numbers / highlights
-    accentInk: "#0A1E14",   // dark text to sit on lime
+    accent: "#128A3A",      // Deep CTA green (lime retired)
+    accentInk: "#FFFFFF",   // white text on deep green
 
-    charcoal: "#2D2D2D",
-    charcoalAlt: "#1F1F1F",
+    charcoal: "#061F16",
+    charcoalAlt: "#03120E",
 
     gray900: "#1A1A1A",
     gray700: "#404040",

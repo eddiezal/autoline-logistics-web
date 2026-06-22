@@ -22,13 +22,17 @@
    * LOCKED May 22, 2026: Operator Green (Option A) from green-finalize-operator.html.
    * Deep green primary + hi-vis lime accent (replaces orange on CTAs/numbers).
    * ============================================================ */
-  --color-brand-primary: #15803d;        /* Operator green */
-  --color-brand-primary-hover: #166534;  /* deeper green (hover) */
+  --color-brand-primary: #128A3A;        /* Deep CTA green (Trust Logistics) */
+  --color-brand-primary-hover: #0B6F2E;  /* deeper green (hover) */
   --color-brand-ink: #0a1e14;            /* pine (green-black) */
   --color-brand-paper: #fafaf9;          /* warm off-white */
-  --color-brand-accent: #84cc16;         /* hi-vis lime: CTAs / numbers */
-  --color-brand-accent-ink: #0a1e14;     /* dark text on lime */
-  --color-brand-accent-hover: #65a30d;   /* deeper lime (hover) */
+  --color-brand-accent: #128A3A;         /* Deep CTA green (was lime) */
+  --color-brand-accent-ink: #FFFFFF;     /* white text on deep green */
+  --color-brand-accent-hover: #0B6F2E;   /* deeper green (hover) */
+  --color-brand-primary-active: #075C26; /* deeper still (CTA active) */
+  --color-brand-muted: #6FCB8A;          /* muted green: icons, small trust accents */
+  --color-brand-muted-border: #8BD4A5;   /* muted green border */
+  --color-brand-soft: #EAF7EF;           /* very pale green: hover wash / soft fills */
 
   --font-brand-display: var(--font-inter);
   --font-brand-body: var(--font-inter);
@@ -63,8 +67,8 @@
   --color-orange-dark: var(--color-brand-primary-hover);
   --color-orange-light: #86efac;  /* light green (legacy alias) */
   --color-orange-tint: #dcfce7;   /* green tint (legacy alias) */
-  --color-charcoal: #2d2d2d;
-  --color-charcoal-alt: #1f1f1f;
+  --color-charcoal: #061F16;
+  --color-charcoal-alt: #03120E;
 
   /* Neutral grays (no blue undertone) — used directly by existing pages */
   --color-gray-900: #1a1a1a;

@@ -90,7 +90,7 @@ export default function Home() {
                     "No fake-low quote games." — both at H1 scale */}
                 <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-[-0.04em]">
                   <span className="block text-white">{t("home.hero.title")}</span>
-                  <span className="block text-brand-accent mt-2">{t("home.hero.titleAccent")}</span>
+                  <span className="block text-white mt-2">{t("home.hero.titleAccent")}</span>
                 </h1>
 
                 {/* Subhead — names the 3 pillars that map to the proof chips below */}

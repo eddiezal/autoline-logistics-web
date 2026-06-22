@@ -419,7 +419,7 @@ function RouteEndItem({
     tone === "origin"
       ? "#16a34a"
       : tone === "current"
-        ? "#84cc16"
+        ? "#6FCB8A"
         : "#0f172a";
   const dotShadow = tone === "current" ? "0 0 0 4px #dcfce7" : "none";
 

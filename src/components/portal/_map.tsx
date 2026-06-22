@@ -209,7 +209,7 @@ function MapboxView({ origin, destination, currentLocation, heightPx }: Props) {
           type: "line",
           source: "route-traveled-source",
           paint: {
-            "line-color": "#84CC16", // brand lime
+            "line-color": "#6FCB8A", // brand muted green (was lime)
             "line-width": 4,
             "line-opacity": 0.95,
           },

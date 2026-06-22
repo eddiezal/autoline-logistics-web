@@ -142,23 +142,23 @@ export function PortalPreviewCard({
           <path
             d="M 28 110 Q 110 80, 200 92 T 290 78"
             fill="none"
-            stroke="#84cc16"
+            stroke="#6FCB8A"
             strokeWidth="3.5"
             strokeLinecap="round"
           />
 
           {/* Origin marker (Beverly Hills) */}
-          <circle cx="28" cy="110" r="7" fill="#84cc16" stroke="#ffffff" strokeWidth="2" />
+          <circle cx="28" cy="110" r="7" fill="#6FCB8A" stroke="#ffffff" strokeWidth="2" />
           <circle cx="28" cy="110" r="2.5" fill="#ffffff" />
 
           {/* Destination marker (Austin) */}
-          <circle cx="455" cy="48" r="7" fill="#ffffff" stroke="#84cc16" strokeWidth="2.5" />
-          <circle cx="455" cy="48" r="2.5" fill="#84cc16" />
+          <circle cx="455" cy="48" r="7" fill="#ffffff" stroke="#6FCB8A" strokeWidth="2.5" />
+          <circle cx="455" cy="48" r="2.5" fill="#6FCB8A" />
 
           {/* Truck at current location — at the lime/slate-dashed split */}
           <g transform="translate(290 78) rotate(-12)">
             {/* Truck body */}
-            <rect x="-14" y="-8" width="20" height="13" rx="2" fill="#84cc16" stroke="#0f1729" strokeWidth="1.5" />
+            <rect x="-14" y="-8" width="20" height="13" rx="2" fill="#6FCB8A" stroke="#0f1729" strokeWidth="1.5" />
             {/* Cab */}
             <rect x="6" y="-5" width="8" height="10" rx="1.5" fill="#a3e635" stroke="#0f1729" strokeWidth="1.5" />
             {/* Window */}
@@ -169,7 +169,7 @@ export function PortalPreviewCard({
           </g>
 
           {/* Subtle glow under truck — implies motion */}
-          <ellipse cx="290" cy="82" rx="22" ry="3" fill="#84cc16" opacity="0.18" />
+          <ellipse cx="290" cy="82" rx="22" ry="3" fill="#6FCB8A" opacity="0.18" />
         </svg>
       </div>
 
@@ -185,7 +185,7 @@ export function PortalPreviewCard({
           </p>
         </div>
         <div className="px-3 py-3.5" style={{ background: "rgba(132,204,22,0.06)" }}>
-          <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#15803d" }}>
+          <p className="text-[9px] font-bold uppercase tracking-wider mb-1" style={{ color: "#128A3A" }}>
             {currentEyebrow}
           </p>
           <p className="text-[12px] font-bold text-charcoal leading-tight">
