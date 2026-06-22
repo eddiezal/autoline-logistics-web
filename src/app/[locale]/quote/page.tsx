@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { QuoteForm } from "@/components/QuoteForm";
+import { parseQuoteSearchParams, type HeroHandoff } from "@/lib/hero-handoff";
 
 export const metadata: Metadata = {
   title: "Get a locked price — Auto Line Logistics",
@@ -16,15 +17,34 @@ export const metadata: Metadata = {
 export default async function QuotePage({
   searchParams,
 }: {
-  searchParams: Promise<{ from?: string; to?: string }>;
+  searchParams: Promise<{
+    from?: string;
+    to?: string;
+    vehicle_type?: string;
+    condition?: string;
+    transport?: string;
+    timing?: string;
+  }>;
 }) {
   const params = await searchParams;
+  const handoff = parseQuoteSearchParams(params);
+  // Headline still uses fromCode/toCode for the "CA → FL" render when
+  // legacy callers pass state codes. ZIP-only callers fall back to the
+  // default headline. The form gets the full handoff either way.
   const fromCode = (params.from ?? "").toUpperCase();
   const toCode = (params.to ?? "").toUpperCase();
-  return <QuoteContent fromCode={fromCode} toCode={toCode} />;
+  return <QuoteContent fromCode={fromCode} toCode={toCode} handoff={handoff} />;
 }
 
-function QuoteContent({ fromCode, toCode }: { fromCode: string; toCode: string }) {
+function QuoteContent({
+  fromCode,
+  toCode,
+  handoff,
+}: {
+  fromCode: string;
+  toCode: string;
+  handoff: HeroHandoff;
+}) {
   const t = useTranslations();
   const fromLabel = fromCode ? safeT(t, `quote.states.${fromCode}`) : "";
   const toLabel = toCode ? safeT(t, `quote.states.${toCode}`) : "";
@@ -55,7 +75,7 @@ function QuoteContent({ fromCode, toCode }: { fromCode: string; toCode: string }
         <section className="py-16 bg-white">
           <Container>
             <div className="max-w-2xl">
-              <QuoteForm fromCode={fromCode} toCode={toCode} />
+              <QuoteForm handoff={handoff} />
             </div>
           </Container>
         </section>

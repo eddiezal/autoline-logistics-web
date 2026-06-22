@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { buildQuoteHref } from "@/lib/hero-handoff";
 import {
   lookupZipApprox,
   zipPrefixToState,
@@ -303,20 +304,19 @@ export function HeroRouteFinder() {
     };
   }, [route.kind, fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey]);
 
-  // Pre-fill /quote with all six inputs — fallback path until SD API is
-  // wired and we can lock + book in-place.
+  // Pre-fill /quote with all six inputs via the shared handoff
+  // contract (src/lib/hero-handoff.ts). Adding a new param is a
+  // one-line change to HeroHandoff; the rest of the chain auto-flows.
   const quoteHref = useMemo(
-    () => ({
-      pathname: "/quote" as const,
-      query: {
-        ...(fromZip ? { from: fromZip } : {}),
-        ...(toZip ? { to: toZip } : {}),
-        ...(vehicleKey ? { vehicle_type: vehicleKey } : {}),
-        ...(conditionKey ? { condition: conditionKey } : {}),
-        ...(transportKey ? { transport: transportKey } : {}),
-        ...(timingKey ? { timing: timingKey } : {}),
-      },
-    }),
+    () =>
+      buildQuoteHref({
+        originZip: fromZip,
+        destinationZip: toZip,
+        vehicleType: vehicleKey,
+        condition: conditionKey,
+        transportType: transportKey,
+        timing: timingKey,
+      }),
     [fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey],
   );
 

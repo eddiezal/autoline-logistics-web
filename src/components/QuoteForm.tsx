@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { track, captureGclid } from "@/lib/analytics/events";
 import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
+import type { HeroHandoff } from "@/lib/hero-handoff";
 
 const VEHICLE_TYPE_KEYS = [
   "sedan",
@@ -33,21 +34,17 @@ const HCAPTCHA_TEST_KEY = "10000000-ffff-ffff-ffff-000000000001";
  * the lead reference. On error, an inline message appears and the user
  * can retry.
  */
-export function QuoteForm({
-  fromCode,
-  toCode,
-}: {
-  fromCode: string;
-  toCode: string;
-}) {
+export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   const t = useTranslations();
   const required = t("quote.form.requiredMark");
   const siteKey =
     process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY ?? HCAPTCHA_TEST_KEY;
   const usingTestKey = siteKey === HCAPTCHA_TEST_KEY;
 
-  const [originZip, setOriginZip] = useState("");
-  const [destinationZip, setDestinationZip] = useState("");
+  const [originZip, setOriginZip] = useState(handoff.originZip ?? "");
+  const [destinationZip, setDestinationZip] = useState(
+    handoff.destinationZip ?? "",
+  );
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -95,11 +92,21 @@ export function QuoteForm({
       // different consumers.
       const gclid = captureGclid();
       const vehicleType = payload.vehicleType ?? "unknown";
+      // Derive state from ZIP for analytics (state codes used to come
+      // from fromCode/toCode URL params; now they're derived from ZIP).
+      const fromState =
+        lookupZipApprox(originZip)?.entry.state ??
+        zipPrefixToState(originZip) ??
+        "";
+      const toState =
+        lookupZipApprox(destinationZip)?.entry.state ??
+        zipPrefixToState(destinationZip) ??
+        "";
       track({
         name: "quote_submitted",
         props: {
-          from_state: fromCode,
-          to_state: toCode,
+          from_state: fromState,
+          to_state: toState,
           vehicle_type: vehicleType,
           gclid,
         },
@@ -107,8 +114,8 @@ export function QuoteForm({
       track({
         name: "lead_form_submit",
         props: {
-          from_state: fromCode,
-          to_state: toCode,
+          from_state: fromState,
+          to_state: toState,
           gclid,
         },
       });
@@ -144,6 +151,16 @@ export function QuoteForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Hidden handoff fields — pre-quote selections the hero captured
+          but the form doesn't expose visually. Flow into the lead doc
+          via FormData on submit. */}
+      {handoff.condition && (
+        <input type="hidden" name="condition" value={handoff.condition} />
+      )}
+      {handoff.transportType && (
+        <input type="hidden" name="transport" value={handoff.transportType} />
+      )}
+
       {/* Origin */}
       <fieldset className="space-y-3">
         <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
@@ -213,6 +230,7 @@ export function QuoteForm({
         <Select
           label={t("quote.form.vehicle.type.label")}
           name="vehicle_type"
+          defaultValue={handoff.vehicleType}
           options={VEHICLE_TYPE_KEYS.map((k) => ({
             value: k,
             label: t("quote.form.vehicle.type.options." + k),
@@ -234,19 +252,23 @@ export function QuoteForm({
             value="standby"
             label={t("quote.form.tier.options.standby.label")}
             sub={t("quote.form.tier.options.standby.sub")}
+            defaultChecked={handoff.timing === "standby"}
           />
           <Radio
             name="tier"
             value="priority"
             label={t("quote.form.tier.options.priority.label")}
             sub={t("quote.form.tier.options.priority.sub")}
-            defaultChecked
+            defaultChecked={
+              handoff.timing === "priority" || !handoff.timing
+            }
           />
           <Radio
             name="tier"
             value="expedited"
             label={t("quote.form.tier.options.expedited.label")}
             sub={t("quote.form.tier.options.expedited.sub")}
+            defaultChecked={handoff.timing === "expedited"}
           />
         </div>
       </fieldset>
@@ -387,10 +409,12 @@ function Select({
   label,
   name,
   options,
+  defaultValue,
 }: {
   label: string;
   name: string;
   options: Array<{ value: string; label: string }>;
+  defaultValue?: string;
 }) {
   return (
     <label className="block">
@@ -399,6 +423,7 @@ function Select({
       </span>
       <select
         name={name}
+        defaultValue={defaultValue}
         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-orange focus:ring-2 focus:ring-orange/20 text-charcoal bg-white"
       >
         {options.map((o) => (
