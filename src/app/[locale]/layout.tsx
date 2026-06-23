@@ -5,6 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Analytics } from "@/components/Analytics";
+import { CallRailSnippet } from "@/components/CallRailSnippet";
 import "../globals.css";
 
 // Single-font system: Inter handles BOTH body and display (Stripe/Linear playbook).
@@ -117,6 +118,7 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <Analytics />
+        <CallRailSnippet />
       </body>
     </html>
   );

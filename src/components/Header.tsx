@@ -52,7 +52,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <a
               href={`tel:${phone.replace(/[^0-9+]/g, "")}`}
-              className="font-semibold hover:opacity-80"
+              className="font-semibold hover:opacity-80 cr-trackable"
             >
               {phone}
             </a>

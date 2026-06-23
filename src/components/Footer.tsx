@@ -83,7 +83,7 @@ export function Footer() {
               <li>
                 <a
                   href={`tel:${phone.replace(/[^0-9+]/g, "")}`}
-                  className="hover:text-orange"
+                  className="hover:text-orange cr-trackable"
                 >
                   {phone}
                 </a>

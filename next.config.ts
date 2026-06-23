@@ -29,17 +29,17 @@ const CSP_DIRECTIVES = [
   // swap (Analytics.tsx loading gtag from the sGTM endpoint) doesn't
   // trip CSP. Add the custom domain (sgtm.autolinelogistics.com) here
   // when DNS cutover happens.
-  "script-src 'self' 'unsafe-inline' https://js.authorize.net https://jstest.authorize.net https://*.hcaptcha.com https://hcaptcha.com https://www.googletagmanager.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://apis.google.com https://accounts.google.com https://www.gstatic.com https://va.vercel-scripts.com",
+  "script-src 'self' 'unsafe-inline' https://js.authorize.net https://jstest.authorize.net https://*.hcaptcha.com https://hcaptcha.com https://www.googletagmanager.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://apis.google.com https://accounts.google.com https://www.gstatic.com https://va.vercel-scripts.com https://cdn.callrail.com",
   // Styles: 'unsafe-inline' allows our CSS-variable inline styles.
   "style-src 'self' 'unsafe-inline' https://*.hcaptcha.com",
   "font-src 'self' data:",
-  "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://www.google-analytics.com https://*.gstatic.com https://api.mapbox.com",
+  "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://www.google-analytics.com https://*.gstatic.com https://api.mapbox.com https://cdn.callrail.com",
   // Fetch destinations.
   // sGTM endpoints added for /g/collect routing through Cloud Run (Phase E).
   // www.google-analytics.com stays as fallback for when NEXT_PUBLIC_SGTM_URL
   // is unset. Add the custom domain (sgtm.autolinelogistics.com) when DNS
   // cutover happens.
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://www.google-analytics.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com https://api.mapbox.com https://events.mapbox.com",
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://www.google-analytics.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com https://api.mapbox.com https://events.mapbox.com https://api.callrail.com",
   // iframes for: Google sign-in popup, Auth.net Accept.js, hCaptcha challenge, Firebase auth handler.
   "frame-src 'self' https://accounts.google.com https://*.authorize.net https://js.authorize.net https://jstest.authorize.net https://*.hcaptcha.com https://hcaptcha.com https://*.firebaseapp.com",
   // Disallow inline plugins entirely.
