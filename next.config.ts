@@ -134,6 +134,15 @@ const nextConfig: NextConfig = {
       // Deleted blog articles (2026-06-22 deposit positioning sweep) -> blog index
       { source: "/blog/deposit-before-driver", destination: "/blog", permanent: true },
       { source: "/blog/pagar-deposito-envio-auto-conductor", destination: "/blog", permanent: true },
+      // Customer-portal shortcuts. Customers (and any old email links) may
+      // type /login or /signin at the root. The real portal lives at
+      // /portal/login. Added 2026-06-23 after a customer hit /login and
+      // got a 404.
+      { source: "/login", destination: "/portal/login", permanent: true },
+      { source: "/signin", destination: "/portal/login", permanent: true },
+      { source: "/sign-in", destination: "/portal/login", permanent: true },
+      { source: "/account", destination: "/portal/account", permanent: true },
+      { source: "/my-account", destination: "/portal/account", permanent: true },
     ];
   },
 };
