@@ -33,13 +33,13 @@ const CSP_DIRECTIVES = [
   // Styles: 'unsafe-inline' allows our CSS-variable inline styles.
   "style-src 'self' 'unsafe-inline' https://*.hcaptcha.com",
   "font-src 'self' data:",
-  "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://www.google-analytics.com https://*.gstatic.com",
+  "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://www.google-analytics.com https://*.gstatic.com https://api.mapbox.com",
   // Fetch destinations.
   // sGTM endpoints added for /g/collect routing through Cloud Run (Phase E).
   // www.google-analytics.com stays as fallback for when NEXT_PUBLIC_SGTM_URL
   // is unset. Add the custom domain (sgtm.autolinelogistics.com) when DNS
   // cutover happens.
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://www.google-analytics.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com",
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://www.google-analytics.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com https://api.mapbox.com https://events.mapbox.com",
   // iframes for: Google sign-in popup, Auth.net Accept.js, hCaptcha challenge, Firebase auth handler.
   "frame-src 'self' https://accounts.google.com https://*.authorize.net https://js.authorize.net https://jstest.authorize.net https://*.hcaptcha.com https://hcaptcha.com https://*.firebaseapp.com",
   // Disallow inline plugins entirely.
@@ -49,6 +49,10 @@ const CSP_DIRECTIVES = [
   "form-action 'self' mailto:",
   // Defeat clickjacking. (frame-ancestors supersedes X-Frame-Options where supported.)
   "frame-ancestors 'none'",
+  // Mapbox-gl spawns rendering workers from blob: URLs. Without an explicit
+  // worker-src directive, browsers fall back to script-src which does not
+  // allow blob:, blocking the portal tracking map. Added 2026-06-23.
+  "worker-src 'self' blob:",
   // Force HTTPS for any same-origin sub-resources.
   "upgrade-insecure-requests",
 ].join("; ");
