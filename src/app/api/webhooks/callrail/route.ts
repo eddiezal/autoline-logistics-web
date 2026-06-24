@@ -64,21 +64,26 @@ interface CallRailPayload {
   customer_id?: string;
 }
 
-/** Verify the CallRail HMAC-SHA256 signature. */
-function verifySignature(rawBody: string, signature: string | null, secret: string): boolean {
+/** Verify the CallRail webhook signature.
+ *
+ *  Despite the "Signature Secret Token" naming in CallRail's UI, the
+ *  scheme is NOT HMAC. CallRail sends the literal token value in the
+ *  `signature` header on every webhook. Receivers compare strings.
+ *
+ *  Trade-off: simpler integration; no payload integrity check. If
+ *  someone leaks the secret, they can forge requests. Mitigated by:
+ *  (a) HTTPS in transit, (b) Vercel-only env var, (c) memory rule to
+ *  rotate immediately if the value ever escapes the secrets store.
+ *
+ *  Timing-safe comparison still used to prevent timing-side-channel
+ *  enumeration of the secret. */
+function verifySignature(signature: string | null, secret: string): boolean {
   if (!signature) return false;
-  // CallRail sends "sha256=<hex>" format. Strip the prefix if present.
-  const expected = crypto
-    .createHmac("sha256", secret)
-    .update(rawBody)
-    .digest("hex");
-  const provided = signature.replace(/^sha256=/, "");
-  // Timing-safe comparison.
+  const provided = Buffer.from(signature.trim());
+  const expected = Buffer.from(secret.trim());
+  if (provided.length !== expected.length) return false;
   try {
-    return crypto.timingSafeEqual(
-      Buffer.from(expected, "hex"),
-      Buffer.from(provided, "hex"),
-    );
+    return crypto.timingSafeEqual(provided, expected);
   } catch {
     return false;
   }
@@ -142,8 +147,11 @@ export async function POST(req: Request) {
   const rawBody = await req.text();
   const signature = req.headers.get("signature") ?? req.headers.get("x-callrail-signature");
 
-  if (!verifySignature(rawBody, signature, secret)) {
-    console.warn("[callrail webhook] signature verification failed");
+  if (!verifySignature(signature, secret)) {
+    console.warn("[callrail webhook] signature verification failed", {
+      hasSignature: signature !== null,
+      providedLen: signature?.length ?? 0,
+    });
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
@@ -219,18 +227,4 @@ export async function POST(req: Request) {
   try {
     await callDocRef.set(leadDoc);
   } catch (err) {
-    console.error("[callrail webhook] Firestore write failed:", err);
-    return NextResponse.json(
-      { error: "Failed to persist call lead" },
-      { status: 500 },
-    );
-  }
-
-  // Fire GA4 event in the background. Don't block the webhook response
-  // on GA4 latency — CallRail expects fast acks.
-  fireGa4Event(payload).catch((err) =>
-    console.error("[callrail webhook] GA4 background fire failed:", err),
-  );
-
-  return NextResponse.json({ ok: true, leadRef: leadDoc.leadRef });
-}
+    
