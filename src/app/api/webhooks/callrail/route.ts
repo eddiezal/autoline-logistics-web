@@ -227,4 +227,18 @@ export async function POST(req: Request) {
   try {
     await callDocRef.set(leadDoc);
   } catch (err) {
-    
+    console.error('[callrail webhook] Firestore write failed:', err);
+    return NextResponse.json(
+      { error: 'Failed to persist call lead' },
+      { status: 500 },
+    );
+  }
+
+  // Fire GA4 event in the background. Don't block the webhook response
+  // on GA4 latency — CallRail expects fast acks.
+  fireGa4Event(payload).catch((err) =>
+    console.error('[callrail webhook] GA4 background fire failed:', err),
+  );
+
+  return NextResponse.json({ ok: true, leadRef: leadDoc.leadRef });
+}
