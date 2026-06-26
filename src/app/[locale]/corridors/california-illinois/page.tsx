@@ -9,6 +9,13 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
 import { CorridorPricingCard } from "@/components/CorridorPricingCard";
 import { getCorridor } from "@/lib/corridors";
+import { StructuredData } from "@/components/StructuredData";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  serviceSchema,
+  SITE_URL,
+} from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Ship a car California to Illinois. Locked-price corridor.",
@@ -36,8 +43,31 @@ export default async function CaliforniaIllinoisCorridor({
     a: t(`corridors.californiaIllinois.faq.items.${i}.a`),
   }));
 
+  // Build structured data for this corridor page. Three schemas:
+  // 1. BreadcrumbList — search-result breadcrumb display
+  // 2. Service — corridor service offering linked to Organization
+  // 3. FAQPage — mirrors the rendered FAQ items for Google FAQ rich snippets
+  const localePath = locale === "es" ? "/es" : "";
+  const canonicalUrl = `${SITE_URL}${localePath}/corridors/california-illinois`;
+  const corridorStructuredData = [
+    breadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}${localePath}/` },
+      { name: "Corridors", url: `${SITE_URL}${localePath}/corridors` },
+      { name: "California to Illinois", url: canonicalUrl },
+    ]),
+    serviceSchema({
+      url: canonicalUrl,
+      name: "Auto Transport from California to Illinois",
+      description:
+        "Locked-price auto transport from California to Illinois. Door-to-door pickup and delivery to Chicago, Naperville, Aurora, and Joliet. Open or enclosed trailers.",
+      areaServed: { origin: "California", destination: "Illinois" },
+    }),
+    faqPageSchema(faqs),
+  ];
+
   return (
     <>
+      <StructuredData data={corridorStructuredData} />
       <Header />
       <CorridorAnalytics corridorSlug="california-illinois" fromState="CA" toState="IL" />
 

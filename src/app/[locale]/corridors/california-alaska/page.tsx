@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { CorridorAnalytics } from "@/components/CorridorAnalytics";
@@ -8,6 +8,13 @@ import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
 import { getCorridor } from "@/lib/corridors";
+import { StructuredData } from "@/components/StructuredData";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  serviceSchema,
+  SITE_URL,
+} from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Ship a car California to Alaska — PCS, oil/gas, retiree relocations",
@@ -33,8 +40,31 @@ export default function CaliforniaAlaskaCorridor() {
     a: t(`corridors.californiaAlaska.faq.items.${i}.a`),
   }));
 
+  // Build structured data for this corridor page. HI/AK use the sync
+  // useLocale hook because the component is sync (vs FAQ_INDEXES corridors
+  // which await params for the locale). Same schema output.
+  const locale = useLocale();
+  const localePath = locale === "es" ? "/es" : "";
+  const canonicalUrl = `${SITE_URL}${localePath}/corridors/california-alaska`;
+  const corridorStructuredData = [
+    breadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}${localePath}/` },
+      { name: "Corridors", url: `${SITE_URL}${localePath}/corridors` },
+      { name: "California to Alaska", url: canonicalUrl },
+    ]),
+    serviceSchema({
+      url: canonicalUrl,
+      name: "Auto Transport from California to Alaska",
+      description:
+        "California-to-Alaska vehicle transport via overland Alaska Highway or ocean from Tacoma to Anchorage. Door-to-door coordination, locked-price quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright.",
+      areaServed: { origin: "California", destination: "Alaska" },
+    }),
+    faqPageSchema(faqs),
+  ];
+
   return (
     <>
+      <StructuredData data={corridorStructuredData} />
       <Header />
       <CorridorAnalytics corridorSlug="california-alaska" fromState="CA" toState="AK" />
 

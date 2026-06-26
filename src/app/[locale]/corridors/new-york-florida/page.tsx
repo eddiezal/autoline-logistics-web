@@ -9,6 +9,13 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
 import { CorridorPricingCard } from "@/components/CorridorPricingCard";
 import { getCorridor } from "@/lib/corridors";
+import { StructuredData } from "@/components/StructuredData";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  serviceSchema,
+  SITE_URL,
+} from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Ship a car New York to Florida. Locked-price corridor.",
@@ -36,8 +43,31 @@ export default async function NewYorkFloridaCorridor({
     a: t(`corridors.newYorkFlorida.faq.items.${i}.a`),
   }));
 
+  // Build structured data for this corridor page. Three schemas:
+  // 1. BreadcrumbList — search-result breadcrumb display
+  // 2. Service — corridor service offering linked to Organization
+  // 3. FAQPage — mirrors the rendered FAQ items for Google FAQ rich snippets
+  const localePath = locale === "es" ? "/es" : "";
+  const canonicalUrl = `${SITE_URL}${localePath}/corridors/new-york-florida`;
+  const corridorStructuredData = [
+    breadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}${localePath}/` },
+      { name: "Corridors", url: `${SITE_URL}${localePath}/corridors` },
+      { name: "New York to Florida", url: canonicalUrl },
+    ]),
+    serviceSchema({
+      url: canonicalUrl,
+      name: "Auto Transport from New York to Florida",
+      description:
+        "Locked-price East Coast auto transport between New York and Florida. The classic snowbird corridor. Door-to-door pickup and delivery to Miami, Orlando, Tampa, and Naples.",
+      areaServed: { origin: "New York", destination: "Florida" },
+    }),
+    faqPageSchema(faqs),
+  ];
+
   return (
     <>
+      <StructuredData data={corridorStructuredData} />
       <Header />
       <CorridorAnalytics corridorSlug="new-york-florida" fromState="NY" toState="FL" />
 

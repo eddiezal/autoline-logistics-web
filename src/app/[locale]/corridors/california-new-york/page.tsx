@@ -9,6 +9,13 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
 import { CorridorPricingCard } from "@/components/CorridorPricingCard";
 import { getCorridor } from "@/lib/corridors";
+import { StructuredData } from "@/components/StructuredData";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  serviceSchema,
+  SITE_URL,
+} from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
   title: "Ship a car California to New York. Locked-price corridor.",
@@ -36,8 +43,31 @@ export default async function CaliforniaNewYorkCorridor({
     a: t(`corridors.californiaNewYork.faq.items.${i}.a`),
   }));
 
+  // Build structured data for this corridor page. Three schemas:
+  // 1. BreadcrumbList — search-result breadcrumb display
+  // 2. Service — corridor service offering linked to Organization
+  // 3. FAQPage — mirrors the rendered FAQ items for Google FAQ rich snippets
+  const localePath = locale === "es" ? "/es" : "";
+  const canonicalUrl = `${SITE_URL}${localePath}/corridors/california-new-york`;
+  const corridorStructuredData = [
+    breadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}${localePath}/` },
+      { name: "Corridors", url: `${SITE_URL}${localePath}/corridors` },
+      { name: "California to New York", url: canonicalUrl },
+    ]),
+    serviceSchema({
+      url: canonicalUrl,
+      name: "Auto Transport from California to New York",
+      description:
+        "Locked-price coast-to-coast auto transport between California and New York. Door-to-door pickup and delivery to Manhattan, Brooklyn, Long Island, and Upstate.",
+      areaServed: { origin: "California", destination: "New York" },
+    }),
+    faqPageSchema(faqs),
+  ];
+
   return (
     <>
+      <StructuredData data={corridorStructuredData} />
       <Header />
       <CorridorAnalytics corridorSlug="california-new-york" fromState="CA" toState="NY" />
 
