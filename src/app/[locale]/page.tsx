@@ -6,12 +6,18 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { HeroRouteFinder } from "@/components/HeroRouteFinder";
 import { PortalPreviewCard } from "@/components/PortalPreviewCard";
+import { StructuredData } from "@/components/StructuredData";
+import { localBusinessSchema } from "@/lib/seo/schemas";
 
 export default function Home() {
   const t = useTranslations();
 
   return (
     <>
+      {/* Homepage extends the sitewide Organization + WebSite schemas with
+          LocalBusiness so this page is eligible for the Maps/local SERP
+          card with address, phone, hours, and reviews (once we have them). */}
+      <StructuredData data={[localBusinessSchema()]} />
       <Header />
 
       <main className="flex-1">
@@ -1318,23 +1324,4 @@ function ToolTeaser({
       <p
         className={`font-bold text-base leading-snug mb-2 ${
           live
-            ? "text-charcoal group-hover:text-orange transition"
-            : "text-gray-500"
-        }`}
-      >
-        {title}
-      </p>
-      <p className="text-gray-700 text-sm leading-relaxed">{summary}</p>
-    </>
-  );
-
-  if (live && href) {
-    return (
-      <Link href={href} className={baseClass}>
-        {content}
-      </Link>
-    );
-  }
-
-  return <div className={baseClass}>{content}</div>;
-}
+      
