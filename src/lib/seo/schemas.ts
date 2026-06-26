@@ -217,7 +217,11 @@ export function breadcrumbSchema(items: readonly BreadcrumbItem[]) {
 
 export interface FaqItem {
   q: string;
-  a: string;
+  // Accept unknown so the corridor FAQ shape (a: ReactNode for JSX flexibility)
+  // can pass through. We coerce to string at serialization. Schema JSON-LD
+  // needs string content; in practice both call sites pass string values
+  // from t() lookups, but the TypeScript types weren't aligned.
+  a: unknown;
 }
 
 export function faqPageSchema(items: readonly FaqItem[]) {
@@ -229,7 +233,8 @@ export function faqPageSchema(items: readonly FaqItem[]) {
       name: pair.q,
       acceptedAnswer: {
         "@type": "Answer",
-        text: pair.a,
+        // Coerce to string. Schema.org rejects non-string types in 'text'.
+        text: typeof pair.a === "string" ? pair.a : String(pair.a ?? ""),
       },
     })),
   };
