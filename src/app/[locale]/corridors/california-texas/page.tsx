@@ -45,11 +45,7 @@ export default async function CaliforniaTexasCorridor({
     a: t(`corridors.californiaTexas.faq.items.${i}.a`),
   }));
 
-  // Build structured data for this corridor page. Three schemas:
-  // 1. BreadcrumbList — search-result breadcrumb display
-  // 2. Service — corridor service offering with @id linked to Organization
-  // 3. FAQPage — the FAQ section we already render, mirrored as schema
-  //    for FAQ rich snippet eligibility in Google search results
+  // Structured data: BreadcrumbList + Service + FAQPage
   const localePath = locale === "es" ? "/es" : "";
   const canonicalUrl = `${SITE_URL}${localePath}/corridors/california-texas`;
   const corridorStructuredData = [
@@ -188,4 +184,40 @@ export default async function CaliforniaTexasCorridor({
           </Container>
         </section>
 
-        {/*
+        {/* FAQ */}
+        <section className="py-16 bg-gray-100">
+          <Container>
+            <div className="max-w-3xl">
+              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                {t("corridors.californiaTexas.faq.eyebrow")}
+              </p>
+              <FAQ items={faqs} title={t("corridors.californiaTexas.faq.title")} />
+            </div>
+          </Container>
+        </section>
+
+        {/* Final CTA */}
+        <section className="py-16 bg-charcoal text-white">
+          <Container>
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
+                {t("corridors.californiaTexas.finalCta.title")}
+              </h2>
+              <p className="text-lg text-gray-300 mb-8">
+                {t("corridors.californiaTexas.finalCta.body")}
+              </p>
+              <Link
+                href={{ pathname: "/quote", query: { from: "CA", to: "TX" } }}
+                className="inline-block bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-8 py-3 rounded-full transition"
+              >
+                {t("corridors.californiaTexas.finalCta.cta")}
+              </Link>
+            </div>
+          </Container>
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
+}

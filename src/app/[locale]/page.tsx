@@ -14,9 +14,8 @@ export default function Home() {
 
   return (
     <>
-      {/* Homepage extends the sitewide Organization + WebSite schemas with
-          LocalBusiness so this page is eligible for the Maps/local SERP
-          card with address, phone, hours, and reviews (once we have them). */}
+      {/* Homepage extends sitewide schemas with LocalBusiness for the
+          Maps/local SERP card eligibility. */}
       <StructuredData data={[localBusinessSchema()]} />
       <Header />
 
@@ -1324,4 +1323,23 @@ function ToolTeaser({
       <p
         className={`font-bold text-base leading-snug mb-2 ${
           live
-      
+            ? "text-charcoal group-hover:text-orange transition"
+            : "text-gray-500"
+        }`}
+      >
+        {title}
+      </p>
+      <p className="text-gray-700 text-sm leading-relaxed">{summary}</p>
+    </>
+  );
+
+  if (live && href) {
+    return (
+      <Link href={href} className={baseClass}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={baseClass}>{content}</div>;
+}
