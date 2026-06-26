@@ -1400,7 +1400,10 @@
       "NV": "Nevada",
       "WA": "Washington",
       "OR": "Oregón",
-      "CO": "Colorado"
+      "CO": "Colorado",
+      "GA": "Georgia",
+      "NC": "Carolina del Norte",
+      "IL": "Illinois"
     }
   },
   "tools": {
