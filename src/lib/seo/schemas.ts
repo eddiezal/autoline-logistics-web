@@ -198,7 +198,7 @@ export interface BreadcrumbItem {
   url: string;
 }
 
-export function breadcrumbSchema(items: BreadcrumbItem[]) {
+export function breadcrumbSchema(items: readonly BreadcrumbItem[]) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -220,7 +220,7 @@ export interface FaqItem {
   a: string;
 }
 
-export function faqPageSchema(items: FaqItem[]) {
+export function faqPageSchema(items: readonly FaqItem[]) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
