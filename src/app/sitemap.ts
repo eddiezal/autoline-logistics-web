@@ -13,7 +13,7 @@ import { routing } from "@/i18n/routing";
  * lifts, this sitemap becomes the canonical map of indexable URLs.
  */
 
-const BASE_URL = "https://autolinelogistics.com";
+const BASE_URL = "https://www.autolinelogistics.com";
 
 // Static page paths (under [locale]/). Locale prefixes are added below.
 const STATIC_PATHS = [

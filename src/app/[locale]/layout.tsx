@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   description:
     "Locked-price auto transport with real-time tracking, photo evidence, and a coordinator who picks up the phone. Built for individual customers who deserve more than a quote and a hope.",
-  metadataBase: new URL("https://autolinelogistics.com"),
+  metadataBase: new URL("https://www.autolinelogistics.com"),
   // Tell search engines the real domain is canonical, regardless of which URL
   // they crawl (staging, preview, etc.). Per-page metadata can override this.
   alternates: {
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Auto Line Logistics",
-    url: "https://autolinelogistics.com",
+    url: "https://www.autolinelogistics.com",
     images: [
       {
         url: "/photography/og-image.webp",
@@ -61,9 +61,7 @@ export const metadata: Metadata = {
   // and any non-production deploy. Only the real production domain should be indexed.
   // Flip this once `autolinelogistics.com` is connected to Vercel as the production domain.
   robots: {
-    index:
-      process.env.VERCEL_ENV === "production" &&
-      process.env.NEXT_PUBLIC_SITE_URL === "https://autolinelogistics.com",
+    index: process.env.VERCEL_ENV === "production",
     follow: true,
   },
   icons: {
