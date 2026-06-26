@@ -8,11 +8,14 @@ import type { MetadataRoute } from "next";
  * set in Vercel Production env vars, we disallow all crawling.
  */
 export default function robots(): MetadataRoute.Robots {
-  const isProductionDomain =
-    process.env.VERCEL_ENV === "production" &&
-    process.env.NEXT_PUBLIC_SITE_URL === "https://autolinelogistics.com";
+  // VERCEL_ENV is the source of truth for production vs preview.
+  // Previous logic also required NEXT_PUBLIC_SITE_URL to equal the non-www
+  // URL string, which silently disallowed all crawling when the env var
+  // was unset or set to the www version. Caused a 4-day SEO outage from
+  // the 2026-06-22 DNS cutover. Simplified 2026-06-26.
+  const isProduction = process.env.VERCEL_ENV === "production";
 
-  if (!isProductionDomain) {
+  if (!isProduction) {
     return {
       rules: [{ userAgent: "*", disallow: "/" }],
     };
@@ -23,11 +26,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Block any private/admin paths once those exist
-        disallow: ["/api/", "/_next/"],
+        // Block any private/admin paths
+        disallow: ["/api/", "/_next/", "/portal/"],
       },
     ],
-    sitemap: "https://autolinelogistics.com/sitemap.xml",
-    host: "https://autolinelogistics.com",
+    sitemap: "https://www.autolinelogistics.com/sitemap.xml",
+    host: "https://www.autolinelogistics.com",
   };
 }
