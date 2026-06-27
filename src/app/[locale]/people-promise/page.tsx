@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { StructuredData } from "@/components/StructuredData";
+import {
+  breadcrumbSchema,
+  faqPageSchema,
+  SITE_URL,
+} from "@/lib/seo/schemas";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -23,8 +29,22 @@ export default function PeoplePromisePage() {
     a: t(`peoplePromise.faq.items.${i}.a`),
   }));
 
+  // Structured data: BreadcrumbList + FAQPage. Uses sync useLocale for the
+  // locale-prefixed canonical URL (matches the corridor HI/AK pattern).
+  const locale = useLocale();
+  const localePath = locale === "es" ? "/es" : "";
+  const canonicalUrl = `${SITE_URL}${localePath}/people-promise`;
+  const pageStructuredData = [
+    breadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}${localePath}/` },
+      { name: "People Promise", url: canonicalUrl },
+    ]),
+    faqPageSchema(faqs),
+  ];
+
   return (
     <>
+      <StructuredData data={pageStructuredData} />
       <Header />
 
       <main className="flex-1">

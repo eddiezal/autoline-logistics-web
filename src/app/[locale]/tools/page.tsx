@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { StructuredData } from "@/components/StructuredData";
+import { breadcrumbSchema, SITE_URL } from "@/lib/seo/schemas";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -44,8 +46,19 @@ const TOOLS: ReadonlyArray<{
 export default function ToolsIndex() {
   const t = useTranslations();
 
+  const locale = useLocale();
+  const localePath = locale === "es" ? "/es" : "";
+  const canonicalUrl = `${SITE_URL}${localePath}/tools`;
+  const pageStructuredData = [
+    breadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}${localePath}/` },
+      { name: "Helpful tools", url: canonicalUrl },
+    ]),
+  ];
+
   return (
     <>
+      <StructuredData data={pageStructuredData} />
       <Header />
 
       <main className="flex-1">

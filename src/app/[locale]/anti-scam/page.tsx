@@ -6,6 +6,8 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { AntiScamCard } from "@/components/AntiScamCard";
 import { getAllArticleSummaries } from "@/lib/blog/articles";
+import { StructuredData } from "@/components/StructuredData";
+import { breadcrumbSchema, SITE_URL } from "@/lib/seo/schemas";
 
 /**
  * Anti-Scam Hub — destination page for the homepage's Anti-Scam Educator
@@ -33,8 +35,18 @@ export default async function AntiScamHubPage({
   const lang = locale === "es" ? "es" : "en";
   const articles = getAllArticleSummaries(lang);
 
+  const localePath = locale === "es" ? "/es" : "";
+  const canonicalUrl = `${SITE_URL}${localePath}/anti-scam`;
+  const pageStructuredData = [
+    breadcrumbSchema([
+      { name: "Home", url: `${SITE_URL}${localePath}/` },
+      { name: "Anti-scam guide", url: canonicalUrl },
+    ]),
+  ];
+
   return (
     <>
+      <StructuredData data={pageStructuredData} />
       <Header />
 
       <main className="flex-1">
