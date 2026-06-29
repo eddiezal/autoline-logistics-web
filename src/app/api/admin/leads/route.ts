@@ -4,7 +4,7 @@
  * Internal debugging endpoint. Returns recent lead docs from Firestore so we
  * can diagnose pricing / agent-routing issues without opening the Firebase
  * console (Eddie's gmail can't accept the GCP org invite per Domain Restricted
- * Sharing — see autoline_firebase_org_policy memory).
+ * Sharing - see autoline_firebase_org_policy memory).
  *
  * Auth:   Authorization: Bearer <CRON_SECRET>
  * Usage:
@@ -73,7 +73,10 @@ export async function GET(req: Request) {
       const doc = snap.docs[0]!;
       return NextResponse.json({
         ok: true,
-        lead: { id: doc.id, ...serializeTimestamps(doc.data()) },
+        lead: {
+          id: doc.id,
+          ...(serializeTimestamps(doc.data()) as Record<string, unknown>),
+        },
       });
     }
 
