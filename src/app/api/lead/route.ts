@@ -21,7 +21,7 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
 import { pickNextAgent, AGENTS, QA_BCC_EMAIL } from "@/lib/leads/agents";
-import { buildLeadEmail } from "@/lib/leads/emailTemplate";
+import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
 import {
   getSdPriceEstimate,
   toSdVehicleType,
@@ -312,6 +312,77 @@ export async function POST(req: Request) {
     }
   } else {
     console.log("[/api/lead] DEV: Resend send ok, id=" + (sendResult.id ?? "?"));
+  }
+
+  // Customer-facing confirmation email.
+  //
+  // Sent after the agent notification so the lead never blocks on customer
+  // delivery. Failures are logged but non-fatal. Reply-to is the admin inbox
+  // so any customer reply lands somewhere monitored.
+  try {
+    const customerEmail = buildCustomerEmail({
+      leadRef,
+      origin: { city: "", state: originState!, zip: originZip! },
+      destination: { city: "", state: destinationState!, zip: destinationZip! },
+      vehicle: {
+        year: vehicleYear!,
+        make: vehicleMake!,
+        model: vehicleModel!,
+      },
+      tier,
+    });
+    const customerSend = await sendLeadEmail({
+      to: [email!],
+      replyTo: "admin@autolinelogistics.com",
+      subject: customerEmail.subject,
+      text: customerEmail.text,
+      html: customerEmail.html,
+      tags: [
+        { name: "leadRef", value: leadRef },
+        { name: "emailType", value: "customer-confirmation" },
+        { name: "tier", value: tier },
+      ],
+    });
+    if (!customerSend.ok) {
+      console.error(
+        "[/api/lead] customer confirmation send failed for " +
+          leadRef +
+          ": " +
+          customerSend.error,
+      );
+    } else if (db) {
+      try {
+        await db
+          .collection("leads")
+          .where("leadRef", "==", leadRef)
+          .limit(1)
+          .get()
+          .then((snap) => {
+            if (!snap.empty) {
+              return snap.docs[0]!.ref.update({
+                customerEmailMessageId: customerSend.id ?? null,
+                customerEmailSentAt: FieldValue.serverTimestamp(),
+              });
+            }
+          });
+      } catch (err) {
+        console.warn(
+          "[/api/lead] failed to stamp customer email id on lead",
+          err,
+        );
+      }
+    } else {
+      console.log(
+        "[/api/lead] DEV: customer confirmation send ok, id=" +
+          (customerSend.id ?? "?"),
+      );
+    }
+  } catch (err) {
+    // Never let customer-email problems break the lead flow. The agent has
+    // already been notified; the lead is in Firestore; the customer saw the
+    // inline success state. A failed confirmation is an inconvenience, not
+    // an outage.
+    console.error("[/api/lead] customer confirmation threw", err);
   }
 
   return NextResponse.json({ ok: true, leadRef });

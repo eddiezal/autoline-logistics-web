@@ -183,3 +183,172 @@ function renderAttribution(a: BuildLeadEmailInput["attribution"]): string {
   if (rows.length === 0) return "";
   return '<h3 style="margin:24px 0 8px;font-size:14px;color:#052e1a;text-transform:uppercase;letter-spacing:0.05em;">Attribution</h3><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">' + rows.join("") + '</table>';
 }
+
+/* ============================================================
+ * Customer-facing confirmation email
+ * ============================================================
+ *
+ * Sent after the agent notification. Confirms the form submission, sets
+ * the expectation for the coordinator callback, and warms our domain in
+ * the recipient's inbox so the agent's later email doesn't land in spam.
+ *
+ * Phase 1 scope:
+ *   - EN only (bilingual deferred)
+ *   - No estimate displayed (we don't lock a price before the agent quotes)
+ *   - No named agent (avoids agent-availability dependency)
+ *   - Single transactional email, no sequence
+ *
+ * Phase 2+:
+ *   - locale-aware (capture ES on form submit, branch template here)
+ *   - personalized agent name + direct line
+ *   - Day 2 / Day 5 nudges if no booking yet
+ */
+
+// TODO: confirm with the team (Nelson follow-up sent 2026-06-29) which
+// number/area code shows on the customer's caller ID. Update both constants
+// at once when the answer comes back.
+const CUSTOMER_SUPPORT_PHONE = "657-551-2307";
+const CUSTOMER_CALL_AREA_CODE = "657";
+
+export interface BuildCustomerEmailInput {
+  leadRef: string;
+  origin: { city: string; state: string; zip: string };
+  destination: { city: string; state: string; zip: string };
+  vehicle: { year: string; make: string; model: string };
+  tier: "standby" | "priority" | "expedited";
+}
+
+export function buildCustomerEmail(
+  input: BuildCustomerEmailInput,
+): BuiltLeadEmail {
+  const o = locLabel(input.origin);
+  const d = locLabel(input.destination);
+  const vehicle =
+    input.vehicle.year + " " + input.vehicle.make + " " + input.vehicle.model;
+  const tier = tierLabel(input.tier);
+
+  const subject = "We've got your request. Confirmation " + input.leadRef;
+
+  const text = [
+    "Hi there,",
+    "",
+    "Got your shipping request. A coordinator will call you within 1 business hour from a " +
+      CUSTOMER_CALL_AREA_CODE +
+      " area code.",
+    "",
+    "Here's what we have on file:",
+    "- Route: " + o + " to " + d,
+    "- Vehicle: " + vehicle,
+    "- Service tier: " + tier,
+    "",
+    "If you need to reach us before the call, reply to this email or phone " +
+      CUSTOMER_SUPPORT_PHONE +
+      ".",
+    "",
+    "Your confirmation number: " + input.leadRef,
+    "",
+    "Talk soon,",
+    "Auto Line Logistics",
+    "",
+    "---",
+    "Auto Line Logistics, Inc.",
+    "10073 Valley View St, Ste 120, Cypress, CA 90630",
+    "MC 1477788 / USDOT 3961864",
+    "Family-owned auto transport since 2011",
+  ].join("\n");
+
+  const html = renderCustomerHtml(input, o, d, vehicle, tier);
+
+  return { subject, text, html };
+}
+
+function renderCustomerHtml(
+  input: BuildCustomerEmailInput,
+  o: string,
+  d: string,
+  vehicle: string,
+  tier: string,
+): string {
+  const PINE = "#052e1a";
+  const ACCENT = "#16a34a";
+  const GRAY = "#374151";
+  const GRAY_LIGHT = "#6b7280";
+
+  return (
+    '<!doctype html><html><body style="margin:0;padding:0;background:#f3f4f6;font-family:Segoe UI,Roboto,sans-serif;">' +
+    '<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 0;"><tr><td align="center">' +
+    '<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">' +
+    // Header
+    '<tr><td style="background:' +
+    PINE +
+    ';color:#fff;padding:20px 24px;">' +
+    '<div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85;">Request received</div>' +
+    '<div style="font-size:22px;font-weight:700;margin-top:6px;">Thanks. We\'re on it.</div>' +
+    "</td></tr>" +
+    // Body
+    '<tr><td style="padding:24px;color:#111;">' +
+    '<p style="margin:0 0 14px;font-size:15px;line-height:1.5;">Hi there,</p>' +
+    '<p style="margin:0 0 16px;font-size:15px;line-height:1.55;">Got your shipping request. A coordinator will call you within <strong>1 business hour</strong> from a <strong>' +
+    escapeHtml(CUSTOMER_CALL_AREA_CODE) +
+    "</strong> area code.</p>" +
+    // Confirmation box
+    '<div style="background:#f0faf3;border-left:3px solid ' +
+    ACCENT +
+    ';padding:14px 16px;border-radius:0 8px 8px 0;margin:18px 0;">' +
+    '<div style="font-size:11px;color:' +
+    ACCENT +
+    ';font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Your confirmation number</div>' +
+    '<div style="font-size:20px;font-weight:800;color:' +
+    PINE +
+    ';margin-top:4px;font-family:Menlo,Consolas,monospace;">' +
+    escapeHtml(input.leadRef) +
+    "</div>" +
+    "</div>" +
+    // Details
+    '<h3 style="margin:20px 0 8px;font-size:13px;color:' +
+    PINE +
+    ';text-transform:uppercase;letter-spacing:0.05em;">Here\'s what we have on file</h3>' +
+    '<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">' +
+    '<tr><td style="padding:6px 0;color:' +
+    GRAY +
+    ';font-size:13px;width:120px;">Route</td><td style="padding:6px 0;color:#111;font-size:14px;">' +
+    escapeHtml(o) +
+    " to " +
+    escapeHtml(d) +
+    "</td></tr>" +
+    '<tr><td style="padding:6px 0;color:' +
+    GRAY +
+    ';font-size:13px;">Vehicle</td><td style="padding:6px 0;color:#111;font-size:14px;">' +
+    escapeHtml(vehicle) +
+    "</td></tr>" +
+    '<tr><td style="padding:6px 0;color:' +
+    GRAY +
+    ';font-size:13px;">Service tier</td><td style="padding:6px 0;color:#111;font-size:14px;">' +
+    escapeHtml(tier) +
+    "</td></tr>" +
+    "</table>" +
+    // Contact line
+    '<p style="margin:20px 0 0;font-size:14px;line-height:1.55;color:' +
+    GRAY +
+    ';">If you need to reach us before the call, reply to this email or phone ' +
+    '<a href="tel:' +
+    CUSTOMER_SUPPORT_PHONE.replace(/[^0-9+]/g, "") +
+    '" style="color:' +
+    PINE +
+    ';font-weight:600;">' +
+    escapeHtml(CUSTOMER_SUPPORT_PHONE) +
+    "</a>.</p>" +
+    "</td></tr>" +
+    // Footer
+    '<tr><td style="background:#fafaf7;padding:18px 24px;border-top:1px solid #e5e7eb;font-size:12px;color:' +
+    GRAY_LIGHT +
+    ';line-height:1.6;">' +
+    "<strong>Auto Line Logistics, Inc.</strong><br>" +
+    "10073 Valley View St, Ste 120, Cypress, CA 90630<br>" +
+    "MC 1477788 / USDOT 3961864<br>" +
+    "Family-owned auto transport since 2011" +
+    "</td></tr>" +
+    "</table></td></tr></table></body></html>"
+  );
+}
+
