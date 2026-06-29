@@ -1,6 +1,6 @@
 /**
- * Super Dispatch — Pricing Insights client (SERVER ONLY).
- * Imported only by /api/pricing — never a client component — so the token
+ * Super Dispatch . Pricing Insights client (SERVER ONLY).
+ * Imported only by /api/pricing . never a client component . so the token
  * never reaches the browser. Do NOT add "use client".
  *
  * Endpoint:  POST https://pricing-insights.superdispatch.com/api/v1/recommended-price
@@ -11,8 +11,14 @@
  * Request body (confirmed from SD reference):
  *   { pickup:{city?,state?,zip}, delivery:{city?,state?,zip},
  *     trailer_type:"open"|"enclosed", vehicles:[{type, is_inoperable}] }
- * Response is { meta, data } — exact price/confidence field names inside `data`
+ * Response is { meta, data } . exact price/confidence field names inside `data`
  * are confirmed on the first live call (parseResponse tries the common shapes).
+ *
+ * VEHICLE TYPE MAPPING (added 2026-06-29 after AL-260629-USC5MC silent failure):
+ *   Customer-facing forms offer "classic", "motorcycle", "van", "truckStandard",
+ *   "truckLifted", "other" in addition to "sedan" / "suv" / "pickup". SD only
+ *   recognizes the latter three. We map at this boundary so the original type
+ *   is still preserved in Firestore + agent email, while SD gets a usable input.
  */
 
 import "server-only";
@@ -47,6 +53,31 @@ function isConfigured(): boolean {
   return Boolean(env.apiKey && env.baseUrl && env.quotePath);
 }
 
+/**
+ * Map our customer-facing vehicle types to what SD's Pricing Insights API
+ * actually accepts ("sedan" | "suv" | "pickup"). Anything else gets silently
+ * normalized so the SD call succeeds. The original type stays intact on the
+ * lead doc and agent email; this only affects what hits SD.
+ */
+function toSdVehicleType(raw: string): "sedan" | "suv" | "pickup" {
+  const v = raw.toLowerCase().trim();
+  if (v === "sedan" || v === "suv" || v === "pickup") return v;
+  // Truck variants . map to pickup (closest SD body class).
+  if (
+    v === "truck" ||
+    v === "truckstandard" ||
+    v === "truck_standard" ||
+    v === "trucklifted" ||
+    v === "truck_lifted"
+  ) {
+    return "pickup";
+  }
+  // Van + minivan . closest is SUV body class for SD pricing purposes.
+  if (v === "van" || v === "minivan") return "suv";
+  // classic, motorcycle, exotic, other, unknown . sedan is the sensible baseline.
+  return "sedan";
+}
+
 function loc(l: { city?: string; state?: string; zip: string }) {
   return {
     ...(l.city ? { city: l.city } : {}),
@@ -60,7 +91,7 @@ function buildPayload(q: PriceQuery): Record<string, unknown> {
     pickup: loc(q.pickup),
     delivery: loc(q.delivery),
     trailer_type: q.trailerType,
-    vehicles: [{ type: q.vehicleType, is_inoperable: q.isInoperable }],
+    vehicles: [{ type: toSdVehicleType(q.vehicleType), is_inoperable: q.isInoperable }],
   };
 }
 
@@ -109,7 +140,7 @@ export async function getSdPriceEstimate(
       cache: "no-store",
     });
     if (!res.ok) {
-      console.warn(`SD pricing call failed: ${res.status} ${res.statusText}`);
+      console.warn(`SD pricing call failed: ${res.status} ${res.statusText} (raw type: ${q.vehicleType})`);
       return null;
     }
     const json = (await res.json()) as Record<string, unknown>;
