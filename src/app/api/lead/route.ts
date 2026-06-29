@@ -22,7 +22,11 @@ import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
 import { pickNextAgent, AGENTS, QA_BCC_EMAIL } from "@/lib/leads/agents";
 import { buildLeadEmail } from "@/lib/leads/emailTemplate";
-import { getSdPriceEstimate } from "@/lib/superdispatch/pricing";
+import {
+  getSdPriceEstimate,
+  toSdVehicleType,
+  type SdVehicleType,
+} from "@/lib/superdispatch/pricing";
 import { sendLeadEmail } from "@/lib/email/resend";
 import { zipPrefixToState, lookupZipApprox } from "@/data/zip-metros";
 
@@ -171,8 +175,13 @@ export async function POST(req: Request) {
     }
   }
 
+  // Mapping happens regardless of SD success so we record both raw + mapped
+  // types on every lead. Lets us audit which body class SD priced this lead as.
+  const sdVehicleType: SdVehicleType = toSdVehicleType(vehicleType!);
+
   let estimate: {
     source: "sd" | "unavailable";
+    sdVehicleType: SdVehicleType;
     price?: number;
     low?: number;
     high?: number;
@@ -189,15 +198,16 @@ export async function POST(req: Request) {
     estimate = sd
       ? {
           source: "sd",
+          sdVehicleType: sd.sdVehicleType,
           price: sd.price,
           low: sd.low,
           high: sd.high,
           confidence: sd.confidence ?? undefined,
         }
-      : { source: "unavailable" };
+      : { source: "unavailable", sdVehicleType };
   } catch (err) {
     console.error("[/api/lead] SD pricing failed (non-fatal)", err);
-    estimate = { source: "unavailable" };
+    estimate = { source: "unavailable", sdVehicleType };
   }
 
   const leadRef = generateLeadRef();

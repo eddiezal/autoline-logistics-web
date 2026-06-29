@@ -13,14 +13,13 @@
 import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { SD_VEHICLE_TYPES, type SdVehicleType } from "@/lib/superdispatch/pricing";
 
-export type PricingVehicleType = "sedan" | "suv" | "pickup";
-
-export const PRICING_VEHICLE_TYPES: ReadonlyArray<PricingVehicleType> = [
-  "sedan",
-  "suv",
-  "pickup",
-];
+// Re-export from the SD client so we have one source of truth for the enum.
+// If SD ever supports a wider vehicle set, update there and the cron + this
+// collection schema pick it up automatically.
+export type PricingVehicleType = SdVehicleType;
+export const PRICING_VEHICLE_TYPES: ReadonlyArray<PricingVehicleType> = SD_VEHICLE_TYPES;
 
 export interface PricingSnapshot {
   vehicleType: PricingVehicleType;

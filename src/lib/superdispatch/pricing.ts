@@ -19,6 +19,9 @@
  *   "truckLifted", "other" in addition to "sedan" / "suv" / "pickup". SD only
  *   recognizes the latter three. We map at this boundary so the original type
  *   is still preserved in Firestore + agent email, while SD gets a usable input.
+ *
+ *   The mapped sdVehicleType also rides back out on the PriceEstimate so the
+ *   lead route can record both raw + mapped types in Firestore for audit.
  */
 
 import "server-only";
@@ -32,12 +35,22 @@ export interface PriceQuery {
   trailerType: "open" | "enclosed";
 }
 
+/**
+ * SD-known vehicle types. Single source of truth . any downstream code that
+ * needs the SD enum should pull from here. firestore.ts re-exports for the
+ * corridor cron snapshot collection.
+ */
+export const SD_VEHICLE_TYPES = ["sedan", "suv", "pickup"] as const;
+export type SdVehicleType = (typeof SD_VEHICLE_TYPES)[number];
+
 export interface PriceEstimate {
   price: number;
   low: number;
   high: number;
   confidence: number | null;
   source: "sd";
+  /** The SD-known type we actually sent (after mapping). For audit / debugging. */
+  sdVehicleType: SdVehicleType;
 }
 
 const env = {
@@ -54,12 +67,11 @@ function isConfigured(): boolean {
 }
 
 /**
- * Map our customer-facing vehicle types to what SD's Pricing Insights API
- * actually accepts ("sedan" | "suv" | "pickup"). Anything else gets silently
- * normalized so the SD call succeeds. The original type stays intact on the
- * lead doc and agent email; this only affects what hits SD.
+ * Map any customer-facing vehicle type string to the SD-known set.
+ * Exported because the lead route also wants this value to store in Firestore
+ * alongside the raw customer-selected type. Idempotent (sedan -> sedan).
  */
-function toSdVehicleType(raw: string): "sedan" | "suv" | "pickup" {
+export function toSdVehicleType(raw: string): SdVehicleType {
   const v = raw.toLowerCase().trim();
   if (v === "sedan" || v === "suv" || v === "pickup") return v;
   // Truck variants . map to pickup (closest SD body class).
@@ -86,17 +98,20 @@ function loc(l: { city?: string; state?: string; zip: string }) {
   };
 }
 
-function buildPayload(q: PriceQuery): Record<string, unknown> {
+function buildPayload(q: PriceQuery, sdType: SdVehicleType): Record<string, unknown> {
   return {
     pickup: loc(q.pickup),
     delivery: loc(q.delivery),
     trailer_type: q.trailerType,
-    vehicles: [{ type: toSdVehicleType(q.vehicleType), is_inoperable: q.isInoperable }],
+    vehicles: [{ type: sdType, is_inoperable: q.isInoperable }],
   };
 }
 
-// Response is { meta, data }; price/confidence live in data. Tries common names.
-function parseResponse(json: Record<string, unknown>): PriceEstimate | null {
+/**
+ * Parse SD response. Returns the priceful subset; caller layers sdVehicleType
+ * and markup on top.
+ */
+function parseResponse(json: Record<string, unknown>): Omit<PriceEstimate, "sdVehicleType"> | null {
   const num = (v: unknown): number | null => {
     const n = typeof v === "string" ? parseFloat(v) : (v as number);
     return Number.isFinite(n) ? Math.round(n) : null;
@@ -128,6 +143,7 @@ export async function getSdPriceEstimate(
   opts: { markup?: boolean } = {},
 ): Promise<PriceEstimate | null> {
   if (!isConfigured()) return null;
+  const sdVehicleType = toSdVehicleType(q.vehicleType);
   try {
     const res = await fetch(env.baseUrl + env.quotePath, {
       method: "POST",
@@ -136,17 +152,18 @@ export async function getSdPriceEstimate(
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify(buildPayload(q)),
+      body: JSON.stringify(buildPayload(q, sdVehicleType)),
       cache: "no-store",
     });
     if (!res.ok) {
-      console.warn(`SD pricing call failed: ${res.status} ${res.statusText} (raw type: ${q.vehicleType})`);
+      console.warn(`SD pricing call failed: ${res.status} ${res.statusText} (raw type: ${q.vehicleType} mapped to: ${sdVehicleType})`);
       return null;
     }
     const json = (await res.json()) as Record<string, unknown>;
     const raw = parseResponse(json);
     if (!raw) return null;
-    return opts.markup === false ? raw : applyCustomerMarkup(raw);
+    const withMapping: PriceEstimate = { ...raw, sdVehicleType };
+    return opts.markup === false ? withMapping : applyCustomerMarkup(withMapping);
   } catch (err) {
     console.warn("SD pricing error:", err);
     return null;
