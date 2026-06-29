@@ -278,7 +278,7 @@ export function RoutePriceCheckerForm({
                 {i18n.anchorEyebrow.replace("{vehicle}", selectedLabel)}
               </p>
               <p className="text-3xl md:text-4xl font-extrabold text-charcoal tracking-tight leading-none">
-                {anchorMid !== null ? `${formatMoney(anchorMid)}` : "—"}
+                {anchorMid !== null ? `$${formatMoney(anchorMid)}` : "—"}
               </p>
               {rangeStr ? (
                 <p className="text-[12px] text-gray-600 mt-2 leading-snug">
@@ -308,7 +308,7 @@ export function RoutePriceCheckerForm({
                         <span className="text-gray-700">{label}</span>
                         <span className="text-charcoal">
                           {p
-                            ? `${formatMoney(p.low)} - ${formatMoney(p.high)}`
+                            ? `$${formatMoney(p.low)} - $${formatMoney(p.high)}`
                             : "—"}
                         </span>
                       </div>
