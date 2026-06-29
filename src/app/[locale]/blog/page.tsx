@@ -9,8 +9,7 @@ import { getLiveCorridors } from "@/lib/corridors";
 import type { ArticleSummary, ArticleLanguage } from "@/lib/blog/types";
 
 export const metadata: Metadata = {
-  title:
-    "Car Shipping Buyer Guides: Avoid Scams, Fake Quotes, and Deposit Traps",
+  title: "Car Shipping Guides: Avoid Scams + Deposit Traps",
   description:
     "Plain-English answers to the scary questions before you book auto transport. Honest explainers, plus a realistic quote when you're ready.",
 };

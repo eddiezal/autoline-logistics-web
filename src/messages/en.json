@@ -364,14 +364,8 @@
     "brandLine": "Auto Line Logistics",
     "description": "Locked-price auto transport for individual customers. Built on real tracking, named coordinators, and a damage protection promise.",
     "sectionTitles": {
-      "services": "Services",
       "promises": "Promises",
       "contact": "Contact"
-    },
-    "services": {
-      "standby": "Standby (7-day)",
-      "priority": "Priority (3–5 day)",
-      "expedited": "Expedited (24–48 hour)"
     },
     "promises": {
       "price": "Price Promise",

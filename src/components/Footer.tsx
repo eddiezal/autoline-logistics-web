@@ -21,35 +21,12 @@ export function Footer() {
   return (
     <footer className="bg-charcoal text-gray-300 mt-auto">
       <Container className="py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <p className="text-white font-bold text-lg mb-3">
               {t("footer.brandLine")}
             </p>
             <p className="text-sm leading-relaxed">{t("footer.description")}</p>
-          </div>
-
-          <div>
-            <p className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">
-              {t("footer.sectionTitles.services")}
-            </p>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/services/standby" className="hover:text-orange">
-                  {t("footer.services.standby")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/priority" className="hover:text-orange">
-                  {t("footer.services.priority")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/expedited" className="hover:text-orange">
-                  {t("footer.services.expedited")}
-                </Link>
-              </li>
-            </ul>
           </div>
 
           <div>

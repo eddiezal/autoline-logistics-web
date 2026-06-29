@@ -364,14 +364,8 @@
     "brandLine": "Auto Line Logistics",
     "description": "Transporte de autos con precio fijo, hecho para personas. Construido sobre seguimiento real, coordinadores con nombre, y una promesa de protección contra daños.",
     "sectionTitles": {
-      "services": "Servicios",
       "promises": "Promesas",
       "contact": "Contacto"
-    },
-    "services": {
-      "standby": "En Espera (7 días)",
-      "priority": "Prioritario (3–5 días)",
-      "expedited": "Urgente (24–48 horas)"
     },
     "promises": {
       "price": "Promesa de Precio",

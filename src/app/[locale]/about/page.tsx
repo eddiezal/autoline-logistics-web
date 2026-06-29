@@ -25,9 +25,9 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
  */
 
 export const metadata: Metadata = {
-  title: "About Auto Line Logistics — family-owned auto transport",
+  title: "About Auto Line Logistics. Family-owned auto transport.",
   description:
-    "Family-owned auto transport based in Southern California. Locked-price quotes, named coordinators, and coverage beyond the carrier — built for the way real customers ship cars.",
+    "Family-owned auto transport based in Southern California. Locked-price quotes, named coordinators, and coverage beyond the carrier, built for the way real customers ship cars.",
 };
 
 const TEAM_KEYS = ["ben", "coordinator", "dispatch"] as const;
