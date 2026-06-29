@@ -264,9 +264,13 @@ export function HeroRouteFinder() {
   // server-side). Replaces the local estimate with SD's market price when
   // available; otherwise the local computeLockedPrice estimate stands. Dormant
   // until SD_PRICING_* env vars are set.
-  const [livePrice, setLivePrice] = useState<number | null>(null);
+  const [liveEstimate, setLiveEstimate] = useState<{
+    price: number;
+    low?: number;
+    high?: number;
+  } | null>(null);
   useEffect(() => {
-    setLivePrice(null);
+    setLiveEstimate(null);
     // SD Pricing Insights covers the continental US only — HI/AK (and every
     // non-"ok" state) keep the local estimate, so only mainland routes hit SD.
     if (route.kind !== "ok") return;
@@ -291,9 +295,18 @@ export function HeroRouteFinder() {
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => {
           if (d && d.source === "sd" && typeof d.price === "number") {
+            const mult = TIMING_MULT[timingKey];
             const adjusted =
-              Math.round((d.price * TIMING_MULT[timingKey]) / 25) * 25;
-            setLivePrice(adjusted);
+              Math.round((d.price * mult) / 25) * 25;
+            const adjLow =
+              typeof d.low === "number"
+                ? Math.round((d.low * mult) / 25) * 25
+                : undefined;
+            const adjHigh =
+              typeof d.high === "number"
+                ? Math.round((d.high * mult) / 25) * 25
+                : undefined;
+            setLiveEstimate({ price: adjusted, low: adjLow, high: adjHigh });
           }
         })
         .catch(() => {});
@@ -417,7 +430,7 @@ export function HeroRouteFinder() {
       </div>
 
       {/* Result panel — only renders when there's a real route. */}
-      <ResultPanel state={route} quoteHref={quoteHref} livePrice={livePrice} />
+      <ResultPanel state={route} quoteHref={quoteHref} liveEstimate={liveEstimate} />
     </div>
   );
 }
@@ -504,11 +517,11 @@ function SegmentedField<T extends string>({
 function PriceDisplay({
   price,
   label,
-  validity,
+  range,
 }: {
   price: number;
   label: string;
-  validity: string;
+  range?: string | null;
 }) {
   return (
     <div className="mb-1">
@@ -518,7 +531,9 @@ function PriceDisplay({
       <p className="text-3xl md:text-4xl font-extrabold text-charcoal tracking-tight leading-none">
         ${formatMoney(price)}
       </p>
-      <p className="text-[11px] text-gray-600 mt-2 leading-snug">{validity}</p>
+      {range ? (
+        <p className="text-[11px] text-gray-600 mt-2 leading-snug">{range}</p>
+      ) : null}
     </div>
   );
 }
@@ -526,13 +541,25 @@ function PriceDisplay({
 function ResultPanel({
   state,
   quoteHref,
-  livePrice,
+  liveEstimate,
 }: {
   state: RouteState;
   quoteHref: { pathname: "/quote"; query: Record<string, string> };
-  livePrice: number | null;
+  liveEstimate: { price: number; low?: number; high?: number } | null;
 }) {
   const t = useTranslations();
+
+  // Option A range subtitle. Only renders when SD returned a real bracket.
+  const rangeLabel =
+    liveEstimate &&
+    typeof liveEstimate.low === "number" &&
+    typeof liveEstimate.high === "number" &&
+    liveEstimate.low < liveEstimate.high
+      ? t("home.heroRouteFinder.rangeLabel", {
+          low: formatMoney(liveEstimate.low),
+          high: formatMoney(liveEstimate.high),
+        })
+      : null;
 
   switch (state.kind) {
     case "incomplete":
@@ -598,9 +625,9 @@ function ResultPanel({
           </p>
 
           <PriceDisplay
-            price={livePrice ?? state.price}
+            price={liveEstimate?.price ?? state.price}
             label={t("home.heroRouteFinder.lockedLabel")}
-            validity={t("home.heroRouteFinder.validityBadge")}
+            range={rangeLabel}
           />
         </div>
       );
@@ -624,9 +651,9 @@ function ResultPanel({
           </div>
 
           <PriceDisplay
-            price={livePrice ?? state.price}
+            price={liveEstimate?.price ?? state.price}
             label={t("home.heroRouteFinder.lockedLabel")}
-            validity={t("home.heroRouteFinder.validityBadge")}
+            range={rangeLabel}
           />
         </div>
       );

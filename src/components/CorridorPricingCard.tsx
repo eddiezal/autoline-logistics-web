@@ -1,16 +1,24 @@
 /**
  * Corridor pricing snapshot card. Server component.
  *
- * Reads Firestore cache only — never calls SD. Per the cached ≠ quoted rule,
- * this card is display-only. The "See today's locked price" link below the
- * card sends the visitor to /quote, which hits SD live.
+ * Reads Firestore cache only - never calls SD. Per the cached != quoted rule,
+ * this card is display-only. The "Get my quote" link below the card sends the
+ * visitor to /quote, which hits SD live.
  *
  * Staleness rule (computed against the freshest snapshot of the 3):
- *   <48h  → "Today's pricing" eyebrow, full card
- *   48-72h → "Recent pricing" eyebrow, softened copy
- *   >72h  → card hidden, "Get today's locked price" CTA shown instead
+ *   <48h   "Today's estimate" eyebrow, full card
+ *   48-72h "Recent estimate" eyebrow, softened copy
+ *   >72h   card hidden, "Get today's estimate" CTA shown instead
  *
  * If Firestore is empty (cron hasn't run yet) we render the hidden state.
+ *
+ * Option A layout (2026-06-29):
+ *   eyebrow + route
+ *   $ANCHOR (sedan midpoint, rounded to nearest $25)
+ *   caption: "Sedan, open trailer. Other vehicles below."
+ *   SUV/pickup rows (sedan is the anchor, not a row)
+ *   transit bar
+ *   "Get my quote" footer link
  */
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
@@ -82,21 +90,21 @@ export async function CorridorPricingCard({
 
   const eyebrowKey = tier === "fresh" ? "todays" : "recent";
 
-  // Build rows ordered by vehicle type (sedan, suv, pickup). The first row
-  // (sedan) is rendered as "featured" — slightly bolder label — so the
-  // entry-tier price reads at a glance for the scanning visitor.
-  const rows = snapshots
-    .filter((s): s is PricingSnapshot => s !== null && s.status === "fresh")
-    .map((s, i) => ({
-      vehicle: s.vehicleType,
-      label: t(`corridorPricing.vehicleLabels.${s.vehicleType}`),
-      priceLow: s.priceLow,
-      priceHigh: s.priceHigh,
-      featured: i === 0,
-    }));
+  // All fresh snapshots, indexed by vehicle for the Option A anchor + rows.
+  const fresh = snapshots.filter(
+    (s): s is PricingSnapshot => s !== null && s.status === "fresh",
+  );
+  const sedan = fresh.find((s) => s.vehicleType === "sedan");
+  const others = fresh.filter((s) => s.vehicleType !== "sedan");
 
-  // V1 design: compact card, single transit bar (not a big verdict box),
-  // quietLink folded into the card footer instead of a separate row below.
+  // Option A anchor: sedan midpoint, rounded to nearest $25. If sedan is
+  // missing (cron only got SUV/pickup that day) fall back to the first
+  // available vehicle as the anchor.
+  const anchorSnap = sedan ?? fresh[0];
+  if (!anchorSnap) return null; // shouldn't happen, tier != hidden means >=1 fresh
+  const anchorMid =
+    Math.round((anchorSnap.priceLow + anchorSnap.priceHigh) / 2 / 25) * 25;
+
   return (
     <aside className="bg-white text-charcoal rounded-2xl p-5 shadow-[0_10px_28px_rgba(0,0,0,0.18)]">
       {/* Eyebrow + route */}
@@ -112,30 +120,36 @@ export async function CorridorPricingCard({
         </p>
       </div>
 
-      {/* Per-vehicle rows. Sedan (first) bolder for entry-tier signal. */}
-      <div className="space-y-1">
-        {rows.map((r) => (
-          <div
-            key={r.vehicle}
-            className="flex items-baseline justify-between py-0.5"
-          >
-            <span
-              className={
-                r.featured
-                  ? "text-charcoal text-sm font-semibold"
-                  : "text-gray-700 text-sm"
-              }
-            >
-              {r.label}
-            </span>
-            <span className="font-bold text-charcoal text-sm">
-              ${formatMoney(r.priceLow)} – ${formatMoney(r.priceHigh)}
-            </span>
-          </div>
-        ))}
+      {/* Option A anchor: sedan midpoint as the headline. Caption below. */}
+      <div className="mb-3">
+        <p className="text-3xl font-extrabold text-charcoal tracking-tight leading-none">
+          ${formatMoney(anchorMid)}
+        </p>
+        <p className="text-xs text-gray-600 mt-1.5 leading-snug">
+          {t("corridorPricing.anchorCaption")}
+        </p>
       </div>
 
-      {/* Transit bar — single horizontal row, not a full verdict box. */}
+      {/* Supporting rows for other vehicles (sedan is the anchor above). */}
+      {others.length > 0 && (
+        <div className="space-y-1">
+          {others.map((s) => (
+            <div
+              key={s.vehicleType}
+              className="flex items-baseline justify-between py-0.5"
+            >
+              <span className="text-gray-700 text-sm">
+                {t(`corridorPricing.vehicleLabels.${s.vehicleType}`)}
+              </span>
+              <span className="text-charcoal text-sm">
+                ${formatMoney(s.priceLow)} - ${formatMoney(s.priceHigh)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Transit bar. Single horizontal row, not a full verdict box. */}
       <div className="flex items-center justify-between mt-3 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
         <span className="text-green-700 text-[11px] font-bold uppercase tracking-wider">
           {t("corridorPricing.transit.eyebrow")}
@@ -148,7 +162,7 @@ export async function CorridorPricingCard({
         </span>
       </div>
 
-      {/* Card footer — quietLink folded in, not a competing CTA. */}
+      {/* Card footer. quietLink folded in, not a competing CTA. */}
       <div className="mt-3 pt-2.5 border-t border-gray-200 text-center">
         <Link
           href={{ pathname: "/quote", query: { from: corridor.fromState, to: corridor.toState } }}

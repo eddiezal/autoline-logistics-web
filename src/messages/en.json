@@ -715,11 +715,10 @@
           "asap": "ASAP — priority"
         }
       },
-      "lockedLabel": "Your locked price",
-      "validityBadge": "Locked for 7 days · No obligation until you book",
+      "lockedLabel": "Estimated price",
       "rangeSeparator": "–",
       "ctaContinue": "Continue",
-      "ctaLock": "Lock this price",
+      "ctaLock": "Get my quote",
       "ctaInvalidZip": "Submit a quote anyway",
       "howPricingWorks": "How pricing works →",
       "statePrompt": "Type both ZIPs to start.",
@@ -741,7 +740,8 @@
         "tag": "Alaska corridor",
         "note": "Inland to Tacoma + ocean to Anchorage + final delivery.",
         "timeline": "10–14 days door-to-port-to-door"
-      }
+      },
+      "rangeLabel": "Market range ${low} to ${high}"
     }
   },
   "pricePromise": {
@@ -1643,22 +1643,20 @@
       "errorService": "Couldn't get a live price for that route right now. Try again, or get a quote and we'll handle it."
     },
     "result": {
-      "eyebrow": "Route price",
+      "eyebrow": "Estimated price",
       "route": "{from} → {to}",
-      "headerVehicle": "Vehicle",
-      "headerToday": "Today's range",
-      "headerThirtyDay": "30-day average",
       "rowSedan": "Sedan",
       "rowSuv": "SUV",
       "rowPickup": "Pickup",
-      "thirtyDayPlaceholder": "Tracking",
-      "thirtyDayNote": "30-day average available once we have 30 days of price history. Tracking started 2026-06-14.",
       "transitLabel": "Transit",
       "transitValue": "3-7 days typical",
-      "cta": "Lock this price",
+      "cta": "Get my quote",
       "unsupportedTitle": "Hawaii and Alaska routes need a custom quote",
       "unsupportedBody": "Ocean transit pricing isn't part of our live carrier-network data. Get a quote and we'll match you with a port partner.",
-      "unsupportedCta": "Get my quote"
+      "unsupportedCta": "Get my quote",
+      "anchorEyebrow": "Estimated price ({vehicle})",
+      "rangeLabel": "Market range ${low} to ${high}",
+      "alsoConsider": "Other vehicles on this route"
     },
     "callouts": {
       "1": {
@@ -1680,8 +1678,8 @@
   },
   "corridorPricing": {
     "eyebrow": {
-      "todays": "Today's pricing",
-      "recent": "Recent pricing"
+      "todays": "Today's estimate",
+      "recent": "Recent estimate"
     },
     "routeLabel": "{from} → {to}",
     "vehicleLabels": {
@@ -1694,12 +1692,13 @@
       "value": "{min}-{max} days",
       "body": "Typical carrier transit once your vehicle is picked up. Pickup availability changes by date and vehicle type."
     },
-    "quietLink": "Get today's locked price",
+    "quietLink": "Get my quote",
     "fallback": {
       "eyebrow": "Live pricing",
       "body": "Today's range hasn't refreshed yet. Get a real locked price in under a minute. No deposit to receive the quote.",
       "cta": "Get today's locked price"
-    }
+    },
+    "anchorCaption": "Sedan, open trailer. Other vehicles below."
   },
   "corridors": {
     "index": {

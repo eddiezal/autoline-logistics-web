@@ -74,14 +74,12 @@ export function RoutePriceCheckerForm({
     unsupportedCta: string;
     resultEyebrow: string;
     resultRoute: string;
-    headerVehicle: string;
-    headerToday: string;
-    headerThirtyDay: string;
+    anchorEyebrow: string;
+    rangeLabel: string;
+    alsoConsider: string;
     rowSedan: string;
     rowSuv: string;
     rowPickup: string;
-    thirtyDayPlaceholder: string;
-    thirtyDayNote: string;
     transitLabel: string;
     transitValue: string;
     resultCta: string;
@@ -241,90 +239,107 @@ export function RoutePriceCheckerForm({
         </div>
       )}
 
-      {/* Result table — V4 design */}
-      {result && result.status === "ok" && (
-        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-[0_4px_14px_rgba(0,0,0,0.06)]">
-          <div className="flex items-baseline justify-between px-5 py-3.5 border-b border-gray-200">
-            <span className="text-orange text-[11px] font-bold uppercase tracking-wider">
-              {i18n.resultEyebrow}
-            </span>
-            <span className="text-gray-700 text-sm font-semibold">
-              {i18n.resultRoute
-                .replace("{from}", result.fromZip)
-                .replace("{to}", result.toZip)}
-            </span>
+      {/* Option A result panel: single anchor + supporting rows. */}
+      {result && result.status === "ok" && (() => {
+        const selectedLabel =
+          result.selectedVehicle === "sedan"
+            ? i18n.rowSedan
+            : result.selectedVehicle === "suv"
+              ? i18n.rowSuv
+              : i18n.rowPickup;
+        const selectedPrice = result.prices[result.selectedVehicle];
+        const anchorMid = selectedPrice
+          ? Math.round((selectedPrice.low + selectedPrice.high) / 2 / 25) * 25
+          : null;
+        const rangeStr = selectedPrice
+          ? i18n.rangeLabel
+              .replace("{low}", formatMoney(selectedPrice.low))
+              .replace("{high}", formatMoney(selectedPrice.high))
+          : null;
+        const otherVehicles = (["sedan", "suv", "pickup"] as const).filter(
+          (v) => v !== result.selectedVehicle,
+        );
+        return (
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-[0_4px_14px_rgba(0,0,0,0.06)]">
+            <div className="flex items-baseline justify-between px-5 py-3.5 border-b border-gray-200">
+              <span className="text-orange text-[11px] font-bold uppercase tracking-wider">
+                {i18n.resultEyebrow}
+              </span>
+              <span className="text-gray-700 text-sm font-semibold">
+                {i18n.resultRoute
+                  .replace("{from}", result.fromZip)
+                  .replace("{to}", result.toZip)}
+              </span>
+            </div>
+
+            {/* Anchor block: selected vehicle as the headline number. */}
+            <div className="px-5 py-5">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-orange-dark mb-1">
+                {i18n.anchorEyebrow.replace("{vehicle}", selectedLabel)}
+              </p>
+              <p className="text-3xl md:text-4xl font-extrabold text-charcoal tracking-tight leading-none">
+                {anchorMid !== null ? `${formatMoney(anchorMid)}` : "—"}
+              </p>
+              {rangeStr ? (
+                <p className="text-[12px] text-gray-600 mt-2 leading-snug">
+                  {rangeStr}
+                </p>
+              ) : null}
+
+              {/* Quiet supporting rows for the other two vehicles. */}
+              <div className="mt-4 pt-3 border-t border-gray-200">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-2">
+                  {i18n.alsoConsider}
+                </p>
+                <div className="space-y-1.5">
+                  {otherVehicles.map((v) => {
+                    const p = result.prices[v];
+                    const label =
+                      v === "sedan"
+                        ? i18n.rowSedan
+                        : v === "suv"
+                          ? i18n.rowSuv
+                          : i18n.rowPickup;
+                    return (
+                      <div
+                        key={v}
+                        className="flex items-baseline justify-between text-sm"
+                      >
+                        <span className="text-gray-700">{label}</span>
+                        <span className="text-charcoal">
+                          {p
+                            ? `${formatMoney(p.low)} - ${formatMoney(p.high)}`
+                            : "—"}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 px-5 py-3 border-t border-gray-200 flex items-center justify-between">
+              <span className="text-sm text-gray-700">
+                {i18n.transitLabel}:{" "}
+                <strong className="text-charcoal">{i18n.transitValue}</strong>
+              </span>
+              <Link
+                href={{
+                  pathname: "/quote",
+                  query: {
+                    fromZip: result.fromZip,
+                    toZip: result.toZip,
+                    vehicleType: result.selectedVehicle,
+                  },
+                }}
+                className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-sm px-4 py-2 rounded-lg transition"
+              >
+                {i18n.resultCta} →
+              </Link>
+            </div>
           </div>
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                  {i18n.headerVehicle}
-                </th>
-                <th className="text-right px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                  {i18n.headerToday}
-                </th>
-                <th className="text-right px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                  {i18n.headerThirtyDay}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {(["sedan", "suv", "pickup"] as const).map((v) => {
-                const p = result.prices[v];
-                const featured = v === result.selectedVehicle;
-                const label =
-                  v === "sedan"
-                    ? i18n.rowSedan
-                    : v === "suv"
-                      ? i18n.rowSuv
-                      : i18n.rowPickup;
-                return (
-                  <tr
-                    key={v}
-                    className={`border-t border-gray-200 ${featured ? "bg-[rgba(132,204,22,0.06)]" : ""}`}
-                  >
-                    <td
-                      className={`px-5 py-3 text-sm ${featured ? "font-bold text-charcoal" : "font-bold text-charcoal"}`}
-                    >
-                      {label}
-                    </td>
-                    <td className="px-5 py-3 text-sm text-right font-bold text-charcoal">
-                      {p
-                        ? `$${formatMoney(p.low)} – $${formatMoney(p.high)}`
-                        : "—"}
-                    </td>
-                    <td className="px-5 py-3 text-xs text-right text-gray-400 italic">
-                      {i18n.thirtyDayPlaceholder}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <div className="bg-gray-50 px-5 py-3 border-t border-gray-200 flex items-center justify-between">
-            <span className="text-sm text-gray-700">
-              {i18n.transitLabel}:{" "}
-              <strong className="text-charcoal">{i18n.transitValue}</strong>
-            </span>
-            <Link
-              href={{
-                pathname: "/quote",
-                query: {
-                  fromZip: result.fromZip,
-                  toZip: result.toZip,
-                  vehicleType: result.selectedVehicle,
-                },
-              }}
-              className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-sm px-4 py-2 rounded-lg transition"
-            >
-              {i18n.resultCta} →
-            </Link>
-          </div>
-          <p className="px-5 py-2.5 text-[11px] text-gray-500 italic border-t border-gray-200 bg-white">
-            {i18n.thirtyDayNote}
-          </p>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
