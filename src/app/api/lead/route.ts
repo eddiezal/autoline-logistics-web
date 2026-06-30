@@ -64,6 +64,7 @@ interface IncomingPayload {
   utm_content?: unknown;
   variant?: unknown;
   referrer?: unknown;
+  gclid?: unknown;
 }
 
 function str(v: unknown): string | undefined {
@@ -232,6 +233,10 @@ export async function POST(req: Request) {
       utmContent: str(body.utm_content) ?? null,
       variant: str(body.variant) ?? null,
       referrer: str(body.referrer) ?? null,
+      // Google Ads click identifier. Captured client-side via captureGclid()
+      // (URL first, then 60-day cookie fallback). Stored here so the future
+      // ProABD adapter can pass it on createLead for OCI attribution.
+      gclid: str(body.gclid) ?? null,
     },
     status: "pending_agent_contact" as const,
   };

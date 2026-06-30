@@ -67,6 +67,11 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     });
     payload.captchaToken = captchaToken;
     payload.referrer = typeof document !== "undefined" ? document.referrer : "";
+    // Capture gclid up front so it lands in the lead doc and (later) flows
+    // through to ProABD createLead for Google Ads OCI attribution.
+    // captureGclid() reads URL first, falls back to the 60-day cookie.
+    const submitGclid = captureGclid();
+    if (submitGclid) payload.gclid = submitGclid;
 
     try {
       const res = await fetch("/api/lead", {
@@ -89,8 +94,9 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
       // Track the conversion. Two events fire: the funnel event
       // (quote_submitted) for GA4 reporting + the conversion event
       // (lead_form_submit) for Google Ads optimization. Same trigger,
-      // different consumers.
-      const gclid = captureGclid();
+      // different consumers. Reuse submitGclid so the backend doc and
+      // the analytics events stay in sync.
+      const gclid = submitGclid;
       const vehicleType = payload.vehicleType ?? "unknown";
       // Derive state from ZIP for analytics (state codes used to come
       // from fromCode/toCode URL params; now they're derived from ZIP).
