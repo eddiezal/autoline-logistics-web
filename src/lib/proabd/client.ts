@@ -101,36 +101,46 @@ export async function createLead(
   const referrerId = process.env.PROABD_REFERRER_ID ?? "8";
   const url = baseUrl + "/createLead";
 
-  // Payload structure. Flat field naming mirrors what we observed in the
-  // JSON Export Structure PDF (Cheli 2026-07-06). Api_key + Api_pin in body
-  // as a fallback in case Basic auth header doesn't parse on their side.
+  // Payload structure. NESTED per ProABD 2026-07-06 error response
+  // ("Shipper - First_Name needs a value" told us fields need to nest
+  // under Shipper/Transport). Matches the JSON Export Structure Cheli sent.
+  // Api_key + Api_pin in body as belt-and-suspenders (Basic auth header
+  // still sent too).
   const payload = {
     Api_key: process.env.PROABD_API_KEY,
     Api_pin: process.env.PROABD_API_PIN,
     Referrer_Id: referrerId,
     Custom_Id: input.leadRef,
-    // Shipper
-    First_Name: input.firstName,
-    Last_Name: input.lastName ?? "",
-    Email: input.email,
-    Phone_1: input.phone,
-    // Origin
-    Origin_City: input.origin.city ?? "",
-    Origin_State: input.origin.state,
-    Origin_Zipcode: input.origin.zip,
-    // Destination
-    Destination_City: input.destination.city ?? "",
-    Destination_State: input.destination.state,
-    Destination_Zipcode: input.destination.zip,
-    // Vehicle (single for now; multi-vehicle refactor tracked as Task #135)
-    Vehicle_Year: input.vehicle.year,
-    Vehicle_Make: input.vehicle.make,
-    Vehicle_Model: input.vehicle.model,
-    Vehicle_Op: input.vehicle.operable ? "1" : "0",
-    // Extras
-    Available_Date: input.availableDate ?? "",
+    Shipper: {
+      First_Name: input.firstName,
+      Last_Name: input.lastName ?? "",
+      Email: input.email,
+      Phone_1: input.phone,
+    },
+    Transport: {
+      Origin: {
+        City: input.origin.city ?? "",
+        State: input.origin.state,
+        Zipcode: input.origin.zip,
+      },
+      Destination: {
+        City: input.destination.city ?? "",
+        State: input.destination.state,
+        Zipcode: input.destination.zip,
+      },
+      Vehicles: [
+        {
+          v_year: input.vehicle.year,
+          v_make: input.vehicle.make,
+          v_model: input.vehicle.model,
+          veh_op: input.vehicle.operable ? "1" : "0",
+        },
+      ],
+      Available_Date: input.availableDate ?? "",
+    },
     Note: input.notes ?? "",
-    // Google Ads attribution
+    // Google Ads attribution. Placement TBD (asked Brian 2026-07-06);
+    // sending at top level for now since Custom_Id was null in exports.
     gclid: input.gclid ?? "",
   };
 

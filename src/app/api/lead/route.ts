@@ -131,7 +131,7 @@ export async function POST(req: Request) {
   const vehicleModel = requireStr(body.vehicle_model, 60);
   const vehicleType = requireStr(body.vehicle_type, 30);
   const firstName = requireStr(body.first_name, 80);
-  const lastName = str(body.last_name);
+  const lastName = requireStr(body.last_name, 80);
   const email = requireStr(body.email, 200);
   const phone = requireStr(body.phone, 30);
   const notes = str(body.notes);
@@ -150,6 +150,7 @@ export async function POST(req: Request) {
   if (!vehicleModel) missing.push("vehicle_model");
   if (!vehicleType) missing.push("vehicle_type");
   if (!firstName) missing.push("first_name");
+  if (!lastName) missing.push("last_name");
   if (!email) missing.push("email");
   if (!phone) missing.push("phone");
   if (missing.length) {
@@ -229,7 +230,7 @@ export async function POST(req: Request) {
     destination: { zip: destinationZip, state: destinationState },
     vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType },
     tier,
-    contact: { firstName, lastName: lastName ?? null, email, phone, notes: notes ?? null },
+    contact: { firstName: firstName!, lastName: lastName!, email, phone, notes: notes ?? null },
     assignedAgent: { email: assigned.agent.email, firstName: assigned.agent.firstName, index: assigned.index },
     estimate,
     attribution: {
@@ -269,7 +270,7 @@ export async function POST(req: Request) {
   const proabdPromise = proabdCreateLead({
     leadRef,
     firstName: firstName!,
-    lastName,
+    lastName: lastName!,
     email: email!,
     phone: phone!,
     origin: { state: originState!, zip: originZip! },
@@ -290,7 +291,7 @@ export async function POST(req: Request) {
   const { subject, text, html } = buildLeadEmail({
     leadRef,
     agentFirstName: assigned.agent.firstName,
-    customer: { firstName: firstName!, lastName, email: email!, phone: phone!, notes },
+    customer: { firstName: firstName!, lastName: lastName!, email: email!, phone: phone!, notes },
     origin: { city: "", state: originState!, zip: originZip! },
     destination: { city: "", state: destinationState!, zip: destinationZip! },
     vehicle: { year: vehicleYear!, make: vehicleMake!, model: vehicleModel!, type: vehicleType! },
