@@ -92,7 +92,7 @@ export default function AboutPage() {
                 {t("about.hero.ctaPrimary")}
               </Link>
               <Link
-                href="/contact"
+                href="/quote"
                 className="inline-block bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-full transition border border-white/20"
               >
                 {t("about.hero.ctaSecondary")}
@@ -411,7 +411,7 @@ export default function AboutPage() {
                   {t("about.cta.primary")}
                 </Link>
                 <Link
-                  href="/contact"
+                  href="/quote"
                   className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-full transition border border-white/20"
                 >
                   {t("about.cta.secondary")}

@@ -126,6 +126,19 @@ const nextConfig: NextConfig = {
       // Contact (no equivalent page, route to quote which is the conversion point)
       { source: "/contact", destination: "/quote", permanent: true },
       { source: "/contact-us", destination: "/quote", permanent: true },
+      // ES-locale contact (Next.js redirects run before next-intl middleware,
+      // so /contact source doesn't match locale-prefixed paths). Added 2026-07-06
+      // after GSC flagged /es/contact as 404.
+      { source: "/es/contact", destination: "/es/quote", permanent: true },
+      { source: "/es/contact-us", destination: "/es/quote", permanent: true },
+      // Legacy services tier deep-links (external referrals discovered via GSC
+      // 2026-07-06). Tier is now selected inside the quote form via ?tier= param.
+      { source: "/services/standby", destination: "/quote?tier=standby", permanent: true },
+      { source: "/services/priority", destination: "/quote?tier=priority", permanent: true },
+      { source: "/services/expedited", destination: "/quote?tier=expedited", permanent: true },
+      { source: "/es/services/standby", destination: "/es/quote?tier=standby", permanent: true },
+      { source: "/es/services/priority", destination: "/es/quote?tier=priority", permanent: true },
+      { source: "/es/services/expedited", destination: "/es/quote?tier=expedited", permanent: true },
       // Generic transport keywords (often used as Squarespace landing slugs)
       { source: "/auto-transport", destination: "/", permanent: true },
       { source: "/car-shipping", destination: "/", permanent: true },
