@@ -11,7 +11,13 @@ import "server-only";
 export interface BuildLeadEmailInput {
   leadRef: string;
   agentFirstName: string;
-  customer: { email: string; phone: string; notes?: string };
+  customer: {
+    firstName: string;
+    lastName?: string | null;
+    email: string;
+    phone: string;
+    notes?: string;
+  };
   origin: { city: string; state: string; zip: string };
   destination: { city: string; state: string; zip: string };
   vehicle: { year: string; make: string; model: string; type: string };
@@ -94,10 +100,14 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
 
   const subject = "[Lead] " + o + " -> " + d + " . " + vehicle + " . " + price;
 
+  const fullName =
+    input.customer.firstName +
+    (input.customer.lastName ? " " + input.customer.lastName : "");
+
   const textLines: string[] = [
     "New lead routed to you (" + input.leadRef + ").",
     "",
-    "Customer: " + input.customer.email + " . " + input.customer.phone,
+    "Customer: " + fullName + " . " + input.customer.email + " . " + input.customer.phone,
     "Route: " + o + " -> " + d,
     "Vehicle: " + vehicle + " (" + input.vehicle.type + ")",
     "Tier: " + tier,
@@ -151,7 +161,8 @@ function renderHtml(
     + '</div>'
     + '<h3 style="margin:0 0 8px;font-size:14px;color:' + PINE + ';text-transform:uppercase;letter-spacing:0.05em;">Customer</h3>'
     + '<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">'
-    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;width:90px;">Email</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.customer.email) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;width:90px;">Name</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.customer.firstName + (input.customer.lastName ? " " + input.customer.lastName : "")) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Email</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.customer.email) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Phone</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.customer.phone) + '</td></tr>'
     + notesRow
     + '</table>'

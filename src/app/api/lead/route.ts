@@ -28,6 +28,7 @@ import {
   type SdVehicleType,
 } from "@/lib/superdispatch/pricing";
 import { sendLeadEmail } from "@/lib/email/resend";
+import { createLead as proabdCreateLead } from "@/lib/proabd/client";
 import { zipPrefixToState, lookupZipApprox } from "@/data/zip-metros";
 
 export const runtime = "nodejs";
@@ -54,6 +55,8 @@ interface IncomingPayload {
   vehicle_model?: unknown;
   vehicle_type?: unknown;
   tier?: unknown;
+  first_name?: unknown;
+  last_name?: unknown;
   email?: unknown;
   phone?: unknown;
   notes?: unknown;
@@ -127,6 +130,8 @@ export async function POST(req: Request) {
   const vehicleMake = requireStr(body.vehicle_make, 60);
   const vehicleModel = requireStr(body.vehicle_model, 60);
   const vehicleType = requireStr(body.vehicle_type, 30);
+  const firstName = requireStr(body.first_name, 80);
+  const lastName = str(body.last_name);
   const email = requireStr(body.email, 200);
   const phone = requireStr(body.phone, 30);
   const notes = str(body.notes);
@@ -144,6 +149,7 @@ export async function POST(req: Request) {
   if (!vehicleMake) missing.push("vehicle_make");
   if (!vehicleModel) missing.push("vehicle_model");
   if (!vehicleType) missing.push("vehicle_type");
+  if (!firstName) missing.push("first_name");
   if (!email) missing.push("email");
   if (!phone) missing.push("phone");
   if (missing.length) {
@@ -223,7 +229,7 @@ export async function POST(req: Request) {
     destination: { zip: destinationZip, state: destinationState },
     vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType },
     tier,
-    contact: { email, phone, notes: notes ?? null },
+    contact: { firstName, lastName: lastName ?? null, email, phone, notes: notes ?? null },
     assignedAgent: { email: assigned.agent.email, firstName: assigned.agent.firstName, index: assigned.index },
     estimate,
     attribution: {
@@ -255,10 +261,36 @@ export async function POST(req: Request) {
     console.log("[/api/lead] DEV: would have persisted lead " + leadRef);
   }
 
+  // ProABD outbound createLead. Best-effort. Fired in parallel with the
+  // email sends so it never blocks the customer-facing return. IDs from
+  // the response (quote_id + encrypted_quote_id + encrypted_company_id)
+  // are stamped on the Firestore doc at the end of the request. Added
+  // 2026-07-06 (Task #119). See src/lib/proabd/client.ts for auth details.
+  const proabdPromise = proabdCreateLead({
+    leadRef,
+    firstName: firstName!,
+    lastName,
+    email: email!,
+    phone: phone!,
+    origin: { state: originState!, zip: originZip! },
+    destination: { state: destinationState!, zip: destinationZip! },
+    vehicle: {
+      year: vehicleYear!,
+      make: vehicleMake!,
+      model: vehicleModel!,
+      operable: true,
+    },
+    gclid: str(body.gclid),
+    notes,
+  }).catch((err) => {
+    console.error("[/api/lead] ProABD createLead threw (should be caught internally):", err);
+    return { ok: false as const, error: "threw" };
+  });
+
   const { subject, text, html } = buildLeadEmail({
     leadRef,
     agentFirstName: assigned.agent.firstName,
-    customer: { email: email!, phone: phone!, notes },
+    customer: { firstName: firstName!, lastName, email: email!, phone: phone!, notes },
     origin: { city: "", state: originState!, zip: originZip! },
     destination: { city: "", state: destinationState!, zip: destinationZip! },
     vehicle: { year: vehicleYear!, make: vehicleMake!, model: vehicleModel!, type: vehicleType! },
@@ -388,6 +420,45 @@ export async function POST(req: Request) {
     // inline success state. A failed confirmation is an inconvenience, not
     // an outage.
     console.error("[/api/lead] customer confirmation threw", err);
+  }
+
+  // Await ProABD result and stamp IDs on the Firestore doc if we got them.
+  // Non-fatal: a ProABD failure just means the CRM row doesn't exist yet;
+  // the lead is still safely in Firestore and Renee got the email.
+  try {
+    const proabdResult = await proabdPromise;
+    if (
+      proabdResult.ok &&
+      db &&
+      (proabdResult.quote_id || proabdResult.encrypted_quote_id)
+    ) {
+      await db
+        .collection("leads")
+        .where("leadRef", "==", leadRef)
+        .limit(1)
+        .get()
+        .then((snap) => {
+          if (!snap.empty) {
+            return snap.docs[0]!.ref.update({
+              proabdQuoteId: proabdResult.quote_id ?? null,
+              proabdEncryptedQuoteId:
+                proabdResult.encrypted_quote_id ?? null,
+              proabdEncryptedCompanyId:
+                proabdResult.encrypted_company_id ?? null,
+              proabdSyncedAt: FieldValue.serverTimestamp(),
+            });
+          }
+        });
+    } else if (!proabdResult.ok) {
+      console.warn(
+        "[/api/lead] ProABD createLead failed for " +
+          leadRef +
+          ": " +
+          (proabdResult.error ?? "unknown"),
+      );
+    }
+  } catch (err) {
+    console.warn("[/api/lead] failed to stamp ProABD IDs on lead", err);
   }
 
   return NextResponse.json({ ok: true, leadRef });

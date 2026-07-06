@@ -284,6 +284,13 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
         <legend className="text-orange text-sm font-semibold uppercase tracking-wider">
           {t("quote.form.contact.legend")}
         </legend>
+        <Field
+          label={t("quote.form.contact.firstName.label")}
+          requiredMark={required}
+          name="first_name"
+          required
+          placeholder={t("quote.form.contact.firstName.placeholder")}
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Field
             label={t("quote.form.contact.email.label")}

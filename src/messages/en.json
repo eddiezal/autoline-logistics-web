@@ -1337,6 +1337,10 @@
       },
       "contact": {
         "legend": "How we reach you",
+        "firstName": {
+          "label": "First name",
+          "placeholder": "e.g. John"
+        },
         "email": {
           "label": "Email",
           "placeholder": "you@example.com"

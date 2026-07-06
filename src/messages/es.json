@@ -1337,6 +1337,10 @@
       },
       "contact": {
         "legend": "Cómo nos comunicamos con usted",
+        "firstName": {
+          "label": "Nombre",
+          "placeholder": "ej. Juan"
+        },
         "email": {
           "label": "Correo electrónico",
           "placeholder": "tucorreo@ejemplo.com"
