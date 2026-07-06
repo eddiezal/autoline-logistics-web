@@ -101,48 +101,46 @@ export async function createLead(
   const referrerId = process.env.PROABD_REFERRER_ID ?? "8";
   const url = baseUrl + "/createLead";
 
-  // Payload structure. NESTED per ProABD 2026-07-06 error response
-  // ("Shipper - First_Name needs a value" told us fields need to nest
-  // under Shipper/Transport). Matches the JSON Export Structure Cheli sent.
-  // Api_key + Api_pin in body as belt-and-suspenders (Basic auth header
-  // still sent too).
-  const payload = {
-    Api_key: process.env.PROABD_API_KEY,
-    Api_pin: process.env.PROABD_API_PIN,
-    Referrer_Id: referrerId,
-    Custom_Id: input.leadRef,
-    Shipper: {
-      First_Name: input.firstName,
-      Last_Name: input.lastName ?? "",
-      Email: input.email,
-      Phone_1: input.phone,
-    },
-    Transport: {
-      Origin: {
-        City: input.origin.city ?? "",
-        State: input.origin.state,
-        Zipcode: input.origin.zip,
-      },
-      Destination: {
-        City: input.destination.city ?? "",
-        State: input.destination.state,
-        Zipcode: input.destination.zip,
-      },
-      Vehicles: [
-        {
-          v_year: input.vehicle.year,
-          v_make: input.vehicle.make,
-          v_model: input.vehicle.model,
-          veh_op: input.vehicle.operable ? "1" : "0",
-        },
-      ],
-      Available_Date: input.availableDate ?? "",
-    },
-    Note: input.notes ?? "",
-    // Google Ads attribution. Placement TBD (asked Brian 2026-07-06);
-    // sending at top level for now since Custom_Id was null in exports.
-    gclid: input.gclid ?? "",
-  };
+  // Payload structure. FORM-ENCODED with bracket-notation nesting.
+  // Two prior attempts on JSON (flat top-level and nested Shipper/Transport
+  // objects) both got "Shipper - First_Name needs a value" back, which
+  // told us ProABD wasn't parsing our JSON body at all. Their endpoint
+  // (/ws/abd/v1/createLead) is a legacy PHP-style webservice that expects
+  // application/x-www-form-urlencoded with Rails/PHP-style bracket nesting.
+  // Brian's 2026-07-06 email hinting at "curl auth_basic with key:pass"
+  // reinforced this read.
+  const form = new URLSearchParams();
+  form.append("Api_key", process.env.PROABD_API_KEY as string);
+  form.append("Api_pin", process.env.PROABD_API_PIN as string);
+  form.append("Referrer_Id", referrerId);
+  form.append("Custom_Id", input.leadRef);
+  // Shipper
+  form.append("Shipper[First_Name]", input.firstName);
+  form.append("Shipper[Last_Name]", input.lastName ?? "");
+  form.append("Shipper[Email]", input.email);
+  form.append("Shipper[Phone_1]", input.phone);
+  // Transport > Origin
+  form.append("Transport[Origin][City]", input.origin.city ?? "");
+  form.append("Transport[Origin][State]", input.origin.state);
+  form.append("Transport[Origin][Zipcode]", input.origin.zip);
+  // Transport > Destination
+  form.append("Transport[Destination][City]", input.destination.city ?? "");
+  form.append("Transport[Destination][State]", input.destination.state);
+  form.append("Transport[Destination][Zipcode]", input.destination.zip);
+  // Transport > Vehicles (array; index 0 for first vehicle)
+  form.append("Transport[Vehicles][0][v_year]", input.vehicle.year);
+  form.append("Transport[Vehicles][0][v_make]", input.vehicle.make);
+  form.append("Transport[Vehicles][0][v_model]", input.vehicle.model);
+  form.append("Transport[Vehicles][0][veh_op]", input.vehicle.operable ? "1" : "0");
+  // Transport > Available date
+  form.append("Transport[Available_Date]", input.availableDate ?? "");
+  // Notes + GCLID
+  form.append("Note", input.notes ?? "");
+  form.append("gclid", input.gclid ?? "");
+
+  // Debug log: show field names we're sending (values redacted for safety
+  // since Api_key + Api_pin are among them).
+  console.log("[proabd] createLead sending fields:", Array.from(form.keys()).join(", "));
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), PROABD_TIMEOUT_MS);
@@ -151,10 +149,10 @@ export async function createLead(
     const res = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
         Authorization: buildAuthHeader(),
       },
-      body: JSON.stringify(payload),
+      body: form.toString(),
       signal: controller.signal,
     });
 
