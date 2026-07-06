@@ -7,16 +7,37 @@ import { Container } from "@/components/Container";
 import { QuoteForm } from "@/components/QuoteForm";
 import { parseQuoteSearchParams, type HeroHandoff } from "@/lib/hero-handoff";
 
-export const metadata: Metadata = {
-  title: "Get a locked price — Auto Line Logistics",
-  description:
-    "Tell us your origin, destination, and vehicle. Your coordinator will lock in a price within 1 business hour. No bait-and-switch. The quote is the contract.",
-};
+// Locale-aware canonical: /quote for EN, /es/quote for ES. Without this,
+// every ?from=X&to=Y&dest=Z variant looks like a distinct page to Google
+// and dilutes crawl budget. GSC flagged 8+ query-param variants of the
+// quote page as "crawled but not indexed" on 2026-07-06 for this reason.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const path = locale === "en" ? "/quote" : "/" + locale + "/quote";
+  return {
+    title: "Get a locked price — Auto Line Logistics",
+    description:
+      "Tell us your origin, destination, and vehicle. Your coordinator will lock in a price within 1 business hour. No bait-and-switch. The quote is the contract.",
+    alternates: {
+      canonical: path,
+      languages: {
+        en: "/quote",
+        es: "/es/quote",
+      },
+    },
+  };
+}
 
 // Next 15+/16 pattern: searchParams is a Promise that must be awaited
 export default async function QuotePage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{
     from?: string;
     to?: string;
@@ -26,13 +47,14 @@ export default async function QuotePage({
     timing?: string;
   }>;
 }) {
-  const params = await searchParams;
-  const handoff = parseQuoteSearchParams(params);
+  void params;
+  const sp = await searchParams;
+  const handoff = parseQuoteSearchParams(sp);
   // Headline still uses fromCode/toCode for the "CA → FL" render when
   // legacy callers pass state codes. ZIP-only callers fall back to the
   // default headline. The form gets the full handoff either way.
-  const fromCode = (params.from ?? "").toUpperCase();
-  const toCode = (params.to ?? "").toUpperCase();
+  const fromCode = (sp.from ?? "").toUpperCase();
+  const toCode = (sp.to ?? "").toUpperCase();
   return <QuoteContent fromCode={fromCode} toCode={toCode} handoff={handoff} />;
 }
 

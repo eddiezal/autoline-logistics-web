@@ -26,8 +26,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Block any private/admin paths
-        disallow: ["/api/", "/_next/", "/portal/"],
+        // Block any private/admin paths.
+        // /manifest.json added 2026-07-06 after GSC flagged it in "crawled but
+        // not indexed" (PWA manifest, not user-facing content — shouldn't
+        // eat crawl budget).
+        disallow: ["/api/", "/_next/", "/portal/", "/manifest.json"],
       },
     ],
     sitemap: "https://www.autolinelogistics.com/sitemap.xml",
