@@ -66,24 +66,30 @@ interface CallRailPayload {
 
 /** Verify the CallRail webhook signature.
  *
- *  Despite the "Signature Secret Token" naming in CallRail's UI, the
- *  scheme is NOT HMAC. CallRail sends the literal token value in the
- *  `signature` header on every webhook. Receivers compare strings.
- *
- *  Trade-off: simpler integration; no payload integrity check. If
- *  someone leaks the secret, they can forge requests. Mitigated by:
- *  (a) HTTPS in transit, (b) Vercel-only env var, (c) memory rule to
- *  rotate immediately if the value ever escapes the secrets store.
+ *  Updated 2026-07-08 after debug mode revealed CallRail actually uses
+ *  HMAC-SHA1 base64 signing, contradicting the earlier memory that said
+ *  it was a plain string comparison. Signatures observed are 28 chars
+ *  ending in base64 padding (=), which is HMAC-SHA1's 20-byte output
+ *  base64-encoded. The "Signature Secret Token" from CallRail's UI is
+ *  used as the HMAC-SHA1 key over the request body.
  *
  *  Timing-safe comparison still used to prevent timing-side-channel
- *  enumeration of the secret. */
-function verifySignature(signature: string | null, secret: string): boolean {
+ *  enumeration of the computed hash. */
+function verifySignature(
+  signature: string | null,
+  body: string,
+  secret: string,
+): boolean {
   if (!signature) return false;
-  const provided = Buffer.from(signature.trim());
-  const expected = Buffer.from(secret.trim());
-  if (provided.length !== expected.length) return false;
+  const computed = crypto
+    .createHmac("sha1", secret)
+    .update(body)
+    .digest("base64");
+  const providedBuf = Buffer.from(signature.trim());
+  const expectedBuf = Buffer.from(computed);
+  if (providedBuf.length !== expectedBuf.length) return false;
   try {
-    return crypto.timingSafeEqual(provided, expected);
+    return crypto.timingSafeEqual(providedBuf, expectedBuf);
   } catch {
     return false;
   }
@@ -148,7 +154,7 @@ export async function POST(req: Request) {
   const signature = req.headers.get("signature") ?? req.headers.get("x-callrail-signature");
 
   const debugMode = process.env.CALLRAIL_WEBHOOK_DEBUG_MODE === "true";
-  const sigOk = verifySignature(signature, secret);
+  const sigOk = verifySignature(signature, rawBody, secret);
 
   if (!sigOk && !debugMode) {
     console.warn("[callrail webhook] signature verification failed", {
@@ -180,11 +186,27 @@ export async function POST(req: Request) {
     );
   }
 
+  // CallRail may send either JSON (when configured) or form-encoded (default).
+  // Try JSON first, fall back to URLSearchParams parsing.
   let payload: CallRailPayload;
   try {
     payload = JSON.parse(rawBody) as CallRailPayload;
   } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    try {
+      const params = new URLSearchParams(rawBody);
+      const asObject: Record<string, string> = {};
+      for (const [k, v] of params.entries()) asObject[k] = v;
+      payload = asObject as unknown as CallRailPayload;
+    } catch {
+      console.warn(
+        "[callrail webhook] body parse failed (neither JSON nor form-encoded): " +
+          "bodyLen=" +
+          rawBody.length +
+          " preview=" +
+          rawBody.slice(0, 300),
+      );
+      return NextResponse.json({ error: "Invalid body format" }, { status: 400 });
+    }
   }
 
   if (!payload.id) {
