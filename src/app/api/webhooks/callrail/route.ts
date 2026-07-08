@@ -147,12 +147,37 @@ export async function POST(req: Request) {
   const rawBody = await req.text();
   const signature = req.headers.get("signature") ?? req.headers.get("x-callrail-signature");
 
-  if (!verifySignature(signature, secret)) {
+  const debugMode = process.env.CALLRAIL_WEBHOOK_DEBUG_MODE === "true";
+  const sigOk = verifySignature(signature, secret);
+
+  if (!sigOk && !debugMode) {
     console.warn("[callrail webhook] signature verification failed", {
       hasSignature: signature !== null,
       providedLen: signature?.length ?? 0,
+      expectedLen: secret.length,
+      // Log first + last 4 chars of provided signature so we can compare
+      // against CallRail's UI without leaking the full token.
+      providedPreview: signature
+        ? signature.slice(0, 4) + "..." + signature.slice(-4)
+        : null,
+      expectedPreview: secret.slice(0, 4) + "..." + secret.slice(-4),
     });
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
+
+  if (!sigOk && debugMode) {
+    console.warn(
+      "[callrail webhook] DEBUG MODE ACCEPTING UNVERIFIED: providedLen=" +
+        (signature?.length ?? 0) +
+        " expectedLen=" +
+        secret.length +
+        " providedPreview=" +
+        (signature ? signature.slice(0, 4) + "..." + signature.slice(-4) : "null") +
+        " expectedPreview=" +
+        secret.slice(0, 4) +
+        "..." +
+        secret.slice(-4),
+    );
   }
 
   let payload: CallRailPayload;
