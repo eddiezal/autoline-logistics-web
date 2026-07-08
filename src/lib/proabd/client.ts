@@ -99,7 +99,7 @@ export async function createLead(
 
   const baseUrl = (process.env.PROABD_API_BASE_URL as string).replace(/\/$/, "");
   const referrerId = process.env.PROABD_REFERRER_ID ?? "8";
-  const url = baseUrl + "/createLead";
+  const url = baseUrl + "/createLead/";
 
   // Payload structure. FORM-ENCODED with bracket-notation nesting.
   // Two prior attempts on JSON (flat top-level and nested Shipper/Transport
