@@ -29,39 +29,80 @@ import { getAdminDb } from "@/lib/firebase/admin";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** CallRail webhook payload, narrowed to fields we use.
- *  CallRail's full schema has more, but we don't need them yet. */
+/** CallRail post-call webhook payload.
+ *  Actual field names captured live via debug mode 2026-07-08.
+ *  CallRail sends 100+ fields; these are the ones we care about now.
+ *  Everything else is preserved in raw_payload for future extraction. */
 interface CallRailPayload {
-  /** CallRail's globally unique call ID. Used for idempotency. */
-  id: string;
-  /** Source pool name as configured in CallRail dashboard (e.g. "Google Paid"). */
-  source: string;
-  /** Caller's phone number, E.164 format. */
-  caller_number?: string;
-  /** Tracking number the caller dialed (lets us know which pool routed). */
-  called_number?: string;
-  /** ISO8601 timestamp of call start. */
+  /** CallRail's globally unique call ID (used for idempotency).
+   *  Note: CallRail's post-call webhook uses `resource_id`, not `id`. */
+  resource_id?: string;
+  /** Legacy alias in case CallRail also sends this. */
+  id?: string;
+  /** Source classification (e.g. "Google Paid", "Direct", "google_organic"). */
+  source?: string;
+  source_name?: string;
+  medium?: string;
+  /** Caller's phone number. */
+  customer_phone_number?: string;
+  /** Business line the call routed to. */
+  business_phone_number?: string;
+  /** The CallRail tracking number the caller dialed (identifies the source pool). */
+  tracking_phone_number?: string;
+  formatted_tracking_source?: string;
+  /** Contact info. */
+  customer_name?: string;
+  customer_city?: string;
+  customer_state?: string;
+  customer_country?: string;
+  /** ISO timestamp of call start. */
   start_time?: string;
+  created_at?: string;
   /** Call duration in seconds. */
-  duration?: number;
-  /** "inbound" or "outbound". We only care about inbound. */
-  direction?: "inbound" | "outbound";
-  /** Signed URL to call recording (if recording enabled). */
+  duration?: number | string;
+  /** "inbound" or "outbound". */
+  direction?: string;
+  call_type?: string;
+  answered?: boolean | string;
+  voicemail?: boolean | string;
+  call_disposition?: string;
+  first_call?: boolean | string;
+  /** Signed URLs for content. */
   recording?: string;
-  /** Signed URL to transcript (if Conversation Intelligence tier). */
-  transcript?: string;
-  /** Page the visitor was on when they called. */
-  landing_page?: string;
-  /** HTTP referrer that brought them to the site. */
+  transcription?: string;
+  conversational_transcript?: string;
+  /** URL context. */
+  landing_page_url?: string;
+  referring_url?: string;
+  last_requested_url?: string;
   referrer?: string;
-  /** UTM params parsed from the landing URL. */
+  referrer_domain?: string;
+  /** UTM params + click IDs (critical for attribution). */
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
   utm_content?: string;
-  /** CallRail company + customer IDs (for auditing). */
+  utm_term?: string;
+  gclid?: string;
+  fbclid?: string;
+  msclkid?: string;
+  /** CallRail AI analysis (Conversation Intelligence tier). */
+  keywords?: string;
+  keywords_spotted?: string;
+  call_summary?: string;
+  call_highlights?: string;
+  sentiment?: string;
+  lead_status?: string;
+  lead_score?: number | string;
+  lead_explanation?: string;
+  /** IDs for auditing. */
   company_id?: string;
-  customer_id?: string;
+  company_resource_id?: string;
+  person_id?: string;
+  person_resource_id?: string;
+  tracker_resource_id?: string;
+  /** Any additional fields CallRail sends. */
+  [key: string]: unknown;
 }
 
 /** Verify the CallRail webhook signature.
@@ -97,7 +138,7 @@ function verifySignature(
 
 /** Fire a GA4 call_completed event via Measurement Protocol.
  *  Non-blocking — we don't await this in the main flow. */
-async function fireGa4Event(payload: CallRailPayload): Promise<void> {
+async function fireGa4Event(payload: CallRailPayload, callId: string): Promise<void> {
   const measurementId = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
   const apiSecret = process.env.GA4_MEASUREMENT_PROTOCOL_SECRET;
   if (!measurementId || !apiSecret) {
@@ -107,7 +148,7 @@ async function fireGa4Event(payload: CallRailPayload): Promise<void> {
   // Use the call ID as a stable client_id when we don't have a cookie-based
   // one. This is best-effort attribution; real session-linking will require
   // CallRail's GA4 connector in a later phase.
-  const clientId = `callrail.${payload.id}`;
+  const clientId = `callrail.${callId}`;
   const body = {
     client_id: clientId,
     events: [
@@ -122,7 +163,7 @@ async function fireGa4Event(payload: CallRailPayload): Promise<void> {
           utm_source: payload.utm_source ?? "",
           utm_medium: payload.utm_medium ?? "",
           utm_campaign: payload.utm_campaign ?? "",
-          callrail_id: payload.id,
+          callrail_id: callId,
         },
       },
     ],
@@ -224,9 +265,17 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!payload.id) {
+  // CallRail post-call webhook uses resource_id as the primary ID.
+  // Fall back to id (older schema) or good_lead_call_id (some events).
+  const callId =
+    (typeof payload.resource_id === "string" ? payload.resource_id : null) ??
+    (typeof payload.id === "string" ? payload.id : null) ??
+    (typeof (payload as { good_lead_call_id?: unknown }).good_lead_call_id === "string"
+      ? String((payload as { good_lead_call_id?: unknown }).good_lead_call_id)
+      : null);
+  if (!callId) {
     console.warn(
-      "[callrail webhook] no id field found. bodyLen=" +
+      "[callrail webhook] no resource_id/id field found. bodyLen=" +
         rawBody.length +
         " keys=" +
         Object.keys(payload as unknown as Record<string, unknown>).join(","),
@@ -241,7 +290,7 @@ export async function POST(req: Request) {
   }
 
   const db = getAdminDb();
-  const callDocRef = db.collection("leads").doc(`call_${payload.id}`);
+  const callDocRef = db.collection("leads").doc(`call_${callId}`);
 
   // Idempotency check: if this call ID already wrote a lead, no-op.
   // CallRail occasionally retries webhooks on transient failures.
@@ -252,7 +301,7 @@ export async function POST(req: Request) {
 
   const submittedAt = payload.start_time ?? new Date().toISOString();
   const leadDoc = {
-    leadRef: `CALL-${payload.id}`,
+    leadRef: `CALL-${callId}`,
     source: "call" as const,
     submittedAt,
     createdAt: FieldValue.serverTimestamp(),
@@ -272,7 +321,7 @@ export async function POST(req: Request) {
     assignedAgent: null,
     estimate: null,
     callMeta: {
-      callrailId: payload.id,
+      callrailId: callId,
       calledNumber: payload.called_number ?? null,
       durationSec: payload.duration ?? null,
       recordingUrl: payload.recording ?? null,
@@ -304,7 +353,7 @@ export async function POST(req: Request) {
 
   // Fire GA4 event in the background. Don't block the webhook response
   // on GA4 latency — CallRail expects fast acks.
-  fireGa4Event(payload).catch((err) =>
+  fireGa4Event(payload, callId).catch((err) =>
     console.error('[callrail webhook] GA4 background fire failed:', err),
   );
 
