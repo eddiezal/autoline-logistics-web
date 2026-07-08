@@ -97,23 +97,40 @@ export async function POST(req: Request) {
     );
   }
 
-  // Placeholder header name until Brian confirms actual auth scheme.
-  // Also accept a fallback X-ProABD-Secret in case Superflo uses that naming.
+  // Accept auth via URL query param OR header. Brian noted 2026-07-06
+  // that "most customers use a key in the URL" so ?secret=xxx is supported
+  // alongside the header options.
+  const url = new URL(req.url);
   const providedSecret =
+    url.searchParams.get("secret") ??
     req.headers.get("x-superflo-secret") ??
     req.headers.get("x-proabd-secret") ??
     req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ??
     null;
 
-  if (!verifySecret(providedSecret, secret)) {
+  // Read raw body FIRST so we can log/capture it regardless of auth outcome.
+  // Superflo actively started posting to us 2026-07-08 with no header we
+  // recognized. Debug mode lets us capture their actual payload shape while
+  // we sort out the auth mechanism with Brian.
+  const rawBody = await req.text();
+  const verified = verifySecret(providedSecret, secret);
+  const debugMode = process.env.PROABD_WEBHOOK_DEBUG_MODE === "true";
+
+  if (!verified && !debugMode) {
     console.warn("[proabd webhook] secret verification failed", {
       hasHeader: providedSecret !== null,
       providedLen: providedSecret?.length ?? 0,
+      bodyLen: rawBody.length,
     });
     return NextResponse.json({ error: "Invalid secret" }, { status: 401 });
   }
 
-  const rawBody = await req.text();
+  if (!verified && debugMode) {
+    console.warn(
+      "[proabd webhook] DEBUG MODE ACCEPTING UNAUTH: bodyLen=" + rawBody.length +
+      " preview=" + rawBody.slice(0, 500),
+    );
+  }
   let payload: SuperfloPayload;
   try {
     payload = JSON.parse(rawBody) as SuperfloPayload;
@@ -162,6 +179,7 @@ export async function POST(req: Request) {
       batch.set(doc, {
         tenant_id: tenantId,
         batch_id: batchId,
+        verified,
         action,
         entity_type: entityType,
         entity_id: entityId,
