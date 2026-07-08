@@ -1293,15 +1293,15 @@
         "legend": "Vehicle",
         "year": {
           "label": "Year",
-          "placeholder": "2022"
+          "placeholder": "e.g. 2022"
         },
         "make": {
           "label": "Make",
-          "placeholder": "Toyota"
+          "placeholder": "e.g. Toyota"
         },
         "model": {
           "label": "Model",
-          "placeholder": "Camry"
+          "placeholder": "e.g. Camry"
         },
         "type": {
           "label": "Vehicle type",
