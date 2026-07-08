@@ -209,7 +209,28 @@ export async function POST(req: Request) {
     }
   }
 
+  if (debugMode) {
+    // Log the raw body + parsed payload keys so we can see exactly what
+    // CallRail is sending. Useful when the id lookup fails.
+    console.log(
+      "[callrail webhook] DEBUG parsed payload: keys=" +
+        Object.keys(payload as unknown as Record<string, unknown>).join(",") +
+        " id=" +
+        (payload as { id?: unknown }).id +
+        " bodyLen=" +
+        rawBody.length +
+        " bodyPreview=" +
+        rawBody.slice(0, 400),
+    );
+  }
+
   if (!payload.id) {
+    console.warn(
+      "[callrail webhook] no id field found. bodyLen=" +
+        rawBody.length +
+        " keys=" +
+        Object.keys(payload as unknown as Record<string, unknown>).join(","),
+    );
     return NextResponse.json({ error: "Missing call id" }, { status: 400 });
   }
 
