@@ -178,12 +178,19 @@ export async function createLead(
 
     clearTimeout(timeout);
 
-    const contentType = res.headers.get("content-type") ?? "";
+    // Parse the body as JSON regardless of the Content-Type header.
+    // ProABD returns its JSON with a non-JSON content type, which made a
+    // header-gated res.json() silently fall back to text and read a
+    // successful create as "unknown response" (caught live 2026-07-14,
+    // lead AL-260715-PVB5C1 / ABD_Id 37257179: lead created, stamp skipped).
     let raw: unknown;
     try {
-      raw = contentType.includes("application/json")
-        ? await res.json()
-        : await res.text();
+      const text = await res.text();
+      try {
+        raw = JSON.parse(text);
+      } catch {
+        raw = text; // genuinely non-JSON; keep for debugging
+      }
     } catch {
       raw = null;
     }
