@@ -5,17 +5,27 @@
  * after the Firestore write so every website quote form submission also
  * lands in Renee/Ginger/Nelson's ProABD queue as a fresh lead.
  *
- * Auth: HTTP Basic via PROABD_API_KEY + PROABD_API_PIN (from env). Also
- * passes Api_key + Api_pin in body as belt-and-suspenders since Superflo
- * supports both patterns.
+ * Request format — confirmed EMPIRICALLY 2026-07-14 via a 4-variant test
+ * matrix (see claude/proabd-createlead-integration-notes.md in the
+ * AutoExpress project, test lead ABD_Id 37256124):
+ *   - Body: a single bare JSON object. NOT an array (despite Brian's
+ *     2026-07-13 email saying "json array" — array-wrapped bodies fail
+ *     with "Shipper - First_Name needs a value"), NOT form-encoded.
+ *   - Content-Type: application/json
+ *   - Auth: HTTP Basic via PROABD_API_KEY + PROABD_API_PIN. The header is
+ *     REQUIRED — body-only auth returns 2099 "Company Token is invalid".
+ *     api_key/api_pin ride along in the body as empty strings per Brian
+ *     (Superflo is removing them from the docs).
  *
- * Field naming mirrors the JSON Export Structure Cheli sent 2026-07-06.
- * Confirmed fields include Shipper (First_Name, Last_Name, Email,
- * Phone_1), Origin/Destination (City, State, Zipcode), Vehicles
- * (v_year, v_make, v_model, veh_op). The /createLead request format
- * isn't formally documented; this uses a flat structure that matches
- * the createLead endpoint pattern. If Superflo returns a validation
- * error we adjust based on the actual response.
+ * Response format (also confirmed live): HTTP status is 200 even on
+ * failure, so the real success signal is body.Status === 1001:
+ *   success: {Status: 1001, Message: "Lead Created",
+ *             Results: {ABD_Id, CustomQuoteID, mileage}}
+ *   validation failure: {Status: 2098, Message, Errors: [...]}
+ *   auth failure: {Error_Code: 2099, Error_Message}
+ * ABD_Id is the permanent record id and the join key to Export API
+ * webhook events (proabd_webhook_events.raw_item.ABD_Id). mileage is
+ * null at create time and computed downstream.
  *
  * Failures are logged verbosely and returned as {ok: false, ...}. Caller
  * should NEVER block the lead flow on this call. Treat it as best-effort
@@ -57,12 +67,14 @@ export interface CreateLeadInput {
 
 export interface CreateLeadResponse {
   ok: boolean;
-  /** Raw internal ID. Not URL-safe. */
-  quote_id?: string;
-  /** URL-safe, used for /getQuoteOrderDetail lookups. */
-  encrypted_quote_id?: string;
-  /** Superflo-provided company identifier. */
-  encrypted_company_id?: string;
+  /** ProABD's permanent record id (Results.ABD_Id). Stable across the
+   *  lead → quote → order lifecycle; join key to Export API webhook
+   *  events (proabd_webhook_events.raw_item.ABD_Id). */
+  abdId?: string;
+  /** Echo of our Custom_Id (Results.CustomQuoteID / CustomQuoteId).
+   *  Was empty until Brian added Custom_Id passthrough to createLead
+   *  2026-07-14; abdId remains the primary join key regardless. */
+  customQuoteId?: string;
   /** Full raw response for debugging / migration. */
   raw?: unknown;
   error?: string;
@@ -101,46 +113,54 @@ export async function createLead(
   const referrerId = process.env.PROABD_REFERRER_ID ?? "8";
   const url = baseUrl + "/createLead/";
 
-  // Payload structure. FORM-ENCODED with bracket-notation nesting.
-  // Two prior attempts on JSON (flat top-level and nested Shipper/Transport
-  // objects) both got "Shipper - First_Name needs a value" back, which
-  // told us ProABD wasn't parsing our JSON body at all. Their endpoint
-  // (/ws/abd/v1/createLead) is a legacy PHP-style webservice that expects
-  // application/x-www-form-urlencoded with Rails/PHP-style bracket nesting.
-  // Brian's 2026-07-06 email hinting at "curl auth_basic with key:pass"
-  // reinforced this read.
-  const form = new URLSearchParams();
-  form.append("Api_key", process.env.PROABD_API_KEY as string);
-  form.append("Api_pin", process.env.PROABD_API_PIN as string);
-  form.append("Referrer_Id", referrerId);
-  form.append("Custom_Id", input.leadRef);
-  // Shipper
-  form.append("Shipper[First_Name]", input.firstName);
-  form.append("Shipper[Last_Name]", input.lastName ?? "");
-  form.append("Shipper[Email]", input.email);
-  form.append("Shipper[Phone_1]", input.phone);
-  // Transport > Origin
-  form.append("Transport[Origin][City]", input.origin.city ?? "");
-  form.append("Transport[Origin][State]", input.origin.state);
-  form.append("Transport[Origin][Zipcode]", input.origin.zip);
-  // Transport > Destination
-  form.append("Transport[Destination][City]", input.destination.city ?? "");
-  form.append("Transport[Destination][State]", input.destination.state);
-  form.append("Transport[Destination][Zipcode]", input.destination.zip);
-  // Transport > Vehicles (array; index 0 for first vehicle)
-  form.append("Transport[Vehicles][0][v_year]", input.vehicle.year);
-  form.append("Transport[Vehicles][0][v_make]", input.vehicle.make);
-  form.append("Transport[Vehicles][0][v_model]", input.vehicle.model);
-  form.append("Transport[Vehicles][0][veh_op]", input.vehicle.operable ? "1" : "0");
-  // Transport > Available date
-  form.append("Transport[Available_Date]", input.availableDate ?? "");
-  // Notes + GCLID
-  form.append("Note", input.notes ?? "");
-  form.append("gclid", input.gclid ?? "");
+  // Payload: single bare JSON object (see file header for the empirical
+  // confirmation). All values sent as strings, matching Export API payload
+  // conventions. api_key/api_pin are intentionally EMPTY — real auth is
+  // the Basic header; sending real values in the body changes nothing
+  // (tested), and Superflo is dropping these fields from the docs.
+  const payload = {
+    api_key: "",
+    api_pin: "",
+    Referrer_Id: referrerId,
+    Custom_Id: input.leadRef,
+    gclid: input.gclid ?? "",
+    Note: input.notes ?? "",
+    Shipper: {
+      First_Name: input.firstName,
+      Last_Name: input.lastName ?? "",
+      Email: input.email,
+      Phone_1: input.phone,
+    },
+    Transport: {
+      Origin: {
+        City: input.origin.city ?? "",
+        State: input.origin.state,
+        Zipcode: input.origin.zip,
+      },
+      Destination: {
+        City: input.destination.city ?? "",
+        State: input.destination.state,
+        Zipcode: input.destination.zip,
+      },
+      // Single vehicle for now. Multi-vehicle support (Task #135) will
+      // map additional entries here.
+      Vehicles: [
+        {
+          v_year: input.vehicle.year,
+          v_make: input.vehicle.make,
+          v_model: input.vehicle.model,
+          veh_op: input.vehicle.operable ? "1" : "0",
+        },
+      ],
+      Available_Date: input.availableDate ?? "",
+    },
+  };
 
-  // Debug log: show field names we're sending (values redacted for safety
-  // since Api_key + Api_pin are among them).
-  console.log("[proabd] createLead sending fields:", Array.from(form.keys()).join(", "));
+  // Debug log: top-level field names only (no values; payload contains PII).
+  console.log(
+    "[proabd] createLead sending fields:",
+    Object.keys(payload).join(", "),
+  );
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), PROABD_TIMEOUT_MS);
@@ -149,10 +169,10 @@ export async function createLead(
     const res = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
         Authorization: buildAuthHeader(),
       },
-      body: form.toString(),
+      body: JSON.stringify(payload),
       signal: controller.signal,
     });
 
@@ -178,25 +198,57 @@ export async function createLead(
       };
     }
 
-    // Log raw response on success so we learn the actual return shape
-    // and can tighten typing on the next iteration.
-    console.log("[proabd] createLead ok:", JSON.stringify(raw));
-
     const rawObj =
       raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
 
+    // ProABD returns HTTP 200 even on failure — res.ok is NOT a success
+    // signal. The real signal is body.Status === 1001 ("Lead Created").
+    // Failures: {Status: 2098, Message, Errors: []} for validation,
+    // {Error_Code: 2099, Error_Message} for auth.
+    const statusCode =
+      typeof rawObj.Status === "number"
+        ? rawObj.Status
+        : typeof rawObj.Error_Code === "number"
+          ? rawObj.Error_Code
+          : undefined;
+
+    if (statusCode !== 1001) {
+      const errors = Array.isArray(rawObj.Errors)
+        ? rawObj.Errors.join("; ")
+        : "";
+      const message =
+        String(rawObj.Message ?? rawObj.Error_Message ?? "unknown response") +
+        (errors ? " — " + errors : "");
+      console.error(
+        "[proabd] createLead rejected (Status " +
+          String(statusCode ?? "?") +
+          "): " +
+          message,
+      );
+      return { ok: false, error: message, status: statusCode, raw };
+    }
+
+    console.log("[proabd] createLead ok:", JSON.stringify(raw));
+
+    const results =
+      rawObj.Results && typeof rawObj.Results === "object"
+        ? (rawObj.Results as Record<string, unknown>)
+        : {};
+
     return {
       ok: true,
-      quote_id:
-        typeof rawObj.quote_id === "string" ? rawObj.quote_id : undefined,
-      encrypted_quote_id:
-        typeof rawObj.encrypted_quote_id === "string"
-          ? rawObj.encrypted_quote_id
+      abdId:
+        typeof results.ABD_Id === "number" || typeof results.ABD_Id === "string"
+          ? String(results.ABD_Id)
           : undefined,
-      encrypted_company_id:
-        typeof rawObj.encrypted_company_id === "string"
-          ? rawObj.encrypted_company_id
-          : undefined,
+      // Casing is uncertain: live response 2026-07-14 says "CustomQuoteID",
+      // Brian's 2026-07-14 email says "CustomQuoteId". Accept both.
+      customQuoteId:
+        typeof results.CustomQuoteID === "string" && results.CustomQuoteID
+          ? results.CustomQuoteID
+          : typeof results.CustomQuoteId === "string" && results.CustomQuoteId
+            ? results.CustomQuoteId
+            : undefined,
       raw,
     };
   } catch (err) {

@@ -5,11 +5,13 @@
  * changes. Fires every 1-5 minutes with a batch of 50-100 items per Brian's
  * spec on the 2026-07-01 call.
  *
- * Each item in the batch includes:
- *   - insert/update flag (action)
- *   - entity type: lead, quote, or order
- *   - the full record data (Shipper + Transport + Vehicles shape)
- *   - our GCLID if we passed it on createLead
+ * Each item in the batch is FLAT (no envelope) and includes:
+ *   - insert/update flag (Type)
+ *   - entity type: lead, quote, or order (Item_Type / Item_Type_Id)
+ *   - ABD_Id: permanent record id, joins to leads.proabdAbdId
+ *   - the full record data at top level (Shipper + Transport + Vehicles)
+ *   - GCLID / Custom_Id round-trip fields (both unreliable as of
+ *     2026-07-14 — see integration notes; pending Brian)
  *
  * See Notion "ProABD API Integration" page for the full call outcome +
  * confirmed payload shape.
@@ -52,20 +54,28 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** Single Superflo event item.
- *  Fields are best-guess based on Brian's verbal description on the 7/1
- *  call. Actual sample payloads pending; update once received. */
+ *  Field names confirmed from LIVE payloads (2026-07-08 debug capture +
+ *  2026-07-14 round-trip test, ABD_Id 37256124). Events are FLAT — the
+ *  item itself is the record (Shipper, Transport, etc. at top level);
+ *  there is no data/record envelope. */
 interface SuperfloEventItem {
-  /** "insert" or "update" indicator. */
-  action?: "insert" | "update" | string;
+  /** "insert" or "update". */
+  Type?: string;
   /** Entity type: "lead", "quote", or "order". */
-  entity_type?: "lead" | "quote" | "order" | string;
-  /** The record data (Shipper + Transport + Vehicles + our GCLID). */
-  data?: Record<string, unknown>;
-  /** Alternate field name if Superflo nests differently. */
-  record?: Record<string, unknown>;
-  /** Convenience field: their record identifier (ABD_Id, quote_id, order_id). */
-  id?: string | number;
-  /** Any additional fields Superflo sends. */
+  Item_Type?: string;
+  /** "1"=lead, "2"=quote. */
+  Item_Type_Id?: string;
+  /** ProABD record id — stable across lead → quote → order lifecycle.
+   *  Joins to leads.proabdAbdId (stamped at createLead time). */
+  ABD_Id?: string | number;
+  /** Our leadRef if ProABD stored it. Empty as of 2026-07-14 (pending
+   *  Brian) — join on ABD_Id instead. */
+  Custom_Id?: string;
+  /** Uppercase in their payloads. Round-trip unconfirmed. */
+  GCLID?: string;
+  Status_Id?: string;
+  Status?: string;
+  /** Any additional fields Superflo sends (Shipper, Transport, ...). */
   [key: string]: unknown;
 }
 
@@ -167,13 +177,17 @@ export async function POST(req: Request) {
     for (const item of items) {
       const doc = col.doc();
       // Extract commonly-useful fields for indexing, keep raw payload.
-      const record = item.data ?? item.record ?? null;
+      // Superflo's real field names (confirmed from live payloads):
+      // Type = insert/update, Item_Type = lead/quote/order, ABD_Id = record
+      // id. Events are flat, so raw_item IS the full record — the old
+      // `record` field (from a guessed data/record envelope) was dropped
+      // 2026-07-14; docs written before then have record: null.
       const entityType =
-        typeof item.entity_type === "string" ? item.entity_type : null;
-      const action = typeof item.action === "string" ? item.action : null;
+        typeof item.Item_Type === "string" ? item.Item_Type : null;
+      const action = typeof item.Type === "string" ? item.Type : null;
       const entityId =
-        typeof item.id === "string" || typeof item.id === "number"
-          ? String(item.id)
+        typeof item.ABD_Id === "string" || typeof item.ABD_Id === "number"
+          ? String(item.ABD_Id)
           : null;
 
       batch.set(doc, {
@@ -183,7 +197,6 @@ export async function POST(req: Request) {
         action,
         entity_type: entityType,
         entity_id: entityId,
-        record,
         raw_item: item,
         received_at: receivedAt,
         parsed: false, // Set true once downstream parser processes it.
