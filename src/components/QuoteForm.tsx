@@ -3,7 +3,7 @@
 import { useRef, useState, useId } from "react";
 import { useTranslations } from "next-intl";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-import { track, captureGclid } from "@/lib/analytics/events";
+import { track, captureGclid, captureUtm } from "@/lib/analytics/events";
 import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
 import type { HeroHandoff } from "@/lib/hero-handoff";
 
@@ -55,6 +55,16 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!captchaToken || pending) return;
+
+    // US-only guard. The ZIP fields are plain text inputs, so before this
+    // check the form happily accepted "Honduras" as a destination (real
+    // launch-day lead, 2026-07-20). Server enforces the same rule.
+    const ZIP_RE = /^\d{5}(-\d{4})?$/;
+    if (!ZIP_RE.test(originZip.trim()) || !ZIP_RE.test(destinationZip.trim())) {
+      setError(t("quote.form.zipInvalid"));
+      return;
+    }
+
     setPending(true);
     setError(null);
 
@@ -72,6 +82,14 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     // captureGclid() reads URL first, falls back to the 60-day cookie.
     const submitGclid = captureGclid();
     if (submitGclid) payload.gclid = submitGclid;
+    // Capture UTM params the same way (URL first, 60-day cookie fallback).
+    // Added 2026-07-20: these were never sent before, so every Google Ads
+    // lead rendered as organic/direct in the agent email + lead doc.
+    const utm = captureUtm();
+    if (utm?.utm_source) payload.utm_source = utm.utm_source;
+    if (utm?.utm_medium) payload.utm_medium = utm.utm_medium;
+    if (utm?.utm_campaign) payload.utm_campaign = utm.utm_campaign;
+    if (utm?.utm_content) payload.utm_content = utm.utm_content;
 
     try {
       const res = await fetch("/api/lead", {
@@ -166,6 +184,12 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
       {handoff.transportType && (
         <input type="hidden" name="transport" value={handoff.transportType} />
       )}
+
+      {/* US-domestic-only notice — deters unservable international requests
+          (esp. via the Spanish funnel) before they reach an agent. */}
+      <p className="text-gray-600 text-sm rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+        {t("quote.form.usOnly")}
+      </p>
 
       {/* Origin */}
       <fieldset className="space-y-3">

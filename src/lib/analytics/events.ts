@@ -199,3 +199,72 @@ export function captureGclid(): string | undefined {
   const match = document.cookie.match(/(?:^|;\s*)gclid=([^;]+)/);
   return match ? decodeURIComponent(match[1]) : undefined;
 }
+
+/** UTM parameters captured from the landing URL. */
+export interface UtmParams {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+}
+
+const UTM_KEYS: ReadonlyArray<keyof UtmParams> = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+];
+
+/**
+ * Capture UTM parameters from the URL, persist to a first-party cookie
+ * for 60 days (last-touch wins), fall back to the cookie when the current
+ * URL has none. Same pattern as captureGclid().
+ *
+ * Added 2026-07-20: the quote form previously sent NO utm fields at all,
+ * so every Google Ads lead rendered as "Google (organic)" / "Direct" in
+ * the agent email. See launch-day attribution bug.
+ */
+export function captureUtm(): UtmParams | undefined {
+  if (typeof window === "undefined") return undefined;
+
+  const url = new URL(window.location.href);
+  const fromUrl: UtmParams = {};
+  let any = false;
+  for (const key of UTM_KEYS) {
+    const v = url.searchParams.get(key);
+    if (v) {
+      fromUrl[key] = v;
+      any = true;
+    }
+  }
+
+  if (any) {
+    const sixtyDays = 60 * 24 * 60 * 60;
+    document.cookie =
+      "utm_last=" +
+      encodeURIComponent(JSON.stringify(fromUrl)) +
+      `; max-age=${sixtyDays}; path=/; SameSite=Lax`;
+    return fromUrl;
+  }
+
+  const match = document.cookie.match(/(?:^|;\s*)utm_last=([^;]+)/);
+  if (!match) return undefined;
+  try {
+    const parsed = JSON.parse(decodeURIComponent(match[1])) as UtmParams;
+    // Only return known keys with string values (cookie could be stale/garbled).
+    const clean: UtmParams = {};
+    let anyClean = false;
+    for (const key of UTM_KEYS) {
+      const v = parsed[key];
+      if (typeof v === "string" && v) {
+        clean[key] = v;
+        anyClean = true;
+      }
+    }
+    return anyClean ? clean : undefined;
+  } catch {
+    return undefined;
+  }
+}

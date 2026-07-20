@@ -1372,7 +1372,9 @@
         "title": "Thanks. A coordinator will reach out within 1 business hour.",
         "body": "We received your details and routed them to an available coordinator. You will get a locked all-in price by email or phone. No obligation until you book.",
         "refLabel": "Reference"
-      }
+      },
+      "usOnly": "We ship within the United States only — door to door across the lower 48 states.",
+      "zipInvalid": "Please enter valid 5-digit US ZIP codes for origin and destination. We ship within the United States only."
     },
     "reassurance": {
       "backedBy": "Backed by",

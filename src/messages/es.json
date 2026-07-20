@@ -1372,7 +1372,9 @@
         "title": "Gracias. Un coordinador le contactara dentro de 1 hora habil.",
         "body": "Recibimos sus datos y los enrutamos a un coordinador disponible. Recibira un precio fijo todo incluido por correo o telefono. Sin compromiso hasta que reserve.",
         "refLabel": "Referencia"
-      }
+      },
+      "usOnly": "Transportamos únicamente dentro de Estados Unidos — puerta a puerta en los 48 estados continentales.",
+      "zipInvalid": "Ingrese códigos postales válidos de EE. UU. (5 dígitos) para origen y destino. Transportamos únicamente dentro de Estados Unidos."
     },
     "reassurance": {
       "backedBy": "Respaldado por",
