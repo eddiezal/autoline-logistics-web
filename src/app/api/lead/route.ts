@@ -279,10 +279,11 @@ export async function POST(req: Request) {
   }
 
   // ProABD outbound createLead. Best-effort. Fired in parallel with the
-  // email sends so it never blocks the customer-facing return. IDs from
-  // the response (quote_id + encrypted_quote_id + encrypted_company_id)
-  // are stamped on the Firestore doc at the end of the request. Added
-  // 2026-07-06 (Task #119). See src/lib/proabd/client.ts for auth details.
+  // email sends so it never blocks the customer-facing return. ABD_Id from
+  // the response is stamped on the Firestore doc at the end of the request
+  // — it's the permanent join key to Export API webhook events
+  // (proabd_webhook_events.raw_item.ABD_Id). Added 2026-07-06 (Task #119),
+  // format fixed 2026-07-14. See src/lib/proabd/client.ts for details.
   const proabdPromise = proabdCreateLead({
     leadRef,
     firstName: firstName!,
@@ -439,16 +440,14 @@ export async function POST(req: Request) {
     console.error("[/api/lead] customer confirmation threw", err);
   }
 
-  // Await ProABD result and stamp IDs on the Firestore doc if we got them.
+  // Await ProABD result and stamp the ABD_Id on the Firestore doc if we
+  // got it. ABD_Id is stable across the lead → quote → order lifecycle,
+  // so this is what lets us join webhook events back to our lead docs.
   // Non-fatal: a ProABD failure just means the CRM row doesn't exist yet;
-  // the lead is still safely in Firestore and Renee got the email.
+  // the lead is still safely in Firestore and the agent got the email.
   try {
     const proabdResult = await proabdPromise;
-    if (
-      proabdResult.ok &&
-      db &&
-      (proabdResult.quote_id || proabdResult.encrypted_quote_id)
-    ) {
+    if (proabdResult.ok && db && proabdResult.abdId) {
       await db
         .collection("leads")
         .where("leadRef", "==", leadRef)
@@ -457,11 +456,10 @@ export async function POST(req: Request) {
         .then((snap) => {
           if (!snap.empty) {
             return snap.docs[0]!.ref.update({
-              proabdQuoteId: proabdResult.quote_id ?? null,
-              proabdEncryptedQuoteId:
-                proabdResult.encrypted_quote_id ?? null,
-              proabdEncryptedCompanyId:
-                proabdResult.encrypted_company_id ?? null,
+              proabdAbdId: proabdResult.abdId,
+              // Empty as of 2026-07-14 (ProABD not storing Custom_Id yet,
+              // pending Brian) — kept so we notice when it starts working.
+              proabdCustomQuoteId: proabdResult.customQuoteId ?? null,
               proabdSyncedAt: FieldValue.serverTimestamp(),
             });
           }
