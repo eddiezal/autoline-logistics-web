@@ -91,6 +91,63 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/**
+ * Google Ads campaign ID -> friendly name.
+ * The account-level tracking suffix sets utm_campaign={campaignid}, so ad
+ * clicks arrive with the numeric ID. Map it to something agents can read.
+ * Keep in sync with the Google Ads account (851-980-8841).
+ */
+const ADS_CAMPAIGN_NAMES: Record<string, string> = {
+  "24034601745": "S1 Cost & Quotes",
+  "24034601748": "S2 Near Me LA",
+  "24034601751": "S3 State + Corridors",
+  "24034601754": "S4 Segments",
+  "24034601757": "Brand Defense",
+  "24034984545": "S5 Español",
+};
+
+/**
+ * One-line, plain-English lead source for agents.
+ *
+ *   "Google Ads - S5 Español"   paid click (utm_source=google&utm_medium=cpc
+ *                                from the account tracking suffix)
+ *   "Google (organic)"          google referrer, no utm tags
+ *   "Bing (organic)"            etc.
+ *   "Referral - <host>"         any other referrer
+ *   "Direct / unknown"          nothing to go on
+ */
+function deriveLeadSource(a: BuildLeadEmailInput["attribution"]): string {
+  const src = a.utmSource?.trim().toLowerCase();
+  const med = a.utmMedium?.trim().toLowerCase();
+
+  if (src === "google" && (med === "cpc" || med === "ppc" || med === "paid")) {
+    const name = a.utmCampaign ? ADS_CAMPAIGN_NAMES[a.utmCampaign.trim()] : undefined;
+    return "Google Ads - " + (name ?? (a.utmCampaign?.trim() || "unknown campaign"));
+  }
+  if (src) {
+    // Some other tagged source (newsletter, facebook, etc.)
+    return src.charAt(0).toUpperCase() + src.slice(1) + (med ? " (" + med + ")" : "");
+  }
+
+  const ref = a.referrer?.trim().toLowerCase() ?? "";
+  if (ref) {
+    let host = "";
+    try {
+      host = new URL(ref).hostname.replace(/^www\./, "");
+    } catch {
+      host = ref;
+    }
+    if (host.includes("google.")) return "Google (organic)";
+    if (host.includes("bing.")) return "Bing (organic)";
+    if (host.includes("duckduckgo.")) return "DuckDuckGo (organic)";
+    if (host.includes("yahoo.")) return "Yahoo (organic)";
+    if (host.includes("autolinelogistics.com")) return "Direct (internal nav)";
+    return "Referral - " + host;
+  }
+
+  return "Direct / unknown";
+}
+
 export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
   const o = locLabel(input.origin);
   const d = locLabel(input.destination);
@@ -111,6 +168,7 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
     "Route: " + o + " -> " + d,
     "Vehicle: " + vehicle + " (" + input.vehicle.type + ")",
     "Tier: " + tier,
+    "Source: " + deriveLeadSource(input.attribution),
     "Estimate: " + price,
   ];
   const range = rangeLabel(input.estimate);
@@ -172,6 +230,7 @@ function renderHtml(
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Destination</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.destination.state) + ' ' + escapeHtml(input.destination.zip) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Vehicle</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(vehicle) + ' . ' + escapeHtml(input.vehicle.type) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Tier</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(tier) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Source</td><td style="padding:6px 0;color:' + PINE + ';font-size:14px;font-weight:700;">' + escapeHtml(deriveLeadSource(input.attribution)) + '</td></tr>'
     + '</table>'
     + attribution
     + '<div style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:' + GRAY + ';">'
