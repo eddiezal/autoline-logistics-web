@@ -1,12 +1,12 @@
 /**
- * Agent round-robin for /quote lead routing.
+ * Agent roster + lead-notification recipients.
  *
- * Phase 1: the 3 named agents on Ben's team. Each new lead picks the
- * "next" agent via an atomically-incremented Firestore counter. Manual
- * entry into ProABD by the assigned agent. No ProABD API call here.
- *
- * Phase 2: replace constants with an admin-configurable agent table in
- * Firestore so Ben can add/remove agents without a redeploy.
+ * RETIRED 2026-07-20: the round-robin assignment (pickNextAgent) is no
+ * longer called from /api/lead. ProABD's rules-based routing is the only
+ * assignment brain — it ran in parallel with ours since the 2026-07-14
+ * createLead automation and the two disagreed on 8 of 11 leads (see
+ * scripts/assignment-audit.mjs). pickNextAgent is kept for reference /
+ * potential rollback; delete once the cutover has soaked.
  */
 
 import "server-only";
@@ -63,3 +63,8 @@ export async function pickNextAgent(): Promise<{ agent: Agent; index: number }> 
 
 /** Where Eddie wants every lead BCC'd for QA + visibility. */
 export const QA_BCC_EMAIL = "eddie@zaldivarlabs.com";
+
+/** Ben — receives the owner-visibility copy of every lead notification
+ *  (cutover 2026-07-20: agents are assigned + notified inside ProABD).
+ *  Same inbox as the Friday weekly digest (weekly-digest/route.ts). */
+export const OWNER_EMAIL = "info@autolinelogistics.com";

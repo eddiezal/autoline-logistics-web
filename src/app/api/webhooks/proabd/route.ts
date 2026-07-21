@@ -10,8 +10,15 @@
  *   - entity type: lead, quote, or order (Item_Type / Item_Type_Id)
  *   - ABD_Id: permanent record id, joins to leads.proabdAbdId
  *   - the full record data at top level (Shipper + Transport + Vehicles)
+ *   - UserName / UserId: the ProABD-assigned agent (rules-based routing)
  *   - GCLID / Custom_Id round-trip fields (both unreliable as of
  *     2026-07-14 — see integration notes; pending Brian)
+ *
+ * ASSIGNMENT STAMP-BACK (cutover 2026-07-20): ProABD is the only
+ * assignment brain — the site's round-robin is retired. After persisting
+ * each batch we mirror the latest UserName/UserId onto the matching
+ * `leads` doc (proabdAssignedAgent) so Firestore analytics reflect the
+ * real assignee, including reassignments arriving as update events.
  *
  * See Notion "ProABD API Integration" page for the full call outcome +
  * confirmed payload shape.
@@ -68,6 +75,11 @@ interface SuperfloEventItem {
   /** ProABD record id — stable across lead → quote → order lifecycle.
    *  Joins to leads.proabdAbdId (stamped at createLead time). */
   ABD_Id?: string | number;
+  /** ProABD-assigned agent display name (e.g. "Nelson Zaldivar").
+   *  Confirmed live 2026-07-20 via scripts/assignment-audit.mjs. */
+  UserName?: string;
+  /** ProABD-assigned agent id. */
+  UserId?: string | number;
   /** Our leadRef if ProABD stored it. Empty as of 2026-07-14 (pending
    *  Brian) — join on ABD_Id instead. */
   Custom_Id?: string;
@@ -225,10 +237,69 @@ export async function POST(req: Request) {
     });
   }
 
+  // ---- Assignment stamp-back (cutover 2026-07-20) -----------------------
+  // ProABD is the only assignment brain. Mirror the assignee from each
+  // event onto the matching lead doc so Firestore analytics show who is
+  // actually working the lead. Items are processed in payload order, so
+  // within a batch the LAST event for an ABD_Id wins (reassignments
+  // arriving as update events overwrite earlier inserts).
+  //
+  // Non-fatal by design: a stamp failure only degrades reporting — the
+  // event itself is already persisted above, and agents were notified
+  // inside ProABD. Never let this block the 200 back to Superflo.
+  let stamped = 0;
+  try {
+    const db = getAdminDb();
+    // Collapse to one write per ABD_Id (last event wins).
+    const latestByAbdId = new Map<
+      string,
+      { userName: string; userId: string | null }
+    >();
+    for (const item of items) {
+      const abdId =
+        typeof item.ABD_Id === "string" || typeof item.ABD_Id === "number"
+          ? String(item.ABD_Id)
+          : "";
+      const userName =
+        typeof item.UserName === "string" ? item.UserName.trim() : "";
+      if (!abdId || !userName) continue;
+      latestByAbdId.set(abdId, {
+        userName,
+        userId:
+          typeof item.UserId === "string" || typeof item.UserId === "number"
+            ? String(item.UserId)
+            : null,
+      });
+    }
+
+    for (const [abdId, assignee] of latestByAbdId) {
+      const snap = await db
+        .collection("leads")
+        .where("proabdAbdId", "==", abdId)
+        .limit(1)
+        .get();
+      if (snap.empty) continue; // Lead not from the website (or pre-createLead-era).
+      await snap.docs[0]!.ref.update({
+        proabdAssignedAgent: {
+          userName: assignee.userName,
+          userId: assignee.userId,
+        },
+        proabdAssignmentUpdatedAt: FieldValue.serverTimestamp(),
+      });
+      stamped++;
+    }
+  } catch (err) {
+    console.warn(
+      "[proabd webhook] assignment stamp-back failed (non-fatal)",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
+
   return NextResponse.json({
     ok: true,
     persisted: true,
     batch_id: batchId,
     count: successCount,
+    assignments_stamped: stamped,
   });
 }

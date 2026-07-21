@@ -1,14 +1,19 @@
 /**
  * POST /api/lead . quote-form intake endpoint.
  *
- * Validates the captcha, picks the next agent via Firestore round-robin,
- * calls SD pricing for the live estimate, saves the lead doc, and sends
- * an agent notification via Resend.
+ * Validates the captcha, calls SD pricing for the live estimate, saves
+ * the lead doc, pushes the lead to ProABD (createLead), and sends an
+ * owner-visibility notification to Ben via Resend.
  *
- * Customer-facing email is NOT sent in Phase 1. The customer sees an
- * inline success state on the form ("an agent will contact you within
- * 1 business hour") and the assigned agent does the outreach manually
- * via ProABD.
+ * ASSIGNMENT (cutover 2026-07-20): ProABD is the ONLY assignment brain.
+ * The old Firestore round-robin (pickNextAgent) is retired — it ran in
+ * parallel with ProABD's rules-based routing since 2026-07-14 and the two
+ * disagreed on 8 of 11 leads (see scripts/assignment-audit.mjs). Agents
+ * are routed + notified inside ProABD; the webhook receiver mirrors the
+ * assignee back onto the lead doc (proabdAssignedAgent) for analytics.
+ *
+ * If createLead FAILS, no agent would ever see the lead — so a loud
+ * ACTION-NEEDED alert goes to Ben + Eddie for manual entry.
  *
  * Returns: { ok: true, leadRef } on success.
  */
@@ -20,7 +25,7 @@ import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
-import { pickNextAgent, AGENTS, QA_BCC_EMAIL } from "@/lib/leads/agents";
+import { OWNER_EMAIL, QA_BCC_EMAIL } from "@/lib/leads/agents";
 import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
 import {
   getSdPriceEstimate,
@@ -183,22 +188,6 @@ export async function POST(req: Request) {
     );
   }
 
-  let assigned: Awaited<ReturnType<typeof pickNextAgent>>;
-  if (DEV_SKIP_FIRESTORE) {
-    console.warn("[/api/lead] DEV_SKIP_FIRESTORE=true . hardcoding to first agent, skipping Firestore");
-    assigned = { agent: AGENTS[0]!, index: 0 };
-  } else {
-    try {
-      assigned = await pickNextAgent();
-    } catch (err) {
-      console.error("[/api/lead] round-robin assignment failed", err);
-      return NextResponse.json(
-        { ok: false, error: "Internal error assigning agent. Please retry." },
-        { status: 500 },
-      );
-    }
-  }
-
   // Mapping happens regardless of SD success so we record both raw + mapped
   // types on every lead. Lets us audit which body class SD priced this lead as.
   const sdVehicleType: SdVehicleType = toSdVehicleType(vehicleType!);
@@ -247,7 +236,10 @@ export async function POST(req: Request) {
     vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType },
     tier,
     contact: { firstName: firstName!, lastName: lastName!, email, phone, notes: notes ?? null },
-    assignedAgent: { email: assigned.agent.email, firstName: assigned.agent.firstName, index: assigned.index },
+    // Retired 2026-07-20: round-robin assignment. ProABD routes the lead;
+    // the webhook receiver stamps proabdAssignedAgent when the event lands.
+    assignedAgent: null,
+    proabdAssignedAgent: null,
     estimate,
     attribution: {
       utmSource: str(body.utm_source) ?? null,
@@ -278,12 +270,15 @@ export async function POST(req: Request) {
     console.log("[/api/lead] DEV: would have persisted lead " + leadRef);
   }
 
-  // ProABD outbound createLead. Best-effort. Fired in parallel with the
-  // email sends so it never blocks the customer-facing return. ABD_Id from
-  // the response is stamped on the Firestore doc at the end of the request
-  // — it's the permanent join key to Export API webhook events
+  // ProABD outbound createLead. Fired in parallel with the email sends so
+  // it never blocks the customer-facing return. ABD_Id from the response
+  // is stamped on the Firestore doc at the end of the request — it's the
+  // permanent join key to Export API webhook events
   // (proabd_webhook_events.raw_item.ABD_Id). Added 2026-07-06 (Task #119),
-  // format fixed 2026-07-14. See src/lib/proabd/client.ts for details.
+  // format fixed 2026-07-14. See src/lib/proabd/client.ts for auth details.
+  //
+  // Since the 2026-07-20 cutover this call is ASSIGNMENT-CRITICAL: ProABD
+  // routes the lead to an agent. Failure triggers the alert email below.
   const proabdPromise = proabdCreateLead({
     leadRef,
     firstName: firstName!,
@@ -307,7 +302,6 @@ export async function POST(req: Request) {
 
   const { subject, text, html } = buildLeadEmail({
     leadRef,
-    agentFirstName: assigned.agent.firstName,
     customer: { firstName: firstName!, lastName: lastName!, email: email!, phone: phone!, notes },
     origin: { city: "", state: originState!, zip: originZip! },
     destination: { city: "", state: destinationState!, zip: destinationZip! },
@@ -325,7 +319,8 @@ export async function POST(req: Request) {
     submittedAt,
   });
 
-  const recipientsTo = DEV_OVERRIDE_RECIPIENT ? [DEV_OVERRIDE_RECIPIENT] : [assigned.agent.email];
+  // Owner-visibility copy to Ben (agents are notified inside ProABD).
+  const recipientsTo = DEV_OVERRIDE_RECIPIENT ? [DEV_OVERRIDE_RECIPIENT] : [OWNER_EMAIL];
   const recipientsBcc = DEV_OVERRIDE_RECIPIENT ? undefined : [QA_BCC_EMAIL];
   if (DEV_OVERRIDE_RECIPIENT) {
     console.warn("[/api/lead] DEV_OVERRIDE_RECIPIENT set . redirecting email to " + DEV_OVERRIDE_RECIPIENT);
@@ -340,7 +335,7 @@ export async function POST(req: Request) {
     html,
     tags: [
       { name: "leadRef", value: leadRef },
-      { name: "agent", value: assigned.agent.firstName.toLowerCase() },
+      { name: "emailType", value: "owner-copy" },
       { name: "tier", value: tier },
     ],
   });
@@ -371,7 +366,7 @@ export async function POST(req: Request) {
 
   // Customer-facing confirmation email.
   //
-  // Sent after the agent notification so the lead never blocks on customer
+  // Sent after the owner notification so the lead never blocks on customer
   // delivery. Failures are logged but non-fatal. Reply-to is the admin inbox
   // so any customer reply lands somewhere monitored.
   try {
@@ -433,18 +428,20 @@ export async function POST(req: Request) {
       );
     }
   } catch (err) {
-    // Never let customer-email problems break the lead flow. The agent has
-    // already been notified; the lead is in Firestore; the customer saw the
-    // inline success state. A failed confirmation is an inconvenience, not
-    // an outage.
+    // Never let customer-email problems break the lead flow. The lead is
+    // in Firestore and on its way to ProABD; the customer saw the inline
+    // success state. A failed confirmation is an inconvenience, not an
+    // outage.
     console.error("[/api/lead] customer confirmation threw", err);
   }
 
   // Await ProABD result and stamp the ABD_Id on the Firestore doc if we
   // got it. ABD_Id is stable across the lead → quote → order lifecycle,
   // so this is what lets us join webhook events back to our lead docs.
-  // Non-fatal: a ProABD failure just means the CRM row doesn't exist yet;
-  // the lead is still safely in Firestore and the agent got the email.
+  //
+  // Failure is NOT quietly tolerable anymore: since the 2026-07-20 cutover
+  // ProABD does the agent assignment, so a lead that never reached ProABD
+  // is a lead no agent will ever contact. Alert Ben + Eddie for manual entry.
   try {
     const proabdResult = await proabdPromise;
     if (proabdResult.ok && db && proabdResult.abdId) {
@@ -465,12 +462,58 @@ export async function POST(req: Request) {
           }
         });
     } else if (!proabdResult.ok) {
-      console.warn(
-        "[/api/lead] ProABD createLead failed for " +
+      console.error(
+        "[/api/lead] ProABD createLead FAILED for " +
           leadRef +
-          ": " +
+          " — no agent will be assigned: " +
           (proabdResult.error ?? "unknown"),
       );
+      try {
+        const alertTo = DEV_OVERRIDE_RECIPIENT
+          ? [DEV_OVERRIDE_RECIPIENT]
+          : [OWNER_EMAIL, QA_BCC_EMAIL];
+        const alertLines = [
+          "This lead did NOT reach ProABD, so NO AGENT has been assigned or notified.",
+          "Enter it into ProABD manually and assign an agent.",
+          "",
+          "Ref: " + leadRef,
+          "Customer: " + firstName + " " + lastName + " . " + email + " . " + phone,
+          "Route: " + originState + " " + originZip + " -> " + destinationState + " " + destinationZip,
+          "Vehicle: " + vehicleYear + " " + vehicleMake + " " + vehicleModel + " (" + vehicleType + ")",
+          "Tier: " + tier,
+          ...(notes ? ["Notes: " + notes] : []),
+          "",
+          "Submitted: " + submittedAt,
+          "ProABD error: " + (proabdResult.error ?? "unknown"),
+          "",
+          "The lead IS saved in Firestore and the customer received their",
+          "confirmation email — only the ProABD push failed.",
+        ];
+        await sendLeadEmail({
+          to: alertTo,
+          replyTo: email!,
+          subject: "ACTION NEEDED: lead " + leadRef + " did NOT reach ProABD",
+          text: alertLines.join("\n"),
+          html:
+            '<div style="font-family:Segoe UI,Roboto,sans-serif;max-width:600px;">' +
+            '<div style="padding:14px 16px;border-radius:8px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:14px;">' +
+            "<strong>This lead did not reach ProABD — no agent has been assigned or notified.</strong> " +
+            "Enter it into ProABD manually and assign an agent." +
+            "</div>" +
+            '<pre style="margin-top:16px;font-size:13px;line-height:1.6;white-space:pre-wrap;">' +
+            alertLines.slice(3).join("\n").replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+            "</pre></div>",
+          tags: [
+            { name: "leadRef", value: leadRef },
+            { name: "emailType", value: "proabd-failure-alert" },
+          ],
+        });
+      } catch (alertErr) {
+        console.error(
+          "[/api/lead] failed to send ProABD-failure alert for " + leadRef,
+          alertErr,
+        );
+      }
     }
   } catch (err) {
     console.warn("[/api/lead] failed to stamp ProABD IDs on lead", err);
