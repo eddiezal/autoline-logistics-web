@@ -351,7 +351,11 @@ export default async function AdminReportPage({
 
   /* Needs-attention rules (§11) — each: issue, count, why, owner. */
   const formsNoEstimate = forms.filter((r) => r.price === null);
-  const unassigned = cohort.filter((r) => !r.proabdUser && !(r.abdId && abdStates.get(r.abdId)?.lastUser));
+  // Calls excluded: CALL- docs never flow through createLead, so they have
+  // no ProABD link to confirm ownership against (CallRail→ProABD mapping TBD).
+  const unassigned = cohort.filter(
+    (r) => !r.isCall && !r.proabdUser && !(r.abdId && abdStates.get(r.abdId)?.lastUser),
+  );
   const postFixAttrMissing = paidPost.filter((r) => r.campaignName === null);
   const attention: { issue: string; count: number; why: string; owner: string }[] = [
     {
@@ -645,6 +649,14 @@ export default async function AdminReportPage({
     }
     const list = [...owners.entries()].sort((a, b) => b[1].n - a[1].n);
 
+    // Actionable vs structural: records created before the ProABD
+    // integration (createLead automation, Jul 14) have no linked ProABD
+    // record and can never show an owner from this data — that's a
+    // historical-import gap, not an assignment failure. Only
+    // integration-era records belong in the alert.
+    const unownedActionable = unowned.filter((r) => r.t >= PROABD_START && !r.isCall);
+    const unownedLegacy = unowned.length - unownedActionable.length;
+
     return (
       <>
         <div style={{ ...SUBTLE, marginBottom: 12 }}>
@@ -652,10 +664,23 @@ export default async function AdminReportPage({
           — ownership and volume, not an agent performance ranking. Response time, contact rate,
           and close rate appear only when their underlying events are captured.
         </div>
-        {unowned.length > 0 && (
+        {unownedActionable.length > 0 && (
           <div style={ALERT}>
-            <strong>{unowned.length} record{unowned.length === 1 ? "" : "s"} without a confirmed owner</strong>{" "}
-            — no ProABD assignee observed. These need assignment in ProABD before anything else.
+            <strong>
+              {unownedActionable.length} record{unownedActionable.length === 1 ? "" : "s"} without a
+              confirmed owner
+            </strong>{" "}
+            — created since the ProABD integration (Jul 14) but no assignee stamped or observed.
+            These need assignment in ProABD. New leads legitimately sit here for a few minutes
+            until ProABD&rsquo;s routing runs and the next event batch arrives.
+          </div>
+        )}
+        {unownedLegacy > 0 && (
+          <div style={{ ...SUBTLE, marginBottom: 12 }}>
+            {unownedLegacy} older record{unownedLegacy === 1 ? "" : "s"} in the 30-day window
+            predate the ProABD integration (Jul 14) and carry no linked ProABD record — ownership
+            is unknowable from here. The historical ProABD export (Ben) resolves these; they are
+            excluded from the alert above.
           </div>
         )}
         <section style={{ ...CARD, overflowX: "auto" }}>
