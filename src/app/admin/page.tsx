@@ -1,23 +1,24 @@
 /**
  * /admin — weekly lead report (Ben's view). Server-rendered from Firestore.
  *
- * Shows the last 7 days vs the prior 7: lead volume, pipeline value,
- * paid/organic split (post-attribution-fix data), daily trend, source
- * breakdown, top lanes (30d), and the most recent leads with the
- * ProABD-assigned agent.
+ * v2a (2026-07-21): channel rollup (Paid/Organic/Referral/Direct) with
+ * campaign drill-down, agent volume + pipeline card, forms-vs-calls split,
+ * blocked-lead tagging (pre-ZIP-gate international submissions), launch
+ * annotation on the week delta, "campaign unknown" labeling for
+ * gclid-backfilled leads, and non-URL referrer artifact fix.
  *
  * Design notes:
- *   - Test submissions (Eddie's) are excluded via TEST_MARKERS — same
- *     rules as scripts/leads-today.mjs.
- *   - All day bucketing is Pacific Time (account + business timezone).
- *   - Cost / cost-per-lead deliberately absent in v1 — needs the Ads API
- *     join (Basic Access approved; phase 2).
+ *   - Test submissions (Eddie's) excluded via TEST_MARKERS — same rules
+ *     as scripts/leads-today.mjs.
+ *   - Day bucketing in Pacific Time (business timezone).
+ *   - Cost / cost-per-lead deliberately absent — Ads API join is phase 2.
+ *   - Close rates / time-to-book arrive with the webhook status parser
+ *     (proabd_webhook_events.raw_item.Status / Booked_Date) — phase 2b.
  *   - Charts are dependency-free inline SVG per the dataviz method:
- *     single brand hue (validated), thin bars, rounded data-ends on a
- *     square baseline, recessive grid, selective direct labels, native
- *     <title> hover.
+ *     single validated brand hue, thin bars, rounded data-ends on a square
+ *     baseline, recessive grid, selective direct labels, native <title>.
  *
- * Added 2026-07-21. Auth in src/proxy.ts (Basic, ADMIN_DASH_PASSWORD).
+ * Auth in src/proxy.ts (HTTP Basic, ADMIN_DASH_PASSWORD).
  */
 import { getAdminDb } from "@/lib/firebase/admin";
 
@@ -39,10 +40,20 @@ const ADS_CAMPAIGN_NAMES: Record<string, string> = {
 };
 
 const PT = "America/Los_Angeles";
+/** Paid search went live this date — annotates week-over-week deltas. */
+const PAID_LAUNCH_LABEL = "paid launched Jul 20";
 
 /* ── Row shaping ─────────────────────────────────────────────── */
 
 type SourceKey = "ads" | "organic" | "referral" | "direct";
+
+const CHANNEL_LABELS: Record<SourceKey, string> = {
+  ads: "Google Ads (paid)",
+  organic: "Search (organic)",
+  referral: "Referral",
+  direct: "Direct / unknown",
+};
+const CHANNEL_ORDER: SourceKey[] = ["ads", "organic", "referral", "direct"];
 
 interface LeadRow {
   t: Date;
@@ -52,8 +63,10 @@ interface LeadRow {
   price: number | null;
   sourceLabel: string;
   sourceKey: SourceKey;
+  campaignName: string | null;
   agent: string;
   isCall: boolean;
+  blocked: boolean;
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -68,19 +81,21 @@ function isTest(d: any): boolean {
   return TEST_MARKERS.some((re) => re.test(hay));
 }
 
-function deriveSource(a: any): { label: string; key: SourceKey } {
+function deriveSource(a: any): { label: string; key: SourceKey; campaign: string | null } {
   const src = typeof a?.utmSource === "string" ? a.utmSource.trim().toLowerCase() : "";
   const med = typeof a?.utmMedium === "string" ? a.utmMedium.trim().toLowerCase() : "";
   if (src === "google" && (med === "cpc" || med === "ppc" || med === "paid")) {
-    const name = a?.utmCampaign ? ADS_CAMPAIGN_NAMES[String(a.utmCampaign).trim()] : undefined;
-    return { label: "Google Ads — " + (name ?? "campaign"), key: "ads" };
+    const id = a?.utmCampaign ? String(a.utmCampaign).trim() : "";
+    const campaign = id ? (ADS_CAMPAIGN_NAMES[id] ?? "Campaign " + id) : "Campaign unknown";
+    return { label: "Google Ads — " + campaign, key: "ads", campaign };
   }
   if (typeof a?.gclid === "string" && a.gclid.trim()) {
-    // gclid only exists on a paid Google click, even when utm tags are absent.
-    return { label: "Google Ads", key: "ads" };
+    // gclid only exists on a paid Google click, even without utm tags
+    // (pre-fix leads corrected by scripts/backfill-attribution.mjs).
+    return { label: "Google Ads — campaign unknown", key: "ads", campaign: "Campaign unknown" };
   }
   if (src) {
-    return { label: src.charAt(0).toUpperCase() + src.slice(1), key: "referral" };
+    return { label: src.charAt(0).toUpperCase() + src.slice(1), key: "referral", campaign: null };
   }
   const ref = typeof a?.referrer === "string" ? a.referrer.trim().toLowerCase() : "";
   if (ref) {
@@ -90,14 +105,17 @@ function deriveSource(a: any): { label: string; key: SourceKey } {
     } catch {
       host = ref;
     }
-    if (host.includes("google.")) return { label: "Google (organic)", key: "organic" };
-    if (host.includes("bing.")) return { label: "Bing (organic)", key: "organic" };
-    if (host.includes("duckduckgo.")) return { label: "DuckDuckGo (organic)", key: "organic" };
-    if (host.includes("yahoo.")) return { label: "Yahoo (organic)", key: "organic" };
-    if (host.includes("autolinelogistics.com")) return { label: "Direct (internal)", key: "direct" };
-    return { label: "Referral — " + host, key: "referral" };
+    // Non-URL junk referrers ("direct", app identifiers without a dot)
+    // are direct traffic, not a "Referral — direct" artifact.
+    if (!host.includes(".")) return { label: "Direct / unknown", key: "direct", campaign: null };
+    if (host.includes("google.")) return { label: "Google (organic)", key: "organic", campaign: null };
+    if (host.includes("bing.")) return { label: "Bing (organic)", key: "organic", campaign: null };
+    if (host.includes("duckduckgo.")) return { label: "DuckDuckGo (organic)", key: "organic", campaign: null };
+    if (host.includes("yahoo.")) return { label: "Yahoo (organic)", key: "organic", campaign: null };
+    if (host.includes("autolinelogistics.com")) return { label: "Direct (internal)", key: "direct", campaign: null };
+    return { label: "Referral — " + host, key: "referral", campaign: null };
   }
-  return { label: "Direct / unknown", key: "direct" };
+  return { label: "Direct / unknown", key: "direct", campaign: null };
 }
 
 function toRow(d: any): LeadRow | null {
@@ -110,18 +128,25 @@ function toRow(d: any): LeadRow | null {
       ? d.proabdAssignedAgent.userName.split(" ")[0]
       : undefined) ??
     d.assignedAgent?.firstName ??
-    "—";
+    "Unassigned";
   const ref = String(d.leadRef ?? "");
+  const isCall = ref.startsWith("CALL");
+  const originState = d.origin?.state || "?";
+  const destState = d.destination?.state || "?";
   return {
     t,
     ref,
-    originState: d.origin?.state || "?",
-    destState: d.destination?.state || "?",
+    originState,
+    destState,
     price,
     sourceLabel: src.label,
     sourceKey: src.key,
+    campaignName: src.campaign,
     agent,
-    isCall: ref.startsWith("CALL"),
+    isCall,
+    // Pre-ZIP-gate submissions with unresolvable route (e.g. "Honduras"
+    // typed as a ZIP). The form + API now reject these outright (Jul 20).
+    blocked: !isCall && (originState === "?" || destState === "?"),
   };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -145,7 +170,7 @@ function barPath(x: number, y: number, w: number, h: number, r: number): string 
 
 /* ── Page ────────────────────────────────────────────────────── */
 
-const GREEN = "var(--color-brand-primary)";
+const GREEN = "#128A3A";
 const INK = "var(--color-brand-ink)";
 const MUTED = "var(--color-text-muted)";
 const CARD: React.CSSProperties = {
@@ -154,6 +179,24 @@ const CARD: React.CSSProperties = {
   borderRadius: 12,
   padding: "18px 20px",
 };
+const H2: React.CSSProperties = { margin: "0 0 12px", fontSize: 14, color: INK };
+const SUB: React.CSSProperties = { color: MUTED, fontWeight: 400 };
+
+function HBar({ frac, title }: { frac: number; title: string }) {
+  return (
+    <div style={{ flex: 1, background: "var(--color-gray-100)", borderRadius: 4, height: 14 }}>
+      <div
+        title={title}
+        style={{
+          width: `${Math.max(2, frac * 100)}%`,
+          height: 14,
+          borderRadius: 4,
+          background: GREEN,
+        }}
+      />
+    </div>
+  );
+}
 
 export default async function AdminReportPage() {
   const now = new Date();
@@ -180,7 +223,9 @@ export default async function AdminReportPage() {
   const prev = rows.filter((r) => r.t >= d14 && r.t < d7);
   const pipeline = week.reduce((s, r) => s + (r.price ?? 0), 0);
   const paid = week.filter((r) => r.sourceKey === "ads");
+  const forms = week.filter((r) => !r.isCall);
   const calls = week.filter((r) => r.isCall);
+  const blockedWeek = week.filter((r) => r.blocked);
   const delta = week.length - prev.length;
 
   // Daily buckets, last 14 PT days.
@@ -195,18 +240,51 @@ export default async function AdminReportPage() {
     if (b) b.count++;
   }
 
-  // Source breakdown (7d).
-  const sourceCounts = new Map<string, number>();
+  // Channel rollup (7d): count, pipeline, priced-count per channel.
+  const channelAgg = new Map<SourceKey, { n: number; sum: number; priced: number }>();
+  for (const k of CHANNEL_ORDER) channelAgg.set(k, { n: 0, sum: 0, priced: 0 });
   for (const r of week) {
-    sourceCounts.set(r.sourceLabel, (sourceCounts.get(r.sourceLabel) ?? 0) + 1);
+    const a = channelAgg.get(r.sourceKey)!;
+    a.n++;
+    if (r.price !== null) {
+      a.sum += r.price;
+      a.priced++;
+    }
   }
-  const sources = [...sourceCounts.entries()].sort((a, b) => b[1] - a[1]);
-  const maxSource = sources[0]?.[1] ?? 1;
+  const maxChannel = Math.max(1, ...[...channelAgg.values()].map((a) => a.n));
 
-  // Top lanes (30d), quote-form leads only (calls have no route).
+  // Paid campaign drill-down (7d).
+  const campAgg = new Map<string, number>();
+  for (const r of paid) {
+    const name = r.campaignName ?? "Campaign unknown";
+    campAgg.set(name, (campAgg.get(name) ?? 0) + 1);
+  }
+  const campaigns = [...campAgg.entries()].sort((a, b) => b[1] - a[1]);
+
+  // Non-paid source detail (7d) for the rollup's secondary lines.
+  const detailAgg = new Map<string, number>();
+  for (const r of week) {
+    if (r.sourceKey === "ads") continue;
+    detailAgg.set(r.sourceLabel, (detailAgg.get(r.sourceLabel) ?? 0) + 1);
+  }
+
+  // Agent volume + pipeline (7d). ProABD is the assignment of record
+  // post-cutover; older leads carry the legacy email routing.
+  const agentAgg = new Map<string, { n: number; sum: number; calls: number }>();
+  for (const r of week) {
+    const a = agentAgg.get(r.agent) ?? { n: 0, sum: 0, calls: 0 };
+    a.n++;
+    if (r.isCall) a.calls++;
+    if (r.price !== null) a.sum += r.price;
+    agentAgg.set(r.agent, a);
+  }
+  const agents = [...agentAgg.entries()].sort((a, b) => b[1].n - a[1].n);
+  const maxAgent = Math.max(1, ...agents.map(([, a]) => a.n));
+
+  // Top lanes (30d), quote-form leads with valid routes only.
   const laneAgg = new Map<string, { n: number; sum: number; priced: number }>();
   for (const r of rows) {
-    if (r.isCall || r.originState === "?" || r.destState === "?") continue;
+    if (r.isCall || r.blocked) continue;
     const lane = r.originState + " → " + r.destState;
     const a = laneAgg.get(lane) ?? { n: 0, sum: 0, priced: 0 };
     a.n++;
@@ -281,7 +359,12 @@ export default async function AdminReportPage() {
               {
                 label: "Leads (7 days)",
                 value: String(week.length),
-                sub: delta === 0 ? "even with prior week" : `${delta > 0 ? "+" : ""}${delta} vs prior 7 days`,
+                sub:
+                  (delta === 0
+                    ? "even with prior week"
+                    : `${delta > 0 ? "+" : ""}${delta} vs prior 7 days`) +
+                  " · " +
+                  PAID_LAUNCH_LABEL,
               },
               {
                 label: "Pipeline value",
@@ -294,25 +377,25 @@ export default async function AdminReportPage() {
                 sub: week.length ? `${Math.round((paid.length / week.length) * 100)}% of leads` : "—",
               },
               {
-                label: "Phone-call leads",
-                value: String(calls.length),
-                sub: "tracked ad calls",
+                label: "Forms · Calls",
+                value: `${forms.length} · ${calls.length}`,
+                sub: "quote forms vs tracked ad calls",
               },
             ].map((s) => (
               <div key={s.label} style={CARD}>
                 <div style={{ fontSize: 12, color: MUTED }}>{s.label}</div>
-                <div style={{ fontSize: 30, fontWeight: 800, color: INK, margin: "2px 0" }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: INK, margin: "2px 0" }}>
                   {s.value}
                 </div>
-                <div style={{ fontSize: 12, color: MUTED }}>{s.sub}</div>
+                <div style={{ fontSize: 11.5, color: MUTED }}>{s.sub}</div>
               </div>
             ))}
           </section>
 
           {/* Daily trend */}
           <section style={{ ...CARD, marginBottom: 12 }}>
-            <h2 style={{ margin: "0 0 10px", fontSize: 14, color: INK }}>
-              Leads per day <span style={{ color: MUTED, fontWeight: 400 }}>· last 14 days</span>
+            <h2 style={H2}>
+              Leads per day <span style={SUB}>· last 14 days</span>
             </h2>
             <svg viewBox={`0 0 ${CW} ${CH}`} role="img" aria-label="Daily lead counts, last 14 days" style={{ width: "100%", height: "auto" }}>
               {[0.5, 1].map((f) => (
@@ -338,7 +421,7 @@ export default async function AdminReportPage() {
                 const showLabel = d.count > 0 && (i === maxIdx || i === days.length - 1);
                 return (
                   <g key={d.key}>
-                    {d.count > 0 && <path d={barPath(x, y, barW, h, 4)} fill="#128A3A" />}
+                    {d.count > 0 && <path d={barPath(x, y, barW, h, 4)} fill={GREEN} />}
                     <title>{`${d.label}: ${d.count} lead${d.count === 1 ? "" : "s"}`}</title>
                     {showLabel && (
                       <text x={x + barW / 2} y={y - 5} textAnchor="middle" fontSize={11} fontWeight={700} fill="#1a1a1a">
@@ -356,43 +439,91 @@ export default async function AdminReportPage() {
             </svg>
           </section>
 
-          {/* Sources */}
+          {/* Channel rollup */}
           <section style={{ ...CARD, marginBottom: 12 }}>
-            <h2 style={{ margin: "0 0 12px", fontSize: 14, color: INK }}>
-              Where leads came from <span style={{ color: MUTED, fontWeight: 400 }}>· last 7 days</span>
+            <h2 style={H2}>
+              Channels <span style={SUB}>· last 7 days · count, pipeline, avg quote</span>
             </h2>
-            {sources.length === 0 && <div style={{ fontSize: 13, color: MUTED }}>No leads yet this week.</div>}
-            {sources.map(([label, count]) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: 10, margin: "7px 0" }}>
-                <div style={{ width: 190, fontSize: 12.5, color: "#1a1a1a", flexShrink: 0 }}>{label}</div>
-                <div style={{ flex: 1, background: "var(--color-gray-100)", borderRadius: 4, height: 14 }}>
-                  <div
-                    style={{
-                      width: `${(count / maxSource) * 100}%`,
-                      minWidth: 4,
-                      height: 14,
-                      borderRadius: 4,
-                      background: "#128A3A",
-                    }}
-                    title={`${label}: ${count}`}
-                  />
+            {CHANNEL_ORDER.map((k) => {
+              const a = channelAgg.get(k)!;
+              return (
+                <div key={k}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "8px 0 2px" }}>
+                    <div style={{ width: 150, fontSize: 13, fontWeight: 700, color: "#1a1a1a", flexShrink: 0 }}>
+                      {CHANNEL_LABELS[k]}
+                    </div>
+                    <HBar frac={a.n / maxChannel} title={`${CHANNEL_LABELS[k]}: ${a.n}`} />
+                    <div style={{ width: 24, fontSize: 13, fontWeight: 800, color: INK, textAlign: "right" }}>{a.n}</div>
+                    <div style={{ width: 130, fontSize: 12, color: MUTED, textAlign: "right" }}>
+                      {a.sum > 0 ? `${money(a.sum)} · avg ${money(a.sum / Math.max(1, a.priced))}` : "—"}
+                    </div>
+                  </div>
+                  {/* drill-down lines */}
+                  {k === "ads" &&
+                    campaigns.map(([name, n]) => (
+                      <div key={name} style={{ display: "flex", gap: 10, margin: "0 0 2px", paddingLeft: 24 }}>
+                        <div style={{ width: 220, fontSize: 12, color: MUTED }}>{name}</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a1a" }}>{n}</div>
+                      </div>
+                    ))}
+                  {k !== "ads" &&
+                    [...detailAgg.entries()]
+                      .filter(([label]) => {
+                        if (k === "organic") return label.includes("(organic)");
+                        if (k === "referral") return label.startsWith("Referral") || (!label.includes("(organic)") && !label.startsWith("Direct") && !label.startsWith("Google Ads"));
+                        return label.startsWith("Direct");
+                      })
+                      .map(([label, n]) => (
+                        <div key={label} style={{ display: "flex", gap: 10, margin: "0 0 2px", paddingLeft: 24 }}>
+                          <div style={{ width: 220, fontSize: 12, color: MUTED }}>{label}</div>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a1a" }}>{n}</div>
+                        </div>
+                      ))}
                 </div>
-                <div style={{ width: 26, fontSize: 12.5, fontWeight: 700, color: INK, textAlign: "right" }}>{count}</div>
+              );
+            })}
+            {blockedWeek.length > 0 && (
+              <div style={{ marginTop: 10, fontSize: 11.5, color: MUTED }}>
+                {blockedWeek.length} additional submission{blockedWeek.length === 1 ? "" : "s"} had
+                invalid/international routes — this traffic is now rejected at the form (ZIP
+                validation, live Jul 20).
               </div>
-            ))}
+            )}
           </section>
 
-          {/* Lanes + recent, two-up on wide screens */}
+          {/* Agents + Top routes, two-up */}
           <section
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
               gap: 12,
+              marginBottom: 12,
             }}
           >
             <div style={CARD}>
-              <h2 style={{ margin: "0 0 10px", fontSize: 14, color: INK }}>
-                Top routes <span style={{ color: MUTED, fontWeight: 400 }}>· last 30 days</span>
+              <h2 style={H2}>
+                Leads by agent <span style={SUB}>· last 7 days</span>
+              </h2>
+              {agents.map(([name, a]) => (
+                <div key={name} style={{ display: "flex", alignItems: "center", gap: 10, margin: "8px 0" }}>
+                  <div style={{ width: 84, fontSize: 12.5, fontWeight: 700, color: "#1a1a1a", flexShrink: 0 }}>{name}</div>
+                  <HBar frac={a.n / maxAgent} title={`${name}: ${a.n}`} />
+                  <div style={{ width: 20, fontSize: 12.5, fontWeight: 800, color: INK, textAlign: "right" }}>{a.n}</div>
+                  <div style={{ width: 90, fontSize: 11.5, color: MUTED, textAlign: "right" }}>
+                    {a.sum > 0 ? money(a.sum) : "—"}
+                  </div>
+                </div>
+              ))}
+              {agents.length === 0 && <div style={{ fontSize: 13, color: MUTED }}>No leads this week.</div>}
+              <div style={{ marginTop: 10, fontSize: 11, color: MUTED, lineHeight: 1.5 }}>
+                Assignment of record is ProABD. Close rates and time-to-book join this card once
+                booking statuses are wired in (next version).
+              </div>
+            </div>
+
+            <div style={CARD}>
+              <h2 style={H2}>
+                Top routes <span style={SUB}>· last 30 days</span>
               </h2>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
                 <thead>
@@ -422,50 +553,71 @@ export default async function AdminReportPage() {
                 </tbody>
               </table>
             </div>
+          </section>
 
-            <div style={CARD}>
-              <h2 style={{ margin: "0 0 10px", fontSize: 14, color: INK }}>Most recent leads</h2>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-                <thead>
-                  <tr style={{ color: MUTED, textAlign: "left" }}>
-                    <th style={{ padding: "4px 0", fontWeight: 600 }}>When (PT)</th>
-                    <th style={{ padding: "4px 0", fontWeight: 600 }}>Route</th>
-                    <th style={{ padding: "4px 0", fontWeight: 600, textAlign: "right" }}>Quote</th>
-                    <th style={{ padding: "4px 0", fontWeight: 600 }}>Source</th>
-                    <th style={{ padding: "4px 0", fontWeight: 600 }}>Agent</th>
+          {/* Recent leads */}
+          <section style={CARD}>
+            <h2 style={H2}>Most recent leads</h2>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <thead>
+                <tr style={{ color: MUTED, textAlign: "left" }}>
+                  <th style={{ padding: "4px 0", fontWeight: 600 }}>When (PT)</th>
+                  <th style={{ padding: "4px 0", fontWeight: 600 }}>Route</th>
+                  <th style={{ padding: "4px 0", fontWeight: 600, textAlign: "right" }}>Quote</th>
+                  <th style={{ padding: "4px 0", fontWeight: 600 }}>Source</th>
+                  <th style={{ padding: "4px 0", fontWeight: 600 }}>Agent</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recent.map((r) => (
+                  <tr key={r.ref + r.t.getTime()} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={{ padding: "6px 4px 6px 0", whiteSpace: "nowrap", color: "#1a1a1a" }}>
+                      {r.t.toLocaleString("en-US", { timeZone: PT, month: "numeric", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                    </td>
+                    <td style={{ padding: "6px 4px 6px 0", whiteSpace: "nowrap" }}>
+                      {r.isCall ? (
+                        <span style={{ color: "#1a1a1a" }}>📞 call</span>
+                      ) : r.blocked ? (
+                        <span
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            color: "#92400e",
+                            background: "#fffbeb",
+                            border: "1px solid #fde68a",
+                            borderRadius: 6,
+                            padding: "1px 6px",
+                          }}
+                          title="Invalid or international route — now rejected at the form (ZIP validation, live Jul 20)"
+                        >
+                          {r.originState} → blocked (intl/invalid)
+                        </span>
+                      ) : (
+                        <span style={{ color: "#1a1a1a" }}>{`${r.originState} → ${r.destState}`}</span>
+                      )}
+                    </td>
+                    <td style={{ padding: "6px 4px 6px 0", textAlign: "right", color: "#1a1a1a" }}>
+                      {r.price !== null ? money(r.price) : "—"}
+                    </td>
+                    <td style={{ padding: "6px 4px 6px 0", color: "#1a1a1a" }}>{r.sourceLabel}</td>
+                    <td style={{ padding: "6px 0", color: "#1a1a1a" }}>{r.agent}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {recent.map((r) => (
-                    <tr key={r.ref + r.t.getTime()} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                      <td style={{ padding: "6px 4px 6px 0", whiteSpace: "nowrap", color: "#1a1a1a" }}>
-                        {r.t.toLocaleString("en-US", { timeZone: PT, month: "numeric", day: "numeric", hour: "numeric", minute: "2-digit" })}
-                      </td>
-                      <td style={{ padding: "6px 4px 6px 0", whiteSpace: "nowrap", color: "#1a1a1a" }}>
-                        {r.isCall ? "📞 call" : `${r.originState} → ${r.destState}`}
-                      </td>
-                      <td style={{ padding: "6px 4px 6px 0", textAlign: "right", color: "#1a1a1a" }}>
-                        {r.price !== null ? money(r.price) : "—"}
-                      </td>
-                      <td style={{ padding: "6px 4px 6px 0", color: "#1a1a1a" }}>{r.sourceLabel}</td>
-                      <td style={{ padding: "6px 0", color: "#1a1a1a" }}>{r.agent}</td>
-                    </tr>
-                  ))}
-                  {recent.length === 0 && (
-                    <tr>
-                      <td colSpan={5} style={{ padding: "6px 0", color: MUTED }}>
-                        No leads in the last 30 days.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                ))}
+                {recent.length === 0 && (
+                  <tr>
+                    <td colSpan={5} style={{ padding: "6px 0", color: MUTED }}>
+                      No leads in the last 30 days.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </section>
 
           <footer style={{ marginTop: 20, fontSize: 11.5, color: MUTED, lineHeight: 1.6 }}>
-            Paid attribution is exact from Jul 20 onward (tracking fix); earlier Google Ads leads are
-            identified by click ID. Cost per lead joins in the next version via the Google Ads API.
+            Paid attribution is exact from Jul 20 onward (tracking fix); earlier Google Ads leads
+            are identified by click ID and shown as “campaign unknown.” Cost per lead and booking
+            close rates join in the next version (Google Ads API + ProABD status feed).
           </footer>
         </>
       )}
