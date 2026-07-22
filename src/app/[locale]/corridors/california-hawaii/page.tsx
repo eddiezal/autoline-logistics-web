@@ -16,11 +16,29 @@ import {
   SITE_URL,
 } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title: "Ship a car California to Hawaii — Port logistics, locked pricing",
-  description:
-    "Mainland-to-Hawaii vehicle transport via Long Beach or Oakland ports. Door-to-port-to-door coordination, all islands. Locked-price quotes. Trusted by military PCS families and snowbird relocations.",
-};
+// Cost-angle metadata (2026-07-22): GSC impressions run BOTH directions
+// ("ship car from california to hawaii" AND "shipping car from hawaii to
+// california") — title and description carry both. No live price here:
+// the SD Pricing API doesn't cover HI, so no number to anchor honestly.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const es = locale === "es";
+  return es
+    ? {
+        title: "Costo de enviar un auto entre California y Hawái — precio bloqueado",
+        description:
+          "Transporte de vehículos de California a Hawái y de Hawái a California, vía puertos de Long Beach u Oakland. Coordinación puerta-puerto-puerta, todas las islas. Precio bloqueado. Familias militares (PCS) confían en nosotros.",
+      }
+    : {
+        title: "Cost to Ship a Car from California to Hawaii (and Back) — Locked Price",
+        description:
+          "Vehicle shipping California to Hawaii AND Hawaii to California via Long Beach or Oakland ports. Door-to-port-to-door, all islands, locked-price quotes. Trusted by military PCS families and relocations.",
+      };
+}
 
 const ROUTE_LEGS = ["1", "2", "3", "4", "5", "6"] as const;
 const SPECIALTY_KEYS = ["ev", "classic", "motorcycle", "oversized", "personal", "ag"] as const;
@@ -278,6 +296,31 @@ export default function CaliforniaHawaiiCorridor() {
         <section className="py-16 bg-white">
           <Container>
             <FAQ items={faqs} title={t("corridors.californiaHawaii.faq.title")} />
+          </Container>
+        </section>
+
+        {/* Reverse direction (2026-07-22): GSC shows "shipping car from
+            hawaii to california" impressing as heavily as the outbound. */}
+        <section className="py-16 bg-gray-100">
+          <Container>
+            <div className="max-w-3xl">
+              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                {t("corridors.californiaHawaii.reverse.eyebrow")}
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-charcoal mb-6">
+                {t("corridors.californiaHawaii.reverse.title")}
+              </h2>
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p>{t("corridors.californiaHawaii.reverse.body.0")}</p>
+                <p>{t("corridors.californiaHawaii.reverse.body.1")}</p>
+              </div>
+              <Link
+                href={{ pathname: "/quote", query: { from: "HI", to: "CA" } }}
+                className="inline-block mt-6 bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-6 py-3 rounded-full transition"
+              >
+                {t("corridors.californiaHawaii.reverse.cta")}
+              </Link>
+            </div>
           </Container>
         </section>
 

@@ -2281,6 +2281,15 @@
         "description": "Código postal de recogida, isla de destino, tipo de vehículo. Le mostraremos tres precios escalonados. Elija uno, fíjelo, y su coordinador toma el control desde ahí.",
         "primary": "Obtenga mi precio CA → HI",
         "secondary": "Vea California ↔ Alaska →"
+      },
+      "reverse": {
+        "eyebrow": "¿Regresas al continente?",
+        "title": "Enviar un auto de Hawái a California",
+        "body": {
+          "0": "Este corredor funciona en ambas direcciones. Los envíos de Hawái a California usan el mismo sistema marítimo a la inversa: coordinamos la entrega en el puerto de Honolulú (o de tu isla), el cruce a Long Beach u Oakland, y el transporte terrestre hasta cualquier dirección de California — o más allá, al resto del continente.",
+          "1": "Es la misma reserva, el mismo precio bloqueado que cubre cada tramo y el mismo coordinador vigilando cada entrega. Órdenes PCS de regreso, familias que vuelven a casa, un auto que te siguió a las islas y ahora debe regresar: movimientos de rutina en esta ruta."
+        },
+        "cta": "Cotiza Hawái → California"
       }
     },
     "californiaAlaska": {
@@ -2539,6 +2548,15 @@
         "title": "Envio de CA a TX con precio fijo. Haga las cuentas.",
         "body": "Cotizacion real todo incluido en 60 segundos. La cotizacion es el contrato. Sin enganos. Luego decida si manejar todavia tiene sentido.",
         "cta": "Obtener mi precio fijo"
+      },
+      "reverse": {
+        "eyebrow": "En ambas direcciones",
+        "title": "¿De Texas a California? Mismo corredor, mismo precio bloqueado.",
+        "body": {
+          "0": "Todo lo que dice esta página funciona a la inversa. Los transportistas recorren California–Texas en circuito, no en un solo sentido: el camión que entrega en Dallas necesita carga de regreso a Los Ángeles. Por esa economía del viaje de retorno, el precio de Texas a California muchas veces sale igual de bueno, o mejor.",
+          "1": "El proceso es idéntico: un precio total bloqueado antes de comprometerte, sin depósito, recogida puerta a puerta en Dallas–Fort Worth, Houston, Austin o San Antonio, y entrega en cualquier parte de California con rastreo en tiempo real."
+        },
+        "cta": "Cotiza Texas → California"
       }
     },
     "californiaFlorida": {
@@ -2748,6 +2766,10 @@
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
             "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+          },
+          "5": {
+            "q": "¿Es más barato el Auto Train que enviar un auto de Nueva York a Florida?",
+            "a": "A veces: un asiento turista más el vehículo en temporada baja puede costar menos que una cotización de envío. Pero el tren va de Lorton, Virginia a Sanford, Florida: primero manejas hasta Virginia y al llegar te falta camino. Un camarote o fechas pico cierran la diferencia rápido. Compara su total contra nuestro precio bloqueado todo incluido para tus direcciones y fechas exactas."
           }
         }
       },
@@ -2755,6 +2777,16 @@
         "title": "Envío con precio fijo de NY a FL. Haga las cuentas.",
         "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
+      },
+      "autoTrain": {
+        "eyebrow": "La pregunta del Amtrak",
+        "title": "Auto Train vs. enviar tu auto",
+        "body": {
+          "0": "Cada temporada de snowbirds, la misma comparación: ¿el Auto Train de Amtrak o un transportista de autos? El tren tiene su atractivo: viajas junto con tu auto. Pero mira el mapa antes de decidir. El Auto Train no sale de Nueva York; parte de Lorton, Virginia, a 4–5 horas manejando hacia el sur. Y termina en Sanford, cerca de Orlando: si vas a Miami, Tampa o Naples, aún te quedan horas de carretera al llegar.",
+          "1": "En precio, la respuesta honesta es “depende”. Un asiento de clase turista más el vehículo en temporada baja puede ganarle a una cotización de envío. Suma un camarote, fechas de temporada alta, una noche de hotel cerca de Lorton, gasolina y peajes en ambos extremos — y los totales suelen emparejarse, con el tren exigiéndote un día y medio entre carretera y vagón.",
+          "2": "Nuestra opinión: si disfrutas el viaje, vas ligero de equipaje y de todos modos te diriges a la zona de Orlando, el Auto Train es un buen producto. Si vas a cualquier otra parte de Florida — o prefieres volar y que el auto aparezca en tu puerta — un envío puerta a puerta con precio bloqueado es menos trabajo y, contando cada costo, rara vez más dinero."
+        },
+        "cta": "Compara con un precio bloqueado"
       }
     },
     "texasFlorida": {

@@ -9,6 +9,7 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
 import { CorridorPricingCard } from "@/components/CorridorPricingCard";
 import { getCorridor } from "@/lib/corridors";
+import { getCorridorAnchorPrice, formatAnchor } from "@/lib/seo/corridorMeta";
 import { StructuredData } from "@/components/StructuredData";
 import {
   breadcrumbSchema,
@@ -17,11 +18,27 @@ import {
   SITE_URL,
 } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title: "Ship a car California to Florida. Locked-price corridor.",
-  description:
-    "Auto transport from California to Florida. Locked all-in price. No deposit. Real-time portal tracking. Miami, Orlando, Tampa, Jacksonville.",
-};
+// Cost-angle metadata (2026-07-22) — see corridorMeta.ts for rationale.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const price = await getCorridorAnchorPrice("california-florida");
+  const es = locale === "es";
+  const title = price
+    ? es
+      ? `Costo de enviar un auto de California a Florida — desde ${formatAnchor(price)}`
+      : `Cost to Ship a Car from California to Florida — From ${formatAnchor(price)}`
+    : es
+      ? "Costo de enviar un auto de California a Florida — precio bloqueado"
+      : "Cost to Ship a Car from California to Florida — Locked Price";
+  const description = es
+    ? `Transporte de autos de California a Florida${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Precio total bloqueado, sin depósito, rastreo en tiempo real. Miami, Orlando, Tampa, Jacksonville.`
+    : `Auto transport from California to Florida${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week` : ""}. Locked all-in price, no deposit, real-time tracking. Miami, Orlando, Tampa, Jacksonville.`;
+  return { title, description };
+}
 
 // Re-read Firestore pricing snapshot at most every 5 minutes. The cron only
 // writes 2x daily so this is more than fresh enough.

@@ -9,6 +9,7 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
 import { CorridorPricingCard } from "@/components/CorridorPricingCard";
 import { getCorridor } from "@/lib/corridors";
+import { getCorridorAnchorPrice, formatAnchor } from "@/lib/seo/corridorMeta";
 import { StructuredData } from "@/components/StructuredData";
 import {
   breadcrumbSchema,
@@ -17,11 +18,31 @@ import {
   SITE_URL,
 } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title: "Ship a car California to Texas. Locked-price corridor.",
-  description:
-    "Auto transport from California to Texas. Often cheaper than driving once you count gas, hotels, and wear-and-tear. Locked all-in price. No deposit. Real-time portal tracking. Dallas, Houston, Austin, San Antonio.",
-};
+// Cost-angle metadata (2026-07-22): GSC shows searchers phrase this corridor
+// as "cost to ship a car from california to texas" / "ship car from
+// california to texas". Title mirrors that language and carries the live
+// anchor price when the snapshot is fresh — the same number the pricing
+// card on the page shows.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const price = await getCorridorAnchorPrice("california-texas");
+  const es = locale === "es";
+  const title = price
+    ? es
+      ? `Costo de enviar un auto de California a Texas — desde ${formatAnchor(price)}`
+      : `Cost to Ship a Car from California to Texas — From ${formatAnchor(price)}`
+    : es
+      ? "Costo de enviar un auto de California a Texas — precio bloqueado"
+      : "Cost to Ship a Car from California to Texas — Locked Price";
+  const description = es
+    ? `Transporte de autos de California a Texas${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Precio total bloqueado, sin depósito, rastreo en tiempo real. Dallas, Houston, Austin, San Antonio — y también de Texas a California.`
+    : `Auto transport from California to Texas${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week, not a teaser rate` : ""}. Locked all-in price, no deposit, real-time tracking. Dallas, Houston, Austin, San Antonio. Texas to California too.`;
+  return { title, description };
+}
 
 // Re-read Firestore pricing snapshot at most every 5 minutes. The cron only
 // writes 2x daily so this is more than fresh enough, and it keeps the page
@@ -192,6 +213,31 @@ export default async function CaliforniaTexasCorridor({
                 {t("corridors.californiaTexas.faq.eyebrow")}
               </p>
               <FAQ items={faqs} title={t("corridors.californiaTexas.faq.title")} />
+            </div>
+          </Container>
+        </section>
+
+        {/* Reverse direction (2026-07-22): GSC shows "texas to california
+            car shipping" impressions but the page read one-directional. */}
+        <section className="py-16 bg-white">
+          <Container>
+            <div className="max-w-3xl">
+              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                {t("corridors.californiaTexas.reverse.eyebrow")}
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-charcoal mb-6">
+                {t("corridors.californiaTexas.reverse.title")}
+              </h2>
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p>{t("corridors.californiaTexas.reverse.body.0")}</p>
+                <p>{t("corridors.californiaTexas.reverse.body.1")}</p>
+              </div>
+              <Link
+                href={{ pathname: "/quote", query: { from: "TX", to: "CA" } }}
+                className="inline-block mt-6 bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-6 py-3 rounded-full transition"
+              >
+                {t("corridors.californiaTexas.reverse.cta")}
+              </Link>
             </div>
           </Container>
         </section>

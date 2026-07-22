@@ -2281,6 +2281,15 @@
         "description": "Pickup ZIP, destination island, vehicle type. We'll show three tiered prices. Pick one, lock it, and your coordinator takes it from there.",
         "primary": "Get my CA → HI price",
         "secondary": "See California ↔ Alaska →"
+      },
+      "reverse": {
+        "eyebrow": "Heading back to the mainland?",
+        "title": "Shipping a car from Hawaii to California",
+        "body": {
+          "0": "This corridor runs both directions. Hawaii-to-California moves use the same ocean system in reverse: we coordinate drop-off at the Honolulu (or neighbor-island) port, the vessel crossing to Long Beach or Oakland, and trucking from the port to any California address — or onward to the rest of the mainland.",
+          "1": "It’s the same booking, the same locked price covering every leg, and the same coordinator watching the handoffs. PCS orders back to the mainland, families relocating home, a car that followed you to the islands and needs to follow you back — all routine moves for this lane."
+        },
+        "cta": "Get a Hawaii → California quote"
       }
     },
     "californiaAlaska": {
@@ -2539,6 +2548,15 @@
         "title": "Locked-price CA to TX shipment. Run the math.",
         "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
+      },
+      "reverse": {
+        "eyebrow": "Runs both ways",
+        "title": "Texas to California? Same corridor, same locked price.",
+        "body": {
+          "0": "Everything on this page works in reverse. Carriers run California–Texas as a loop, not a one-way trip — the truck that delivers in Dallas needs a load home to Los Angeles. That return-leg economics is why Texas-to-California pricing often comes in just as sharp, sometimes sharper.",
+          "1": "The process is identical: one locked all-in price before you commit, no deposit, door-to-door pickup in Dallas–Fort Worth, Houston, Austin, or San Antonio, and delivery anywhere in California with real-time tracking the whole way."
+        },
+        "cta": "Get a Texas → California quote"
       }
     },
     "californiaFlorida": {
@@ -2748,6 +2766,10 @@
           "4": {
             "q": "What does 'locked price' mean?",
             "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+          },
+          "5": {
+            "q": "Is the Auto Train cheaper than shipping a car from New York to Florida?",
+            "a": "Sometimes — a coach seat plus vehicle in the off-season can undercut a shipping quote. But the train runs Lorton, VA to Sanford, FL, so you drive to Virginia first and finish the trip on the other end, and sleeper cabins or peak dates close the gap fast. Compare its total against our locked all-in price for your exact addresses and dates."
           }
         }
       },
@@ -2755,6 +2777,16 @@
         "title": "Locked-price NY to FL shipment. Run the math.",
         "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
+      },
+      "autoTrain": {
+        "eyebrow": "The Amtrak question",
+        "title": "Auto Train vs. shipping your car",
+        "body": {
+          "0": "Every snowbird season, the same comparison: Amtrak’s Auto Train or a car shipper? The train has real appeal — you ride along with your car. But look at the map before you decide. The Auto Train doesn’t leave from New York; it departs from Lorton, Virginia, a 4–5 hour drive south. And it ends in Sanford, near Orlando — if you’re bound for Miami, Tampa, or Naples, you still have hours of driving on the far end.",
+          "1": "On price, the honest answer is “it depends.” A coach seat plus vehicle in the off-season can beat a shipping quote. Add a sleeper cabin, peak-season dates, a night in a hotel near Lorton, fuel and tolls on both ends — and the totals usually converge, with the train demanding a day and a half of your time aboard and on the road.",
+          "2": "Our take: if you enjoy the ride, travel light, and you’re headed to the Orlando area anyway, the Auto Train is a fine product. If you’re going anywhere else in Florida — or you’d rather fly down and have the car appear at your door — a locked-price door-to-door shipment is less work and, once you count every cost, rarely more money."
+        },
+        "cta": "Compare with a locked quote"
       }
     },
     "texasFlorida": {

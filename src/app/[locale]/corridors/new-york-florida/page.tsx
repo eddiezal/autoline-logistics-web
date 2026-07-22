@@ -9,6 +9,7 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
 import { SubDestinationGrid } from "@/components/SubDestinationGrid";
 import { CorridorPricingCard } from "@/components/CorridorPricingCard";
 import { getCorridor } from "@/lib/corridors";
+import { getCorridorAnchorPrice, formatAnchor } from "@/lib/seo/corridorMeta";
 import { StructuredData } from "@/components/StructuredData";
 import {
   breadcrumbSchema,
@@ -17,18 +18,38 @@ import {
   SITE_URL,
 } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
-  title: "Ship a car New York to Florida. Locked-price corridor.",
-  description:
-    "Auto transport from New York to Florida. Locked all-in price. No deposit. Real-time portal tracking. Miami, Orlando, Tampa, Naples.",
-};
+// Cost-angle metadata (2026-07-22): GSC's top non-brand cluster for this
+// page is "car shipping new york to florida" + auto-train comparison
+// queries. Title carries the live anchor price when fresh.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const price = await getCorridorAnchorPrice("new-york-florida");
+  const es = locale === "es";
+  const title = price
+    ? es
+      ? `Costo de enviar un auto de Nueva York a Florida — desde ${formatAnchor(price)}`
+      : `Car Shipping New York to Florida — From ${formatAnchor(price)}`
+    : es
+      ? "Costo de enviar un auto de Nueva York a Florida — precio bloqueado"
+      : "Car Shipping New York to Florida — Cost & Locked Price";
+  const description = es
+    ? `Transporte de autos de Nueva York a Florida${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Precio total bloqueado, sin depósito, rastreo en tiempo real. Miami, Orlando, Tampa, Naples. Compare con el Auto Train.`
+    : `Auto transport from New York to Florida${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week` : ""}. Locked all-in price, no deposit, real-time tracking. Miami, Orlando, Tampa, Naples. How it compares to Amtrak's Auto Train.`;
+  return { title, description };
+}
 
 // Re-read Firestore pricing snapshot at most every 5 minutes. The cron only
 // writes 2x daily so this is more than fresh enough.
 export const revalidate = 300;
 
 const CUSTOMER_KEYS = ["jobRelocators", "multiVehicle", "highValue"] as const;
-const FAQ_INDEXES = [0, 1, 2, 3, 4] as const;
+// Index 5 (Auto Train comparison) added 2026-07-22 — GSC shows auto-train
+// queries impressing on this page.
+const FAQ_INDEXES = [0, 1, 2, 3, 4, 5] as const;
 
 export default async function NewYorkFloridaCorridor({
   params,
@@ -182,6 +203,33 @@ export default async function NewYorkFloridaCorridor({
                 {t("corridors.newYorkFlorida.faq.eyebrow")}
               </p>
               <FAQ items={faqs} title={t("corridors.newYorkFlorida.faq.title")} />
+            </div>
+          </Container>
+        </section>
+
+        {/* Auto Train vs. shipping (2026-07-22): GSC shows ~8 impressions on
+            "auto train from new york to florida" variants — comparison
+            searchers no broker addresses honestly. */}
+        <section className="py-16 bg-white">
+          <Container>
+            <div className="max-w-3xl">
+              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
+                {t("corridors.newYorkFlorida.autoTrain.eyebrow")}
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-charcoal mb-6">
+                {t("corridors.newYorkFlorida.autoTrain.title")}
+              </h2>
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p>{t("corridors.newYorkFlorida.autoTrain.body.0")}</p>
+                <p>{t("corridors.newYorkFlorida.autoTrain.body.1")}</p>
+                <p>{t("corridors.newYorkFlorida.autoTrain.body.2")}</p>
+              </div>
+              <Link
+                href={{ pathname: "/quote", query: { from: "NY", to: "FL" } }}
+                className="inline-block mt-6 bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-semibold px-6 py-3 rounded-full transition"
+              >
+                {t("corridors.newYorkFlorida.autoTrain.cta")}
+              </Link>
             </div>
           </Container>
         </section>
