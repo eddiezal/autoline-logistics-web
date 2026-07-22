@@ -199,6 +199,15 @@ export default async function CaliforniaFloridaCorridor({
                 {t("corridors.californiaFlorida.faq.eyebrow")}
               </p>
               <FAQ items={faqs} title={t("corridors.californiaFlorida.faq.title")} />
+              <p className="text-gray-700 mt-8">
+                {t("corridors.shared.quoteGuide.lead")}{" "}
+                <Link
+                  href={`/blog/${locale === "es" ? "cotizacion-precisa-envio-auto" : "accurate-car-shipping-quote"}` as "/blog/why-car-shipping-quotes-go-up"}
+                  className="text-brand-accent font-semibold underline underline-offset-4"
+                >
+                  {t("corridors.shared.quoteGuide.label")}
+                </Link>
+              </p>
             </div>
           </Container>
         </section>

@@ -296,6 +296,15 @@ export default function CaliforniaHawaiiCorridor() {
         <section className="py-16 bg-white">
           <Container>
             <FAQ items={faqs} title={t("corridors.californiaHawaii.faq.title")} />
+            <p className="text-gray-700 mt-8 max-w-3xl">
+              {t("corridors.shared.quoteGuide.lead")}{" "}
+              <Link
+                href={`/blog/${locale === "es" ? "cotizacion-precisa-envio-auto" : "accurate-car-shipping-quote"}` as "/blog/why-car-shipping-quotes-go-up"}
+                className="text-brand-accent font-semibold underline underline-offset-4"
+              >
+                {t("corridors.shared.quoteGuide.label")}
+              </Link>
+            </p>
           </Container>
         </section>
 

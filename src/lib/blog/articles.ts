@@ -15,11 +15,15 @@ import { article as brokerVsCarrier } from "@/content/blog/broker-vs-carrier";
 import { article as whyQuotesDontHold } from "@/content/blog/why-quotes-dont-hold";
 import { article as porQueSubioCotizacion } from "@/content/blog/por-que-subio-cotizacion-envio-auto";
 import { article as porQueNoAguantan } from "@/content/blog/por-que-las-cotizaciones-no-aguantan";
+import { article as accurateQuote } from "@/content/blog/accurate-car-shipping-quote";
+import { article as cotizacionPrecisa } from "@/content/blog/cotizacion-precisa-envio-auto";
 
 const ALL_ARTICLES: ReadonlyArray<Article> = [
+  accurateQuote,
   whyQuotesGoUp,
   brokerVsCarrier,
   whyQuotesDontHold,
+  cotizacionPrecisa,
   porQueSubioCotizacion,
   porQueNoAguantan,
 ];

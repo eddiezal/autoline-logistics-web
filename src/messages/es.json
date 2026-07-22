@@ -3076,6 +3076,12 @@
         "body": "Cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi precio fijo"
       }
+    },
+    "shared": {
+      "quoteGuide": {
+        "lead": "Antes de comparar cotizaciones en cualquier sitio, lee nuestra guía:",
+        "label": "Cómo obtener una cotización precisa (9 consejos + errores que evitar)"
+      }
     }
   },
   "antiScamHub": {

@@ -3076,6 +3076,12 @@
         "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
+    },
+    "shared": {
+      "quoteGuide": {
+        "lead": "Before you compare quotes anywhere, read our guide:",
+        "label": "How to get an accurate car shipping quote (9 tips + mistakes to avoid)"
+      }
     }
   },
   "antiScamHub": {
