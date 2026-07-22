@@ -6,7 +6,12 @@ import { routing } from "./i18n/routing";
  * Request-level proxy (Next 16+ naming for the interceptor that used to
  * be called "middleware" in Next 15).
  *
- * Two concerns, in order:
+ * Three concerns, in order:
+ *
+ *   0. /admin Basic-auth gate — the internal reporting page
+ *      (src/app/admin) is protected by HTTP Basic auth against
+ *      ADMIN_DASH_PASSWORD, then served WITHOUT locale routing
+ *      (it lives outside the [locale] tree; English-only).
  *
  *   1. Portal auth gating — redirect unauthenticated visitors from
  *      /portal/* (except /portal/login) to the login page, preserving
@@ -26,6 +31,9 @@ const intlProxy = createMiddleware(routing);
 /* ─────────────────────────────────────────────────────────────
  * Portal path patterns
  * ──────────────────────────────────────────────────────────── */
+
+// Matches /admin and /admin/anything (never locale-prefixed).
+const ADMIN_PATH = /^\/admin(?:\/|$)/;
 
 // Matches /portal, /portal/anything, /es/portal, /es/portal/anything
 const PORTAL_PATH = /^\/(?:[a-z]{2}\/)?portal(?:\/|$)/;
@@ -55,6 +63,36 @@ function isAuthenticated(request: NextRequest): boolean {
 
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // 0. Basic-auth gate for the internal /admin report, then bypass
+  //    locale routing entirely (the page lives outside [locale]).
+  //    Edge runtime: atob() is available; timing-safety is not a
+  //    concern worth an Edge-compatible constant-time compare here —
+  //    the page is read-only reporting behind HTTPS.
+  if (ADMIN_PATH.test(pathname)) {
+    const expected = process.env.ADMIN_DASH_PASSWORD;
+    if (!expected) {
+      return new NextResponse("Admin report not configured", { status: 503 });
+    }
+    const auth = request.headers.get("authorization") ?? "";
+    let ok = false;
+    if (auth.startsWith("Basic ")) {
+      try {
+        const decoded = atob(auth.slice(6));
+        const pass = decoded.slice(decoded.indexOf(":") + 1);
+        ok = pass === expected;
+      } catch {
+        ok = false;
+      }
+    }
+    if (!ok) {
+      return new NextResponse("Authentication required", {
+        status: 401,
+        headers: { "WWW-Authenticate": 'Basic realm="ALL Reports", charset="UTF-8"' },
+      });
+    }
+    return NextResponse.next();
+  }
 
   // 1. Auth-gate portal (except login itself)
   if (PORTAL_PATH.test(pathname) && !PORTAL_LOGIN_PATH.test(pathname)) {
