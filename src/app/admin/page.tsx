@@ -225,6 +225,9 @@ function toRow(d: any): LeadRow | null {
 /* ── Formatting ──────────────────────────────────────────────── */
 
 const money = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
+/** Unit-economics money (CPC, cost/conv, CPL): always 2 decimals. */
+const money2 = (n: number) =>
+  "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const pct = (num: number, den: number) => (den > 0 ? Math.round((num / den) * 100) + "%" : "—");
 const fmtDay = (d: Date) => d.toLocaleDateString("en-US", { timeZone: PT, month: "short", day: "numeric" });
 
@@ -744,11 +747,11 @@ export default async function AdminReportPage({
                   <td style={{ ...TD, fontWeight: 600 }}>{c.name}</td>
                   <td style={{ ...TDR, fontWeight: 700 }}>{money(c.costDollars)}</td>
                   <td style={TDR}>{c.clicks}</td>
-                  <td style={TDR}>{c.clicks > 0 ? money(c.costDollars / c.clicks) : "—"}</td>
+                  <td style={TDR}>{c.clicks > 0 ? money2(c.costDollars / c.clicks) : "—"}</td>
                   <td style={TDR}>{c.conversions > 0 ? c.conversions.toFixed(1) : "—"}</td>
-                  <td style={TDR}>{c.conversions > 0 ? money(c.costDollars / c.conversions) : "—"}</td>
+                  <td style={TDR}>{c.conversions > 0 ? money2(c.costDollars / c.conversions) : "—"}</td>
                   <td style={{ ...TDR, fontWeight: 700, color: INK }}>{webLeads || "—"}</td>
-                  <td style={TDR}>{webLeads > 0 ? money(c.costDollars / webLeads) : "—"}</td>
+                  <td style={TDR}>{webLeads > 0 ? money2(c.costDollars / webLeads) : "—"}</td>
                 </tr>
               );
             })}
@@ -761,7 +764,7 @@ export default async function AdminReportPage({
               <td style={TDR}>—</td>
               <td style={{ ...TDR, fontWeight: 800, color: INK }}>{totalLeads || "—"}</td>
               <td style={{ ...TDR, fontWeight: 700 }}>
-                {totalLeads > 0 ? money(totalCost / totalLeads) : "—"}
+                {totalLeads > 0 ? money2(totalCost / totalLeads) : "—"}
               </td>
             </tr>
           </tbody>
