@@ -38,6 +38,7 @@
  * The previous dashboard is preserved at src/app/admin/_legacy/ per §1.
  */
 import { getAdminDb } from "@/lib/firebase/admin";
+import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -338,6 +339,10 @@ export default async function AdminReportPage({
     loadError = err instanceof Error ? err.message : String(err);
   }
 
+  // Google Ads spend/conversions (cost join). Typed states — the page
+  // renders fully without credentials; the readiness row tells the truth.
+  const ads: AdsResult = await fetchAdsStats(PROABD_START);
+
   /* ── Cohorts (§7) ── */
   // Lead cohort: created since ProABD integration (Jul 14), valid only.
   const cohortAll = all.filter((r) => r.t >= PROABD_START);
@@ -635,8 +640,124 @@ export default async function AdminReportPage({
           )}
         </section>
 
+        <AdsSpendCard />
+
         <PagesCard />
       </>
+    );
+  }
+
+  function AdsSpendCard() {
+    if (ads.state === "unconfigured") {
+      return (
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>Google Ads spend &amp; conversions</h2>
+          <div style={SUBTLE}>
+            Awaiting API credentials ({ads.missing.join(", ")}). Developer token is approved
+            (Basic Access) — see scripts/mint-ads-refresh-token.mjs for the one-time setup.
+          </div>
+        </section>
+      );
+    }
+    if (ads.state === "error") {
+      return (
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>Google Ads spend &amp; conversions</h2>
+          <div style={{ ...SUBTLE, color: "#b45309" }}>API call failed: {ads.message}</div>
+        </section>
+      );
+    }
+    const { stats } = ads;
+    // CPL join: post-fix web form leads carry the campaign ID (utmCampaign).
+    const leadsByCampaign = new Map<string, number>();
+    for (const r of paidPost) {
+      const cid =
+        r.campaignId ??
+        // fall back through the mapped name in case the row only has a name
+        null;
+      if (cid) leadsByCampaign.set(cid, (leadsByCampaign.get(cid) ?? 0) + 1);
+    }
+    const totalCost = stats.campaigns.reduce((s, c) => s + c.costDollars, 0);
+    const totalLeads = paidPost.length;
+
+    return (
+      <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
+        <h2 style={H2}>Google Ads spend &amp; conversions</h2>
+        <div style={{ ...SUBTLE, marginBottom: 8 }}>
+          Live from the Ads API ({stats.since} → {stats.until}, account timezone). “Web leads”
+          are post-fix form leads in our own database joined by campaign ID — the honest CPL.
+          Ads-reported conversions include calls and are attributed by Google&rsquo;s rules;
+          expect the two columns to differ.
+        </div>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 640 }}>
+          <thead>
+            <tr>
+              <th style={TH}>Campaign</th>
+              <th style={{ ...TH, textAlign: "right" }}>Spend</th>
+              <th style={{ ...TH, textAlign: "right" }}>Clicks</th>
+              <th style={{ ...TH, textAlign: "right" }}>Avg CPC</th>
+              <th style={{ ...TH, textAlign: "right" }}>Ads conv.</th>
+              <th style={{ ...TH, textAlign: "right" }}>Cost / conv.</th>
+              <th style={{ ...TH, textAlign: "right" }}>Web leads</th>
+              <th style={{ ...TH, textAlign: "right" }}>CPL (web)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stats.campaigns.map((c) => {
+              const webLeads = leadsByCampaign.get(c.id) ?? 0;
+              return (
+                <tr key={c.id} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={{ ...TD, fontWeight: 600 }}>{c.name}</td>
+                  <td style={{ ...TDR, fontWeight: 700 }}>{money(c.costDollars)}</td>
+                  <td style={TDR}>{c.clicks}</td>
+                  <td style={TDR}>{c.clicks > 0 ? money(c.costDollars / c.clicks) : "—"}</td>
+                  <td style={TDR}>{c.conversions > 0 ? c.conversions.toFixed(1) : "—"}</td>
+                  <td style={TDR}>{c.conversions > 0 ? money(c.costDollars / c.conversions) : "—"}</td>
+                  <td style={{ ...TDR, fontWeight: 700, color: INK }}>{webLeads || "—"}</td>
+                  <td style={TDR}>{webLeads > 0 ? money(c.costDollars / webLeads) : "—"}</td>
+                </tr>
+              );
+            })}
+            <tr style={{ borderTop: "2px solid var(--color-gray-200)" }}>
+              <td style={{ ...TD, fontWeight: 800 }}>Total</td>
+              <td style={{ ...TDR, fontWeight: 800 }}>{money(totalCost)}</td>
+              <td style={TDR}>{stats.campaigns.reduce((s, c) => s + c.clicks, 0)}</td>
+              <td style={TDR}>—</td>
+              <td style={TDR}>{stats.campaigns.reduce((s, c) => s + c.conversions, 0).toFixed(1)}</td>
+              <td style={TDR}>—</td>
+              <td style={{ ...TDR, fontWeight: 800, color: INK }}>{totalLeads || "—"}</td>
+              <td style={{ ...TDR, fontWeight: 700 }}>
+                {totalLeads > 0 ? money(totalCost / totalLeads) : "—"}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        {stats.conversionActions.length > 0 && (
+          <>
+            <h2 style={{ ...H2, marginTop: 16 }}>Conversion actions observed</h2>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480 }}>
+              <thead>
+                <tr>
+                  <th style={TH}>Action</th>
+                  <th style={{ ...TH, textAlign: "right" }}>All conversions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.conversionActions.map((a) => (
+                  <tr key={a.actionName} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={TD}>{a.actionName}</td>
+                    <td style={TDR}>{a.allConversions.toFixed(1)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ ...SUBTLE, marginTop: 8 }}>
+              “All conversions” includes secondary (observation-only) actions — this table shows
+              everything being tracked, not what bidding optimizes toward.
+            </div>
+          </>
+        )}
+      </section>
     );
   }
 
@@ -941,7 +1062,17 @@ export default async function AdminReportPage({
     { group: "Transport & Shipper financial fields", unlocks: "Customer price, carrier pay, gross profit", state: "Unavailable (unmapped)", dependency: "Sample dump + mapping" },
     { group: "CallRail detail shape", unlocks: "Call duration/answered quality metrics", state: "Unavailable (unmapped)", dependency: "Sample dump" },
     { group: "Historical ProABD import", unlocks: "Seasonality, mature lane/agent baselines", state: "Unavailable", dependency: "Ben (export)" },
-    { group: "Google Ads cost join", unlocks: "CPL, CAC, GP-ROAS", state: "Unavailable (API access granted)", dependency: "August build" },
+    {
+      group: "Google Ads cost join",
+      unlocks: "CPL, CAC, GP-ROAS",
+      state:
+        ads.state === "ok"
+          ? `Live (${ads.stats.since} → ${ads.stats.until})`
+          : ads.state === "unconfigured"
+            ? `Awaiting credentials: ${ads.missing.join(", ")}`
+            : `Error: ${ads.message}`,
+      dependency: ads.state === "ok" ? "—" : "Eddie (OAuth env vars)",
+    },
     { group: "First-contact / follow-up events", unlocks: "Response time, contact rate, follow-up compliance", state: "Unavailable", dependency: "Brian (Export API scope)" },
     { group: "Webhook authentication", unlocks: "Verified event provenance", state: "Pending secret exchange", dependency: "Eddie ↔ Superflo" },
   ];
