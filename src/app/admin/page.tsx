@@ -275,7 +275,7 @@ export default async function AdminReportPage({
       const evSnap = await db
         .collection("proabd_webhook_events")
         .where("received_at", ">=", d30)
-        .select("raw_item.ABD_Id", "raw_item.UserName", "received_at")
+        .select("entity_id", "raw_item.ABD_Id", "raw_item.UserName", "received_at")
         .get();
       const evs: { abd: string; user: string | null; at: Date | null }[] = [];
       for (const doc of evSnap.docs) {
@@ -283,7 +283,16 @@ export default async function AdminReportPage({
         const ev: any = doc.data();
         /* eslint-enable @typescript-eslint/no-explicit-any */
         const raw = ev.raw_item ?? {};
-        const abd = raw.ABD_Id != null ? String(raw.ABD_Id) : "";
+        // Join key: entity_id (our indexed copy, stamped by the webhook on
+        // every event) with raw_item.ABD_Id as fallback. Keying on the raw
+        // payload alone silently drops events whose ABD_Id arrives in an
+        // unexpected shape.
+        const abd =
+          ev.entity_id != null && String(ev.entity_id).trim()
+            ? String(ev.entity_id).trim()
+            : raw.ABD_Id != null
+              ? String(raw.ABD_Id)
+              : "";
         if (!abd) continue;
         evs.push({
           abd,
