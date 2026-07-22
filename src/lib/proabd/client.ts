@@ -61,6 +61,10 @@ export interface CreateLeadInput {
   gclid?: string;
   /** Free-text notes from the customer. */
   notes?: string;
+  /** Visitor language ("es" | "en"). Spanish routes via the Website
+   *  Spanish referrer (PROABD_REFERRER_ID_ES) so ProABD's rules can
+   *  assign Spanish-speaking agents. Added 2026-07-22 per Brian. */
+  language?: string;
   /** ISO date string (YYYY-MM-DD). Optional; ProABD accepts blank. */
   availableDate?: string;
 }
@@ -110,7 +114,17 @@ export async function createLead(
   }
 
   const baseUrl = (process.env.PROABD_API_BASE_URL as string).replace(/\/$/, "");
-  const referrerId = process.env.PROABD_REFERRER_ID ?? "8";
+  // Referrer routing (Brian, 2026-07-22): ProABD referrers can be assigned
+  // to agent GROUPS, so language routing rides on the referrer ID. Spanish
+  // web leads send PROABD_REFERRER_ID_ES ("Website Spanish" referrer, to be
+  // created in ProABD) when set; everything else uses the default Website
+  // referrer. Until the ES env var exists, Spanish leads fall through to
+  // the default — no behavior change on deploy.
+  const defaultReferrerId = process.env.PROABD_REFERRER_ID ?? "8";
+  const referrerId =
+    input.language === "es"
+      ? (process.env.PROABD_REFERRER_ID_ES ?? defaultReferrerId)
+      : defaultReferrerId;
   const url = baseUrl + "/createLead/";
 
   // Payload: single bare JSON object (see file header for the empirical

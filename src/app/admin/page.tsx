@@ -39,6 +39,7 @@
  */
 import { getAdminDb } from "@/lib/firebase/admin";
 import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
+import { classifyRecord, type RecordOutcome } from "@/lib/proabd/statuses";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -109,6 +110,12 @@ interface AbdState {
   lastUser: string | null;
   userChanges: number;
   eventCount: number;
+  /** Any event reached Order stage (entity_type "order" or Booked_Date set). */
+  reachedOrder: boolean;
+  /** Status_Id on the most recent event carrying one. */
+  lastStatusId: string | null;
+  /** Canonical outcome per the Superflo status map (2026-07-22). */
+  outcome: RecordOutcome;
 }
 
 /* ── Row shaping ─────────────────────────────────────────────── */
@@ -289,9 +296,23 @@ export default async function AdminReportPage({
       const evSnap = await db
         .collection("proabd_webhook_events")
         .where("received_at", ">=", d30)
-        .select("entity_id", "raw_item.ABD_Id", "raw_item.UserName", "received_at")
+        .select(
+          "entity_id",
+          "entity_type",
+          "raw_item.ABD_Id",
+          "raw_item.UserName",
+          "raw_item.Status_Id",
+          "raw_item.Booked_Date",
+          "received_at",
+        )
         .get();
-      const evs: { abd: string; user: string | null; at: Date | null }[] = [];
+      const evs: {
+        abd: string;
+        user: string | null;
+        at: Date | null;
+        isOrder: boolean;
+        statusId: string | null;
+      }[] = [];
       for (const doc of evSnap.docs) {
         /* eslint-disable @typescript-eslint/no-explicit-any */
         const ev: any = doc.data();
@@ -312,6 +333,11 @@ export default async function AdminReportPage({
           abd,
           user: typeof raw.UserName === "string" && raw.UserName.trim() ? raw.UserName.trim() : null,
           at: ev.received_at?.toDate?.() ?? null,
+          // Order stage = the canonical booked signal (status map 2026-07-22).
+          isOrder:
+            ev.entity_type === "order" ||
+            (typeof raw.Booked_Date === "string" && raw.Booked_Date.trim() !== ""),
+          statusId: raw.Status_Id != null && String(raw.Status_Id).trim() ? String(raw.Status_Id) : null,
         });
       }
       evs.sort((a, b) => (a.at?.getTime() ?? 0) - (b.at?.getTime() ?? 0));
@@ -322,6 +348,9 @@ export default async function AdminReportPage({
           lastUser: null,
           userChanges: 0,
           eventCount: 0,
+          reachedOrder: false,
+          lastStatusId: null,
+          outcome: "active" as RecordOutcome,
         };
         st.eventCount++;
         st.lastAt = e.at;
@@ -330,7 +359,12 @@ export default async function AdminReportPage({
           if (st.lastUser && st.lastUser !== e.user) st.userChanges++;
           st.lastUser = e.user;
         }
+        if (e.isOrder) st.reachedOrder = true;
+        if (e.statusId) st.lastStatusId = e.statusId;
         abdStates.set(e.abd, st);
+      }
+      for (const st of abdStates.values()) {
+        st.outcome = classifyRecord(st.reachedOrder, st.lastStatusId);
       }
     } catch {
       /* readiness panel notes coverage; page renders without event data */
@@ -825,25 +859,55 @@ export default async function AdminReportPage({
     // 30-day observed ownership activity (valid, non-blocked records).
     const rows30 = all.filter((r) => !r.blocked);
     const unowned: LeadRow[] = [];
-    const owners = new Map<string, { n: number; quoted: number; matched: number; withAbd: number; reassignedIn: number }>();
+    const owners = new Map<
+      string,
+      {
+        n: number;
+        quoted: number;
+        matched: number;
+        withAbd: number;
+        reassignedIn: number;
+        booked: number;
+        lost: number;
+        active: number;
+      }
+    >();
+    // Whole-cohort outcome tallies (canonical status map, live 2026-07-22).
+    const outcomes = { booked: 0, canceled: 0, lost: 0, active: 0 };
     for (const r of rows30) {
       const st = r.abdId ? abdStates.get(r.abdId) : undefined;
+      if (st) outcomes[st.outcome]++;
       const owner = st?.lastUser ?? r.proabdUser;
       if (!owner) {
         unowned.push(r);
         continue;
       }
-      const o = owners.get(owner) ?? { n: 0, quoted: 0, matched: 0, withAbd: 0, reassignedIn: 0 };
+      const o = owners.get(owner) ?? {
+        n: 0,
+        quoted: 0,
+        matched: 0,
+        withAbd: 0,
+        reassignedIn: 0,
+        booked: 0,
+        lost: 0,
+        active: 0,
+      };
       o.n++;
       if (r.price !== null) o.quoted += r.price;
       if (r.abdId) {
         o.withAbd++;
-        if (st) o.matched++;
+        if (st) {
+          o.matched++;
+          if (st.outcome === "booked") o.booked++;
+          else if (st.outcome === "lost" || st.outcome === "canceled") o.lost++;
+          else o.active++;
+        }
         if (st?.firstUser && st.lastUser && st.firstUser !== st.lastUser) o.reassignedIn++;
       }
       owners.set(owner, o);
     }
     const list = [...owners.entries()].sort((a, b) => b[1].n - a[1].n);
+    const decided = outcomes.booked + outcomes.lost + outcomes.canceled;
 
     // Actionable vs structural: records created before the ProABD
     // integration (createLead automation, Jul 14) have no linked ProABD
@@ -879,15 +943,48 @@ export default async function AdminReportPage({
             excluded from the alert above.
           </div>
         )}
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>Outcomes (canonical ProABD statuses — live since Jul 22)</h2>
+          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginTop: 4 }}>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: INK }}>{outcomes.booked}</div>
+              <div style={SUBTLE}>Booked (reached Order)</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 800 }}>{outcomes.active}</div>
+              <div style={SUBTLE}>In pipeline</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 800 }}>{outcomes.lost + outcomes.canceled}</div>
+              <div style={SUBTLE}>
+                Lost{outcomes.canceled > 0 ? ` (incl. ${outcomes.canceled} canceled)` : ""}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 800 }}>
+                {decided > 0 ? pct(outcomes.booked, decided) : "—"}
+              </div>
+              <div style={SUBTLE}>Close rate (of decided)</div>
+            </div>
+          </div>
+          <div style={{ ...SUBTLE, marginTop: 10 }}>
+            Booked = record reached Order stage (or carries Booked_Date). Lost = terminal
+            statuses: Bad/Closed Lead, Not Interested, Invalid, Archive, Do Not Contact.
+            Everything else is working pipeline — not a verdict. Small cohort: read
+            direction, not decimals.
+          </div>
+        </section>
         <section style={{ ...CARD, overflowX: "auto" }}>
           <h2 style={H2}>Ownership &amp; workload</h2>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 480 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 560 }}>
             <thead>
               <tr>
                 <th style={TH}>Current owner</th>
                 <th style={{ ...TH, textAlign: "right" }}>Records owned</th>
                 <th style={{ ...TH, textAlign: "right" }}>Quoted value owned</th>
-                <th style={{ ...TH, textAlign: "right" }}>Status coverage</th>
+                <th style={{ ...TH, textAlign: "right" }}>Booked</th>
+                <th style={{ ...TH, textAlign: "right" }}>In pipeline</th>
+                <th style={{ ...TH, textAlign: "right" }}>Lost</th>
                 <th style={{ ...TH, textAlign: "right" }}>Reassigned in</th>
               </tr>
             </thead>
@@ -897,13 +994,15 @@ export default async function AdminReportPage({
                   <td style={{ ...TD, fontWeight: 700 }}>{name}</td>
                   <td style={{ ...TDR, fontWeight: 800, color: INK }}>{o.n}</td>
                   <td style={TDR}>{o.quoted > 0 ? money(o.quoted) : "—"}</td>
-                  <td style={TDR}>{o.withAbd > 0 ? pct(o.matched, o.withAbd) : "—"}</td>
+                  <td style={{ ...TDR, fontWeight: 700 }}>{o.booked || "—"}</td>
+                  <td style={TDR}>{o.active || "—"}</td>
+                  <td style={TDR}>{o.lost || "—"}</td>
                   <td style={TDR}>{o.reassignedIn || "—"}</td>
                 </tr>
               ))}
               {list.length === 0 && (
                 <tr>
-                  <td colSpan={5} style={{ ...TD, color: MUTED }}>
+                  <td colSpan={7} style={{ ...TD, color: MUTED }}>
                     No owned records observed yet.
                   </td>
                 </tr>
@@ -1058,7 +1157,7 @@ export default async function AdminReportPage({
 
   const readiness: { group: string; unlocks: string; state: string; dependency: string }[] = [
     { group: "Post-fix campaign attribution", unlocks: "Exact campaign/ad-group reporting", state: "Observed (since Jul 20 fix)", dependency: "—" },
-    { group: "Canonical ProABD status map", unlocks: "Authoritative booked/lost + close rates", state: "Provisional (heuristics)", dependency: "Brian / Superflo" },
+    { group: "Canonical ProABD status map", unlocks: "Authoritative booked/lost + close rates", state: "LIVE (Brian, Jul 22)", dependency: "—" },
     { group: "Transport & Shipper financial fields", unlocks: "Customer price, carrier pay, gross profit", state: "Unavailable (unmapped)", dependency: "Sample dump + mapping" },
     { group: "CallRail detail shape", unlocks: "Call duration/answered quality metrics", state: "Unavailable (unmapped)", dependency: "Sample dump" },
     { group: "Historical ProABD import", unlocks: "Seasonality, mature lane/agent baselines", state: "Unavailable", dependency: "Ben (export)" },

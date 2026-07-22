@@ -306,10 +306,11 @@ export async function POST(req: Request) {
       operable: true,
     },
     gclid: str(body.gclid),
-    // Language flag (2026-07-22): Spanish-page leads get a note prefix so
-    // agents open the record knowing the customer's language. Step 1 of
-    // language-aware routing — step 2 is a ProABD routing rule keyed on a
-    // dedicated field (needs Superflo; Note is the only free-text we have).
+    // Language routing (2026-07-22, per Brian): Spanish leads route via the
+    // Website Spanish referrer (client.ts picks PROABD_REFERRER_ID_ES).
+    // The Note prefix stays as belt-and-suspenders until the referrer is
+    // created and Note passthrough is fixed on ProABD's side.
+    language: str(body.locale),
     notes:
       str(body.locale) === "es"
         ? ["[CLIENTE EN ESPAÑOL — prefiere español]", notes].filter(Boolean).join(" ")
