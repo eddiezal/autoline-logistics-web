@@ -3,7 +3,12 @@
 import { useRef, useState, useId } from "react";
 import { useTranslations } from "next-intl";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-import { track, captureGclid, captureUtm } from "@/lib/analytics/events";
+import {
+  track,
+  captureGclid,
+  captureUtm,
+  captureLandingPath,
+} from "@/lib/analytics/events";
 import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
 import type { HeroHandoff } from "@/lib/hero-handoff";
 
@@ -90,6 +95,15 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     if (utm?.utm_medium) payload.utm_medium = utm.utm_medium;
     if (utm?.utm_campaign) payload.utm_campaign = utm.utm_campaign;
     if (utm?.utm_content) payload.utm_content = utm.utm_content;
+    // Page attribution (added 2026-07-22): which page the form was
+    // submitted on, which page started the visit (30-day first-touch
+    // cookie), and the visitor's language. Locale derives from the URL
+    // prefix — /es/... is Spanish, everything else English — and flows
+    // to ProABD so agents see the customer's language.
+    payload.page_path = window.location.pathname;
+    const landingPath = captureLandingPath();
+    if (landingPath) payload.landing_path = landingPath;
+    payload.locale = window.location.pathname.startsWith("/es") ? "es" : "en";
 
     try {
       const res = await fetch("/api/lead", {

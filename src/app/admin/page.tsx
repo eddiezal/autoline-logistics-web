@@ -97,6 +97,9 @@ interface LeadRow {
   abdId: string;
   synced: boolean; // proabdSyncedAt present
   proabdUser: string | null; // stamped assignee (webhook stamp-back)
+  submitPath: string | null; // page the form was submitted on (capture began Jul 22)
+  landingPath: string | null; // first-touch page, 30-day cookie (capture began Jul 22)
+  locale: "es" | "en" | null; // visitor language (capture began Jul 22)
 }
 
 interface AbdState {
@@ -193,6 +196,16 @@ function toRow(d: any): LeadRow | null {
     postFix: t >= TRACKING_FIX_TS,
     abdId: d.proabdAbdId != null ? String(d.proabdAbdId) : "",
     synced: Boolean(d.proabdSyncedAt),
+    submitPath:
+      typeof d.attribution?.submitPath === "string" && d.attribution.submitPath
+        ? d.attribution.submitPath
+        : null,
+    landingPath:
+      typeof d.attribution?.landingPath === "string" && d.attribution.landingPath
+        ? d.attribution.landingPath
+        : null,
+    locale:
+      d.attribution?.locale === "es" ? "es" : d.attribution?.locale === "en" ? "en" : null,
     proabdUser:
       typeof d.proabdAssignedAgent?.userName === "string" && d.proabdAssignedAgent.userName.trim()
         ? d.proabdAssignedAgent.userName.trim()
@@ -621,7 +634,69 @@ export default async function AdminReportPage({
             </div>
           )}
         </section>
+
+        <PagesCard />
       </>
+    );
+  }
+
+  function PagesCard() {
+    // Page attribution capture began Jul 22 — earlier leads have no path.
+    const formsWithPage = forms.filter((r) => r.submitPath !== null);
+    const uncaptured = forms.length - formsWithPage.length;
+    const pageAgg = new Map<
+      string,
+      { n: number; quoted: number; es: number; landedHere: number }
+    >();
+    for (const r of formsWithPage) {
+      const key = r.submitPath as string;
+      const a = pageAgg.get(key) ?? { n: 0, quoted: 0, es: 0, landedHere: 0 };
+      a.n++;
+      if (r.price !== null) a.quoted += r.price;
+      if (r.locale === "es") a.es++;
+      if (r.landingPath === r.submitPath) a.landedHere++;
+      pageAgg.set(key, a);
+    }
+    const pageList = [...pageAgg.entries()].sort((a, b) => b[1].n - a[1].n);
+
+    return (
+      <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
+        <h2 style={H2}>Lead-producing pages</h2>
+        <div style={{ ...SUBTLE, marginBottom: 8 }}>
+          Which page carried the form at submit, and whether the visit also started there
+          (first-touch, 30-day cookie). Capture began Jul 22 — this table fills as new leads
+          arrive.
+          {uncaptured > 0 && ` ${uncaptured} earlier cohort form${uncaptured === 1 ? "" : "s"} predate capture.`}
+        </div>
+        {pageList.length > 0 ? (
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 520 }}>
+            <thead>
+              <tr>
+                <th style={TH}>Page</th>
+                <th style={{ ...TH, textAlign: "right" }}>Form leads</th>
+                <th style={{ ...TH, textAlign: "right" }}>Spanish</th>
+                <th style={{ ...TH, textAlign: "right" }}>Also the landing page</th>
+                <th style={{ ...TH, textAlign: "right" }}>Quoted value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pageList.map(([path, a]) => (
+                <tr key={path} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={{ ...TD, fontFamily: "ui-monospace, monospace", fontSize: 12 }}>{path}</td>
+                  <td style={{ ...TDR, fontWeight: 800, color: INK }}>{a.n}</td>
+                  <td style={TDR}>{a.es || "—"}</td>
+                  <td style={TDR}>{a.landedHere || "—"}</td>
+                  <td style={TDR}>{a.quoted > 0 ? money(a.quoted) : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div style={{ ...SUBTLE }}>
+            No leads with page attribution yet — the first post-deploy lead starts this table.
+          </div>
+        )}
+      </section>
     );
   }
 

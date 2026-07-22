@@ -5,6 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Analytics } from "@/components/Analytics";
+import { AttributionCapture } from "@/components/AttributionCapture";
 import { CallRailSnippet } from "@/components/CallRailSnippet";
 import { StructuredData } from "@/components/StructuredData";
 import { organizationSchema, webSiteSchema } from "@/lib/seo/schemas";
@@ -118,6 +119,7 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <Analytics />
+        <AttributionCapture />
         <CallRailSnippet />
         {/* Sitewide structured data. Per-page schemas (LocalBusiness, Service,
             FAQPage, BreadcrumbList) get mounted from their own page files. */}

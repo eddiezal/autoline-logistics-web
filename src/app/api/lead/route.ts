@@ -73,6 +73,12 @@ interface IncomingPayload {
   variant?: unknown;
   referrer?: unknown;
   gclid?: unknown;
+  /** Page the form was submitted on (pathname). Added 2026-07-22. */
+  page_path?: unknown;
+  /** First-touch landing page (30-day cookie). Added 2026-07-22. */
+  landing_path?: unknown;
+  /** Visitor language from URL prefix: "es" | "en". Added 2026-07-22. */
+  locale?: unknown;
 }
 
 function str(v: unknown): string | undefined {
@@ -252,6 +258,12 @@ export async function POST(req: Request) {
       // (URL first, then 60-day cookie fallback). Stored here so the future
       // ProABD adapter can pass it on createLead for OCI attribution.
       gclid: str(body.gclid) ?? null,
+      // Page attribution (added 2026-07-22) — powers the pages dashboard.
+      // submitPath = page carrying the form; landingPath = first-touch
+      // page (30-day cookie); locale = visitor language ("es" | "en").
+      submitPath: str(body.page_path)?.slice(0, 300) ?? null,
+      landingPath: str(body.landing_path)?.slice(0, 300) ?? null,
+      locale: str(body.locale) === "es" ? "es" : str(body.locale) === "en" ? "en" : null,
     },
     status: "pending_agent_contact" as const,
   };
@@ -294,7 +306,14 @@ export async function POST(req: Request) {
       operable: true,
     },
     gclid: str(body.gclid),
-    notes,
+    // Language flag (2026-07-22): Spanish-page leads get a note prefix so
+    // agents open the record knowing the customer's language. Step 1 of
+    // language-aware routing — step 2 is a ProABD routing rule keyed on a
+    // dedicated field (needs Superflo; Note is the only free-text we have).
+    notes:
+      str(body.locale) === "es"
+        ? ["[CLIENTE EN ESPAÑOL — prefiere español]", notes].filter(Boolean).join(" ")
+        : notes,
   }).catch((err) => {
     console.error("[/api/lead] ProABD createLead threw (should be caught internally):", err);
     return { ok: false as const, error: "threw" };

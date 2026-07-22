@@ -268,3 +268,33 @@ export function captureUtm(): UtmParams | undefined {
     return undefined;
   }
 }
+
+/**
+ * First-touch landing path, persisted to a 30-day first-party cookie.
+ *
+ * Set once — the first page a visitor is seen on wins for 30 days. Read
+ * at quote submit so the lead doc records which page STARTED the journey
+ * (landingPath) separately from where the form was submitted (submitPath).
+ *
+ * Called on every full page load via <AttributionCapture /> in the locale
+ * layout, which also re-runs captureGclid/captureUtm there so click IDs
+ * and UTMs are cookied on ARRIVAL — not just at submit time. Before this,
+ * a visitor who landed with UTMs, navigated client-side (params drop),
+ * then submitted on another page lost attribution entirely.
+ *
+ * Added 2026-07-22: powers the "which pages produce leads" dashboard view.
+ */
+export function captureLandingPath(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+
+  const match = document.cookie.match(/(?:^|;\s*)first_landing=([^;]+)/);
+  if (match) return decodeURIComponent(match[1]);
+
+  const path = window.location.pathname;
+  const thirtyDays = 30 * 24 * 60 * 60;
+  document.cookie =
+    "first_landing=" +
+    encodeURIComponent(path) +
+    `; max-age=${thirtyDays}; path=/; SameSite=Lax`;
+  return path;
+}
