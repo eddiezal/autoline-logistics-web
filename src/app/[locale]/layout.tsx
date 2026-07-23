@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Analytics } from "@/components/Analytics";
 import { AttributionCapture } from "@/components/AttributionCapture";
+import { BehaviorTracker } from "@/components/BehaviorTracker";
 import { CallRailSnippet } from "@/components/CallRailSnippet";
 import { StructuredData } from "@/components/StructuredData";
 import { organizationSchema, webSiteSchema } from "@/lib/seo/schemas";
@@ -120,6 +121,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <Analytics />
         <AttributionCapture />
+        <BehaviorTracker />
         <CallRailSnippet />
         {/* Sitewide structured data. Per-page schemas (LocalBusiness, Service,
             FAQPage, BreadcrumbList) get mounted from their own page files. */}

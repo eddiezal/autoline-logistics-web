@@ -123,7 +123,7 @@ export async function createLead(
   const defaultReferrerId = process.env.PROABD_REFERRER_ID ?? "8";
   const referrerId =
     input.language === "es"
-      ? (process.env.PROABD_REFERRER_ID_ES ?? defaultReferrerId)
+      ? (process.env.PROABD_REFERRER_ID_ES || defaultReferrerId)
       : defaultReferrerId;
   const url = baseUrl + "/createLead/";
 

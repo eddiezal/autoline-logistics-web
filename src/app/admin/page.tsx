@@ -102,6 +102,8 @@ interface LeadRow {
   submitPath: string | null; // page the form was submitted on (capture began Jul 22)
   landingPath: string | null; // first-touch page, 30-day cookie (capture began Jul 22)
   locale: "es" | "en" | null; // visitor language (capture began Jul 22)
+  visitorId: string | null; // behavior join key (capture began Jul 22 PM)
+  firstTouchAt: Date | null; // first-touch cookie timestamp (Jul 22 PM)
 }
 
 interface AbdState {
@@ -214,6 +216,11 @@ function toRow(d: any): LeadRow | null {
         : null,
     locale:
       d.attribution?.locale === "es" ? "es" : d.attribution?.locale === "en" ? "en" : null,
+    visitorId:
+      typeof d.attribution?.visitorId === "string" && d.attribution.visitorId
+        ? d.attribution.visitorId
+        : null,
+    firstTouchAt: d.attribution?.firstTouchAt?.toDate?.() ?? null,
     proabdUser:
       typeof d.proabdAssignedAgent?.userName === "string" && d.proabdAssignedAgent.userName.trim()
         ? d.proabdAssignedAgent.userName.trim()
@@ -265,6 +272,7 @@ const VIEWS = [
   { id: "sales", label: "Sales workload" },
   { id: "lanes", label: "Lane activity" },
   { id: "opportunities", label: "Opportunities" },
+  { id: "behavior", label: "Behavior" },
 ] as const;
 type ViewId = (typeof VIEWS)[number]["id"];
 
@@ -379,6 +387,44 @@ export default async function AdminReportPage({
   // Google Ads spend/conversions (cost join). Typed states — the page
   // renders fully without credentials; the readiness row tells the truth.
   const ads: AdsResult = await fetchAdsStats(PROABD_START);
+
+  // First-party behavior events (last 14 days). Capture began Jul 22 PM —
+  // the Behavior view labels itself accordingly while history accrues.
+  interface SiteEvent {
+    vid: string;
+    sid: string | null;
+    type: string;
+    path: string;
+    locale: "es" | "en";
+    at: Date | null;
+    price: number | null;
+  }
+  let siteEvents: SiteEvent[] = [];
+  try {
+    const d14 = new Date(now.getTime() - 14 * 86_400_000);
+    const sevSnap = await getAdminDb()
+      .collection("site_events")
+      .where("ts", ">=", d14)
+      .select("vid", "sid", "type", "path", "locale", "ts", "meta.price")
+      .get();
+    siteEvents = sevSnap.docs.map((doc) => {
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      const e: any = doc.data();
+      /* eslint-enable @typescript-eslint/no-explicit-any */
+      return {
+        vid: String(e.vid ?? ""),
+        sid: e.sid ? String(e.sid) : null,
+        type: String(e.type ?? ""),
+        path: String(e.path ?? ""),
+        locale: e.locale === "es" ? ("es" as const) : ("en" as const),
+        at: e.ts?.toDate?.() ?? null,
+        price: typeof e.meta?.price === "number" ? e.meta.price : null,
+      };
+    });
+    siteEvents.sort((a, b) => (a.at?.getTime() ?? 0) - (b.at?.getTime() ?? 0));
+  } catch {
+    /* Behavior view renders its empty state */
+  }
 
   /* ── Cohorts (§7) ── */
   // Lead cohort: created since ProABD integration (Jul 14), valid only.
@@ -1158,6 +1204,272 @@ export default async function AdminReportPage({
     );
   }
 
+
+  function Behavior() {
+    // ── Sessionize ──
+    interface Sess {
+      vid: string;
+      locale: "es" | "en";
+      day: string;
+      pages: string[];
+      formStarted: boolean;
+      estPrices: number[];
+    }
+    const norm = (p: string) => {
+      const n = p.replace(/^\/es(?=\/|$)/, "");
+      return n === "" ? "/" : n;
+    };
+    const isQuotePath = (p: string) => norm(p).startsWith("/quote");
+    const dayOf = (d: Date | null) =>
+      d ? d.toLocaleDateString("en-CA", { timeZone: PT }) : "?";
+    const sessions = new Map<string, Sess>();
+    for (const e of siteEvents) {
+      if (!e.vid) continue;
+      const key = e.sid ?? e.vid + "|" + dayOf(e.at);
+      const sess =
+        sessions.get(key) ??
+        ({ vid: e.vid, locale: e.locale, day: dayOf(e.at), pages: [], formStarted: false, estPrices: [] } as Sess);
+      if (e.type === "page_view") sess.pages.push(e.path);
+      else if (e.type === "form_started") sess.formStarted = true;
+      else if (e.type === "estimate_shown" && e.price !== null) sess.estPrices.push(e.price);
+      sessions.set(key, sess);
+    }
+    const sessList = [...sessions.values()].filter((x) => x.pages.length > 0 || x.formStarted);
+    const convertedVids = new Set(all.filter((r) => r.visitorId).map((r) => r.visitorId as string));
+
+    // ── Aggregates ──
+    const byDay = new Map<string, { n: number; es: number }>();
+    for (const x of sessList) {
+      const d = byDay.get(x.day) ?? { n: 0, es: 0 };
+      d.n++;
+      if (x.locale === "es") d.es++;
+      byDay.set(x.day, d);
+    }
+    const days = [...byDay.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1)).slice(0, 14);
+
+    const landings = new Map<string, { n: number; quote: number; convVids: Set<string> }>();
+    for (const x of sessList) {
+      if (x.pages.length === 0) continue;
+      const lp = norm(x.pages[0]);
+      const l = landings.get(lp) ?? { n: 0, quote: 0, convVids: new Set<string>() };
+      l.n++;
+      if (x.pages.some(isQuotePath)) l.quote++;
+      if (convertedVids.has(x.vid)) l.convVids.add(x.vid);
+      landings.set(lp, l);
+    }
+    const landingList = [...landings.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 15);
+
+    const totalSess = sessList.length;
+    const quoteSess = sessList.filter((x) => x.pages.some(isQuotePath) || x.formStarted).length;
+    const startedSess = sessList.filter((x) => x.formStarted).length;
+    // Distinct visitors (2026-07-22 review): counting sessions here inflated
+    // conversions — a converted visitor's every return visit counted again.
+    const convVisitors = new Set(
+      sessList.filter((x) => convertedVids.has(x.vid)).map((x) => x.vid),
+    ).size;
+
+    // Price bands from estimate_shown (route checker), with what happened next.
+    const BANDS: Array<{ label: string; min: number; max: number }> = [
+      { label: "under $750", min: 0, max: 750 },
+      { label: "$750–1,099", min: 750, max: 1100 },
+      { label: "$1,100–1,499", min: 1100, max: 1500 },
+      { label: "$1,500+", min: 1500, max: Infinity },
+    ];
+    const bandRows = BANDS.map((b) => {
+      const withEst = sessList.filter((x) => x.estPrices.some((v) => v >= b.min && v < b.max));
+      return {
+        label: b.label,
+        n: withEst.length,
+        proceeded: withEst.filter((x) => x.formStarted || convertedVids.has(x.vid)).length,
+      };
+    }).filter((r) => r.n > 0);
+    const estSessCount = sessList.filter((x) => x.estPrices.length > 0).length;
+
+    // Page-before-quote.
+    const before = new Map<string, number>();
+    for (const x of sessList) {
+      const idx = x.pages.findIndex(isQuotePath);
+      if (idx > 0) {
+        const prev = norm(x.pages[idx - 1]);
+        before.set(prev, (before.get(prev) ?? 0) + 1);
+      }
+    }
+    const beforeList = [...before.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+    // Time-to-convert from lead docs (firstTouchAt capture began Jul 22 PM).
+    const ttcLeads = all.filter((r) => r.firstTouchAt !== null && !r.isCall);
+    const TTC_BUCKETS = [
+      { label: "Same visit (<30 min)", maxMs: 30 * 60_000 },
+      { label: "Same day", maxMs: 86_400_000 },
+      { label: "1–3 days", maxMs: 3 * 86_400_000 },
+      { label: "3–7 days", maxMs: 7 * 86_400_000 },
+      { label: "Over a week", maxMs: Infinity },
+    ];
+    // Buckets partition [0, ∞): clamp negatives (client clock skew) to 0
+    // so every lead lands in exactly one bucket (2026-07-22 review).
+    const ttcCounts = TTC_BUCKETS.map((bkt, i) => ({
+      label: bkt.label,
+      n: ttcLeads.filter((r) => {
+        const ms = Math.max(0, r.t.getTime() - (r.firstTouchAt as Date).getTime());
+        const lo = i === 0 ? 0 : TTC_BUCKETS[i - 1].maxMs;
+        return ms >= lo && ms < bkt.maxMs;
+      }).length,
+    }));
+
+    if (siteEvents.length === 0) {
+      return (
+        <section style={CARD}>
+          <h2 style={H2}>On-site behavior</h2>
+          <div style={SUBTLE}>
+            Collecting — first-party event capture went live Jul 22. This view populates as
+            visitors arrive; check back in a day or two. (No GA involved: events flow from the
+            site to our own database.)
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <>
+        <div style={{ ...SUBTLE, marginBottom: 12 }}>
+          <strong style={{ color: "#1a1a1a" }}>Last 14 days of first-party sessions</strong> —
+          capture began Jul 22, so early numbers are partial by construction. Anonymous visitor
+          IDs; conversion = a lead submitted by the same visitor.
+        </div>
+
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>Quote funnel (sessions)</h2>
+          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginTop: 4 }}>
+            <div><div style={{ fontSize: 22, fontWeight: 800, color: INK }}>{totalSess}</div><div style={SUBTLE}>Sessions</div></div>
+            <div><div style={{ fontSize: 22, fontWeight: 800 }}>{quoteSess}</div><div style={SUBTLE}>Reached quote page</div></div>
+            <div><div style={{ fontSize: 22, fontWeight: 800 }}>{startedSess}</div><div style={SUBTLE}>Started the form</div></div>
+            <div><div style={{ fontSize: 22, fontWeight: 800, color: INK }}>{convVisitors}</div><div style={SUBTLE}>Converted (distinct visitors)</div></div>
+          </div>
+          <div style={{ ...SUBTLE, marginTop: 10 }}>
+            Drop-off reads left to right. Sessions = 30-minute activity windows per anonymous
+            visitor.
+          </div>
+        </section>
+
+        <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
+          <h2 style={H2}>Landing pages — all visitors</h2>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 520 }}>
+            <thead>
+              <tr>
+                <th style={TH}>Landing page</th>
+                <th style={{ ...TH, textAlign: "right" }}>Sessions</th>
+                <th style={{ ...TH, textAlign: "right" }}>Reached quote</th>
+                <th style={{ ...TH, textAlign: "right" }}>Converted</th>
+              </tr>
+            </thead>
+            <tbody>
+              {landingList.map(([path, l]) => (
+                <tr key={path} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={{ ...TD, fontFamily: "ui-monospace, monospace", fontSize: 12 }}>{path}</td>
+                  <td style={{ ...TDR, fontWeight: 700 }}>{l.n}</td>
+                  <td style={TDR}>{l.quote > 0 ? pct(l.quote, l.n) : "—"}</td>
+                  <td style={TDR}>{l.convVids.size > 0 ? pct(l.convVids.size, l.n) : "—"}</td>
+                </tr>
+              ))}
+              {landingList.length === 0 && (
+                <tr><td colSpan={4} style={{ ...TD, color: MUTED }}>No sessions with page views yet.</td></tr>
+              )}
+            </tbody>
+          </table>
+          <div style={{ ...SUBTLE, marginTop: 8 }}>
+            EN and ES versions of a page are grouped (locale split below). This is every visitor,
+            not just converters — the denominator the lead-pages table was missing.
+          </div>
+        </section>
+
+        {bandRows.length > 0 && (
+          <section style={{ ...CARD, marginBottom: 12 }}>
+            <h2 style={H2}>Price shown vs. what happened next</h2>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480 }}>
+              <thead>
+                <tr>
+                  <th style={TH}>Price band (route checker)</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Sessions shown</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Proceeded</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bandRows.map((r) => (
+                  <tr key={r.label} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={TD}>{r.label}</td>
+                    <td style={TDR}>{r.n}</td>
+                    <td style={TDR}>{pct(r.proceeded, r.n)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ ...SUBTLE, marginTop: 8 }}>
+              {estSessCount} session{estSessCount === 1 ? "" : "s"} saw a live price pre-submit.
+              “Proceeded” = started or submitted the quote form afterward. Small samples: read
+              direction, not decimals.
+            </div>
+          </section>
+        )}
+
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>Time to convert (leads with first-touch data)</h2>
+          {ttcLeads.length > 0 ? (
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 420 }}>
+              <tbody>
+                {ttcCounts.map((r) => (
+                  <tr key={r.label} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={TD}>{r.label}</td>
+                    <td style={{ ...TDR, fontWeight: 700 }}>{r.n || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div style={SUBTLE}>
+              First-touch timestamps began Jul 22 — this fills as new leads arrive.
+            </div>
+          )}
+        </section>
+
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>Page visited right before the quote page</h2>
+          {beforeList.length > 0 ? (
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480 }}>
+              <tbody>
+                {beforeList.map(([path, n]) => (
+                  <tr key={path} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={{ ...TD, fontFamily: "ui-monospace, monospace", fontSize: 12 }}>{path}</td>
+                    <td style={{ ...TDR, fontWeight: 700 }}>{n}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div style={SUBTLE}>No multi-page journeys into the quote page recorded yet.</div>
+          )}
+        </section>
+
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>Sessions per day</h2>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 380 }}>
+            <tbody>
+              {days.map(([d, v]) => (
+                <tr key={d} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={TD}>{d}</td>
+                  <td style={{ ...TDR, fontWeight: 700 }}>{v.n}</td>
+                  <td style={{ ...TDR, color: MUTED }}>{v.es > 0 ? v.es + " ES" : "—"}</td>
+                </tr>
+              ))}
+              {days.length === 0 && (
+                <tr><td colSpan={3} style={{ ...TD, color: MUTED }}>No sessions recorded yet.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </section>
+      </>
+    );
+  }
+
   const readiness: { group: string; unlocks: string; state: string; dependency: string }[] = [
     { group: "Post-fix campaign attribution", unlocks: "Exact campaign/ad-group reporting", state: "Observed (since Jul 20 fix)", dependency: "—" },
     { group: "Canonical ProABD status map", unlocks: "Authoritative booked/lost + close rates", state: "LIVE (Brian, Jul 22)", dependency: "—" },
@@ -1235,6 +1547,7 @@ export default async function AdminReportPage({
           {view === "sales" && <Sales />}
           {view === "lanes" && <Lanes />}
           {view === "opportunities" && <Opportunities />}
+          {view === "behavior" && <Behavior />}
 
           <details style={{ ...CARD, marginTop: 16 }}>
             <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>

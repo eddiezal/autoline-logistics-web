@@ -79,11 +79,22 @@ interface IncomingPayload {
   landing_path?: unknown;
   /** Visitor language from URL prefix: "es" | "en". Added 2026-07-22. */
   locale?: unknown;
+  /** Hero handoff: "operable" | "inoperable". Was silently dropped
+   *  until the 2026-07-22 review. */
+  condition?: unknown;
+  /** Hero handoff: transport preference (e.g. "enclosed"). */
+  transport?: unknown;
+  /** Anonymous behavior visitor ID (alv_vid cookie). Added 2026-07-22. */
+  visitor_id?: unknown;
+  /** First-touch epoch millis (30-day cookie). Added 2026-07-22. */
+  first_touch_at?: unknown;
 }
 
 function str(v: unknown): string | undefined {
   if (typeof v !== "string") return undefined;
-  const trimmed = v.trim();
+  // Global safety cap (2026-07-22 review): nothing user-supplied should be
+  // stored/emailed/forwarded unbounded. Field-level limits still apply.
+  const trimmed = v.trim().slice(0, 2000);
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
@@ -146,6 +157,14 @@ export async function POST(req: Request) {
   const email = requireStr(body.email, 200);
   const phone = requireStr(body.phone, 30);
   const notes = str(body.notes);
+
+  // Hero-handoff fields (2026-07-22 review: these arrived via hidden
+  // inputs but were never read — inoperable vehicles reached ProABD as
+  // operable).
+  const rawCondition = str(body.condition);
+  const vehicleCondition =
+    rawCondition === "inoperable" ? "inoperable" : rawCondition === "operable" ? "operable" : null;
+  const transportPref = str(body.transport)?.slice(0, 30) ?? null;
 
   const rawTier = str(body.tier);
   const tier: Tier =
@@ -239,7 +258,7 @@ export async function POST(req: Request) {
     createdAt: FieldValue.serverTimestamp(),
     origin: { zip: originZip, state: originState },
     destination: { zip: destinationZip, state: destinationState },
-    vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType },
+    vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType, condition: vehicleCondition, transportPref },
     tier,
     contact: { firstName: firstName!, lastName: lastName!, email, phone, notes: notes ?? null },
     // Retired 2026-07-20: round-robin assignment. ProABD routes the lead;
@@ -264,6 +283,15 @@ export async function POST(req: Request) {
       submitPath: str(body.page_path)?.slice(0, 300) ?? null,
       landingPath: str(body.landing_path)?.slice(0, 300) ?? null,
       locale: str(body.locale) === "es" ? "es" : str(body.locale) === "en" ? "en" : null,
+      // Behavior join (2026-07-22): chains site_events → lead → ProABD
+      // outcome, and firstTouchAt → createdAt = time-to-convert.
+      visitorId: str(body.visitor_id)?.slice(0, 60) ?? null,
+      firstTouchAt: (() => {
+        const n = Number(str(body.first_touch_at));
+        return Number.isFinite(n) && n > 1_600_000_000_000 && n <= Date.now() + 60_000
+          ? new Date(n)
+          : null;
+      })(),
     },
     status: "pending_agent_contact" as const,
   };
@@ -303,7 +331,9 @@ export async function POST(req: Request) {
       year: vehicleYear!,
       make: vehicleMake!,
       model: vehicleModel!,
-      operable: true,
+      // Hero handoff (2026-07-22 review): was hardcoded true, silently
+      // sending inoperable vehicles to ProABD as operable.
+      operable: vehicleCondition !== "inoperable",
     },
     gclid: str(body.gclid),
     // Language routing (2026-07-22, per Brian): Spanish leads route via the

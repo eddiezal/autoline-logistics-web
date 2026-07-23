@@ -287,14 +287,28 @@ export function captureUtm(): UtmParams | undefined {
 export function captureLandingPath(): string | undefined {
   if (typeof window === "undefined") return undefined;
 
+  const thirtyDays = 30 * 24 * 60 * 60;
+  // First-touch TIMESTAMP (2026-07-22): set alongside the landing path so
+  // leads can carry time-to-convert (firstTouchAt → submittedAt).
+  if (!document.cookie.match(/(?:^|;\s*)first_touch_at=/)) {
+    document.cookie = `first_touch_at=${Date.now()}; max-age=${thirtyDays}; path=/; SameSite=Lax`;
+  }
+
   const match = document.cookie.match(/(?:^|;\s*)first_landing=([^;]+)/);
   if (match) return decodeURIComponent(match[1]);
 
   const path = window.location.pathname;
-  const thirtyDays = 30 * 24 * 60 * 60;
   document.cookie =
     "first_landing=" +
     encodeURIComponent(path) +
     `; max-age=${thirtyDays}; path=/; SameSite=Lax`;
   return path;
+}
+
+/** First-touch epoch millis from the 30-day cookie, if present. */
+export function getFirstTouchAt(): number | undefined {
+  if (typeof document === "undefined") return undefined;
+  const m = document.cookie.match(/(?:^|;\s*)first_touch_at=(\d+)/);
+  const v = m ? Number(m[1]) : NaN;
+  return Number.isFinite(v) && v > 0 ? v : undefined;
 }

@@ -150,7 +150,13 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
   const missing = adsMissingEnv();
   if (missing.length > 0) return { state: "unconfigured", missing };
 
-  if (cache && Date.now() - cache.at < CACHE_TTL_MS) return cache.result;
+  // Errors are cached briefly (60s) so a transient OAuth/API hiccup does
+  // not blank the card for the full TTL; good results use the normal TTL.
+  if (cache) {
+    const age = Date.now() - cache.at;
+    const ttl = cache.result.state === "error" ? 60_000 : CACHE_TTL_MS;
+    if (age < ttl) return cache.result;
+  }
 
   let result: AdsResult;
   try {

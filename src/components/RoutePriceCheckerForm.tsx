@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/analytics/events";
+import { sendEvent } from "@/lib/analytics/behavior";
 
 /**
  * RoutePriceCheckerForm. Client component for /tools/route-price-checker.
@@ -120,6 +121,18 @@ export function RoutePriceCheckerForm({
         setError(i18n.errorService);
       } else {
         setResult(data);
+        // First-party funnel (2026-07-22): record that a live price was
+        // shown pre-submit, with the anchor value — powers the
+        // price-band abandonment analysis on /admin.
+        if (data.status === "ok") {
+          const sel = data.prices[data.selectedVehicle];
+          if (sel) {
+            sendEvent("estimate_shown", {
+              price: Math.round((sel.low + sel.high) / 2 / 25) * 25,
+              tool: "route-checker",
+            });
+          }
+        }
         track({
           name: "route_price_checked",
           props: {

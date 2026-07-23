@@ -8,7 +8,9 @@ import {
   captureGclid,
   captureUtm,
   captureLandingPath,
+  getFirstTouchAt,
 } from "@/lib/analytics/events";
+import { sendEvent, getVisitorId } from "@/lib/analytics/behavior";
 import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
 import type { HeroHandoff } from "@/lib/hero-handoff";
 
@@ -52,6 +54,17 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   );
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  // First-party funnel: fire form_started once on first interaction.
+  const formStartedSent = useRef(false);
+  function onFirstInteraction(e: React.FocusEvent<HTMLFormElement>) {
+    if (formStartedSent.current) return;
+    // Only count focus on actual form fields (not the hCaptcha iframe).
+    const t = e.target as HTMLElement | null;
+    const tag = t?.tagName;
+    if (tag !== "INPUT" && tag !== "SELECT" && tag !== "TEXTAREA") return;
+    formStartedSent.current = true;
+    sendEvent("form_started");
+  }
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const captchaRef = useRef<HCaptcha>(null);
@@ -103,7 +116,14 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     payload.page_path = window.location.pathname;
     const landingPath = captureLandingPath();
     if (landingPath) payload.landing_path = landingPath;
-    payload.locale = window.location.pathname.startsWith("/es") ? "es" : "en";
+    payload.locale = /^\/es(\/|$)/.test(window.location.pathname) ? "es" : "en";
+    // Behavior join (2026-07-22): visitor ID + first-touch time let the
+    // dashboard chain pages → lead → ProABD outcome and compute
+    // time-to-convert per lead.
+    const vid = getVisitorId();
+    if (vid) payload.visitor_id = vid;
+    const ftAt = getFirstTouchAt();
+    if (ftAt) payload.first_touch_at = String(ftAt);
 
     try {
       const res = await fetch("/api/lead", {
@@ -129,7 +149,7 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
       // different consumers. Reuse submitGclid so the backend doc and
       // the analytics events stay in sync.
       const gclid = submitGclid;
-      const vehicleType = payload.vehicleType ?? "unknown";
+      const vehicleType = payload.vehicle_type ?? "unknown";
       // Derive state from ZIP for analytics (state codes used to come
       // from fromCode/toCode URL params; now they're derived from ZIP).
       const fromState =
@@ -188,7 +208,11 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      onFocusCapture={onFirstInteraction}
+      className="space-y-6"
+    >
       {/* Hidden handoff fields — pre-quote selections the hero captured
           but the form doesn't expose visually. Flow into the lead doc
           via FormData on submit. */}
