@@ -20,7 +20,7 @@ import { checkRateLimit, getClientIp } from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
 
-const EVENT_TYPES = new Set(["page_view", "form_started", "estimate_shown"]);
+const EVENT_TYPES = new Set(["page_view", "form_started", "estimate_shown", "tool_result"]);
 
 const BOT_UA =
   /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|headless|lighthouse|pingdom|uptime|monitor|python-requests|curl\/|wget\//i;
@@ -75,6 +75,11 @@ export async function POST(req: NextRequest) {
       if (Number.isFinite(price) && price > 0 && price < 100000) meta.price = Math.round(price);
       const tool = str(b.meta.tool, 40);
       if (tool) meta.tool = tool;
+      // Ship-vs-drive verdict + signed dollar delta (tool_result events).
+      const verdict = str(b.meta.verdict, 20);
+      if (verdict) meta.verdict = verdict;
+      const delta = Number(b.meta.delta);
+      if (Number.isFinite(delta) && Math.abs(delta) < 100000) meta.delta = Math.round(delta);
       if (Object.keys(meta).length === 0) meta = null;
     }
 

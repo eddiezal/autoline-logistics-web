@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { buildQuoteHref } from "@/lib/hero-handoff";
+import { sendEvent } from "@/lib/analytics/behavior";
 import {
   lookupZipApprox,
   zipPrefixToState,
@@ -316,6 +317,25 @@ export function HeroRouteFinder() {
       clearTimeout(timer);
     };
   }, [route.kind, fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey]);
+
+  // First-party analytics (2026-07-22): record that the hero showed a
+  // price — once per unique route+price per mount, debounced so mid-ZIP
+  // keystrokes don't fire. This was the site's most-used interactive
+  // element with zero instrumentation.
+  const firedEstimates = useRef(new Set<string>());
+  useEffect(() => {
+    if (route.kind !== "ok" && route.kind !== "hawaii" && route.kind !== "alaska") return;
+    const shown = liveEstimate?.price ?? route.price;
+    if (typeof shown !== "number" || shown <= 0) return;
+    const key = fromZip + "|" + toZip + "|" + shown;
+    if (firedEstimates.current.has(key)) return;
+    const timer = setTimeout(() => {
+      if (firedEstimates.current.has(key)) return;
+      firedEstimates.current.add(key);
+      sendEvent("estimate_shown", { price: shown, tool: "hero" });
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [route, liveEstimate, fromZip, toZip]);
 
   // Pre-fill /quote with all six inputs via the shared handoff
   // contract (src/lib/hero-handoff.ts). Adding a new param is a

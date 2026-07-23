@@ -10,6 +10,7 @@ import {
   roadDistanceMiles,
 } from "@/data/zip-metros";
 import { track } from "@/lib/analytics/events";
+import { sendEvent } from "@/lib/analytics/behavior";
 
 /**
  * Ship vs Drive Calculator — §1 named deliverable.
@@ -681,6 +682,13 @@ function VerdictBox({ calc }: { calc: Calc }) {
           verdict_state: verdictState,
           delta_usd: deltaUsd,
         },
+      });
+      // First-party mirror (2026-07-22): verdict + dollar gap into our own
+      // pipe — aggregate ship-vs-drive outcomes become marketing claims.
+      sendEvent("tool_result", {
+        tool: "ship-vs-drive",
+        verdict: verdictState,
+        delta: deltaUsd,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

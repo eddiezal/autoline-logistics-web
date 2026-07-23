@@ -57,7 +57,7 @@ export function getSessionId(): string | null {
   }
 }
 
-export type BehaviorEventType = "page_view" | "form_started" | "estimate_shown";
+export type BehaviorEventType = "page_view" | "form_started" | "estimate_shown" | "tool_result";
 
 /**
  * Send a behavioral event to our first-party collector. Fire-and-forget:
