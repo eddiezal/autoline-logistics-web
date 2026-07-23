@@ -1176,7 +1176,7 @@ export default async function AdminReportPage({
       dependency: ads.state === "ok" ? "—" : "Eddie (OAuth env vars)",
     },
     { group: "First-contact / follow-up events", unlocks: "Response time, contact rate, follow-up compliance", state: "Unavailable", dependency: "Brian (Export API scope)" },
-    { group: "Webhook authentication", unlocks: "Verified event provenance", state: "Pending secret exchange", dependency: "Eddie ↔ Superflo" },
+    { group: "Webhook authentication", unlocks: "Verified event provenance", state: "ENFORCED (Jul 22) — unauthenticated posts rejected", dependency: "—" },
   ];
 
   return (
