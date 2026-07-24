@@ -388,6 +388,44 @@ export default async function AdminReportPage({
   // renders fully without credentials; the readiness row tells the truth.
   const ads: AdsResult = await fetchAdsStats(PROABD_START);
 
+  // ProABD order history (Business Baseline card). Populated by
+  // scripts/import-orders.mjs (monthly re-run until the webhook parser
+  // writes orders automatically). Card renders nothing if empty.
+  interface OrderRow {
+    email: string;
+    originState: string;
+    destState: string;
+    leadCreatedAt: Date | null;
+    orderCreatedAt: Date | null;
+    availableAt: Date | null;
+    price: number;
+    deposit: number;
+  }
+  let orders: OrderRow[] = [];
+  try {
+    const oSnap = await getAdminDb()
+      .collection("orders")
+      .select("email", "originState", "destState", "leadCreatedAt", "orderCreatedAt", "availableAt", "price", "deposit")
+      .get();
+    orders = oSnap.docs.map((doc) => {
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      const d: any = doc.data();
+      /* eslint-enable @typescript-eslint/no-explicit-any */
+      return {
+        email: String(d.email ?? ""),
+        originState: String(d.originState ?? ""),
+        destState: String(d.destState ?? ""),
+        leadCreatedAt: d.leadCreatedAt?.toDate?.() ?? null,
+        orderCreatedAt: d.orderCreatedAt?.toDate?.() ?? null,
+        availableAt: d.availableAt?.toDate?.() ?? null,
+        price: Number(d.price) || 0,
+        deposit: Number(d.deposit) || 0,
+      };
+    });
+  } catch {
+    /* orders collection absent → card simply doesn't render */
+  }
+
   // First-party behavior events (last 14 days). Capture began Jul 22 PM —
   // the Behavior view labels itself accordingly while history accrues.
   interface SiteEvent {
@@ -501,6 +539,156 @@ export default async function AdminReportPage({
 
   /* ── View renderers ── */
 
+  function BusinessBaselineCard() {
+    if (orders.length === 0) return null;
+
+    const monthKey = (d: Date) =>
+      d.toLocaleDateString("en-CA", { timeZone: PT, year: "numeric", month: "2-digit" });
+    const monthLabel = (d: Date) => d.toLocaleDateString("en-US", { timeZone: PT, month: "short" });
+
+    const monthly = new Map<string, { label: string; orders: number; fees: number }>();
+    let firstOrder: Date | null = null;
+    for (const o of orders) {
+      if (!o.orderCreatedAt) continue;
+      if (!firstOrder || o.orderCreatedAt < firstOrder) firstOrder = o.orderCreatedAt;
+      const k = monthKey(o.orderCreatedAt);
+      const m = monthly.get(k) ?? { label: monthLabel(o.orderCreatedAt), orders: 0, fees: 0 };
+      m.orders++;
+      m.fees += o.deposit;
+      monthly.set(k, m);
+    }
+    const keys = [...monthly.keys()].sort();
+    const currentKey = monthKey(now);
+    const months = keys.map((k) => ({ key: k, ...monthly.get(k)! }));
+    const maxFees = Math.max(...months.map((m) => m.fees), 1);
+    const peak = months.reduce((a, b) => (b.fees > a.fees ? b : a), months[0]);
+
+    const totalFees = orders.reduce((s, o) => s + o.deposit, 0);
+    const avgFee = Math.round(totalFees / orders.length);
+
+    const byEmail = new Map<string, number>();
+    for (const o of orders) if (o.email) byEmail.set(o.email, (byEmail.get(o.email) ?? 0) + 1);
+    const repeatCustomers = [...byEmail.values()].filter((n) => n > 1).length;
+    const repeatOrders = [...byEmail.values()].filter((n) => n > 1).reduce((s, n) => s + n, 0);
+    const repeatPct = Math.round((repeatOrders / orders.length) * 100);
+
+    const SOUTH = new Set(["FL", "AZ"]);
+    const snowbirds = orders.filter((o) => SOUTH.has(o.originState) && !SOUTH.has(o.destState)).length;
+
+    const fastPickup = orders.filter(
+      (o) =>
+        o.availableAt && o.orderCreatedAt && o.availableAt.getTime() - o.orderCreatedAt.getTime() <= 1.5 * 86_400_000,
+    ).length;
+    const fastPct = Math.round((fastPickup / orders.length) * 100);
+
+    // "$0 → $peak/month in ~N days" — first order to end of peak month.
+    const [py, pm] = peak.key.split("-").map(Number);
+    const peakMonthEnd = new Date(py, pm, 0);
+    const days = firstOrder ? Math.round((peakMonthEnd.getTime() - firstOrder.getTime()) / 86_400_000 / 10) * 10 : 90;
+
+    const money = (n: number) =>
+      n >= 10_000 ? `$${(n / 1000).toFixed(1)}K` : `$${n.toLocaleString("en-US")}`;
+
+    const chip: React.CSSProperties = {
+      display: "inline-flex",
+      alignItems: "baseline",
+      gap: 5,
+      border: "1px solid var(--color-gray-200)",
+      borderRadius: 999,
+      padding: "4px 12px",
+      fontSize: 12,
+      background: "#f9fafb",
+    };
+    const chipNum: React.CSSProperties = { color: GREEN, fontWeight: 800, fontSize: 14 };
+    const STRIPE = `repeating-linear-gradient(135deg, ${GREEN} 0 4px, #6FCB8A 4px 8px)`;
+
+    return (
+      <div style={{ ...CARD, marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+          <div>
+            <div style={{ ...SUBTLE, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>
+              The B2C book · started {firstOrder?.toLocaleDateString("en-US", { timeZone: PT, month: "long", year: "numeric" })}
+            </div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: INK, lineHeight: 1.15, margin: "2px 0" }}>
+              $0 → {money(peak.fees)}/month in {days} days
+            </div>
+            <div style={SUBTLE}>
+              ${totalFees.toLocaleString("en-US")} in fees · {orders.length} bookings · avg ${avgFee} per order ·{" "}
+              {repeatPct}% repeat volume
+            </div>
+          </div>
+          <div style={{ ...SUBTLE, textAlign: "right", whiteSpace: "nowrap" }}>
+            Source: ProABD orders
+            <br />
+            Updated {updatedAt}
+          </div>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 92 }}>
+          {months.map((m) => {
+            const isPartial = m.key === currentKey;
+            const showVal = m.key === peak.key || isPartial;
+            return (
+              <div
+                key={m.key}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0 }}
+                title={`${m.label} — ${m.orders} orders · $${m.fees.toLocaleString("en-US")} fees${isPartial ? " (in progress)" : ""}`}
+              >
+                {showVal && (
+                  <div style={{ fontSize: 10.5, color: INK, fontWeight: 700, marginBottom: 3, whiteSpace: "nowrap" }}>
+                    ${m.fees.toLocaleString("en-US")}
+                  </div>
+                )}
+                <div
+                  style={{
+                    width: "100%",
+                    maxWidth: 40,
+                    height: `${Math.max(3, Math.round((m.fees / maxFees) * 100))}%`,
+                    background: isPartial ? STRIPE : GREEN,
+                    borderRadius: "4px 4px 0 0",
+                  }}
+                />
+                <div style={{ fontSize: 10.5, color: MUTED, marginTop: 5, textAlign: "center", lineHeight: 1.35 }}>
+                  {m.label}
+                  {isPartial ? "*" : ""}
+                  <br />
+                  <span style={{ color: INK, fontWeight: 600 }}>{m.orders}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div
+          style={{
+            borderTop: "1px solid var(--color-gray-200)",
+            marginTop: 14,
+            paddingTop: 12,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <span style={{ ...SUBTLE, marginRight: 4 }}>Banked:</span>
+          <span style={chip}>
+            <span style={chipNum}>{snowbirds}</span> snowbird targets · Oct
+          </span>
+          <span style={chip}>
+            <span style={chipNum}>{repeatCustomers}</span> repeat customers
+          </span>
+          <span style={chip}>
+            <span style={chipNum}>{fastPct}%</span> book pickup ≤1 day
+          </span>
+        </div>
+        <div style={{ fontSize: 10.5, color: MUTED, marginTop: 10 }}>
+          Bars = monthly fees (booking deposits, Auto Line revenue — not customer gross). *Current month in
+          progress. First fall/winter on record — this year sets the baseline.
+        </div>
+      </div>
+    );
+  }
+
   function Overview() {
     return (
       <>
@@ -509,6 +697,8 @@ export default async function AdminReportPage({
           calls created since the ProABD integration went live; test and blocked-invalid
           submissions excluded (blocked demand reported separately below).
         </div>
+
+        <BusinessBaselineCard />
 
         <section
           style={{
