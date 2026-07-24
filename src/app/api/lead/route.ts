@@ -130,7 +130,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
   }
 
-  const captchaOk = await verifyHcaptcha(str(body.captchaToken));
+  // INCIDENT FIX (2026-07-24): the captcha token must NOT go through str()
+  // — its 2000-char cap (added in the Jul 23 hardening pass) truncated
+  // hCaptcha tokens, which routinely exceed 2000 chars. hCaptcha then saw a
+  // malformed token → "invalid-input-response" → every long-token submit
+  // failed from Jul 23 ~12:15 PM to Jul 24 ~4 PM PT. Tokens get their own
+  // generous bound instead.
+  const captchaToken =
+    typeof body.captchaToken === "string" && body.captchaToken.trim()
+      ? body.captchaToken.trim().slice(0, 16_384)
+      : undefined;
+  const captchaOk = await verifyHcaptcha(captchaToken);
   if (!captchaOk) {
     return NextResponse.json(
       { ok: false, error: "Captcha verification failed. Please try again." },
