@@ -429,6 +429,15 @@ export async function POST(req: Request) {
   // Sent after the owner notification so the lead never blocks on customer
   // delivery. Failures are logged but non-fatal. Reply-to is the admin inbox
   // so any customer reply lands somewhere monitored.
+  //
+  // 2026-07-24: gated behind SEND_CUSTOMER_CONFIRMATION. The SendGrid DNS
+  // fix surfaced that ProABD auto-sends its own ack on every new lead
+  // (previously spam-foldered), so customers received two near-identical
+  // emails. ProABD's template isn't in our control yet (Amendment No. 3),
+  // so ours stands down: set SEND_CUSTOMER_CONFIRMATION=false in Vercel.
+  // Re-enable (and localize for /es leads — currently English-only) when
+  // the messaging flow is consolidated under Amendment No. 3 Item B.
+  if (process.env.SEND_CUSTOMER_CONFIRMATION !== "false") {
   try {
     const customerEmail = buildCustomerEmail({
       leadRef,
@@ -494,6 +503,7 @@ export async function POST(req: Request) {
     // outage.
     console.error("[/api/lead] customer confirmation threw", err);
   }
+  } // end SEND_CUSTOMER_CONFIRMATION gate
 
   // Await ProABD result and stamp the ABD_Id on the Firestore doc if we
   // got it. ABD_Id is stable across the lead → quote → order lifecycle,
