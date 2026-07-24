@@ -29,11 +29,21 @@ export async function verifyHcaptcha(token: string | undefined): Promise<boolean
       body: params.toString(),
     });
 
-    if (!res.ok) return false;
-    const data = (await res.json()) as { success?: boolean };
+    if (!res.ok) {
+      console.error("[hcaptcha] siteverify HTTP", res.status);
+      return false;
+    }
+    const data = (await res.json()) as { success?: boolean; "error-codes"?: string[] };
+    if (!data.success) {
+      // Diagnostic (2026-07-24 form-down incident): surface WHY hCaptcha
+      // rejected the token. Expected values: expired-input-response,
+      // invalid-or-already-seen-response, sitekey-secret-mismatch,
+      // invalid-input-secret. No user data logged.
+      console.error("[hcaptcha] rejected:", (data["error-codes"] ?? []).join(",") || "(no codes)");
+    }
     return Boolean(data.success);
   } catch (err) {
-    console.error("[hcaptcha] verification failed", err);
+    console.error("[hcaptcha] verification failed (network)", err);
     return false;
   }
 }
