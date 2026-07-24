@@ -577,7 +577,7 @@ export default async function AdminReportPage({
 
     const fastPickup = orders.filter(
       (o) =>
-        o.availableAt && o.orderCreatedAt && o.availableAt.getTime() - o.orderCreatedAt.getTime() <= 1.5 * 86_400_000,
+        o.availableAt && o.orderCreatedAt && o.availableAt.getTime() - o.orderCreatedAt.getTime() <= 86_400_000,
     ).length;
     const fastPct = Math.round((fastPickup / orders.length) * 100);
 
@@ -624,14 +624,14 @@ export default async function AdminReportPage({
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 92 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 2 }}>
           {months.map((m) => {
             const isPartial = m.key === currentKey;
             const showVal = m.key === peak.key || isPartial;
             return (
               <div
                 key={m.key}
-                style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0 }}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", flex: 1, minWidth: 0 }}
                 title={`${m.label} — ${m.orders} orders · $${m.fees.toLocaleString("en-US")} fees${isPartial ? " (in progress)" : ""}`}
               >
                 {showVal && (
@@ -643,7 +643,9 @@ export default async function AdminReportPage({
                   style={{
                     width: "100%",
                     maxWidth: 40,
-                    height: `${Math.max(3, Math.round((m.fees / maxFees) * 100))}%`,
+                    // Pixel heights: percentage heights collapse inside an
+                    // auto-height flex column (bug caught on first deploy).
+                    height: Math.max(3, Math.round((m.fees / maxFees) * 72)),
                     background: isPartial ? STRIPE : GREEN,
                     borderRadius: "4px 4px 0 0",
                   }}
