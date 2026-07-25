@@ -393,10 +393,11 @@ async function upsertShipment(
       "Tariff",
     ]) ?? (typeof lead?.estimate?.price === "number" ? lead.estimate.price : undefined);
 
-  // Extra operational fields the export carries (confirmed live sample):
-  // carrier display name + customer deposit. Stored as bookkeeping fields
-  // (portal type doesn't model them yet; admin views can use them).
-  const carrierName = pick(raw, ["Transport.Carrier"], 120);
+  // Extra operational fields the export carries. Live-data correction
+  // (2026-07-24, 45-doc verification pass): Transport.Carrier holds the
+  // TRAILER TYPE ("Open"/"Enclosed"), not a carrier name — it feeds
+  // vehicle.enclosedRequired. Deposit stays a bookkeeping field.
+  const trailerType = pick(raw, ["Transport.Carrier"], 40);
   const depositDollars = pickNum(raw, ["Transport.Deposit"]);
 
   const bookedAt =
@@ -469,7 +470,7 @@ async function upsertShipment(
     proabdAbdId: string;
     proabdStatusId?: string;
     proabdStatusText?: string;
-    proabdCarrierName?: string;
+    proabdTrailerType?: string;
     proabdDepositCents?: number;
     updatedFromProabdAt?: unknown;
   } = {
@@ -491,7 +492,9 @@ async function upsertShipment(
       model: vModel ?? "Unknown",
       vin: vVin ?? prior?.vehicle?.vin,
       condition: vOp === "2" || vOp === "0" ? "inoperable" : "operable",
-      enclosedRequired: prior?.vehicle?.enclosedRequired ?? false,
+      enclosedRequired: trailerType
+        ? /enclosed/i.test(trailerType)
+        : prior?.vehicle?.enclosedRequired ?? false,
     },
     origin: { zip: originZip, city: originCity, state: originState, street: originStreet },
     destination: { zip: destZip, city: destCity, state: destState, street: destStreet },
@@ -521,7 +524,7 @@ async function upsertShipment(
     proabdAbdId: abdId,
     proabdStatusId: statusId,
     proabdStatusText: statusId ? PROABD_STATUS[statusId]?.text : undefined,
-    proabdCarrierName: carrierName,
+    proabdTrailerType: trailerType,
     proabdDepositCents:
       depositDollars !== undefined ? Math.round(depositDollars * 100) : undefined,
     updatedFromProabdAt: FieldValue.serverTimestamp(),
