@@ -2,6 +2,10 @@
  * One-off: dump the FIELD SHAPES (not values) of recent proabd_webhook_events
  * so the shipments parser can map Shipper/Transport subfields with confidence.
  * Prints keys + value types; only whitelisted non-PII values are shown.
+ *
+ * v2: no composite index needed — pulls the latest 300 events by
+ * received_at only (single-field) and buckets by entity_type client-side.
+ * Counts use aggregate count() queries.
  */
 import { config as loadEnv } from "dotenv";
 import { initializeApp, cert, applicationDefault, getApps } from "firebase-admin/app";
@@ -39,27 +43,45 @@ function shape(obj, prefix = "", out = []) {
   return out;
 }
 
-for (const entityType of ["order", "quote", "lead"]) {
-  const snap = await db
-    .collection("proabd_webhook_events")
-    .where("entity_type", "==", entityType)
-    .orderBy("received_at", "desc")
-    .limit(1)
-    .get();
-  console.log(`\n===== entity_type=${entityType} (${snap.size} found) =====`);
-  for (const d of snap.docs) {
-    const raw = d.data().raw_item ?? {};
-    console.log(shape(raw).join("\n"));
-  }
+// Latest 300 events, newest first — single-field orderBy, no index needed.
+const recent = await db
+  .collection("proabd_webhook_events")
+  .orderBy("received_at", "desc")
+  .limit(300)
+  .get();
+
+const samples = new Map(); // entity_type -> raw_item
+for (const d of recent.docs) {
+  const t = d.get("entity_type") ?? "(null)";
+  if (!samples.has(t)) samples.set(t, d.get("raw_item") ?? {});
 }
 
-// Count events by entity_type + parsed flag for sizing the backfill.
-const counts = {};
-const all = await db.collection("proabd_webhook_events").select("entity_type", "parsed").get();
-for (const d of all.docs) {
-  const k = `${d.get("entity_type")}|parsed=${d.get("parsed")}`;
-  counts[k] = (counts[k] ?? 0) + 1;
+for (const [t, raw] of samples) {
+  console.log(`\n===== newest entity_type=${t} =====`);
+  console.log(shape(raw).join("\n"));
 }
+if (!samples.has("order")) {
+  console.log(
+    "\n(!) No ORDER event in the latest 300 — the order-price/VIN field names " +
+    "are still unconfirmed. Re-run after the next booking.",
+  );
+}
+
+// Aggregate counts — no composite index required.
+const col = db.collection("proabd_webhook_events");
+const [total, unparsed, leads, quotes, orders] = await Promise.all([
+  col.count().get(),
+  col.where("parsed", "==", false).count().get(),
+  col.where("entity_type", "==", "lead").count().get(),
+  col.where("entity_type", "==", "quote").count().get(),
+  col.where("entity_type", "==", "order").count().get(),
+]);
 console.log("\n===== event counts =====");
-console.log(counts, "total:", all.size);
+console.log({
+  total: total.data().count,
+  unparsed: unparsed.data().count,
+  lead: leads.data().count,
+  quote: quotes.data().count,
+  order: orders.data().count,
+});
 process.exit(0);

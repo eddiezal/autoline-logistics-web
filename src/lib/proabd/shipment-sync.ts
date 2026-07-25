@@ -356,6 +356,10 @@ async function upsertShipment(
   const vVin = pick(veh as Raw, ["v_vin", "VIN", "Vin", "vin"], 30);
   const vOp = pick(veh as Raw, ["veh_op", "Operable", "operable"], 10);
 
+  // Street addresses are populated on ORDER-stage records (confirmed from
+  // live export sample 2026-07-24) — nice for the portal address display.
+  const originStreet = pick(raw, ["Transport.Origin.Address_1"], 200);
+  const destStreet = pick(raw, ["Transport.Destination.Address_1"], 200);
   const originCity =
     pick(raw, ["Transport.Origin.City", "Origin.City", "Origin_City"], 100) ?? "";
   const originState =
@@ -388,6 +392,12 @@ async function upsertShipment(
       "Total_Tariff",
       "Tariff",
     ]) ?? (typeof lead?.estimate?.price === "number" ? lead.estimate.price : undefined);
+
+  // Extra operational fields the export carries (confirmed live sample):
+  // carrier display name + customer deposit. Stored as bookkeeping fields
+  // (portal type doesn't model them yet; admin views can use them).
+  const carrierName = pick(raw, ["Transport.Carrier"], 120);
+  const depositDollars = pickNum(raw, ["Transport.Deposit"]);
 
   const bookedAt =
     ptToIso(pick(raw, ["Booked_Date"], 40)) ??
@@ -459,6 +469,8 @@ async function upsertShipment(
     proabdAbdId: string;
     proabdStatusId?: string;
     proabdStatusText?: string;
+    proabdCarrierName?: string;
+    proabdDepositCents?: number;
     updatedFromProabdAt?: unknown;
   } = {
     id: orderNumber,
@@ -481,8 +493,8 @@ async function upsertShipment(
       condition: vOp === "2" || vOp === "0" ? "inoperable" : "operable",
       enclosedRequired: prior?.vehicle?.enclosedRequired ?? false,
     },
-    origin: { zip: originZip, city: originCity, state: originState },
-    destination: { zip: destZip, city: destCity, state: destState },
+    origin: { zip: originZip, city: originCity, state: originState, street: originStreet },
+    destination: { zip: destZip, city: destCity, state: destState, street: destStreet },
     tier: prior?.tier ?? (lead?.tier as Shipment["tier"] | undefined) ?? "standby",
     priceLockedCents:
       prior?.priceLockedCents && prior.priceLockedCents > 0
@@ -509,6 +521,9 @@ async function upsertShipment(
     proabdAbdId: abdId,
     proabdStatusId: statusId,
     proabdStatusText: statusId ? PROABD_STATUS[statusId]?.text : undefined,
+    proabdCarrierName: carrierName,
+    proabdDepositCents:
+      depositDollars !== undefined ? Math.round(depositDollars * 100) : undefined,
     updatedFromProabdAt: FieldValue.serverTimestamp(),
   };
 
