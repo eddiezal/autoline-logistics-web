@@ -56,6 +56,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { FieldValue } from "firebase-admin/firestore";
 import { getAdminDb } from "@/lib/firebase/admin";
+import { sweepShipmentSync } from "@/lib/proabd/shipment-sync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -295,11 +296,31 @@ export async function POST(req: Request) {
     );
   }
 
+  // ---- Portal shipment sync (Amendment 3 Item E, 2026-07-24) ------------
+  // Sweep the just-persisted events (plus any backlog) into `shipments`
+  // docs so the customer portal reflects CRM status changes within the
+  // webhook's 1-5 minute delivery cadence — no cron dependency. Non-fatal:
+  // the daily sync-shipments cron re-sweeps anything this misses.
+  let shipmentsSynced = 0;
+  try {
+    const sweep = await sweepShipmentSync({ limit: 300 });
+    shipmentsSynced = sweep.shipmentsUpserted;
+    if (sweep.errors > 0) {
+      console.warn("[proabd webhook] shipment sync had record errors", sweep);
+    }
+  } catch (err) {
+    console.warn(
+      "[proabd webhook] shipment sync failed (non-fatal)",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
+
   return NextResponse.json({
     ok: true,
     persisted: true,
     batch_id: batchId,
     count: successCount,
     assignments_stamped: stamped,
+    shipments_synced: shipmentsSynced,
   });
 }
