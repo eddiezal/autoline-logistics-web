@@ -57,6 +57,48 @@ export async function GET(req: Request) {
     { scanned: 0, recordsSeen: 0, shipmentsUpserted: 0, skippedPreOrder: 0, errors: 0 },
   );
 
-  console.log("[sync-shipments]", JSON.stringify({ ...total, sweeps: sweeps.length, more }));
-  return NextResponse.json({ ok: true, ...total, sweeps: sweeps.length, backlogRemaining: more });
+  // ---- Webhook liveness check (added 2026-07-27 after the Jul 22-27
+  // silent stall: Superflo posted to the non-www URL, got 301s, dropped
+  // every delivery for 5 days and nobody noticed). If the newest webhook
+  // event is older than the threshold, scream in the logs — Vercel log
+  // alerts / the weekly digest can pick this up. Superflo posts every
+  // 1-5 min during business activity; >12h of silence spanning a weekday
+  // is almost certainly a broken subscription, not a quiet business.
+  const STALE_THRESHOLD_MS = 12 * 60 * 60 * 1000;
+  let webhookStale = false;
+  let lastDeliveryIso: string | null = null;
+  try {
+    const { getAdminDb } = await import("@/lib/firebase/admin");
+    const newest = await getAdminDb()
+      .collection("proabd_webhook_events")
+      .orderBy("received_at", "desc")
+      .limit(1)
+      .get();
+    const ts = newest.docs[0]?.get("received_at")?.toDate?.() as Date | undefined;
+    if (ts) {
+      lastDeliveryIso = ts.toISOString();
+      webhookStale = Date.now() - ts.getTime() > STALE_THRESHOLD_MS;
+    } else {
+      webhookStale = true; // no events at all — definitely broken
+    }
+    if (webhookStale) {
+      console.error(
+        `[sync-shipments] ⚠️ WEBHOOK STALE: last Superflo delivery ${lastDeliveryIso ?? "NEVER"} ` +
+        `(threshold ${STALE_THRESHOLD_MS / 3_600_000}h). Check the subscription URL (must include www) ` +
+        `and secret with Superflo. See claude/proabd-createlead-integration-notes.md GOTCHA 5.`,
+      );
+    }
+  } catch (err) {
+    console.warn("[sync-shipments] liveness check failed (non-fatal)", err);
+  }
+
+  console.log("[sync-shipments]", JSON.stringify({ ...total, sweeps: sweeps.length, more, webhookStale, lastDeliveryIso }));
+  return NextResponse.json({
+    ok: true,
+    ...total,
+    sweeps: sweeps.length,
+    backlogRemaining: more,
+    webhookStale,
+    lastDelivery: lastDeliveryIso,
+  });
 }
