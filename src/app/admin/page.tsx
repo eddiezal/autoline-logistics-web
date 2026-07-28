@@ -37,7 +37,6 @@
  *
  * The previous dashboard is preserved at src/app/admin/_legacy/ per §1.
  */
-import { Fragment } from "react";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
 import { classifyRecord, type RecordOutcome } from "@/lib/proabd/statuses";
@@ -222,6 +221,8 @@ const ADMIN_TIP_CSS = `
   text-transform:none;line-height:1.55;padding:8px 11px;border-radius:8px;white-space:normal;text-align:left}
 .tip:hover::before{content:"";position:absolute;left:12px;bottom:calc(100% + 2px);z-index:60;
   border:5px solid transparent;border-top-color:#0A1E14}
+.navcap{transition:color .12s}
+.navcap:hover{color:#0A1E14 !important}
 `;
 
 const PT = "America/Los_Angeles";
@@ -440,6 +441,25 @@ const VIEWS = [
   { id: "business", label: "Business", group: "Economics" },
 ] as const;
 type ViewId = (typeof VIEWS)[number]["id"];
+
+/**
+ * Nav clusters (2026-07-28 v2): consecutive VIEWS sharing a group render as
+ * one flex unit — a tiny uppercase caption ABOVE its pill row, pills
+ * bottom-aligned across the bar. Labels-above never read as buttons (the
+ * inline captions did), each cluster wraps as a unit on narrow windows, and
+ * the caption itself is a link to the group's first tab.
+ */
+const NAV_GROUPS = VIEWS.reduce<{ group: string; views: (typeof VIEWS)[number][] }[]>(
+  (acc, v) => {
+    const last = acc[acc.length - 1];
+    if (last && last.group === v.group && v.group !== "") last.views.push(v);
+    else acc.push({ group: v.group, views: [v] });
+    return acc;
+  },
+  [],
+);
+
+const viewHref = (id: ViewId) => (id === "overview" ? "/admin" : `/admin?view=${id}`);
 
 const BIZ_TABS: { id: BusinessTab; label: string }[] = [
   { id: "repeats", label: "Repeats" },
@@ -3212,39 +3232,60 @@ export default async function AdminReportPage({
         </div>
       </header>
 
-      <nav style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16, alignItems: "center" }}>
-        {VIEWS.map((v, i) => (
-          <Fragment key={v.id}>
-            {v.group !== "" && (i === 0 || VIEWS[i - 1].group !== v.group) && (
-              <span
+      <nav
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          columnGap: 14,
+          rowGap: 10,
+          marginBottom: 16,
+          alignItems: "flex-end",
+        }}
+      >
+        {NAV_GROUPS.map((g) => (
+          <div
+            key={g.group || g.views[0].id}
+            style={{ display: "flex", flexDirection: "column", gap: 3 }}
+          >
+            {g.group !== "" && (
+              <a
+                className="navcap"
+                href={viewHref(g.views[0].id)}
+                title={`Jump to ${g.views[0].label}`}
                 style={{
                   fontSize: 9.5,
                   fontWeight: 800,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   color: MUTED,
-                  marginLeft: i === 0 ? 0 : 6,
+                  textDecoration: "none",
+                  paddingLeft: 6,
                 }}
               >
-                {v.group}
-              </span>
+                {g.group}
+              </a>
             )}
-            <a
-              href={v.id === "overview" ? "/admin" : `/admin?view=${v.id}`}
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                textDecoration: "none",
-                padding: "6px 12px",
-                borderRadius: 999,
-                color: view === v.id ? "#fff" : INK,
-                background: view === v.id ? GREEN : "var(--color-gray-100)",
-              }}
-              aria-current={view === v.id ? "page" : undefined}
-            >
-              {v.label}
-            </a>
-          </Fragment>
+            <div style={{ display: "flex", gap: 6 }}>
+              {g.views.map((v) => (
+                <a
+                  key={v.id}
+                  href={viewHref(v.id)}
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    padding: "6px 12px",
+                    borderRadius: 999,
+                    color: view === v.id ? "#fff" : INK,
+                    background: view === v.id ? GREEN : "var(--color-gray-100)",
+                  }}
+                  aria-current={view === v.id ? "page" : undefined}
+                >
+                  {v.label}
+                </a>
+              ))}
+            </div>
+          </div>
         ))}
         <a
           href="/admin/report"
