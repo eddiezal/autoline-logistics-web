@@ -139,7 +139,10 @@ function ptDateString(d: Date): string {
   return d.toLocaleDateString("en-CA", { timeZone: "America/Los_Angeles" });
 }
 
-let cache: { at: number; result: AdsResult } | null = null;
+// Keyed by the window's since-date: /admin (PROABD_START) and /admin/report
+// (current month start) both call this with different windows — a single
+// unkeyed entry would silently serve one page the other's numbers.
+const cacheByWindow = new Map<string, { at: number; result: AdsResult }>();
 
 /**
  * Campaign spend/clicks/conversions + per-action conversion totals from
@@ -152,6 +155,8 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
 
   // Errors are cached briefly (60s) so a transient OAuth/API hiccup does
   // not blank the card for the full TTL; good results use the normal TTL.
+  const windowKey = ptDateString(since);
+  const cache = cacheByWindow.get(windowKey);
   if (cache) {
     const age = Date.now() - cache.at;
     const ttl = cache.result.state === "error" ? 60_000 : CACHE_TTL_MS;
@@ -161,7 +166,7 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
   let result: AdsResult;
   try {
     const token = await accessToken();
-    const sinceStr = ptDateString(since);
+    const sinceStr = windowKey;
     const untilStr = ptDateString(new Date());
     const window = `segments.date BETWEEN '${sinceStr}' AND '${untilStr}'`;
 
@@ -226,6 +231,6 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
     result = { state: "error", message: err instanceof Error ? err.message : String(err) };
   }
 
-  cache = { at: Date.now(), result };
+  cacheByWindow.set(windowKey, { at: Date.now(), result });
   return result;
 }

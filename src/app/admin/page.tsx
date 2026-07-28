@@ -40,6 +40,13 @@
 import { getAdminDb } from "@/lib/firebase/admin";
 import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
 import { classifyRecord, type RecordOutcome } from "@/lib/proabd/statuses";
+import { roadMilesBetweenZips } from "@/lib/geo/zip3";
+import {
+  tabRows,
+  snowbirdOrderCount,
+  type BizOrder,
+  type BusinessTab,
+} from "@/lib/admin/business";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -273,16 +280,24 @@ const VIEWS = [
   { id: "lanes", label: "Lane activity" },
   { id: "opportunities", label: "Opportunities" },
   { id: "behavior", label: "Behavior" },
+  { id: "business", label: "Business" },
 ] as const;
 type ViewId = (typeof VIEWS)[number]["id"];
+
+const BIZ_TABS: { id: BusinessTab; label: string }[] = [
+  { id: "repeats", label: "Repeats" },
+  { id: "snowbirds", label: "Snowbirds" },
+  { id: "b2b", label: "B2B" },
+];
 
 export default async function AdminReportPage({
   searchParams,
 }: {
-  searchParams: Promise<{ view?: string }>;
+  searchParams: Promise<{ view?: string; tab?: string }>;
 }) {
   const sp = await searchParams;
   const view: ViewId = (VIEWS.find((v) => v.id === sp.view)?.id ?? "overview") as ViewId;
+  const bizTab: BusinessTab = (BIZ_TABS.find((t) => t.id === sp.tab)?.id ?? "repeats") as BusinessTab;
 
   const now = new Date();
   const d30 = new Date(now.getTime() - 30 * 86_400_000);
@@ -388,34 +403,30 @@ export default async function AdminReportPage({
   // renders fully without credentials; the readiness row tells the truth.
   const ads: AdsResult = await fetchAdsStats(PROABD_START);
 
-  // ProABD order history (Business Baseline card). Populated by
-  // scripts/import-orders.mjs (monthly re-run until the webhook parser
-  // writes orders automatically). Card renders nothing if empty.
-  interface OrderRow {
-    email: string;
-    originState: string;
-    destState: string;
-    leadCreatedAt: Date | null;
-    orderCreatedAt: Date | null;
-    availableAt: Date | null;
-    price: number;
-    deposit: number;
-  }
-  let orders: OrderRow[] = [];
+  // ProABD order history (Business Baseline card + Business view + lane
+  // economics). Populated by scripts/import-orders.mjs (monthly re-run until
+  // the webhook parser writes orders automatically). Full docs, not select():
+  // the Business view needs contact + city/zip fields and the collection is
+  // a few hundred docs.
+  let orders: BizOrder[] = [];
   try {
-    const oSnap = await getAdminDb()
-      .collection("orders")
-      .select("email", "originState", "destState", "leadCreatedAt", "orderCreatedAt", "availableAt", "price", "deposit")
-      .get();
+    const oSnap = await getAdminDb().collection("orders").get();
     orders = oSnap.docs.map((doc) => {
       /* eslint-disable @typescript-eslint/no-explicit-any */
       const d: any = doc.data();
       /* eslint-enable @typescript-eslint/no-explicit-any */
       return {
+        orderId: String(d.orderId ?? doc.id),
+        firstName: String(d.firstName ?? ""),
+        lastName: String(d.lastName ?? ""),
         email: String(d.email ?? ""),
+        phone: String(d.phone ?? ""),
+        originCity: String(d.originCity ?? ""),
         originState: String(d.originState ?? ""),
+        originZip: String(d.originZip ?? ""),
+        destCity: String(d.destCity ?? ""),
         destState: String(d.destState ?? ""),
-        leadCreatedAt: d.leadCreatedAt?.toDate?.() ?? null,
+        destZip: String(d.destZip ?? ""),
         orderCreatedAt: d.orderCreatedAt?.toDate?.() ?? null,
         availableAt: d.availableAt?.toDate?.() ?? null,
         price: Number(d.price) || 0,
@@ -1262,6 +1273,7 @@ export default async function AdminReportPage({
   }
 
   function Lanes() {
+    // ── Lead demand (last 30 days) ──
     const laneAgg = new Map<string, { n: number; priced: number; sum: number }>();
     for (const r of all) {
       if (r.isCall || r.blocked) continue;
@@ -1274,49 +1286,166 @@ export default async function AdminReportPage({
       }
       laneAgg.set(lane, a);
     }
-    const lanes = [...laneAgg.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 12);
-    const evidence = (n: number) => (n >= 10 ? "Emerging pattern" : n >= 3 ? "Small sample" : "Very small sample");
+
+    // ── Booked history (ProABD orders, Mar–now) — the C1 merge ──
+    const median = (xs: number[]) => {
+      if (xs.length === 0) return null;
+      const s = [...xs].sort((a, b) => a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    };
+    const hist = new Map<string, { booked: number; prices: number[]; ppms: number[] }>();
+    for (const o of orders) {
+      if (!o.originState || !o.destState) continue;
+      const lane = o.originState + " → " + o.destState;
+      const h = hist.get(lane) ?? { booked: 0, prices: [], ppms: [] };
+      h.booked++;
+      if (o.price > 0) {
+        h.prices.push(o.price);
+        const miles = roadMilesBetweenZips(o.originZip, o.destZip);
+        if (miles !== null) h.ppms.push(o.price / miles);
+      }
+      hist.set(lane, h);
+    }
+
+    // Corridor landing pages that exist on the site today (src/app/[locale]/
+    // corridors/*). Matched as unordered state pairs — a CA→TX page serves
+    // TX→CA demand too.
+    const CORRIDOR_PAIRS = new Set(
+      ["CA|TX", "CA|FL", "CA|NY", "CA|GA", "CA|IL", "CA|NC", "CA|AK", "CA|HI", "NY|FL", "TX|FL"].flatMap(
+        (p) => {
+          const [a, b] = p.split("|");
+          return [a + "|" + b, b + "|" + a];
+        },
+      ),
+    );
+
+    // Union of demand + history, ranked by current leads then booked depth.
+    const laneKeys = new Set<string>([...laneAgg.keys(), ...hist.keys()]);
+    interface LaneRow {
+      lane: string;
+      leads: number;
+      quoted: number;
+      booked: number;
+      medPrice: number | null;
+      medPpm: number | null;
+      flags: { text: string; tone: "good" | "gap" | "info" }[];
+    }
+    const rows: LaneRow[] = [...laneKeys].map((lane) => {
+      const a = laneAgg.get(lane) ?? { n: 0, priced: 0, sum: 0 };
+      const h = hist.get(lane) ?? { booked: 0, prices: [], ppms: [] };
+      return {
+        lane,
+        leads: a.n,
+        quoted: a.sum,
+        booked: h.booked,
+        medPrice: median(h.prices),
+        medPpm: median(h.ppms),
+        flags: [],
+      };
+    });
+    rows.sort((x, y) => y.leads - x.leads || y.booked - x.booked);
+    const top = rows.slice(0, 18);
+
+    // Verdict flags (the C3 "verdict line", folded into C1 as chips).
+    const bestPpm = top
+      .filter((r) => r.booked >= 3 && r.medPpm !== null)
+      .reduce<LaneRow | null>((best, r) => (best === null || (r.medPpm ?? 0) > (best.medPpm ?? 0) ? r : best), null);
+    for (const r of top) {
+      const [o, d] = r.lane.split(" → ");
+      const hasPage = CORRIDOR_PAIRS.has(o + "|" + d);
+      if (r.booked >= 8 && (r.medPrice ?? 0) >= 1000) r.flags.push({ text: "Proven earner", tone: "good" });
+      if (bestPpm !== null && r.lane === bestPpm.lane) r.flags.push({ text: "Best $/mi", tone: "good" });
+      if (hasPage) r.flags.push({ text: "Corridor page ✓", tone: "info" });
+      else if (o !== d && (r.booked >= 3 || r.leads >= 3)) r.flags.push({ text: "No corridor page — gap", tone: "gap" });
+      if (r.leads >= 3 && r.booked === 0) r.flags.push({ text: "New demand — no booked history", tone: "info" });
+      if (r.booked >= 4 && r.leads === 0) r.flags.push({ text: "Books historically — no current leads", tone: "gap" });
+    }
+
+    const flagChip = (tone: "good" | "gap" | "info"): React.CSSProperties => ({
+      display: "inline-block",
+      fontSize: 10.5,
+      fontWeight: 600,
+      borderRadius: 999,
+      padding: "1px 8px",
+      marginRight: 4,
+      marginBottom: 2,
+      whiteSpace: "nowrap",
+      color: tone === "good" ? "#065f46" : tone === "gap" ? "#92400e" : MUTED,
+      background: tone === "good" ? "#ecfdf5" : tone === "gap" ? "#fffbeb" : "var(--color-gray-100)",
+      border: `1px solid ${tone === "good" ? "#a7f3d0" : tone === "gap" ? "#fde68a" : "var(--color-gray-200)"}`,
+    });
+
+    const hasHistory = orders.length > 0;
 
     return (
       <>
         <div style={{ ...SUBTLE, marginBottom: 12 }}>
-          <strong style={{ color: "#1a1a1a" }}>Emerging lane activity · last 30 days of leads</strong>{" "}
-          — descriptive demand only; no scaling decisions yet. Carrier pay, booking, dispatch
-          time, cancellation, and margin are not yet included; average quote is customer-facing
-          price, not economics.
+          <strong style={{ color: "#1a1a1a" }}>Lane activity · leads (last 30 days) merged with booked
+          history (ProABD orders since Mar)</strong>{" "}
+          — one row = the whole truth of a lane. Quoted is customer-facing quote value, not
+          revenue; Median $ and $/mi are booked customer price (ZIP3-centroid road miles,
+          ±~2% median). Local moves under ~25 mi are excluded from $/mi.
         </div>
+        {!hasHistory && (
+          <div style={ALERT}>
+            Booked-history columns are empty because the <code>orders</code> collection has no
+            data — run <code>scripts/import-orders.mjs</code> with the latest ProABD export.
+          </div>
+        )}
         <section style={{ ...CARD, overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 520 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 640 }}>
             <thead>
               <tr>
-                <th style={TH}>Directional lane</th>
-                <th style={{ ...TH, textAlign: "right" }}>Leads</th>
-                <th style={{ ...TH, textAlign: "right" }}>Priced forms</th>
-                <th style={{ ...TH, textAlign: "right" }}>Avg quote</th>
-                <th style={TH}>Evidence</th>
-                <th style={TH}>Current use</th>
+                <th style={TH}>Lane</th>
+                <th style={{ ...TH, textAlign: "right" }}>Leads 30d</th>
+                <th style={{ ...TH, textAlign: "right" }}>Quoted</th>
+                <th style={{ ...TH, textAlign: "right", color: GREEN }}>Booked</th>
+                <th style={{ ...TH, textAlign: "right", color: GREEN }}>Median $</th>
+                <th style={{ ...TH, textAlign: "right", color: GREEN }}>$/mi</th>
+                <th style={TH}>Signals</th>
               </tr>
             </thead>
             <tbody>
-              {lanes.map(([lane, a]) => (
-                <tr key={lane} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                  <td style={{ ...TD, fontWeight: 700 }}>{lane}</td>
-                  <td style={{ ...TDR, fontWeight: 800, color: INK }}>{a.n}</td>
-                  <td style={TDR}>{a.priced}</td>
-                  <td style={TDR}>{a.priced ? money(a.sum / a.priced) : "—"}</td>
-                  <td style={{ ...TD, color: a.n >= 10 ? INK : MUTED }}>{evidence(a.n)} (n={a.n})</td>
-                  <td style={{ ...TD, color: MUTED }}>Monitor demand</td>
+              {top.map((r) => (
+                <tr key={r.lane} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={{ ...TD, fontWeight: 700 }}>{r.lane}</td>
+                  <td style={{ ...TDR, fontWeight: 800, color: r.leads > 0 ? INK : MUTED }}>
+                    {r.leads || "—"}
+                  </td>
+                  <td style={TDR}>{r.quoted > 0 ? money(r.quoted) : "—"}</td>
+                  <td style={{ ...TDR, fontWeight: 700, color: r.booked > 0 ? "#065f46" : MUTED }}>
+                    {r.booked || "—"}
+                  </td>
+                  <td style={TDR}>{r.medPrice !== null ? money(r.medPrice) : "—"}</td>
+                  <td style={TDR}>
+                    {r.medPpm !== null ? "$" + r.medPpm.toFixed(2) : "—"}
+                  </td>
+                  <td style={{ ...TD, minWidth: 150 }}>
+                    {r.flags.length > 0
+                      ? r.flags.map((f) => (
+                          <span key={f.text} style={flagChip(f.tone)}>
+                            {f.text}
+                          </span>
+                        ))
+                      : null}
+                  </td>
                 </tr>
               ))}
-              {lanes.length === 0 && (
+              {top.length === 0 && (
                 <tr>
-                  <td colSpan={6} style={{ ...TD, color: MUTED }}>
-                    No routed leads yet.
+                  <td colSpan={7} style={{ ...TD, color: MUTED }}>
+                    No routed leads or booked history yet.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
+          <div style={{ ...SUBTLE, marginTop: 10 }}>
+            Top {top.length} lanes by current lead volume, then booked depth. Small samples
+            everywhere — read medians as direction, not gospel. Corridor-page flags reflect
+            pages live on the site today.
+          </div>
         </section>
       </>
     );
@@ -1662,6 +1791,232 @@ export default async function AdminReportPage({
     );
   }
 
+  function Business() {
+    // B3 layout — "numbers | people": charts in a narrow left rail, one tall
+    // working customer table with tabs + export on the right. This view's
+    // real job is outreach: when snowbird season hits, this is the screen
+    // Ginger works from.
+    if (orders.length === 0) {
+      return (
+        <div style={ALERT}>
+          The Business view needs the ProABD orders import — run{" "}
+          <code>scripts/import-orders.mjs</code> with the latest export, then reload.
+        </div>
+      );
+    }
+
+    const monthKey = (d: Date) =>
+      d.toLocaleDateString("en-CA", { timeZone: PT, year: "numeric", month: "2-digit" });
+    const monthLabel = (d: Date) => d.toLocaleDateString("en-US", { timeZone: PT, month: "short" });
+
+    // ── Left rail chart 1: fees / month ──
+    const monthly = new Map<string, { label: string; fees: number }>();
+    for (const o of orders) {
+      if (!o.orderCreatedAt) continue;
+      const k = monthKey(o.orderCreatedAt);
+      const m = monthly.get(k) ?? { label: monthLabel(o.orderCreatedAt), fees: 0 };
+      m.fees += o.deposit;
+      monthly.set(k, m);
+    }
+    const months = [...monthly.keys()].sort().map((k) => ({ key: k, ...monthly.get(k)! }));
+    const maxFees = Math.max(...months.map((m) => m.fees), 1);
+    const currentKey = monthKey(now);
+
+    // ── Left rail chart 2: $ / mile by distance band (booked price) ──
+    const BANDS: { label: string; lo: number; hi: number }[] = [
+      { label: "≤250", lo: 25, hi: 250 },
+      { label: "250–500", lo: 250, hi: 500 },
+      { label: "500–1K", lo: 500, hi: 1000 },
+      { label: "1–1.5K", lo: 1000, hi: 1500 },
+      { label: "1.5–2K", lo: 1500, hi: 2000 },
+      { label: "2–2.5K", lo: 2000, hi: 2500 },
+      { label: "2.5K+", lo: 2500, hi: Infinity },
+    ];
+    const bandPpms: number[][] = BANDS.map(() => []);
+    for (const o of orders) {
+      if (o.price <= 0) continue;
+      const miles = roadMilesBetweenZips(o.originZip, o.destZip);
+      if (miles === null) continue;
+      const idx = BANDS.findIndex((b) => miles > b.lo && miles <= b.hi);
+      if (idx >= 0) bandPpms[idx].push(o.price / miles);
+    }
+    const medianOf = (xs: number[]) => {
+      if (xs.length === 0) return null;
+      const s = [...xs].sort((a, b) => a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    };
+    const bands = BANDS.map((b, i) => ({ ...b, ppm: medianOf(bandPpms[i]), n: bandPpms[i].length }));
+    const maxPpm = Math.max(...bands.map((b) => b.ppm ?? 0), 0.01);
+
+    // ── Right: tabbed customer table ──
+    const rows = tabRows(orders, bizTab);
+    const counts: Record<BusinessTab, number> = {
+      repeats: tabRows(orders, "repeats").length,
+      snowbirds: tabRows(orders, "snowbirds").length,
+      b2b: tabRows(orders, "b2b").length,
+    };
+    const fmtLast = (d: Date | null) =>
+      d ? d.toLocaleDateString("en-US", { timeZone: PT, month: "short", day: "numeric" }) : "—";
+    const STRIPE = `repeating-linear-gradient(135deg, ${GREEN} 0 4px, #6FCB8A 4px 8px)`;
+
+    return (
+      <>
+        <div style={{ ...SUBTLE, marginBottom: 12 }}>
+          <strong style={{ color: "#1a1a1a" }}>The book as a business · ProABD orders since Mar</strong>{" "}
+          — fees are booking deposits (Auto Line revenue). Repeats = ≥2 orders on one email.
+          Snowbird targets left FL/AZ in spring — the October outreach list ({snowbirdOrderCount(orders)}{" "}
+          qualifying orders across {counts.snowbirds} customers). B2B = company/org mailbox or
+          business name. Contact PII is here on purpose — this screen is an outreach tool.
+        </div>
+
+        <div style={{ display: "flex", gap: 12, alignItems: "flex-start", flexWrap: "wrap" }}>
+          {/* ── Left rail ── */}
+          <div style={{ flex: "0 0 218px", display: "flex", flexDirection: "column", gap: 12 }}>
+            <section style={CARD}>
+              <h2 style={H2}>Fees / mo</h2>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 3, marginTop: 8 }}>
+                {months.map((m) => (
+                  <div
+                    key={m.key}
+                    style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end" }}
+                    title={`${m.label} — $${m.fees.toLocaleString("en-US")}`}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        maxWidth: 26,
+                        height: Math.max(3, Math.round((m.fees / maxFees) * 56)),
+                        background: m.key === currentKey ? STRIPE : GREEN,
+                        borderRadius: "3px 3px 0 0",
+                      }}
+                    />
+                    <div style={{ fontSize: 9.5, color: MUTED, marginTop: 3 }}>{m.label}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section style={CARD}>
+              <h2 style={H2}>$ / mile by distance</h2>
+              <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 5 }}>
+                {bands.map((b) => (
+                  <div key={b.label} style={{ display: "flex", alignItems: "center", gap: 6 }} title={`${b.label} mi — n=${b.n}`}>
+                    <div style={{ fontSize: 10, color: MUTED, width: 48, textAlign: "right", whiteSpace: "nowrap" }}>{b.label}</div>
+                    <div style={{ flex: 1, background: "var(--color-gray-100)", borderRadius: 3, height: 10 }}>
+                      {b.ppm !== null && (
+                        <div
+                          style={{
+                            width: `${Math.round((b.ppm / maxPpm) * 100)}%`,
+                            height: "100%",
+                            background: GREEN,
+                            borderRadius: 3,
+                          }}
+                        />
+                      )}
+                    </div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: INK, width: 38 }}>
+                      {b.ppm !== null ? "$" + b.ppm.toFixed(2) : "—"}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 10, color: MUTED, marginTop: 8 }}>
+                Median booked price per road mile (ZIP3 estimate). Short moves price steep;
+                mid-long routes flatten — the forward-pricing opportunity.
+              </div>
+            </section>
+          </div>
+
+          {/* ── Right: working customer table ── */}
+          <section style={{ ...CARD, flex: "1 1 420px", minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10, flexWrap: "wrap" }}>
+              {BIZ_TABS.map((t) => (
+                <a
+                  key={t.id}
+                  href={`/admin?view=business&tab=${t.id}`}
+                  style={{
+                    fontSize: 12.5,
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    padding: "4px 12px",
+                    borderRadius: 999,
+                    color: bizTab === t.id ? "#fff" : INK,
+                    background: bizTab === t.id ? GREEN : "var(--color-gray-100)",
+                  }}
+                >
+                  {counts[t.id]} {t.label}
+                </a>
+              ))}
+              <a
+                href={`/admin/export?tab=${bizTab}`}
+                style={{ marginLeft: "auto", fontSize: 12.5, fontWeight: 600, color: GREEN, textDecoration: "none" }}
+              >
+                Export CSV ↓
+              </a>
+            </div>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 480 }}>
+                <thead>
+                  <tr>
+                    <th style={TH}>Customer</th>
+                    {bizTab === "b2b" && <th style={TH}>Signal</th>}
+                    <th style={TH}>Contact</th>
+                    {bizTab === "snowbirds" ? (
+                      <>
+                        <th style={TH}>Route</th>
+                        <th style={{ ...TH, textAlign: "right" }}>Paid</th>
+                      </>
+                    ) : (
+                      <>
+                        <th style={{ ...TH, textAlign: "right" }}>Orders</th>
+                        <th style={{ ...TH, textAlign: "right" }}>Fees</th>
+                      </>
+                    )}
+                    <th style={TH}>Last</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((c) => (
+                    <tr key={c.email || c.name} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                      <td style={{ ...TD, fontWeight: 700, whiteSpace: "nowrap" }}>{c.name}</td>
+                      {bizTab === "b2b" && (
+                        <td style={{ ...TD, color: MUTED, whiteSpace: "nowrap" }}>{c.bizSignal}</td>
+                      )}
+                      <td style={{ ...TD, color: MUTED, fontSize: 11.5 }}>
+                        {c.email}
+                        {c.phone ? <> · {c.phone}</> : null}
+                      </td>
+                      {bizTab === "snowbirds" ? (
+                        <>
+                          <td style={{ ...TD, whiteSpace: "nowrap" }}>{c.route}</td>
+                          <td style={{ ...TDR, fontWeight: 700 }}>{money(c.lastPaid)}</td>
+                        </>
+                      ) : (
+                        <>
+                          <td style={{ ...TDR, fontWeight: 800, color: INK }}>{c.orders}</td>
+                          <td style={{ ...TDR, fontWeight: 700 }}>{money(c.fees)}</td>
+                        </>
+                      )}
+                      <td style={{ ...TD, color: MUTED, whiteSpace: "nowrap" }}>{fmtLast(c.lastOrderAt)}</td>
+                    </tr>
+                  ))}
+                  {rows.length === 0 && (
+                    <tr>
+                      <td colSpan={6} style={{ ...TD, color: MUTED }}>
+                        No customers match this tab yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </>
+    );
+  }
+
   const readiness: { group: string; unlocks: string; state: string; dependency: string }[] = [
     { group: "Post-fix campaign attribution", unlocks: "Exact campaign/ad-group reporting", state: "Observed (since Jul 20 fix)", dependency: "—" },
     { group: "Canonical ProABD status map", unlocks: "Authoritative booked/lost + close rates", state: "LIVE (Brian, Jul 22)", dependency: "—" },
@@ -1707,7 +2062,7 @@ export default async function AdminReportPage({
         </div>
       </header>
 
-      <nav style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+      <nav style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16, alignItems: "center" }}>
         {VIEWS.map((v) => (
           <a
             key={v.id}
@@ -1726,6 +2081,21 @@ export default async function AdminReportPage({
             {v.label}
           </a>
         ))}
+        <a
+          href="/admin/report"
+          style={{
+            marginLeft: "auto",
+            fontSize: 13,
+            fontWeight: 600,
+            textDecoration: "none",
+            padding: "6px 12px",
+            borderRadius: 999,
+            color: GREEN,
+            border: `1px solid ${GREEN}`,
+          }}
+        >
+          Monthly report →
+        </a>
       </nav>
 
       {loadError ? (
@@ -1740,6 +2110,7 @@ export default async function AdminReportPage({
           {view === "lanes" && <Lanes />}
           {view === "opportunities" && <Opportunities />}
           {view === "behavior" && <Behavior />}
+          {view === "business" && <Business />}
 
           <details style={{ ...CARD, marginTop: 16 }}>
             <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>
