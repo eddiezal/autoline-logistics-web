@@ -120,7 +120,7 @@ export async function GET(req: Request) {
   textLines.push("");
   textLines.push(`Total web leads this week: ${totalLeads}`);
   if (avgEstimate != null) {
-    textLines.push(`Average estimated quote (with 22.5% markup): $${avgEstimate.toLocaleString()}`);
+    textLines.push(`Average estimated quote (flat-fee model: carrier + $150 + 9%, capped $400): $${avgEstimate.toLocaleString()}`);
   }
   textLines.push("");
   if (Object.keys(tierCount).length) {
@@ -218,7 +218,7 @@ export async function GET(req: Request) {
     `<div style="font-size:14px;opacity:0.85;margin-top:4px;">${weekLabel}</div>` +
     "</td></tr><tr><td style=\"padding:24px;\">" +
     (avgEstimate != null
-      ? `<div style="background:${SOFT};border-left:3px solid ${ACCENT};padding:14px 16px;border-radius:0 6px 6px 0;margin-bottom:18px;"><div style="font-size:11px;color:${ACCENT};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Average estimated quote</div><div style="font-size:24px;font-weight:800;color:${PINE};margin-top:4px;">$${avgEstimate.toLocaleString()}</div><div style="font-size:11px;color:${GRAY};margin-top:2px;">Includes the 22.5% customer-facing markup. Raw SD market would be \\~${Math.round(avgEstimate / 1.225).toLocaleString()}.</div></div>`
+      ? `<div style="background:${SOFT};border-left:3px solid ${ACCENT};padding:14px 16px;border-radius:0 6px 6px 0;margin-bottom:18px;"><div style="font-size:11px;color:${ACCENT};font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Average estimated quote</div><div style="font-size:24px;font-weight:800;color:${PINE};margin-top:4px;">$${avgEstimate.toLocaleString()}</div><div style="font-size:11px;color:${GRAY};margin-top:2px;">Includes the customer-facing fee (flat-fee model v1: carrier estimate + $150 + 9%, capped at $400).</div></div>`
       : "") +
     (tierRows
       ? `<h3 style="margin:8px 0;font-size:13px;color:${PINE};text-transform:uppercase;letter-spacing:0.05em;">By tier</h3><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin-bottom:14px;">${tierRows}</table>`

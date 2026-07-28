@@ -27,6 +27,7 @@ import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
 import { OWNER_EMAIL, QA_BCC_EMAIL } from "@/lib/leads/agents";
 import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
+import { applyCustomerMarkup, legacyMarkupPrice, PRICING_MODEL } from "@/lib/pricing/markup";
 import {
   getSdPriceEstimate,
   toSdVehicleType,
@@ -235,24 +236,48 @@ export async function POST(req: Request) {
     high?: number;
     confidence?: number;
   } | null = null;
+  // Shadow pricing fields (flat-fee model v1, 2026-07-28): stored on the
+  // lead DOC only — the API response is {ok, leadRef}, so the wholesale
+  // number never reaches a client. Lets compare-quote-prices.mjs measure
+  // the live model against agent quotes, and legacyPrice shows what the
+  // retired ×1.225 would have quoted the same lead.
+  let pricingShadow: {
+    model: string;
+    carrierEstimate: number;
+    legacyPrice: number;
+  } | null = null;
   try {
-    const sd = await getSdPriceEstimate({
-      pickup: { state: originState!, zip: originZip! },
-      delivery: { state: destinationState!, zip: destinationZip! },
-      vehicleType: vehicleType!,
-      isInoperable: false,
-      trailerType: "open",
-    });
-    estimate = sd
-      ? {
-          source: "sd",
-          sdVehicleType: sd.sdVehicleType,
-          price: sd.price,
-          low: sd.low,
-          high: sd.high,
-          confidence: sd.confidence ?? undefined,
-        }
-      : { source: "unavailable", sdVehicleType };
+    // One SD call, raw — the customer-facing numbers are derived locally
+    // so the raw carrier estimate is available for shadow logging.
+    const rawSd = await getSdPriceEstimate(
+      {
+        pickup: { state: originState!, zip: originZip! },
+        delivery: { state: destinationState!, zip: destinationZip! },
+        vehicleType: vehicleType!,
+        isInoperable: false,
+        trailerType: "open",
+      },
+      { markup: false },
+    );
+    const sd = rawSd ? applyCustomerMarkup(rawSd) : null;
+    estimate =
+      rawSd && sd
+        ? {
+            source: "sd",
+            sdVehicleType: sd.sdVehicleType,
+            price: sd.price,
+            low: sd.low,
+            high: sd.high,
+            confidence: sd.confidence ?? undefined,
+          }
+        : { source: "unavailable", sdVehicleType };
+    if (rawSd) {
+      pricingShadow = {
+        model: PRICING_MODEL,
+        carrierEstimate: rawSd.price,
+        legacyPrice: legacyMarkupPrice(rawSd.price),
+      };
+    }
   } catch (err) {
     console.error("[/api/lead] SD pricing failed (non-fatal)", err);
     estimate = { source: "unavailable", sdVehicleType };
@@ -275,7 +300,7 @@ export async function POST(req: Request) {
     // the webhook receiver stamps proabdAssignedAgent when the event lands.
     assignedAgent: null,
     proabdAssignedAgent: null,
-    estimate,
+    estimate: pricingShadow ? { ...estimate, ...pricingShadow } : estimate,
     attribution: {
       utmSource: str(body.utm_source) ?? null,
       utmMedium: str(body.utm_medium) ?? null,
