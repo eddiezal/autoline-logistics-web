@@ -56,8 +56,17 @@ async function logQuery(data: {
 }): Promise<void> {
   try {
     const db = getAdminDb();
+    // BUG FIX 2026-07-27: Firestore rejects documents containing undefined
+    // values. The success path passed `errorReason: undefined`, so every
+    // OK-status query since launch threw here and was silently swallowed
+    // by this catch — the demand log recorded ONLY failures (14 rows) while
+    // 35 successful checks fired client-side events. Strip undefined keys
+    // before writing so successes finally persist.
+    const clean = Object.fromEntries(
+      Object.entries(data).filter(([, v]) => v !== undefined),
+    );
     await db.collection("route_price_checker_queries").add({
-      ...data,
+      ...clean,
       createdAt: FieldValue.serverTimestamp(),
     });
   } catch (err) {
