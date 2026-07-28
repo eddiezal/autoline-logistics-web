@@ -18,6 +18,7 @@
 const VID_COOKIE = "alv_vid";
 const VID_MAX_AGE = 400 * 24 * 60 * 60; // ~13 months, first-party
 const SESSION_KEY = "alv_sid";
+const SESSION_ATTR_KEY = "alv_attr"; // session-scoped click attribution
 const SESSION_GAP_MS = 30 * 60 * 1000; // 30-min rolling session window
 
 function randomId(): string {
@@ -51,9 +52,67 @@ export function getSessionId(): string | null {
     }
     const sid = randomId();
     window.sessionStorage.setItem(SESSION_KEY, `${sid}|${now}`);
+    // New session → stale click attribution must not carry over. A visitor
+    // who returns organically two hours after a paid click is a new
+    // session with no campaign; getSessionAttribution() re-captures from
+    // the URL if this landing IS a fresh ad click.
+    window.sessionStorage.removeItem(SESSION_ATTR_KEY);
     return sid;
   } catch {
     return null; // storage blocked — event still sends without session grouping
+  }
+}
+
+/** Session-scoped paid-click attribution attached to every event. */
+export interface SessionAttribution {
+  src: string | null; // utm_source
+  med: string | null; // utm_medium
+  campaignId: string | null; // utm_campaign (numeric campaign id per URL suffix)
+  adGroupId: string | null; // utm_content
+  gclid: boolean; // a Google click ID was present on the landing URL
+}
+
+/**
+ * Capture-or-recall the session's click attribution (2026-07-28, the
+ * "signal→lead rate" unlock). On a landing that carries utm params or a
+ * gclid, values persist for the session, so SPA navigations — which lose query
+ * params — keep reporting the campaign that paid for the visit. A newer
+ * click mid-session overwrites (latest click wins). Cleared on session
+ * rollover by getSessionId().
+ *
+ * This is what lets reporting tie NON-converting research behavior
+ * (estimate_shown, tool_result) to a campaign; converting visitors were
+ * already joined via the lead doc's attribution fields.
+ */
+export function getSessionAttribution(): SessionAttribution | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const q = new URLSearchParams(window.location.search);
+    const clip = (v: string | null) => (v && v.trim() ? v.trim().slice(0, 100) : null);
+    const fresh: SessionAttribution = {
+      src: clip(q.get("utm_source")),
+      med: clip(q.get("utm_medium")),
+      campaignId: clip(q.get("utm_campaign")),
+      adGroupId: clip(q.get("utm_content")),
+      gclid: Boolean(clip(q.get("gclid"))),
+    };
+    const hasFresh = fresh.gclid || fresh.src !== null || fresh.campaignId !== null;
+    if (hasFresh) {
+      window.sessionStorage.setItem(SESSION_ATTR_KEY, JSON.stringify(fresh));
+      return fresh;
+    }
+    const raw = window.sessionStorage.getItem(SESSION_ATTR_KEY);
+    if (!raw) return null;
+    const stored = JSON.parse(raw) as SessionAttribution;
+    return {
+      src: clip(typeof stored.src === "string" ? stored.src : null),
+      med: clip(typeof stored.med === "string" ? stored.med : null),
+      campaignId: clip(typeof stored.campaignId === "string" ? stored.campaignId : null),
+      adGroupId: clip(typeof stored.adGroupId === "string" ? stored.adGroupId : null),
+      gclid: stored.gclid === true,
+    };
+  } catch {
+    return null; // storage blocked or malformed — event sends unattributed
   }
 }
 
@@ -72,7 +131,10 @@ export function sendEvent(
   try {
     const body = JSON.stringify({
       vid: getVisitorId(),
+      // Order matters: getSessionId() clears stale attribution on session
+      // rollover BEFORE getSessionAttribution() re-captures from the URL.
       sid: getSessionId(),
+      attr: getSessionAttribution(),
       type,
       path: window.location.pathname,
       locale: /^\/es(\/|$)/.test(window.location.pathname) ? "es" : "en",

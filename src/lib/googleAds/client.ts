@@ -42,6 +42,18 @@ export interface CampaignStat {
   /** Conversions counted per the account's "Conversions" column (primary actions). */
   conversions: number;
   conversionsValue: number;
+  /**
+   * All conversions = primary + secondary actions. Secondary (allConversions
+   * − conversions) are the site behavior events Google ties to ad clicks —
+   * the "research signal" count on the Acquisition view. Events, not people.
+   */
+  allConversions: number;
+  /** Search impression share, 0–1. Google floors reporting at 0.0999 ("<10%"). null = not returned. */
+  searchImpressionShare: number | null;
+  /** Share of TOP-of-page eligible impressions lost to rank, 0–1. Different denominator than searchImpressionShare. */
+  searchRankLostTopShare: number | null;
+  /** Share of absolute-top eligible impressions lost to budget, 0–1. */
+  searchBudgetLostAbsTopShare: number | null;
 }
 
 export interface ConversionActionStat {
@@ -104,6 +116,9 @@ interface GaqlRow {
     conversions?: number;
     conversionsValue?: number;
     allConversions?: number;
+    searchImpressionShare?: number;
+    searchRankLostTopImpressionShare?: number;
+    searchBudgetLostAbsoluteTopImpressionShare?: number;
   };
 }
 
@@ -174,7 +189,10 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
       gaqlSearch(
         token,
         `SELECT campaign.id, campaign.name, metrics.cost_micros, metrics.clicks,
-                metrics.impressions, metrics.conversions, metrics.conversions_value
+                metrics.impressions, metrics.conversions, metrics.conversions_value,
+                metrics.all_conversions, metrics.search_impression_share,
+                metrics.search_rank_lost_top_impression_share,
+                metrics.search_budget_lost_absolute_top_impression_share
          FROM campaign
          WHERE ${window} AND metrics.impressions > 0`,
       ),
@@ -187,7 +205,10 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
     ]);
 
     // Campaign rows arrive per-day-unsegmented (no date in SELECT), but the
-    // API may still split rows; aggregate by id defensively.
+    // API may still split rows; aggregate by id defensively. Impression-share
+    // metrics are ratios and must NOT be summed — keep the last non-null.
+    const isVal = (v: number | undefined): number | null =>
+      typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : null;
     const byId = new Map<string, CampaignStat>();
     for (const r of campaignRows) {
       const id = String(r.campaign?.id ?? "");
@@ -200,12 +221,22 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
         impressions: 0,
         conversions: 0,
         conversionsValue: 0,
+        allConversions: 0,
+        searchImpressionShare: null,
+        searchRankLostTopShare: null,
+        searchBudgetLostAbsTopShare: null,
       };
       c.costDollars += num(r.metrics?.costMicros) / 1_000_000;
       c.clicks += num(r.metrics?.clicks);
       c.impressions += num(r.metrics?.impressions);
       c.conversions += num(r.metrics?.conversions);
       c.conversionsValue += num(r.metrics?.conversionsValue);
+      c.allConversions += num(r.metrics?.allConversions);
+      c.searchImpressionShare = isVal(r.metrics?.searchImpressionShare) ?? c.searchImpressionShare;
+      c.searchRankLostTopShare =
+        isVal(r.metrics?.searchRankLostTopImpressionShare) ?? c.searchRankLostTopShare;
+      c.searchBudgetLostAbsTopShare =
+        isVal(r.metrics?.searchBudgetLostAbsoluteTopImpressionShare) ?? c.searchBudgetLostAbsTopShare;
       byId.set(id, c);
     }
 

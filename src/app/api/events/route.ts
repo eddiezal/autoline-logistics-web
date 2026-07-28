@@ -67,6 +67,31 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Session click attribution (2026-07-28): utm/gclid captured client-side
+    // on the landing URL and persisted for the session. This is what ties
+    // non-converting research behavior to the campaign that paid for the
+    // visit — the signal→lead-rate unlock. Values clamped; campaign/ad-group
+    // IDs additionally restricted to digits (they come from {campaignid}/
+    // {adgroupid} ValueTrack, so anything else is noise or tampering).
+    let attr: Record<string, string | boolean> | null = null;
+    if (b.attr && typeof b.attr === "object") {
+      attr = {};
+      const idOnly = (v: unknown): string | null => {
+        const s = str(v, 30);
+        return s && /^\d{1,20}$/.test(s) ? s : null;
+      };
+      const src = str(b.attr.src, 60);
+      if (src) attr.src = src.toLowerCase();
+      const med = str(b.attr.med, 60);
+      if (med) attr.med = med.toLowerCase();
+      const campaignId = idOnly(b.attr.campaignId);
+      if (campaignId) attr.campaignId = campaignId;
+      const adGroupId = idOnly(b.attr.adGroupId);
+      if (adGroupId) attr.adGroupId = adGroupId;
+      if (b.attr.gclid === true) attr.gclid = true;
+      if (Object.keys(attr).length === 0) attr = null;
+    }
+
     // Meta: allow a small numeric price + short string fields only.
     let meta: Record<string, string | number> | null = null;
     if (b.meta && typeof b.meta === "object") {
@@ -93,6 +118,7 @@ export async function POST(req: NextRequest) {
         path,
         locale: b.locale === "es" ? "es" : "en",
         referrerHost,
+        attr,
         meta,
         // PT calendar day for cheap daily grouping without tz math on read.
         day: now.toLocaleDateString("en-CA", { timeZone: "America/Los_Angeles" }),

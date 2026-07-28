@@ -57,6 +57,10 @@ export const dynamic = "force-dynamic";
 const PROABD_START = new Date("2026-07-14T07:00:00Z"); // Jul 14 00:00 PT
 /** Exact UTM tracking-fix deploy (commit e3e92ae verified live ~3:00 PM PT). */
 const TRACKING_FIX_TS = new Date("2026-07-20T22:00:00Z");
+/** First-party behavior capture went live (site_events). */
+const BEHAVIOR_START = new Date("2026-07-22T19:00:00Z");
+/** Route-price-checker success logging fixed (before this, only failures logged). */
+const RPC_LOG_START = new Date("2026-07-28T00:00:00Z"); // Jul 27 ~5 PM PT
 /** Webhook event history begins (assignment/status coverage floor). */
 const WEBHOOK_START_LABEL = "Jul 8";
 /** Grace period before a missing ProABD sync counts as a failure. */
@@ -72,6 +76,20 @@ const ADS_CAMPAIGN_NAMES: Record<string, string> = {
   "24034601754": "S4 Segments",
   "24034601757": "Brand Defense",
   "24034984545": "S5 Español",
+};
+
+/**
+ * Declared campaign roles — HYPOTHESES until booking data validates them
+ * (Acquisition view, 2026-07-28 redesign). A campaign is judged against its
+ * own role's success metric, never one shared CPL yardstick.
+ */
+const CAMPAIGN_ROLES: Record<string, { role: string; metric: string }> = {
+  "24034601745": { role: "research feeder", metric: "$ / signal · signal→lead rate (accruing)" },
+  "24034601748": { role: "local presence", metric: "present at sane CPC" },
+  "24034601751": { role: "route intent", metric: "$ / primary action · rank recovery" },
+  "24034601754": { role: "niche direct response", metric: "$ / primary action" },
+  "24034601757": { role: "moat", metric: "overall impr. share ≥ 90%" },
+  "24034984545": { role: "direct response · ES", metric: "$ / primary action → $ / booking" },
 };
 
 const PT = "America/Los_Angeles";
@@ -401,7 +419,9 @@ export default async function AdminReportPage({
 
   // Google Ads spend/conversions (cost join). Typed states — the page
   // renders fully without credentials; the readiness row tells the truth.
-  const ads: AdsResult = await fetchAdsStats(PROABD_START);
+  // Window starts at the tracking fix, not PROABD_START: "paid attribution
+  // eligible since Jul 20" is the honest cohort for every paid number shown.
+  const ads: AdsResult = await fetchAdsStats(TRACKING_FIX_TS);
 
   // ProABD order history (Business Baseline card + Business view + lane
   // economics). Populated by scripts/import-orders.mjs (monthly re-run until
@@ -435,6 +455,28 @@ export default async function AdminReportPage({
     });
   } catch {
     /* orders collection absent → card simply doesn't render */
+  }
+
+  // Route-price-checker demand since success logging was fixed (Jul 27 PM).
+  // Small volume by construction; counted in memory to avoid a composite
+  // index on (status, createdAt).
+  let rpcOk = 0;
+  let rpcUnsupported = 0;
+  let rpcError = 0;
+  try {
+    const rpcSnap = await getAdminDb()
+      .collection("route_price_checker_queries")
+      .where("createdAt", ">=", RPC_LOG_START)
+      .select("status")
+      .get();
+    for (const doc of rpcSnap.docs) {
+      const s = String(doc.get("status") ?? "");
+      if (s === "ok") rpcOk++;
+      else if (s === "unsupported_route") rpcUnsupported++;
+      else if (s === "sd_error") rpcError++;
+    }
+  } catch {
+    /* diagnostics line simply omits price-checker counts */
   }
 
   // First-party behavior events (last 14 days). Capture began Jul 22 PM —
@@ -819,38 +861,531 @@ export default async function AdminReportPage({
   }
 
   function Acquisition() {
+    /* ── Paid Acquisition — Early Funnel (redesigned 2026-07-28) ──
+     * Measurement rules enforced here (per the v2 mockup critique):
+     *  - Only genuinely nested stages appear on the spine; research/
+     *    engagement activity is a PARALLEL diagnostic, never a stage.
+     *  - Secondary conversions are events, not people; primary actions are
+     *    not deduplicated into unique leads. Labels say so.
+     *  - Roles are hypotheses until booking data validates them; every
+     *    conclusion is threshold-gated to the sample size behind it.
+     *  - Coverage/eligibility dates render BEFORE any conclusion.
+     */
+    const stats = ads.state === "ok" ? ads.stats : null;
+
+    interface CampRow {
+      id: string;
+      name: string;
+      role: string;
+      metric: string;
+      cost: number;
+      clicks: number;
+      cpc: number | null;
+      primary: number;
+      secondary: number;
+      cpAction: number | null;
+      cpSignal: number | null;
+      is: number | null;
+      rankLost: number | null;
+      budgetLost: number | null;
+      flags: { text: string; tone: "good" | "gap" | "info" }[];
+    }
+
+    const camps: CampRow[] = (stats?.campaigns ?? [])
+      .filter((c) => c.clicks > 0 || c.costDollars > 0)
+      .map((c) => {
+        const meta = CAMPAIGN_ROLES[c.id] ?? { role: "unassigned", metric: "$ / primary action" };
+        const primary = c.conversions;
+        const secondary = Math.max(0, c.allConversions - c.conversions);
+        return {
+          id: c.id,
+          name: c.name.replace(/^ALL - /, ""),
+          role: meta.role,
+          metric: meta.metric,
+          cost: c.costDollars,
+          clicks: c.clicks,
+          cpc: c.clicks > 0 ? c.costDollars / c.clicks : null,
+          primary,
+          secondary,
+          cpAction: primary > 0 ? c.costDollars / primary : null,
+          cpSignal: secondary > 0 ? c.costDollars / secondary : null,
+          is: c.searchImpressionShare,
+          rankLost: c.searchRankLostTopShare,
+          budgetLost: c.searchBudgetLostAbsTopShare,
+          flags: [],
+        };
+      })
+      .sort((a, b) => b.cost - a.cost);
+
+    const tot = {
+      cost: camps.reduce((s, c) => s + c.cost, 0),
+      clicks: camps.reduce((s, c) => s + c.clicks, 0),
+      primary: camps.reduce((s, c) => s + c.primary, 0),
+      secondary: camps.reduce((s, c) => s + c.secondary, 0),
+    };
+    const acctCpc = tot.clicks > 0 ? tot.cost / tot.clicks : null;
+
+    /* ── Threshold-gated flags (evidence-proportional by construction) ── */
+    const actionLeaders = camps.filter((c) => c.primary >= 3).sort((a, b) => (a.cpAction ?? 1e9) - (b.cpAction ?? 1e9));
+    for (const c of camps) {
+      if (actionLeaders.length > 0 && c.id === actionLeaders[0].id)
+        c.flags.push({ text: "Best $/action — validate serviceability", tone: "good" });
+      else if (c.primary >= 3) c.flags.push({ text: "Promising — small n", tone: "good" });
+      if (c.secondary >= 10 && c.secondary >= 10 * Math.max(1, c.primary))
+        c.flags.push({ text: "Hold budget — downstream value unproven", tone: "gap" });
+      if (acctCpc !== null && c.cpc !== null && c.clicks < 10 && c.cpc > 2 * acctCpc)
+        c.flags.push({ text: "Rebuild relevance, then retest", tone: "gap" });
+      else if (c.rankLost !== null && c.rankLost > 0.5)
+        c.flags.push({ text: "Rank-limited — QS / relevance work", tone: "gap" });
+      if (c.budgetLost !== null && c.budgetLost > 0.3)
+        c.flags.push({ text: "Budget-limited — headroom exists", tone: "info" });
+      if (c.role === "moat" && c.is !== null && c.is < 0.9)
+        c.flags.push({ text: `Moat leaky — ~${Math.round((1 - c.is) * 100)}% of brand searches unserved`, tone: "gap" });
+      if (c.flags.length === 0 && c.primary <= 1 && c.clicks < 50)
+        c.flags.push({ text: "Too early to judge", tone: "info" });
+    }
+
+    /* ── Decision panel (rule-derived; a tile renders only when its rule fires) ── */
+    const decisions: { n: string; title: string; body: string; warn: boolean }[] = [];
+    if (actionLeaders.length > 0) {
+      const names = actionLeaders.slice(0, 2).map((c) => c.name.split(" ")[0]);
+      decisions.push({
+        n: "PROTECT & VALIDATE",
+        title: names.join(" + "),
+        body: `Best cost per primary action (${actionLeaders
+          .slice(0, 2)
+          .map((c) => money(c.cpAction ?? 0))
+          .join(" · ")}). Next: verify these actions become serviceable leads and bookings via the ProABD join before calling them winners.`,
+        warn: false,
+      });
+    }
+    const holdCamp = camps
+      .filter((c) => c.secondary >= 10 && c.secondary >= 10 * Math.max(1, c.primary))
+      .sort((a, b) => b.secondary - a.secondary)[0];
+    if (holdCamp) {
+      decisions.push({
+        n: "DO NOT SCALE YET",
+        title: holdCamp.name.split(" ")[0],
+        body: `Cheap engagement (${holdCamp.cpSignal !== null ? money2(holdCamp.cpSignal) : "—"}/signal) but ${holdCamp.primary || "no"} primary action${holdCamp.primary === 1 ? "" : "s"}. Signal→lead rate is now accruing (UTM capture live) — decide with that evidence, not before.`,
+        warn: true,
+      });
+    }
+    const rebuildCamp = camps
+      .filter((c) => acctCpc !== null && c.cpc !== null && c.clicks < 10 && c.cpc > 2 * acctCpc)
+      .sort((a, b) => (b.cpc ?? 0) - (a.cpc ?? 0))[0];
+    if (rebuildCamp) {
+      decisions.push({
+        n: "REBUILD, THEN RETEST",
+        title: rebuildCamp.name.split(" ")[0],
+        body: `${rebuildCamp.clicks} click${rebuildCamp.clicks === 1 ? "" : "s"} at ${rebuildCamp.cpc !== null ? money2(rebuildCamp.cpc) : "—"}${rebuildCamp.rankLost !== null && rebuildCamp.rankLost > 0.9 ? "; >90% of top-of-page impressions lost to rank" : ""}. Fix relevance/QS first — adding money to a rank problem buys nothing.`,
+        warn: true,
+      });
+    }
+
+    /* ── Spine stages 3–4: site-side, window-consistent (since the fix) ── */
+    const paidLeadRecords = paidPost.length; // valid paid lead records since Jul 20 (forms + calls)
+    const paidJoined = paidPost.filter((r) => !r.isCall && r.abdId && r.synced);
+    const paidBooked = paidJoined.filter((r) => abdStates.get(r.abdId)?.outcome === "booked");
+
+    /* ── First-party research echo (14-day site_events window) ── */
+    const estEvents = siteEvents.filter((e) => e.type === "estimate_shown");
+    const estVids = new Set(estEvents.map((e) => e.vid)).size;
+
+    /* ── Display helpers ── */
+    const isPct = (v: number | null): string =>
+      v === null ? "—" : v <= 0.1 ? "<10%" : v >= 0.9 ? ">90%" : Math.round(v * 100) + "%";
+    const per100 = (n: number, d: number): string => (d > 0 ? ((n / d) * 100).toFixed(1) : "—");
+
+    const covChip: React.CSSProperties = {
+      fontSize: 11,
+      border: "1px solid var(--color-gray-200)",
+      background: "var(--color-surface)",
+      borderRadius: 999,
+      padding: "4px 11px",
+      color: MUTED,
+      marginRight: 6,
+      marginBottom: 6,
+      display: "inline-block",
+    };
+    const covB: React.CSSProperties = { color: "#1a1a1a", fontWeight: 700 };
+    const flagChip = (tone: "good" | "gap" | "info"): React.CSSProperties => ({
+      display: "inline-block",
+      fontSize: 10.5,
+      fontWeight: 600,
+      borderRadius: 999,
+      padding: "2px 9px",
+      marginRight: 4,
+      marginBottom: 2,
+      whiteSpace: "nowrap",
+      color: tone === "good" ? "#065f46" : tone === "gap" ? "#92400e" : MUTED,
+      background: tone === "good" ? "#ecfdf5" : tone === "gap" ? "#fffbeb" : "var(--color-gray-100)",
+      border: `1px solid ${tone === "good" ? "#a7f3d0" : tone === "gap" ? "#fde68a" : "var(--color-gray-200)"}`,
+    });
+    const stageCard = (pending: boolean): React.CSSProperties => ({
+      ...CARD,
+      padding: "12px 14px",
+      flex: "1 1 140px",
+      minWidth: 128,
+      ...(pending ? { background: "var(--color-gray-100)", borderStyle: "dashed" as const } : {}),
+    });
+    const stgName: React.CSSProperties = {
+      fontSize: 10,
+      fontWeight: 700,
+      letterSpacing: "0.07em",
+      textTransform: "uppercase",
+      color: MUTED,
+    };
+    const stgNote: React.CSSProperties = { fontSize: 10, color: MUTED, marginTop: 5, lineHeight: 1.5 };
+
+    /* ── Channels context (kept from the previous design — unique data) ── */
     const chan = CHANNEL_ORDER.map((k) => {
       const rows = cohort.filter((r) => r.sourceKey === k);
       const f = rows.filter((r) => !r.isCall);
       const c = rows.filter((r) => r.isCall);
       const p = f.filter((r) => r.price !== null);
-      const fSync = f.filter((r) => r.abdId && r.synced);
-      return { k, rows, f, c, p, quoted: p.reduce((s, r) => s + (r.price ?? 0), 0), fSync };
+      return { k, rows, f, c, p, quoted: p.reduce((s, r) => s + (r.price ?? 0), 0) };
     }).filter((c) => c.rows.length > 0);
 
-    const campMap = new Map<string, { post: number; pre: number }>();
-    for (const r of cohort.filter((x) => x.paidProof)) {
-      const name = r.campaignName ?? (r.postFix ? "Unattributed (post-fix — investigate)" : "Historical — campaign unrecoverable");
-      const e = campMap.get(name) ?? { post: 0, pre: 0 };
-      if (r.postFix) e.post++;
-      else e.pre++;
-      campMap.set(name, e);
-    }
-    const adGroups = new Map<string, number>();
-    for (const r of paidPost) {
-      if (r.adGroupId) adGroups.set(r.adGroupId, (adGroups.get(r.adGroupId) ?? 0) + 1);
+    if (ads.state === "unconfigured") {
+      return (
+        <div style={ALERT}>
+          Paid acquisition needs the Ads API credentials ({ads.missing.join(", ")}) — see
+          scripts/mint-ads-refresh-token.mjs. Channel and lead data still appear on Overview.
+        </div>
+      );
     }
 
     return (
       <>
-        <div style={{ ...SUBTLE, marginBottom: 12 }}>
-          <strong style={{ color: "#1a1a1a" }}>{cohortLabel}</strong> — same eligible cohort as
-          Overview. Spend, CPL, CAC, close rate, and profit appear only when their sources are
-          connected (see data coverage panel).
+        {/* Coverage strip — BEFORE any conclusion */}
+        <div style={{ marginBottom: 10 }}>
+          <span style={covChip}>
+            <span style={covB}>Paid attribution</span> eligible since {fmtDay(TRACKING_FIX_TS)} (tracking fix)
+          </span>
+          <span style={covChip}>
+            <span style={covB}>First-party behavior</span> since {fmtDay(BEHAVIOR_START)}
+          </span>
+          <span style={covChip}>
+            <span style={covB}>Price-checker log</span> since {fmtDay(RPC_LOG_START)}
+          </span>
+          <span style={covChip}>
+            <span style={covB}>ProABD booking cohort</span> maturing — no booking economics yet
+          </span>
+          {stats && (
+            <span style={covChip}>
+              <span style={covB}>Ads window</span> {stats.since} → {stats.until} · latest day partial · weekends dark
+            </span>
+          )}
         </div>
+
+        {ads.state === "error" && (
+          <div style={ALERT}>Ads API error: {ads.message} — showing site-side data only.</div>
+        )}
+
+        {/* Narrative — deflated language by construction */}
+        {stats && (
+          <section style={{ ...CARD, marginBottom: 12, borderLeft: `4px solid ${GREEN}` }}>
+            <div style={{ fontSize: 14, lineHeight: 1.6, color: "#1a1a1a" }}>
+              <strong>
+                {money(tot.cost)} generated {tot.clicks} clicks, {tot.secondary} secondary engagement
+                events, and {tot.primary} primary conversion actions
+              </strong>{" "}
+              (forms + 90s+ calls; not deduplicated into unique leads).{" "}
+              {actionLeaders.length > 0 && (
+                <>
+                  <strong>
+                    {actionLeaders.slice(0, 2).map((c) => c.name.split(" ")[0]).join(" and ")} lead on cost per
+                    primary action
+                  </strong>{" "}
+                  ({actionLeaders.slice(0, 2).map((c) => money(c.cpAction ?? 0)).join(" · ")}).{" "}
+                </>
+              )}
+              {holdCamp && holdCamp.cpSignal !== null && (
+                <>
+                  {holdCamp.name.split(" ")[0]} produces the least-expensive secondary engagement (
+                  {money2(holdCamp.cpSignal)} per signal) — <strong>its downstream value is not yet proven</strong>.{" "}
+                </>
+              )}
+              Booking economics remain pending while the ProABD cohort matures.
+            </div>
+          </section>
+        )}
+
+        {/* Decision panel */}
+        {decisions.length > 0 && (
+          <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+            {decisions.map((d, i) => (
+              <div
+                key={d.n}
+                style={{
+                  flex: "1 1 220px",
+                  border: "1px solid var(--color-gray-200)",
+                  borderLeft: `4px solid ${d.warn ? "#d97706" : GREEN}`,
+                  borderRadius: 10,
+                  background: "var(--color-surface)",
+                  padding: "12px 14px",
+                }}
+              >
+                <div style={{ fontSize: 11, fontWeight: 800, color: MUTED }}>
+                  {i + 1} · {d.n}
+                </div>
+                <div style={{ fontSize: 13.5, fontWeight: 800, color: INK, margin: "2px 0 4px" }}>{d.title}</div>
+                <div style={{ fontSize: 11.5, color: "#374151", lineHeight: 1.5 }}>{d.body}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Measured spine — nested stages only */}
+        <h2 style={{ ...H2, marginBottom: 8 }}>
+          The measured spine{" "}
+          <span style={{ ...SUBTLE, fontWeight: 400 }}>— each stage is a subset of the one before it</span>
+        </h2>
+        <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
+          <div style={stageCard(false)}>
+            <div style={stgName}>Paid clicks</div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{stats ? tot.clicks : "—"}</div>
+            <div style={{ fontSize: 11.5, color: GREEN, fontWeight: 700 }}>
+              {acctCpc !== null ? money2(acctCpc) + " avg CPC" : ""}
+            </div>
+            <div style={stgNote}>
+              {camps
+                .slice()
+                .sort((a, b) => b.clicks - a.clicks)
+                .slice(0, 4)
+                .map((c) => `${c.name.split(" ")[0]} ${c.clicks}`)
+                .join(" · ")}
+            </div>
+          </div>
+          <div style={stageCard(false)}>
+            <div style={stgName}>Primary conversion actions</div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{stats ? tot.primary : "—"}</div>
+            <div style={{ fontSize: 11.5, color: GREEN, fontWeight: 700 }}>
+              {tot.primary > 0 ? `${money(tot.cost / tot.primary)} / action · ${per100(tot.primary, tot.clicks)} per 100 clicks` : "none this window"}
+            </div>
+            <div style={stgNote}>
+              forms + 90s+ calls; calls are a lead <i>proxy</i>, not yet validated as serviceable
+            </div>
+          </div>
+          <div style={stageCard(false)}>
+            <div style={stgName}>Paid lead records (site)</div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{paidLeadRecords}</div>
+            <div style={{ fontSize: 11.5, color: GREEN, fontWeight: 700 }}>
+              {paidLeadRecords > 0 ? money(tot.cost / paidLeadRecords) + " / record" : ""}
+            </div>
+            <div style={stgNote}>
+              our own DB, paid proof since {fmtDay(TRACKING_FIX_TS)} · forms + tracked calls; cross-channel dedup pending
+            </div>
+          </div>
+          <div style={stageCard(paidJoined.length === 0)}>
+            <div style={stgName}>ProABD joined → booked</div>
+            <div style={{ fontSize: paidJoined.length > 0 ? 24 : 17, fontWeight: 800, color: paidJoined.length > 0 ? INK : MUTED }}>
+              {paidJoined.length > 0 ? `${paidJoined.length} → ${paidBooked.length}` : "maturing"}
+            </div>
+            <div style={stgNote}>
+              {paidJoined.length > 0
+                ? `${paidJoined.length} synced by ABD_Id; ${paidBooked.length} booked so far — cohort young, rates not meaningful yet`
+                : "ABD_Id stamp-backs live; cohort too young for booking rates by campaign"}
+            </div>
+          </div>
+          <div style={stageCard(true)}>
+            <div style={stgName}>Gross profit</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: MUTED }}>pending</div>
+            <div style={stgNote}>needs the fee join (deposit per booked order) — the number this page should end on</div>
+          </div>
+        </div>
+
+        {/* Engagement diagnostics — parallel evidence, NOT a stage */}
+        <section
+          style={{ ...CARD, marginBottom: 14, background: "#EDF5F0", borderColor: "#d5e8dc" }}
+        >
+          <h2 style={H2}>
+            Engagement diagnostics{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>— parallel evidence from paid traffic, not a funnel stage</span>
+          </h2>
+          <div style={{ fontSize: 12.5, lineHeight: 1.7, color: "#1a1a1a" }}>
+            {stats && (
+              <>
+                <strong>{tot.secondary} secondary conversion events</strong> · {per100(tot.secondary, tot.clicks)} per
+                100 clicks{tot.secondary > 0 ? ` · ${money2(tot.cost / tot.secondary)} per event` : ""} ·{" "}
+                <i>events, not people</i> — one visitor can fire several, and a lead does not have to pass through any
+                of them. Mix:{" "}
+                {camps
+                  .slice()
+                  .sort((a, b) => b.secondary - a.secondary)
+                  .filter((c) => c.secondary > 0)
+                  .slice(0, 4)
+                  .map((c) => `${c.name.split(" ")[0]} ${c.secondary}`)
+                  .join(" · ") || "none"}
+                .{" "}
+              </>
+            )}
+            First-party echo (last 14 days): <strong>{estEvents.length} estimate_shown events from {estVids} unique visitors</strong>.
+            {rpcOk + rpcUnsupported + rpcError > 0 && (
+              <>
+                {" "}Price-checker since {fmtDay(RPC_LOG_START)}: {rpcOk} priced · {rpcUnsupported} unserviceable route
+                {rpcUnsupported === 1 ? "" : "s"} (HI/AK/PR demand){rpcError > 0 ? ` · ${rpcError} pricing errors` : ""}.
+              </>
+            )}
+            <br />
+            <span style={SUBTLE}>
+              Signal→lead rate by campaign is now accruing (session UTM capture live as of this deploy) — that answer
+              decides the research feeder&rsquo;s budget, nothing else does.
+            </span>
+          </div>
+        </section>
+
+        {/* Campaign roles — hypotheses, compact */}
         <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
-          <h2 style={H2}>Channels</h2>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 560 }}>
+          <h2 style={H2}>
+            Campaign roles{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>— hypotheses until booking data validates them</span>
+          </h2>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 640, marginTop: 6 }}>
+            <thead>
+              <tr>
+                <th style={TH}>Campaign · role hypothesis</th>
+                <th style={TH}>Success metric</th>
+                <th style={TH}>Evidence (this window)</th>
+                <th style={TH}>Next action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {camps.map((c) => (
+                <tr key={c.id} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={TD}>
+                    <strong>{c.name}</strong>
+                    <br />
+                    <span style={SUBTLE}>{c.role}</span>
+                  </td>
+                  <td style={{ ...TD, color: MUTED }}>{c.metric}</td>
+                  <td style={TD}>
+                    {c.primary > 0
+                      ? `${c.primary} action${c.primary === 1 ? "" : "s"} @ ${money(c.cpAction ?? 0)}`
+                      : `${c.clicks} click${c.clicks === 1 ? "" : "s"}${c.cpc !== null ? ` @ ${money2(c.cpc)}` : ""}`}
+                    {c.secondary > 0 && c.role === "research feeder"
+                      ? ` · ${c.secondary} signals @ ${money2(c.cpSignal ?? 0)}`
+                      : ""}
+                    {c.rankLost !== null && c.rankLost > 0.5 ? ` · ${isPct(c.rankLost)} top-IS lost to rank` : ""}
+                    {c.role === "moat" && c.is !== null ? ` · ${isPct(c.is)} overall IS` : ""}
+                  </td>
+                  <td style={TD}>
+                    {c.flags.map((f) => (
+                      <span key={f.text} style={flagChip(f.tone)}>
+                        {f.text}
+                      </span>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+              {camps.length === 0 && (
+                <tr>
+                  <td colSpan={4} style={{ ...TD, color: MUTED }}>
+                    No campaign activity in the window.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </section>
+
+        {/* Analyst matrix — collapsed by default */}
+        <details style={{ ...CARD, marginBottom: 12 }}>
+          <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>
+            Analyst view — full numbers by campaign
+          </summary>
+          <div style={{ overflowX: "auto", marginTop: 10 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, minWidth: 680 }}>
+              <thead>
+                <tr>
+                  <th style={TH}>Campaign</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Cost</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Clicks</th>
+                  <th style={{ ...TH, textAlign: "right" }}>CPC</th>
+                  <th style={{ ...TH, textAlign: "right" }}>2° events</th>
+                  <th style={{ ...TH, textAlign: "right" }}>$ / event</th>
+                  <th style={{ ...TH, textAlign: "right" }}>1° actions</th>
+                  <th style={{ ...TH, textAlign: "right" }}>$ / action</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Impr. share</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Top lost (rank)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {camps.map((c) => (
+                  <tr key={c.id} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={{ ...TD, fontWeight: 700 }}>{c.name}</td>
+                    <td style={TDR}>{money(c.cost)}</td>
+                    <td style={TDR}>{c.clicks}</td>
+                    <td style={TDR}>{c.cpc !== null ? money2(c.cpc) : "—"}</td>
+                    <td style={TDR}>{c.secondary || "—"}</td>
+                    <td style={TDR}>{c.cpSignal !== null ? money2(c.cpSignal) : "—"}</td>
+                    <td style={{ ...TDR, fontWeight: 700 }}>{c.primary || "—"}</td>
+                    <td style={TDR}>{c.cpAction !== null ? money(c.cpAction) : "—"}</td>
+                    <td style={TDR}>{isPct(c.is)}</td>
+                    <td style={TDR}>{isPct(c.rankLost)}</td>
+                  </tr>
+                ))}
+                {stats && (
+                  <tr style={{ borderTop: "2px solid var(--color-gray-200)", color: MUTED }}>
+                    <td style={{ ...TD, color: MUTED }}>Account</td>
+                    <td style={TDR}>{money(tot.cost)}</td>
+                    <td style={TDR}>{tot.clicks}</td>
+                    <td style={TDR}>{acctCpc !== null ? money2(acctCpc) : "—"}</td>
+                    <td style={TDR}>{tot.secondary}</td>
+                    <td style={TDR}>{tot.secondary > 0 ? money2(tot.cost / tot.secondary) : "—"}</td>
+                    <td style={TDR}>{tot.primary}</td>
+                    <td style={TDR}>{tot.primary > 0 ? money(tot.cost / tot.primary) : "—"}</td>
+                    <td style={TDR} colSpan={2} />
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            <div style={{ ...SUBTLE, marginTop: 8 }}>
+              2° = secondary conversion events (site behavior Google ties to ad clicks). 1° = primary conversion
+              actions (forms + 90s+ calls). Small samples throughout — direction, not gospel.
+            </div>
+          </div>
+        </details>
+
+        {/* Methodology drawer */}
+        <details style={{ ...CARD, marginBottom: 12 }}>
+          <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>
+            Methodology &amp; definitions
+          </summary>
+          <div style={{ fontSize: 12.5, lineHeight: 1.7, color: "#1a1a1a", marginTop: 10 }}>
+            <strong>Secondary events ≠ people.</strong> Google counts events; one visitor can fire several, and a form
+            can be submitted without any preceding research event — which is why engagement sits beside the spine, not
+            inside it.
+            <br />
+            <strong>Primary actions ≠ unique leads.</strong> Forms and 90s+ calls are counted separately by Google and
+            not deduplicated; a 90-second call is a lead proxy until validated as serviceable. The site-side
+            &ldquo;paid lead records&rdquo; stage counts our own DB rows (also not cross-channel deduplicated yet).
+            <br />
+            <strong>Impression-share denominators differ.</strong> Overall impression share is measured against ALL
+            eligible impressions; &ldquo;top lost (rank)&rdquo; against top-of-page eligible impressions only — the two
+            can legitimately sum past 100%.
+            <br />
+            <strong>Windows.</strong> Ads numbers cover {stats ? `${stats.since} → ${stats.until}` : "the post-fix window"}
+            {" "}(latest day partial; weekends dark by schedule). First-party behavior since {fmtDay(BEHAVIOR_START)};
+            price-checker success logging since {fmtDay(RPC_LOG_START)}; booking joins maturing. Numbers from different
+            windows are never summed together.
+            {stats && stats.conversionActions.length > 0 && (
+              <>
+                <br />
+                <strong>Conversion actions observed:</strong>{" "}
+                {stats.conversionActions.map((a) => `${a.actionName} (${a.allConversions.toFixed(0)})`).join(" · ")}
+              </>
+            )}
+          </div>
+        </details>
+
+        {/* All-channels context */}
+        <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
+          <h2 style={H2}>
+            All channels{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>— {cohortLabel.toLowerCase()}, paid and unpaid together</span>
+          </h2>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 520, marginTop: 6 }}>
             <thead>
               <tr>
                 <th style={TH}>Channel</th>
@@ -858,9 +1393,7 @@ export default async function AdminReportPage({
                 <th style={{ ...TH, textAlign: "right" }}>Forms</th>
                 <th style={{ ...TH, textAlign: "right" }}>Calls</th>
                 <th style={{ ...TH, textAlign: "right" }}>Priced forms</th>
-                <th style={{ ...TH, textAlign: "right" }}>Pricing coverage</th>
                 <th style={{ ...TH, textAlign: "right" }}>Quoted value</th>
-                <th style={{ ...TH, textAlign: "right" }}>ProABD sync</th>
               </tr>
             </thead>
             <tbody>
@@ -871,179 +1404,19 @@ export default async function AdminReportPage({
                   <td style={TDR}>{c.f.length}</td>
                   <td style={TDR}>{c.c.length}</td>
                   <td style={TDR}>{c.p.length}</td>
-                  <td style={TDR}>{pct(c.p.length, c.f.length)}</td>
                   <td style={TDR}>{c.quoted > 0 ? money(c.quoted) : "—"}</td>
-                  <td style={TDR}>{c.f.length > 0 ? pct(c.fSync.length, c.f.length) : "n/a"}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <div style={{ ...SUBTLE, marginTop: 8 }}>
-            Quoted value is the sum of instant estimates on priced forms — not revenue. Calls
-            carry no form estimate by design.
+            Quoted value is the sum of instant estimates on priced forms — not revenue. Calls carry no form estimate by
+            design.
           </div>
         </section>
-
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Google Ads drill-down</h2>
-          <div style={{ ...SUBTLE, marginBottom: 8 }}>
-            Post-fix leads carry exact campaign attribution; historical paid leads are proven by
-            click ID but their campaign is generally unrecoverable.
-          </div>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
-            <thead>
-              <tr>
-                <th style={TH}>Campaign</th>
-                <th style={{ ...TH, textAlign: "right" }}>Post-fix leads</th>
-                <th style={{ ...TH, textAlign: "right" }}>Historical leads</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[...campMap.entries()]
-                .sort((a, b) => b[1].post + b[1].pre - (a[1].post + a[1].pre))
-                .map(([name, e]) => (
-                  <tr key={name} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                    <td style={TD}>{name}</td>
-                    <td style={{ ...TDR, fontWeight: 700 }}>{e.post || "—"}</td>
-                    <td style={{ ...TDR, color: MUTED }}>{e.pre || "—"}</td>
-                  </tr>
-                ))}
-              {campMap.size === 0 && (
-                <tr>
-                  <td colSpan={3} style={{ ...TD, color: MUTED }}>
-                    No paid leads in cohort yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          {adGroups.size > 0 && (
-            <div style={{ ...SUBTLE, marginTop: 8 }}>
-              Ad-group IDs observed on post-fix leads:{" "}
-              {[...adGroups.entries()].map(([id, n]) => `${id} (${n})`).join(" · ")} — name mapping
-              pending.
-            </div>
-          )}
-        </section>
-
-        <AdsSpendCard />
 
         <PagesCard />
       </>
-    );
-  }
-
-  function AdsSpendCard() {
-    if (ads.state === "unconfigured") {
-      return (
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Google Ads spend &amp; conversions</h2>
-          <div style={SUBTLE}>
-            Awaiting API credentials ({ads.missing.join(", ")}). Developer token is approved
-            (Basic Access) — see scripts/mint-ads-refresh-token.mjs for the one-time setup.
-          </div>
-        </section>
-      );
-    }
-    if (ads.state === "error") {
-      return (
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Google Ads spend &amp; conversions</h2>
-          <div style={{ ...SUBTLE, color: "#b45309" }}>API call failed: {ads.message}</div>
-        </section>
-      );
-    }
-    const { stats } = ads;
-    // CPL join: post-fix web form leads carry the campaign ID (utmCampaign).
-    const leadsByCampaign = new Map<string, number>();
-    for (const r of paidPost) {
-      const cid =
-        r.campaignId ??
-        // fall back through the mapped name in case the row only has a name
-        null;
-      if (cid) leadsByCampaign.set(cid, (leadsByCampaign.get(cid) ?? 0) + 1);
-    }
-    const totalCost = stats.campaigns.reduce((s, c) => s + c.costDollars, 0);
-    const totalLeads = paidPost.length;
-
-    return (
-      <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
-        <h2 style={H2}>Google Ads spend &amp; conversions</h2>
-        <div style={{ ...SUBTLE, marginBottom: 8 }}>
-          Live from the Ads API ({stats.since} → {stats.until}, account timezone). “Web leads”
-          are post-fix form leads in our own database joined by campaign ID — the honest CPL.
-          Ads-reported conversions include calls and are attributed by Google&rsquo;s rules;
-          expect the two columns to differ.
-        </div>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 640 }}>
-          <thead>
-            <tr>
-              <th style={TH}>Campaign</th>
-              <th style={{ ...TH, textAlign: "right" }}>Spend</th>
-              <th style={{ ...TH, textAlign: "right" }}>Clicks</th>
-              <th style={{ ...TH, textAlign: "right" }}>Avg CPC</th>
-              <th style={{ ...TH, textAlign: "right" }}>Ads conv.</th>
-              <th style={{ ...TH, textAlign: "right" }}>Cost / conv.</th>
-              <th style={{ ...TH, textAlign: "right" }}>Web leads</th>
-              <th style={{ ...TH, textAlign: "right" }}>CPL (web)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats.campaigns.map((c) => {
-              const webLeads = leadsByCampaign.get(c.id) ?? 0;
-              return (
-                <tr key={c.id} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                  <td style={{ ...TD, fontWeight: 600 }}>{c.name}</td>
-                  <td style={{ ...TDR, fontWeight: 700 }}>{money(c.costDollars)}</td>
-                  <td style={TDR}>{c.clicks}</td>
-                  <td style={TDR}>{c.clicks > 0 ? money2(c.costDollars / c.clicks) : "—"}</td>
-                  <td style={TDR}>{c.conversions > 0 ? c.conversions.toFixed(1) : "—"}</td>
-                  <td style={TDR}>{c.conversions > 0 ? money2(c.costDollars / c.conversions) : "—"}</td>
-                  <td style={{ ...TDR, fontWeight: 700, color: INK }}>{webLeads || "—"}</td>
-                  <td style={TDR}>{webLeads > 0 ? money2(c.costDollars / webLeads) : "—"}</td>
-                </tr>
-              );
-            })}
-            <tr style={{ borderTop: "2px solid var(--color-gray-200)" }}>
-              <td style={{ ...TD, fontWeight: 800 }}>Total</td>
-              <td style={{ ...TDR, fontWeight: 800 }}>{money(totalCost)}</td>
-              <td style={TDR}>{stats.campaigns.reduce((s, c) => s + c.clicks, 0)}</td>
-              <td style={TDR}>—</td>
-              <td style={TDR}>{stats.campaigns.reduce((s, c) => s + c.conversions, 0).toFixed(1)}</td>
-              <td style={TDR}>—</td>
-              <td style={{ ...TDR, fontWeight: 800, color: INK }}>{totalLeads || "—"}</td>
-              <td style={{ ...TDR, fontWeight: 700 }}>
-                {totalLeads > 0 ? money2(totalCost / totalLeads) : "—"}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {stats.conversionActions.length > 0 && (
-          <>
-            <h2 style={{ ...H2, marginTop: 16 }}>Conversion actions observed</h2>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480 }}>
-              <thead>
-                <tr>
-                  <th style={TH}>Action</th>
-                  <th style={{ ...TH, textAlign: "right" }}>All conversions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.conversionActions.map((a) => (
-                  <tr key={a.actionName} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                    <td style={TD}>{a.actionName}</td>
-                    <td style={TDR}>{a.allConversions.toFixed(1)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{ ...SUBTLE, marginTop: 8 }}>
-              “All conversions” includes secondary (observation-only) actions — this table shows
-              everything being tracked, not what bidding optimizes toward.
-            </div>
-          </>
-        )}
-      </section>
     );
   }
 
