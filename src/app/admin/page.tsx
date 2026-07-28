@@ -79,18 +79,148 @@ const ADS_CAMPAIGN_NAMES: Record<string, string> = {
 };
 
 /**
- * Declared campaign roles — HYPOTHESES until booking data validates them
- * (Acquisition view, 2026-07-28 redesign). A campaign is judged against its
- * own role's success metric, never one shared CPL yardstick.
+ * Campaign metadata — single source of truth for what each campaign IS,
+ * in words a human who doesn't live in the Ads account can read
+ * (2026-07-28: "we do not know what S1 or S3 are"). Roles are HYPOTHESES
+ * until booking data validates them; a campaign is judged against its own
+ * role's success metric, never one shared CPL yardstick. Budgets are
+ * deliberately NOT stored here — they drift, and a stale number on a
+ * dashboard is worse than a click into Ads.
  */
-const CAMPAIGN_ROLES: Record<string, { role: string; metric: string }> = {
-  "24034601745": { role: "research feeder", metric: "$ / signal · signal→lead rate (accruing)" },
-  "24034601748": { role: "local presence", metric: "present at sane CPC" },
-  "24034601751": { role: "route intent", metric: "$ / primary action · rank recovery" },
-  "24034601754": { role: "niche direct response", metric: "$ / primary action" },
-  "24034601757": { role: "moat", metric: "overall impr. share ≥ 90%" },
-  "24034984545": { role: "direct response · ES", metric: "$ / primary action → $ / booking" },
+interface CampaignMeta {
+  role: string;
+  metric: string;
+  /** One plain-English sentence: who this campaign catches. */
+  plain: string;
+  /** Two-three example searches, verbatim style. */
+  examples: string;
+  /** Where the ads land. */
+  lands: string;
+}
+const CAMPAIGN_META: Record<string, CampaignMeta> = {
+  "24034601745": {
+    role: "research feeder",
+    metric: "$ / signal · signal→lead rate (accruing)",
+    plain: "People googling what shipping a car costs — early researchers, not ready to book.",
+    examples: "“car shipping cost” · “car shipping calculator” · “car shipping quotes”",
+    lands: "price checker + quote page",
+  },
+  "24034601748": {
+    role: "local presence",
+    metric: "present at sane CPC",
+    plain: "Los Angeles-area “near me” searches. Local intent, home turf.",
+    examples: "“car shipping near me” · “auto transport los angeles”",
+    lands: "home page",
+  },
+  "24034601751": {
+    role: "route intent",
+    metric: "$ / primary action · rank recovery",
+    plain: "People who already know their route — the closest thing search has to a hand raised.",
+    examples: "“ship car from california to texas” · “car transport to florida”",
+    lands: "matching corridor pages",
+  },
+  "24034601754": {
+    role: "niche direct response",
+    metric: "$ / primary action",
+    plain: "Specialty needs: enclosed/classic, door-to-door, military moves (more unpause Aug 1).",
+    examples: "“enclosed car transport” · “military car shipping”",
+    lands: "matching service pages",
+  },
+  "24034601757": {
+    role: "moat",
+    metric: "overall impr. share ≥ 90%",
+    plain: "People searching our name. Cheap clicks that keep competitors off it.",
+    examples: "“auto line logistics”",
+    lands: "home page",
+  },
+  "24034984545": {
+    role: "direct response · ES",
+    metric: "$ / primary action → $ / booking",
+    plain: "Spanish-language searches, Spanish ads, Spanish site — an audience most competitors ignore.",
+    examples: "“transportar carro a otro estado” · “envío de autos”",
+    lands: "Spanish quote page",
+  },
 };
+
+/**
+ * Layman definitions for the jargon on this page — drives BOTH the hover
+ * tooltips (CSS-only, .tip class in the style block) and the glossary in
+ * the methodology drawer, so the two can never drift apart. Definitions
+ * are deliberately opinionated: a neutral definition doesn't help a
+ * decision.
+ */
+const DEFS = {
+  avgCpc: {
+    term: "Avg CPC",
+    def: "What one click costs us on average (cost ÷ clicks).",
+  },
+  imprShare: {
+    term: "Impression share",
+    def: "Of the searches where our ad was eligible to show, the % of times it actually did.",
+  },
+  topLostRank: {
+    term: "Top lost (rank)",
+    def: "Top-of-page ad slots we missed because Google ranked our ad too low (ad quality × bid). NOT a budget problem — money won't fix it; better ads and landing pages will.",
+  },
+  budgetLimited: {
+    term: "Budget-limited",
+    def: "Impressions missed because the daily budget ran out. This one IS fixable with money.",
+  },
+  secondaryEvents: {
+    term: "Secondary events (2°)",
+    def: "Things people did on the site after clicking an ad: used the price checker, engaged the quote page. Interest signals we track but don't bid on. Events, not people — one visitor can fire several.",
+  },
+  primaryActions: {
+    term: "Primary actions (1°)",
+    def: "What we count as a lead and tell Google to optimize toward: a submitted quote form, or a phone call from an ad lasting 90+ seconds.",
+  },
+  signalLeadRate: {
+    term: "Signal→lead rate",
+    def: "Of the tool-users an ad paid for, how many later became a lead. Started measuring at the Jul 28 deploy; this number decides the research feeder's budget.",
+  },
+  quotedValue: {
+    term: "Quoted value",
+    def: "Sum of the instant estimates we showed. What was quoted — never revenue.",
+  },
+  paidLeadRecords: {
+    term: "Paid lead records",
+    def: "Leads in OUR database carrying proof of an ad click (click ID or campaign tag). Not yet deduplicated across forms and calls.",
+  },
+  proabdJoined: {
+    term: "ProABD joined",
+    def: "The lead made it into the CRM and got an ID back, so we can follow what actually happens to it — assigned, quoted, booked, or lost.",
+  },
+} as const;
+type DefKey = keyof typeof DEFS;
+
+/**
+ * Dotted-underline term with a CSS-only hover definition (plus native
+ * title as the touch/clipped-container fallback). Style rules live in the
+ * ADMIN_TIP_CSS block rendered once per page.
+ */
+function Term({ k, children }: { k: DefKey; children?: React.ReactNode }) {
+  return (
+    <span className="tip" data-tip={DEFS[k].def} title={DEFS[k].def}>
+      {children ?? DEFS[k].term}
+    </span>
+  );
+}
+
+/** Hover card text for a campaign name. */
+function campaignTip(id: string): string | undefined {
+  const m = CAMPAIGN_META[id];
+  if (!m) return undefined;
+  return `${m.plain} Typical searches: ${m.examples}. Lands on: ${m.lands}.`;
+}
+
+const ADMIN_TIP_CSS = `
+.tip{border-bottom:1px dotted #9ca3af;cursor:help;position:relative}
+.tip:hover::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 7px);z-index:60;
+  width:250px;background:#0A1E14;color:#fff;font-size:11px;font-weight:400;letter-spacing:0;
+  text-transform:none;line-height:1.55;padding:8px 11px;border-radius:8px;white-space:normal;text-align:left}
+.tip:hover::before{content:"";position:absolute;left:12px;bottom:calc(100% + 2px);z-index:60;
+  border:5px solid transparent;border-top-color:#0A1E14}
+`;
 
 const PT = "America/Los_Angeles";
 
@@ -894,7 +1024,8 @@ export default async function AdminReportPage({
     const camps: CampRow[] = (stats?.campaigns ?? [])
       .filter((c) => c.clicks > 0 || c.costDollars > 0)
       .map((c) => {
-        const meta = CAMPAIGN_ROLES[c.id] ?? { role: "unassigned", metric: "$ / primary action" };
+        const meta: Pick<CampaignMeta, "role" | "metric"> =
+          CAMPAIGN_META[c.id] ?? { role: "unassigned", metric: "$ / primary action" };
         const primary = c.conversions;
         const secondary = Math.max(0, c.allConversions - c.conversions);
         return {
@@ -1087,8 +1218,9 @@ export default async function AdminReportPage({
           <section style={{ ...CARD, marginBottom: 12, borderLeft: `4px solid ${GREEN}` }}>
             <div style={{ fontSize: 14, lineHeight: 1.6, color: "#1a1a1a" }}>
               <strong>
-                {money(tot.cost)} generated {tot.clicks} clicks, {tot.secondary} secondary engagement
-                events, and {tot.primary} primary conversion actions
+                {money(tot.cost)} generated {tot.clicks} clicks, {tot.secondary}{" "}
+                <Term k="secondaryEvents">secondary engagement events</Term>, and {tot.primary}{" "}
+                <Term k="primaryActions">primary conversion actions</Term>
               </strong>{" "}
               (forms + 90s+ calls; not deduplicated into unique leads).{" "}
               {actionLeaders.length > 0 && (
@@ -1146,7 +1278,7 @@ export default async function AdminReportPage({
             <div style={stgName}>Paid clicks</div>
             <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{stats ? tot.clicks : "—"}</div>
             <div style={{ fontSize: 11.5, color: GREEN, fontWeight: 700 }}>
-              {acctCpc !== null ? money2(acctCpc) + " avg CPC" : ""}
+              {acctCpc !== null ? <>{money2(acctCpc)} <Term k="avgCpc">avg CPC</Term></> : ""}
             </div>
             <div style={stgNote}>
               {camps
@@ -1158,7 +1290,7 @@ export default async function AdminReportPage({
             </div>
           </div>
           <div style={stageCard(false)}>
-            <div style={stgName}>Primary conversion actions</div>
+            <div style={stgName}><Term k="primaryActions">Primary conversion actions</Term></div>
             <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{stats ? tot.primary : "—"}</div>
             <div style={{ fontSize: 11.5, color: GREEN, fontWeight: 700 }}>
               {tot.primary > 0 ? `${money(tot.cost / tot.primary)} / action · ${per100(tot.primary, tot.clicks)} per 100 clicks` : "none this window"}
@@ -1168,7 +1300,7 @@ export default async function AdminReportPage({
             </div>
           </div>
           <div style={stageCard(false)}>
-            <div style={stgName}>Paid lead records (site)</div>
+            <div style={stgName}><Term k="paidLeadRecords">Paid lead records (site)</Term></div>
             <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{paidLeadRecords}</div>
             <div style={{ fontSize: 11.5, color: GREEN, fontWeight: 700 }}>
               {paidLeadRecords > 0 ? money(tot.cost / paidLeadRecords) + " / record" : ""}
@@ -1178,7 +1310,7 @@ export default async function AdminReportPage({
             </div>
           </div>
           <div style={stageCard(paidJoined.length === 0)}>
-            <div style={stgName}>ProABD joined → booked</div>
+            <div style={stgName}><Term k="proabdJoined">ProABD joined</Term> → booked</div>
             <div style={{ fontSize: paidJoined.length > 0 ? 24 : 17, fontWeight: 800, color: paidJoined.length > 0 ? INK : MUTED }}>
               {paidJoined.length > 0 ? `${paidJoined.length} → ${paidBooked.length}` : "maturing"}
             </div>
@@ -1206,7 +1338,7 @@ export default async function AdminReportPage({
           <div style={{ fontSize: 12.5, lineHeight: 1.7, color: "#1a1a1a" }}>
             {stats && (
               <>
-                <strong>{tot.secondary} secondary conversion events</strong> · {per100(tot.secondary, tot.clicks)} per
+                <strong>{tot.secondary} <Term k="secondaryEvents">secondary conversion events</Term></strong> · {per100(tot.secondary, tot.clicks)} per
                 100 clicks{tot.secondary > 0 ? ` · ${money2(tot.cost / tot.secondary)} per event` : ""} ·{" "}
                 <i>events, not people</i> — one visitor can fire several, and a lead does not have to pass through any
                 of them. Mix:{" "}
@@ -1229,7 +1361,7 @@ export default async function AdminReportPage({
             )}
             <br />
             <span style={SUBTLE}>
-              Signal→lead rate by campaign is now accruing (session UTM capture live as of this deploy) — that answer
+              <Term k="signalLeadRate">Signal→lead rate</Term> by campaign is now accruing (session UTM capture live as of this deploy) — that answer
               decides the research feeder&rsquo;s budget, nothing else does.
             </span>
           </div>
@@ -1253,10 +1385,19 @@ export default async function AdminReportPage({
             <tbody>
               {camps.map((c) => (
                 <tr key={c.id} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                  <td style={TD}>
-                    <strong>{c.name}</strong>
+                  <td style={{ ...TD, maxWidth: 240 }}>
+                    {campaignTip(c.id) ? (
+                      <strong className="tip" data-tip={campaignTip(c.id)} title={campaignTip(c.id)}>
+                        {c.name}
+                      </strong>
+                    ) : (
+                      <strong>{c.name}</strong>
+                    )}
                     <br />
-                    <span style={SUBTLE}>{c.role}</span>
+                    <span style={SUBTLE}>
+                      {c.role}
+                      {CAMPAIGN_META[c.id] ? <> — {CAMPAIGN_META[c.id].plain}</> : null}
+                    </span>
                   </td>
                   <td style={{ ...TD, color: MUTED }}>{c.metric}</td>
                   <td style={TD}>
@@ -1302,12 +1443,12 @@ export default async function AdminReportPage({
                   <th style={{ ...TH, textAlign: "right" }}>Cost</th>
                   <th style={{ ...TH, textAlign: "right" }}>Clicks</th>
                   <th style={{ ...TH, textAlign: "right" }}>CPC</th>
-                  <th style={{ ...TH, textAlign: "right" }}>2° events</th>
+                  <th style={{ ...TH, textAlign: "right" }} title={DEFS.secondaryEvents.def}>2° events</th>
                   <th style={{ ...TH, textAlign: "right" }}>$ / event</th>
-                  <th style={{ ...TH, textAlign: "right" }}>1° actions</th>
+                  <th style={{ ...TH, textAlign: "right" }} title={DEFS.primaryActions.def}>1° actions</th>
                   <th style={{ ...TH, textAlign: "right" }}>$ / action</th>
-                  <th style={{ ...TH, textAlign: "right" }}>Impr. share</th>
-                  <th style={{ ...TH, textAlign: "right" }}>Top lost (rank)</th>
+                  <th style={{ ...TH, textAlign: "right" }} title={DEFS.imprShare.def}>Impr. share</th>
+                  <th style={{ ...TH, textAlign: "right" }} title={DEFS.topLostRank.def}>Top lost (rank)</th>
                 </tr>
               </thead>
               <tbody>
@@ -1376,6 +1517,38 @@ export default async function AdminReportPage({
                 {stats.conversionActions.map((a) => `${a.actionName} (${a.allConversions.toFixed(0)})`).join(" · ")}
               </>
             )}
+
+            <div style={{ fontWeight: 800, color: INK, margin: "14px 0 4px" }}>The campaigns, in plain English</div>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <tbody>
+                {Object.entries(CAMPAIGN_META).map(([id, m]) => (
+                  <tr key={id} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={{ ...TD, fontWeight: 700, whiteSpace: "nowrap", verticalAlign: "top" }}>
+                      {(ADS_CAMPAIGN_NAMES[id] ?? id).replace(" Español", " Espanol")}
+                    </td>
+                    <td style={{ ...TD, color: "#374151" }}>
+                      {m.plain} <span style={{ color: MUTED }}>Typical searches: {m.examples}. Lands on: {m.lands}.</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div style={{ fontWeight: 800, color: INK, margin: "14px 0 4px" }}>Glossary</div>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <tbody>
+                {Object.values(DEFS).map((d) => (
+                  <tr key={d.term} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                    <td style={{ ...TD, fontWeight: 700, whiteSpace: "nowrap", verticalAlign: "top" }}>{d.term}</td>
+                    <td style={{ ...TD, color: "#374151" }}>{d.def}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ ...SUBTLE, marginTop: 8 }}>
+              Dotted-underlined terms across the page show these definitions on hover; this drawer is the same list in
+              one place (and the version that works on a phone).
+            </div>
           </div>
         </details>
 
@@ -2413,6 +2586,7 @@ export default async function AdminReportPage({
 
   return (
     <main style={{ maxWidth: 860, margin: "0 auto", padding: "28px 20px 64px" }}>
+      <style>{ADMIN_TIP_CSS}</style>
       <header style={{ marginBottom: 16 }}>
         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: GREEN }}>
           Auto Line Logistics
