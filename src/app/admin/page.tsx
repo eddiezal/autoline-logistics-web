@@ -41,6 +41,7 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
 import { classifyRecord, type RecordOutcome } from "@/lib/proabd/statuses";
 import { roadMilesBetweenZips } from "@/lib/geo/zip3";
+import { dedupeLeads, normalizePhoneKey, normalizeEmailKey } from "@/lib/leads/identity";
 import {
   tabRows,
   snowbirdOrderCount,
@@ -259,6 +260,9 @@ interface LeadRow {
   locale: "es" | "en" | null; // visitor language (capture began Jul 22)
   visitorId: string | null; // behavior join key (capture began Jul 22 PM)
   firstTouchAt: Date | null; // first-touch cookie timestamp (Jul 22 PM)
+  /** P4 identity keys (metric-contract §3) — read-time dedup, never stored. */
+  phoneKey: string | null;
+  emailKey: string | null;
 }
 
 interface AbdState {
@@ -380,6 +384,8 @@ function toRow(d: any): LeadRow | null {
       typeof d.proabdAssignedAgent?.userName === "string" && d.proabdAssignedAgent.userName.trim()
         ? d.proabdAssignedAgent.userName.trim()
         : null,
+    phoneKey: normalizePhoneKey(d.contact?.phone),
+    emailKey: normalizeEmailKey(d.contact?.email),
   };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -619,6 +625,8 @@ export default async function AdminReportPage({
     locale: "es" | "en";
     at: Date | null;
     price: number | null;
+    /** Session click attribution (capture live Jul 28) — the P1 lens. */
+    campaignId: string | null;
   }
   let siteEvents: SiteEvent[] = [];
   try {
@@ -626,7 +634,7 @@ export default async function AdminReportPage({
     const sevSnap = await getAdminDb()
       .collection("site_events")
       .where("ts", ">=", d14)
-      .select("vid", "sid", "type", "path", "locale", "ts", "meta.price")
+      .select("vid", "sid", "type", "path", "locale", "ts", "meta.price", "attr.campaignId")
       .get();
     siteEvents = sevSnap.docs.map((doc) => {
       /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -640,6 +648,8 @@ export default async function AdminReportPage({
         locale: e.locale === "es" ? ("es" as const) : ("en" as const),
         at: e.ts?.toDate?.() ?? null,
         price: typeof e.meta?.price === "number" ? e.meta.price : null,
+        campaignId:
+          typeof e.attr?.campaignId === "string" && e.attr.campaignId ? e.attr.campaignId : null,
       };
     });
     siteEvents.sort((a, b) => (a.at?.getTime() ?? 0) - (b.at?.getTime() ?? 0));
@@ -1115,6 +1125,8 @@ export default async function AdminReportPage({
 
     /* ── Spine stages 3–4: site-side, window-consistent (since the fix) ── */
     const paidLeadRecords = paidPost.length; // valid paid lead records since Jul 20 (forms + calls)
+    // P4∩P6: unique paid leads (metric-contract §3, ratified 7/28) — read-time dedup.
+    const uniquePaidLeads = dedupeLeads(paidPost).length;
     const paidJoined = paidPost.filter((r) => !r.isCall && r.abdId && r.synced);
     const paidBooked = paidJoined.filter((r) => abdStates.get(r.abdId)?.outcome === "booked");
 
@@ -1300,13 +1312,14 @@ export default async function AdminReportPage({
             </div>
           </div>
           <div style={stageCard(false)}>
-            <div style={stgName}><Term k="paidLeadRecords">Paid lead records (site)</Term></div>
-            <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{paidLeadRecords}</div>
+            <div style={stgName}>Unique paid leads (P4)</div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>{uniquePaidLeads}</div>
             <div style={{ fontSize: 11.5, color: GREEN, fontWeight: 700 }}>
-              {paidLeadRecords > 0 ? money(tot.cost / paidLeadRecords) + " / record" : ""}
+              {uniquePaidLeads > 0 ? money(tot.cost / uniquePaidLeads) + " / unique lead" : ""}
             </div>
             <div style={stgNote}>
-              our own DB, paid proof since {fmtDay(TRACKING_FIX_TS)} · forms + tracked calls; cross-channel dedup pending
+              {paidLeadRecords} <Term k="paidLeadRecords">records</Term> deduped by phone/email
+              (30-day window) · paid proof since {fmtDay(TRACKING_FIX_TS)}
             </div>
           </div>
           <div style={stageCard(paidJoined.length === 0)}>
@@ -2073,7 +2086,15 @@ export default async function AdminReportPage({
 
 
   function Behavior() {
-    // ── Sessionize ──
+    /* ── Behavior — what visitors do before raising a hand ──
+     * Rebuilt 2026-07-28 to the shared grammar (metric-contract.md):
+     * pills → narrative verdict → decision tiles (rule-gated) → nested
+     * funnel → research diagnostics (parallel, §7.4) → landing pages →
+     * per-campaign lens (P1) → analyst + methodology drawers.
+     * Computations preserved from the Jul 22 build; presentation reordered.
+     */
+
+    // ── Sessionize (P0) ──
     interface Sess {
       vid: string;
       locale: "es" | "en";
@@ -2081,6 +2102,7 @@ export default async function AdminReportPage({
       pages: string[];
       formStarted: boolean;
       estPrices: number[];
+      campaignId: string | null; // P1 lens — first attr seen in session
     }
     const norm = (p: string) => {
       const n = p.replace(/^\/es(?=\/|$)/, "");
@@ -2095,47 +2117,47 @@ export default async function AdminReportPage({
       const key = e.sid ?? e.vid + "|" + dayOf(e.at);
       const sess =
         sessions.get(key) ??
-        ({ vid: e.vid, locale: e.locale, day: dayOf(e.at), pages: [], formStarted: false, estPrices: [] } as Sess);
+        ({ vid: e.vid, locale: e.locale, day: dayOf(e.at), pages: [], formStarted: false, estPrices: [], campaignId: null } as Sess);
       if (e.type === "page_view") sess.pages.push(e.path);
       else if (e.type === "form_started") sess.formStarted = true;
       else if (e.type === "estimate_shown" && e.price !== null) sess.estPrices.push(e.price);
+      if (sess.campaignId === null && e.campaignId !== null) sess.campaignId = e.campaignId;
       sessions.set(key, sess);
     }
     const sessList = [...sessions.values()].filter((x) => x.pages.length > 0 || x.formStarted);
     const convertedVids = new Set(all.filter((r) => r.visitorId).map((r) => r.visitorId as string));
 
-    // ── Aggregates ──
-    const byDay = new Map<string, { n: number; es: number }>();
-    for (const x of sessList) {
-      const d = byDay.get(x.day) ?? { n: 0, es: 0 };
-      d.n++;
-      if (x.locale === "es") d.es++;
-      byDay.set(x.day, d);
-    }
-    const days = [...byDay.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1)).slice(0, 14);
-
-    const landings = new Map<string, { n: number; quote: number; convVids: Set<string> }>();
-    for (const x of sessList) {
-      if (x.pages.length === 0) continue;
-      const lp = norm(x.pages[0]);
-      const l = landings.get(lp) ?? { n: 0, quote: 0, convVids: new Set<string>() };
-      l.n++;
-      if (x.pages.some(isQuotePath)) l.quote++;
-      if (convertedVids.has(x.vid)) l.convVids.add(x.vid);
-      landings.set(lp, l);
-    }
-    const landingList = [...landings.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 15);
-
+    // ── Funnel (nested session stages — law 3) ──
     const totalSess = sessList.length;
     const quoteSess = sessList.filter((x) => x.pages.some(isQuotePath) || x.formStarted).length;
     const startedSess = sessList.filter((x) => x.formStarted).length;
-    // Distinct visitors (2026-07-22 review): counting sessions here inflated
-    // conversions — a converted visitor's every return visit counted again.
+    // Converted = distinct VISITORS (cross-session join by design) — shown
+    // beside the funnel, never as a nested bar: a visitor can start the
+    // form in one session and submit in another.
     const convVisitors = new Set(
       sessList.filter((x) => convertedVids.has(x.vid)).map((x) => x.vid),
     ).size;
 
-    // Price bands from estimate_shown (route checker), with what happened next.
+    // ── Locale split for the ES rule ──
+    const esSess = sessList.filter((x) => x.locale === "es");
+    const enSess = sessList.filter((x) => x.locale !== "es");
+    const convRate = (xs: Sess[]) => {
+      const vids = new Set(xs.map((x) => x.vid));
+      let conv = 0;
+      for (const v of vids) if (convertedVids.has(v)) conv++;
+      return vids.size > 0 ? conv / vids.size : null;
+    };
+    const esRate = convRate(esSess);
+    const enRate = convRate(enSess);
+
+    // ── Research diagnostics (parallel evidence — contract §7.4) ──
+    const estEvents = siteEvents.filter((e) => e.type === "estimate_shown");
+    const estVids = new Set(estEvents.map((e) => e.vid)).size;
+    const anchors = estEvents
+      .map((e) => e.price)
+      .filter((v): v is number => v !== null)
+      .sort((a, b) => a - b);
+    const anchorMedian = anchors.length > 0 ? anchors[Math.floor(anchors.length / 2)] : null;
     const BANDS: Array<{ label: string; min: number; max: number }> = [
       { label: "under $750", min: 0, max: 750 },
       { label: "$750–1,099", min: 750, max: 1100 },
@@ -2152,7 +2174,41 @@ export default async function AdminReportPage({
     }).filter((r) => r.n > 0);
     const estSessCount = sessList.filter((x) => x.estPrices.length > 0).length;
 
-    // Page-before-quote.
+    // ── Landing pages ──
+    const landings = new Map<string, { n: number; quote: number; convVids: Set<string> }>();
+    for (const x of sessList) {
+      if (x.pages.length === 0) continue;
+      const lp = norm(x.pages[0]);
+      const l = landings.get(lp) ?? { n: 0, quote: 0, convVids: new Set<string>() };
+      l.n++;
+      if (x.pages.some(isQuotePath)) l.quote++;
+      if (convertedVids.has(x.vid)) l.convVids.add(x.vid);
+      landings.set(lp, l);
+    }
+    const landingList = [...landings.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 15);
+
+    // ── Per-campaign lens (P1 — accruing since the Jul 28 UTM capture) ──
+    const byCampaign = new Map<string, { sess: number; est: number; started: number; convVids: Set<string> }>();
+    for (const x of sessList) {
+      if (x.campaignId === null) continue;
+      const c = byCampaign.get(x.campaignId) ?? { sess: 0, est: 0, started: 0, convVids: new Set<string>() };
+      c.sess++;
+      if (x.estPrices.length > 0) c.est++;
+      if (x.formStarted) c.started++;
+      if (convertedVids.has(x.vid)) c.convVids.add(x.vid);
+      byCampaign.set(x.campaignId, c);
+    }
+    const campaignRows = [...byCampaign.entries()].sort((a, b) => b[1].sess - a[1].sess);
+
+    // ── Analyst-drawer aggregates (kept, demoted) ──
+    const byDay = new Map<string, { n: number; es: number }>();
+    for (const x of sessList) {
+      const d = byDay.get(x.day) ?? { n: 0, es: 0 };
+      d.n++;
+      if (x.locale === "es") d.es++;
+      byDay.set(x.day, d);
+    }
+    const days = [...byDay.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1)).slice(0, 14);
     const before = new Map<string, number>();
     for (const x of sessList) {
       const idx = x.pages.findIndex(isQuotePath);
@@ -2162,8 +2218,6 @@ export default async function AdminReportPage({
       }
     }
     const beforeList = [...before.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
-
-    // Time-to-convert from lead docs (firstTouchAt capture began Jul 22 PM).
     const ttcLeads = all.filter((r) => r.firstTouchAt !== null && !r.isCall);
     const TTC_BUCKETS = [
       { label: "Same visit (<30 min)", maxMs: 30 * 60_000 },
@@ -2172,8 +2226,6 @@ export default async function AdminReportPage({
       { label: "3–7 days", maxMs: 7 * 86_400_000 },
       { label: "Over a week", maxMs: Infinity },
     ];
-    // Buckets partition [0, ∞): clamp negatives (client clock skew) to 0
-    // so every lead lands in exactly one bucket (2026-07-22 review).
     const ttcCounts = TTC_BUCKETS.map((bkt, i) => ({
       label: bkt.label,
       n: ttcLeads.filter((r) => {
@@ -2183,44 +2235,200 @@ export default async function AdminReportPage({
       }).length,
     }));
 
+    /* ── Decision rules (threshold-gated; stateless — contract §7.5) ── */
+    const decisions: { title: string; meta: string; body: string }[] = [];
+    // ES funnel rule: needs a real ES sample before it may speak.
+    if (esSess.length >= 30 && esRate !== null && enRate !== null && enRate > 0 && esRate < 0.5 * enRate) {
+      decisions.push({
+        title: "ES quote funnel converts at under half the EN rate",
+        meta: `impact: ~${Math.max(1, Math.round(esSess.length * (enRate - esRate)))} leads/period · confidence: ${esSess.length >= 80 ? "med" : "low"} (n=${esSess.length} ES sessions) · owner: Eddie`,
+        body: "Review ES form copy and the S5 landing path before adding S5 budget.",
+      });
+    }
+    // High-band abandonment rule: $1,500+ proceeds at <half the under-$750 rate.
+    const bandLow = bandRows.find((b) => b.label === "under $750");
+    const bandHigh = bandRows.find((b) => b.label === "$1,500+");
+    if (
+      bandLow && bandHigh && bandHigh.n >= 8 && bandLow.n >= 8 && bandLow.proceeded > 0 &&
+      bandHigh.proceeded / bandHigh.n < 0.5 * (bandLow.proceeded / bandLow.n)
+    ) {
+      decisions.push({
+        title: "High-price estimates lose visitors at twice the low-band rate",
+        meta: `impact: ${bandHigh.n - bandHigh.proceeded} abandoned high-value sessions · confidence: low-med · owner: Eddie`,
+        body: "Flat-fee v1 lowered heavy-deal quotes on Jul 28 — watch whether this band's proceed rate moves; if not, the price isn't the objection.",
+      });
+    }
+
+    const pill: React.CSSProperties = {
+      display: "inline-block",
+      fontSize: 11,
+      border: "1px solid var(--color-gray-200)",
+      background: "var(--color-surface)",
+      borderRadius: 999,
+      padding: "4px 11px",
+      color: MUTED,
+      marginRight: 6,
+      marginBottom: 6,
+    };
+    const pillB: React.CSSProperties = { color: "#1a1a1a", fontWeight: 700 };
+
     if (siteEvents.length === 0) {
       return (
         <section style={CARD}>
           <h2 style={H2}>On-site behavior</h2>
           <div style={SUBTLE}>
             Collecting — first-party event capture went live Jul 22. This view populates as
-            visitors arrive; check back in a day or two. (No GA involved: events flow from the
-            site to our own database.)
+            visitors arrive. (No GA involved: events flow from the site to our own database.)
           </div>
         </section>
       );
     }
 
+    const funnelBar = (label: string, n: number, denomLabel: string | null, width: number) => (
+      <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "7px 0" }}>
+        <div style={{ width: 130, fontSize: 11.5, fontWeight: 600, color: INK, textAlign: "right" }}>{label}</div>
+        <div style={{ flex: 1, background: "var(--color-gray-100)", borderRadius: 5, height: 20, position: "relative" }}>
+          <div
+            style={{
+              width: `${Math.max(width, 0.5)}%`,
+              height: "100%",
+              background: GREEN,
+              borderRadius: 5,
+            }}
+          />
+          <span
+            style={{
+              position: "absolute",
+              left: width > 12 ? undefined : `calc(${Math.max(width, 0.5)}% + 7px)`,
+              right: width > 12 ? `calc(${100 - width}% + 7px)` : undefined,
+              top: 2,
+              fontSize: 11,
+              fontWeight: 800,
+              color: width > 12 ? "#fff" : INK,
+            }}
+          >
+            {n}
+          </span>
+        </div>
+        <div style={{ width: 130, fontSize: 10.5, color: MUTED }}>{denomLabel ?? "—"}</div>
+      </div>
+    );
+
     return (
       <>
-        <div style={{ ...SUBTLE, marginBottom: 12 }}>
-          <strong style={{ color: "#1a1a1a" }}>Last 14 days of first-party sessions</strong> —
-          capture began Jul 22, so early numbers are partial by construction. Anonymous visitor
-          IDs; conversion = a lead submitted by the same visitor.
+        {/* pills */}
+        <div style={{ marginBottom: 10 }}>
+          <span style={pill}>Window: <span style={pillB}>last 14 days</span> · capture began {fmtDay(BEHAVIOR_START)}</span>
+          <span style={pill}>Population: <span style={pillB}>all sessions</span> · bot-filtered · 30-min windows</span>
+          <span style={pill}>Per-campaign lens: <span style={pillB}>accruing since {fmtDay(new Date("2026-07-28T20:00:00Z"))}</span></span>
         </div>
 
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Quote funnel (sessions)</h2>
-          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginTop: 4 }}>
-            <div><div style={{ fontSize: 22, fontWeight: 800, color: INK }}>{totalSess}</div><div style={SUBTLE}>Sessions</div></div>
-            <div><div style={{ fontSize: 22, fontWeight: 800 }}>{quoteSess}</div><div style={SUBTLE}>Reached quote page</div></div>
-            <div><div style={{ fontSize: 22, fontWeight: 800 }}>{startedSess}</div><div style={SUBTLE}>Started the form</div></div>
-            <div><div style={{ fontSize: 22, fontWeight: 800, color: INK }}>{convVisitors}</div><div style={SUBTLE}>Converted (distinct visitors)</div></div>
-          </div>
-          <div style={{ ...SUBTLE, marginTop: 10 }}>
-            Drop-off reads left to right. Sessions = 30-minute activity windows per anonymous
-            visitor.
+        {/* narrative verdict */}
+        <section style={{ ...CARD, marginBottom: 12, borderLeft: `4px solid ${GREEN}` }}>
+          <div style={{ fontSize: 14, lineHeight: 1.6, color: "#1a1a1a" }}>
+            <strong>
+              {totalSess} sessions · {quoteSess} reached the quote page · {startedSess} started the
+              form · {convVisitors} distinct visitors converted
+            </strong>{" "}
+            ({pct(convVisitors, totalSess)} of sessions — cross-session join, see funnel note). Research
+            tools fired <strong>{estEvents.length} <Term k="secondaryEvents">estimate events</Term> from {estVids} unique visitors</strong>
+            {anchorMedian !== null ? ` (median price shown ${money(anchorMedian)})` : ""}.{" "}
+            {esSess.length >= 30 && esRate !== null && enRate !== null ? (
+              <>Spanish sessions convert at {pct(Math.round((esRate ?? 0) * 1000), 1000)} vs {pct(Math.round((enRate ?? 0) * 1000), 1000)} for English.</>
+            ) : (
+              <>ES sample still too small to compare conversion rates honestly (n={esSess.length} sessions; rule arms at 30).</>
+            )}
           </div>
         </section>
 
+        {/* decision tiles */}
+        {decisions.map((d) => (
+          <div
+            key={d.title}
+            style={{
+              border: "1px solid var(--color-gray-200)",
+              borderLeft: "4px solid #d97706",
+              borderRadius: 10,
+              background: "var(--color-surface)",
+              padding: "11px 13px",
+              marginBottom: 10,
+            }}
+          >
+            <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: INK }}>{d.title}</span>
+              <span style={{ fontSize: 10.5, color: MUTED }}>{d.meta}</span>
+            </div>
+            <div style={{ fontSize: 11.5, color: "#374151", lineHeight: 1.5, marginTop: 3 }}>{d.body}</div>
+          </div>
+        ))}
+
+        {/* nested funnel */}
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>
+            The quote funnel{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>— nested: same sessions at every stage</span>
+          </h2>
+          <div style={{ marginTop: 6 }}>
+            {funnelBar("Sessions", totalSess, null, 100)}
+            {funnelBar("Reached /quote", quoteSess, pct(quoteSess, totalSess) + " of sessions", totalSess > 0 ? (quoteSess / totalSess) * 100 : 0)}
+            {funnelBar("Form started", startedSess, pct(startedSess, quoteSess) + " of quote-reachers", totalSess > 0 ? (startedSess / totalSess) * 100 : 0)}
+          </div>
+          <div style={{ ...SUBTLE, marginTop: 8 }}>
+            <strong style={{ color: INK }}>{convVisitors} distinct visitors converted</strong> — kept
+            beside the funnel, not in it: a visitor can start the form in one session and submit in
+            another, so conversion is a visitor-level join, not a nested session stage.
+          </div>
+        </section>
+
+        {/* research diagnostics — parallel */}
+        <section style={{ ...CARD, marginBottom: 12, background: "#EDF5F0", borderColor: "#d5e8dc" }}>
+          <h2 style={H2}>
+            Research diagnostics{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>— parallel evidence, not funnel stages (contract §7.4)</span>
+          </h2>
+          <div style={{ fontSize: 12.5, lineHeight: 1.7, color: "#1a1a1a" }}>
+            <strong>{estEvents.length} estimate events · {estVids} unique visitors · {estSessCount} sessions</strong>
+            {anchors.length > 0 && (
+              <> · prices shown: median {money(anchorMedian ?? 0)} ({money(anchors[0])}–{money(anchors[anchors.length - 1])})</>
+            )}
+            {rpcOk + rpcUnsupported + rpcError > 0 && (
+              <>
+                {" "}· route-checker since {fmtDay(RPC_LOG_START)}: {rpcOk} priced · {rpcUnsupported} unserviceable
+                route{rpcUnsupported === 1 ? "" : "s"}{rpcError > 0 ? ` · ${rpcError} pricing errors` : ""}
+              </>
+            )}
+          </div>
+          {bandRows.length > 0 && (
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480, marginTop: 8 }}>
+              <thead>
+                <tr>
+                  <th style={TH}>Price band shown</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Sessions</th>
+                  <th style={{ ...TH, textAlign: "right" }}>Proceeded</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bandRows.map((r) => (
+                  <tr key={r.label} style={{ borderTop: "1px solid #d5e8dc" }}>
+                    <td style={TD}>{r.label}</td>
+                    <td style={TDR}>{r.n}</td>
+                    <td style={TDR}>{pct(r.proceeded, r.n)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          <div style={{ ...SUBTLE, marginTop: 8 }}>
+            &ldquo;Proceeded&rdquo; = started or submitted the quote form afterward. These become funnel
+            stages only if proven unique + nested + predictive — the signal→lead instrument (live Jul 28)
+            decides. Small samples: direction, not decimals.
+          </div>
+        </section>
+
+        {/* landing pages */}
         <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
-          <h2 style={H2}>Landing pages — all visitors</h2>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 520 }}>
+          <h2 style={H2}>Where sessions land</h2>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 520, marginTop: 4 }}>
             <thead>
               <tr>
                 <th style={TH}>Landing page</th>
@@ -2244,95 +2452,127 @@ export default async function AdminReportPage({
             </tbody>
           </table>
           <div style={{ ...SUBTLE, marginTop: 8 }}>
-            EN and ES versions of a page are grouped (locale split below). This is every visitor,
-            not just converters — the denominator the lead-pages table was missing.
+            EN and ES versions of a page are grouped. Every visitor, not just converters.
           </div>
         </section>
 
-        {bandRows.length > 0 && (
-          <section style={{ ...CARD, marginBottom: 12 }}>
-            <h2 style={H2}>Price shown vs. what happened next</h2>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480 }}>
-              <thead>
-                <tr>
-                  <th style={TH}>Price band (route checker)</th>
-                  <th style={{ ...TH, textAlign: "right" }}>Sessions shown</th>
-                  <th style={{ ...TH, textAlign: "right" }}>Proceeded</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bandRows.map((r) => (
-                  <tr key={r.label} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                    <td style={TD}>{r.label}</td>
-                    <td style={TDR}>{r.n}</td>
-                    <td style={TDR}>{pct(r.proceeded, r.n)}</td>
+        {/* per-campaign lens */}
+        <section style={{ ...CARD, marginBottom: 12, overflowX: "auto" }}>
+          <h2 style={H2}>
+            By campaign{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>— the lens session UTM capture unlocks (accruing)</span>
+          </h2>
+          {campaignRows.length > 0 ? (
+            <>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 520, marginTop: 4 }}>
+                <thead>
+                  <tr>
+                    <th style={TH}>Campaign</th>
+                    <th style={{ ...TH, textAlign: "right" }}>Sessions</th>
+                    <th style={{ ...TH, textAlign: "right" }}>Research sessions</th>
+                    <th style={{ ...TH, textAlign: "right" }}>Form starts</th>
+                    <th style={{ ...TH, textAlign: "right" }}>Converted visitors</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{ ...SUBTLE, marginTop: 8 }}>
-              {estSessCount} session{estSessCount === 1 ? "" : "s"} saw a live price pre-submit.
-              “Proceeded” = started or submitted the quote form afterward. Small samples: read
-              direction, not decimals.
-            </div>
-          </section>
-        )}
-
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Time to convert (leads with first-touch data)</h2>
-          {ttcLeads.length > 0 ? (
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 420 }}>
-              <tbody>
-                {ttcCounts.map((r) => (
-                  <tr key={r.label} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                    <td style={TD}>{r.label}</td>
-                    <td style={{ ...TDR, fontWeight: 700 }}>{r.n || "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {campaignRows.map(([id, c]) => (
+                    <tr key={id} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                      <td style={{ ...TD, fontWeight: 700 }}>{ADS_CAMPAIGN_NAMES[id] ?? `campaign ${id}`}</td>
+                      <td style={{ ...TDR, fontWeight: 700 }}>{c.sess}</td>
+                      <td style={TDR}>{c.est || "—"}</td>
+                      <td style={TDR}>{c.started || "—"}</td>
+                      <td style={TDR}>{c.convVids.size || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div style={{ ...SUBTLE, marginTop: 8 }}>
+                Research-session share per campaign is the signal→lead precursor — the number that
+                settles the research feeder&rsquo;s budget once conversion columns fill.
+              </div>
+            </>
           ) : (
-            <div style={SUBTLE}>
-              First-touch timestamps began Jul 22 — this fills as new leads arrive.
+            <div style={{ ...SUBTLE, marginTop: 4 }}>
+              No attributed sessions yet — capture deployed {fmtDay(new Date("2026-07-28T20:00:00Z"))}; fills within
+              ~a week of paid traffic. Columns waiting: sessions · research sessions · form starts ·
+              converted visitors · signal→lead rate per campaign.
             </div>
           )}
         </section>
 
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Page visited right before the quote page</h2>
-          {beforeList.length > 0 ? (
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480 }}>
-              <tbody>
-                {beforeList.map(([path, n]) => (
-                  <tr key={path} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                    <td style={{ ...TD, fontFamily: "ui-monospace, monospace", fontSize: 12 }}>{path}</td>
-                    <td style={{ ...TDR, fontWeight: 700 }}>{n}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div style={SUBTLE}>No multi-page journeys into the quote page recorded yet.</div>
-          )}
-        </section>
-
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Sessions per day</h2>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 380 }}>
-            <tbody>
-              {days.map(([d, v]) => (
-                <tr key={d} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                  <td style={TD}>{d}</td>
-                  <td style={{ ...TDR, fontWeight: 700 }}>{v.n}</td>
-                  <td style={{ ...TDR, color: MUTED }}>{v.es > 0 ? v.es + " ES" : "—"}</td>
-                </tr>
-              ))}
-              {days.length === 0 && (
-                <tr><td colSpan={3} style={{ ...TD, color: MUTED }}>No sessions recorded yet.</td></tr>
+        {/* analyst drawer */}
+        <details style={{ ...CARD, marginBottom: 8 }}>
+          <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>
+            Analyst view — time to convert · path before quote · sessions per day
+          </summary>
+          <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginTop: 10 }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: INK, marginBottom: 4 }}>Time to convert</div>
+              {ttcLeads.length > 0 ? (
+                <table style={{ borderCollapse: "collapse", fontSize: 12 }}>
+                  <tbody>
+                    {ttcCounts.map((r) => (
+                      <tr key={r.label} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                        <td style={TD}>{r.label}</td>
+                        <td style={{ ...TDR, fontWeight: 700, paddingLeft: 14 }}>{r.n || "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div style={SUBTLE}>Fills as first-touch leads arrive.</div>
               )}
-            </tbody>
-          </table>
-        </section>
+            </div>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: INK, marginBottom: 4 }}>Page before /quote</div>
+              {beforeList.length > 0 ? (
+                <table style={{ borderCollapse: "collapse", fontSize: 12 }}>
+                  <tbody>
+                    {beforeList.map(([path, n]) => (
+                      <tr key={path} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                        <td style={{ ...TD, fontFamily: "ui-monospace, monospace" }}>{path}</td>
+                        <td style={{ ...TDR, fontWeight: 700, paddingLeft: 14 }}>{n}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div style={SUBTLE}>No multi-page journeys into /quote yet.</div>
+              )}
+            </div>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: INK, marginBottom: 4 }}>Sessions / day</div>
+              <table style={{ borderCollapse: "collapse", fontSize: 12 }}>
+                <tbody>
+                  {days.map(([d, v]) => (
+                    <tr key={d} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                      <td style={TD}>{d}</td>
+                      <td style={{ ...TDR, fontWeight: 700, paddingLeft: 14 }}>{v.n}</td>
+                      <td style={{ ...TDR, color: MUTED, paddingLeft: 10 }}>{v.es > 0 ? v.es + " ES" : "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        {/* methodology drawer */}
+        <details style={{ ...CARD }}>
+          <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>
+            Methodology
+          </summary>
+          <div style={{ fontSize: 12.5, lineHeight: 1.7, color: "#1a1a1a", marginTop: 10 }}>
+            <strong>Sessions</strong> = 30-minute activity windows per anonymous visitor (first-party
+            cookie; no GA). <strong>Converted</strong> = a lead submitted by the same visitor ID —
+            a cross-session, visitor-level join, deliberately excluded from the nested funnel.
+            <strong> Research events ≠ people</strong>: one visitor can fire several; they stay in the
+            diagnostics panel per metric-contract §7.4 until proven unique, nested, and predictive.
+            <strong> Per-campaign lens</strong> = sessions whose landing URL carried our own UTM/gclid
+            capture (live Jul 28) — includes non-converters, which the lead-doc join never could.
+            Full definitions: metric-contract.md.
+          </div>
+        </details>
       </>
     );
   }
