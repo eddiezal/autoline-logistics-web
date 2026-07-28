@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.json","compilerOptions":{"skipLibCheck":true,"noEmit":true},"include":["src/lib/analytics/events.ts","src/components/QuoteForm.tsx","src/lib/hero-handoff*","src/data/zip-metros*"]}

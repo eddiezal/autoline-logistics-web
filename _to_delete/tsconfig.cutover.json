@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "noEmit": true, "types": ["node"] },
+  "include": [
+    "../next-env.d.ts",
+    "../src/app/api/lead/route.ts",
+    "../src/app/api/webhooks/proabd/route.ts",
+    "../src/lib/leads/emailTemplate.ts",
+    "../src/lib/leads/agents.ts"
+  ]
+}

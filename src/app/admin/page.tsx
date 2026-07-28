@@ -37,6 +37,7 @@
  *
  * The previous dashboard is preserved at src/app/admin/_legacy/ per §1.
  */
+import { Fragment } from "react";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
 import { classifyRecord, type RecordOutcome } from "@/lib/proabd/statuses";
@@ -427,14 +428,16 @@ const ALERT: React.CSSProperties = {
 
 /* ── Page ────────────────────────────────────────────────────── */
 
+// Journey-ordered, grouped nav (2026-07-28): Overview, then Growth →
+// Operations → Economics. Opportunities retired — its rules live on in the
+// Overview decision queue (parity confirmed at removal).
 const VIEWS = [
-  { id: "overview", label: "Overview" },
-  { id: "acquisition", label: "Acquisition" },
-  { id: "sales", label: "Sales workload" },
-  { id: "lanes", label: "Lane activity" },
-  { id: "opportunities", label: "Opportunities" },
-  { id: "behavior", label: "Behavior" },
-  { id: "business", label: "Business" },
+  { id: "overview", label: "Overview", group: "" },
+  { id: "acquisition", label: "Acquisition", group: "Growth" },
+  { id: "behavior", label: "Behavior", group: "Growth" },
+  { id: "sales", label: "Sales workload", group: "Operations" },
+  { id: "lanes", label: "Lane activity", group: "Economics" },
+  { id: "business", label: "Business", group: "Economics" },
 ] as const;
 type ViewId = (typeof VIEWS)[number]["id"];
 
@@ -455,27 +458,38 @@ export default async function AdminReportPage({
 
   const now = new Date();
   const d30 = new Date(now.getTime() - 30 * 86_400_000);
+  // Clock B (metric-contract §2): mature cohort = leads created 44→14 days
+  // ago. The fetch extends to 44d; `all` stays the 30d slice legacy views
+  // were built on so nothing else shifts meaning.
+  const d44 = new Date(now.getTime() - 44 * 86_400_000);
+  const d14 = new Date(now.getTime() - 14 * 86_400_000);
+  const d7 = new Date(now.getTime() - 7 * 86_400_000);
 
   /* ── Load ── */
-  let all: LeadRow[] = [];
+  let allFetched: LeadRow[] = []; // 44-day fetch (Clock B needs the tail)
+  let all: LeadRow[] = []; // 30-day slice — legacy views keep their meaning
   let loadError: string | null = null;
   const abdStates = new Map<string, AbdState>();
+  /** First time each record was OBSERVED at order stage — Clock-A "bookings
+   *  recorded" counts these transitions inside the operating window. */
+  const abdFirstOrderAt = new Map<string, Date>();
   try {
     const db = getAdminDb();
     const snap = await db
       .collection("leads")
-      .where("createdAt", ">=", d30)
+      .where("createdAt", ">=", d44)
       .orderBy("createdAt", "desc")
       .get();
-    all = snap.docs
+    allFetched = snap.docs
       .map((doc) => (isTest(doc.data()) ? null : toRow(doc.data())))
       .filter((r): r is LeadRow => r !== null);
+    all = allFetched.filter((r) => r.t >= d30);
 
     // Ownership/event coverage from ProABD Export events (since Jul 8).
     try {
       const evSnap = await db
         .collection("proabd_webhook_events")
-        .where("received_at", ">=", d30)
+        .where("received_at", ">=", d44)
         .select(
           "entity_id",
           "entity_type",
@@ -539,7 +553,10 @@ export default async function AdminReportPage({
           if (st.lastUser && st.lastUser !== e.user) st.userChanges++;
           st.lastUser = e.user;
         }
-        if (e.isOrder) st.reachedOrder = true;
+        if (e.isOrder) {
+          st.reachedOrder = true;
+          if (e.at && !abdFirstOrderAt.has(e.abd)) abdFirstOrderAt.set(e.abd, e.at);
+        }
         if (e.statusId) st.lastStatusId = e.statusId;
         abdStates.set(e.abd, st);
       }
@@ -558,6 +575,9 @@ export default async function AdminReportPage({
   // Window starts at the tracking fix, not PROABD_START: "paid attribution
   // eligible since Jul 20" is the honest cohort for every paid number shown.
   const ads: AdsResult = await fetchAdsStats(TRACKING_FIX_TS);
+  // Clock-A paid totals for Overview (cache is keyed per window, so this
+  // second call cannot poison the Acquisition window).
+  const ads7: AdsResult = await fetchAdsStats(d7);
 
   // ProABD order history (Business Baseline card + Business view + lane
   // economics). Populated by scripts/import-orders.mjs (monthly re-run until
@@ -565,12 +585,15 @@ export default async function AdminReportPage({
   // the Business view needs contact + city/zip fields and the collection is
   // a few hundred docs.
   let orders: BizOrder[] = [];
+  let ordersImportedAtMs = 0; // freshness for the health chip (const Date derived below)
   try {
     const oSnap = await getAdminDb().collection("orders").get();
     orders = oSnap.docs.map((doc) => {
       /* eslint-disable @typescript-eslint/no-explicit-any */
       const d: any = doc.data();
       /* eslint-enable @typescript-eslint/no-explicit-any */
+      const impMs: number = d.importedAt?.toDate?.()?.getTime?.() ?? 0;
+      if (impMs > ordersImportedAtMs) ordersImportedAtMs = impMs;
       return {
         orderId: String(d.orderId ?? doc.id),
         firstName: String(d.firstName ?? ""),
@@ -592,6 +615,49 @@ export default async function AdminReportPage({
   } catch {
     /* orders collection absent → card simply doesn't render */
   }
+  const ordersImportedAt: Date | null = ordersImportedAtMs > 0 ? new Date(ordersImportedAtMs) : null;
+
+  // Webhook-linked shipments — the booked-broker-fee source (metric-contract
+  // §6.1, coverage measured 93.1% on 2026-07-28). Test fixtures excluded.
+  interface ShipRow {
+    abdId: string;
+    stage: string;
+    depositCents: number | null;
+  }
+  let ships: ShipRow[] = [];
+  try {
+    const shSnap = await getAdminDb()
+      .collection("shipments")
+      .select("proabdAbdId", "stage", "status", "proabdDepositCents", "ownerEmail")
+      .get();
+    ships = shSnap.docs
+      .filter(
+        (doc) =>
+          !doc.id.startsWith("ALL-TEST") &&
+          !/eddiezal28@gmail\.com/i.test(String(doc.get("ownerEmail") ?? "")),
+      )
+      .map((doc) => {
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        const d: any = doc.data();
+        /* eslint-enable @typescript-eslint/no-explicit-any */
+        const dep = Number(d.proabdDepositCents);
+        return {
+          abdId: d.proabdAbdId != null ? String(d.proabdAbdId) : "",
+          stage: String(d.stage ?? d.status ?? "unknown"),
+          depositCents: Number.isFinite(dep) && dep > 0 ? dep : null,
+        };
+      });
+  } catch {
+    /* fee tile renders its unavailable state */
+  }
+  const BOOKED_STAGES = new Set(["booked", "prep", "inTransit", "delivered", "completed"]);
+  const shipsBooked = ships.filter((x) => BOOKED_STAGES.has(x.stage));
+  const shipsBookedWithFee = shipsBooked.filter((x) => x.depositCents !== null);
+  const feeCoveragePct =
+    shipsBooked.length > 0 ? (shipsBookedWithFee.length / shipsBooked.length) * 100 : null;
+  const shipFeeByAbd = new Map(
+    shipsBookedWithFee.filter((x) => x.abdId).map((x) => [x.abdId, x.depositCents as number]),
+  );
 
   // Route-price-checker demand since success logging was fixed (Jul 27 PM).
   // Small volume by construction; counted in memory to avoid a composite
@@ -681,7 +747,7 @@ export default async function AdminReportPage({
   // Status/event match coverage among synced forms.
   const statusMatched = syncOk.filter((r) => abdStates.has(r.abdId));
 
-  /* Needs-attention rules (§11) — each: issue, count, why, owner. */
+  /* ── Operational conditions (feed the decision queue) ── */
   const formsNoEstimate = forms.filter((r) => r.price === null);
   // Calls excluded: CALL- docs never flow through createLead, so they have
   // no ProABD link to confirm ownership against (CallRail→ProABD mapping TBD).
@@ -689,38 +755,179 @@ export default async function AdminReportPage({
     (r) => !r.isCall && !r.proabdUser && !(r.abdId && abdStates.get(r.abdId)?.lastUser),
   );
   const postFixAttrMissing = paidPost.filter((r) => r.campaignName === null);
-  const attention: { issue: string; count: number; why: string; owner: string }[] = [
-    {
-      issue: "Valid form leads without an estimate",
-      count: formsNoEstimate.length,
-      why: "Customer saw no price — pricing API failure or unusual route; agent must quote manually.",
-      owner: "Agents / Eddie (pricing API)",
-    },
-    {
-      issue: "Records without a confirmed ProABD assignee",
-      count: unassigned.length,
-      why: "Nobody confirmed as owner in the assignment of record; risk of an uncontacted lead.",
-      owner: "Ben / agents (assign in ProABD)",
-    },
-    {
-      issue: "Post-fix paid leads missing campaign attribution",
-      count: postFixAttrMissing.length,
-      why: "Paid click proven but campaign unmapped after the Jul 20 fix — should trend to zero; investigate if it grows.",
-      owner: "Eddie (tracking)",
-    },
-    {
-      issue: "Eligible forms that failed ProABD sync",
-      count: syncFailed.length,
-      why: "Lead never reached the CRM — no agent will see it there; needs manual entry.",
-      owner: "Eddie (alert email fires) / agents",
-    },
-    {
-      issue: "Blocked international/invalid submissions",
-      count: cohortBlocked.length,
-      why: "Unserviceable demand, now rejected at the form. Volume here is a possible referral-partner opportunity.",
-      owner: "Ben (partnership decision)",
-    },
-  ];
+
+  /* ── Clock A (7d) operating totals ── */
+  const leads7 = all.filter((r) => r.t >= d7); // valid leads, forms + calls
+  const unique7 = dedupeLeads(leads7);
+  const branch7 = new Map<SourceKey, number>();
+  for (const e of unique7) branch7.set(e.origin.sourceKey, (branch7.get(e.origin.sourceKey) ?? 0) + 1);
+  const bookingsRecorded7 = [...abdFirstOrderAt.values()].filter((at) => at >= d7).length;
+  const feeRecorded7Cents = [...abdFirstOrderAt.entries()]
+    .filter(([, at]) => at >= d7)
+    .reduce((sum, [abd]) => sum + (shipFeeByAbd.get(abd) ?? 0), 0);
+
+  /* ── Clock B mature cohort (created 44→14 days ago) — the only rates ── */
+  const matureRows = allFetched.filter((r) => r.t >= d44 && r.t < d14);
+  const matureEntities = dedupeLeads(matureRows);
+  // P5 serviceable v1 (contract §7.2): blocked already excluded upstream;
+  // junk-contact filter = at least one identity key. Lower bound by design.
+  const matureServiceable = matureEntities.filter(
+    (e) => e.origin.phoneKey !== null || e.origin.emailKey !== null,
+  );
+  const matureQuoted = matureServiceable.filter((e) => e.touches.some((t) => t.price !== null));
+  const matureJoined = matureServiceable.filter((e) => e.touches.some((t) => t.abdId && t.synced));
+  const matureBooked = matureJoined.filter((e) =>
+    e.touches.some((t) => t.abdId && abdStates.get(t.abdId)?.outcome === "booked"),
+  );
+  const matureFeeCents = matureBooked.reduce((sum, e) => {
+    const abd = e.touches.find((t) => t.abdId && abdStates.get(t.abdId)?.outcome === "booked")?.abdId;
+    return sum + (abd ? (shipFeeByAbd.get(abd) ?? 0) : 0);
+  }, 0);
+  // Honesty label: does this cohort predate the ProABD integration?
+  const maturePreIntegration = d44 < PROABD_START;
+  const firstCleanCohortMatures = new Date(PROABD_START.getTime() + 44 * 86_400_000);
+
+  /* ── Unified decision queue (contract §7.5 — stateless, rule-derived).
+   *    Severity = hand-tuned impact × urgency × confidence score; every old
+   *    Opportunities/Needs-attention rule is present (queue parity), so the
+   *    Opportunities tab retires. Top 4 render on Overview; the rest live
+   *    in the all-actions drawer. ── */
+  interface QueueItem {
+    title: string;
+    body: string;
+    impact: string;
+    confidence: "high" | "med" | "low";
+    owner: string;
+    tab: string; // ?view= target ("" = overview/data-health)
+    score: number; // ranking only
+    warn: boolean;
+  }
+  const queue: QueueItem[] = [];
+  if (syncFailed.length > 0)
+    queue.push({
+      title: `${syncFailed.length} form lead${syncFailed.length === 1 ? "" : "s"} never reached ProABD`,
+      body: "No agent will see these in the CRM — enter manually today, then investigate the createLead failure.",
+      impact: `${syncFailed.length} uncontacted lead${syncFailed.length === 1 ? "" : "s"}`,
+      confidence: "high",
+      owner: "Eddie / agents",
+      tab: "sales",
+      score: 100 + syncFailed.length * 10,
+      warn: true,
+    });
+  if (syncOk.length > 0 && statusMatched.length / syncOk.length < 0.9)
+    queue.push({
+      title: "Webhook coverage gap — records missing event stamp-backs",
+      body: `Only ${pct(statusMatched.length, syncOk.length)} of synced forms have webhook events. Jul 22–27 outage residue (~$3.4K July fees invisible) — chase Brian's replay; self-resolves when it lands.`,
+      impact: "~$3.4K July fees + outcome blind spots",
+      confidence: "high",
+      owner: "Eddie → Brian",
+      tab: "",
+      score: 90,
+      warn: true,
+    });
+  if (unassigned.length > 0)
+    queue.push({
+      title: `${unassigned.length} record${unassigned.length === 1 ? "" : "s"} without a confirmed owner`,
+      body: "Nobody is stamped as owner in ProABD — risk of an uncontacted lead. Assign now.",
+      impact: `${unassigned.length} lead${unassigned.length === 1 ? "" : "s"} at risk`,
+      confidence: "med",
+      owner: "Ben / agents",
+      tab: "sales",
+      score: 60 + unassigned.length * 5,
+      warn: true,
+    });
+  // Ads-derived rules (mirror Acquisition's thresholds on the D-window stats).
+  if (ads.state === "ok") {
+    const acctClicks = ads.stats.campaigns.reduce((n, c) => n + c.clicks, 0);
+    const acctCost = ads.stats.campaigns.reduce((n, c) => n + c.costDollars, 0);
+    const acctCpc = acctClicks > 0 ? acctCost / acctClicks : null;
+    for (const c of ads.stats.campaigns) {
+      const cpc = c.clicks > 0 ? c.costDollars / c.clicks : null;
+      const short = c.name.replace(/^ALL - /, "").split(" ")[0];
+      if (acctCpc !== null && cpc !== null && c.clicks < 10 && cpc > 2 * acctCpc && c.costDollars > 0)
+        queue.push({
+          title: `${short}: rebuild relevance, then retest`,
+          body: `${c.clicks} click${c.clicks === 1 ? "" : "s"} at ${money2(cpc)} (${(cpc / acctCpc).toFixed(1)}× account avg). Money can't fix a rank problem.`,
+          impact: "parked daily budget",
+          confidence: "high",
+          owner: "Eddie",
+          tab: "acquisition",
+          score: 55,
+          warn: true,
+        });
+      const secondary = Math.max(0, c.allConversions - c.conversions);
+      if (secondary >= 10 && secondary >= 10 * Math.max(1, c.conversions))
+        queue.push({
+          title: `${short}: hold budget — downstream value unproven`,
+          body: `${secondary} secondary events vs ${c.conversions || 0} primary action${c.conversions === 1 ? "" : "s"}. Signal→lead rate (accruing) decides; not budget moves.`,
+          impact: `$${Math.round(c.costDollars)} window spend on unproven traffic`,
+          confidence: "med",
+          owner: "Eddie",
+          tab: "acquisition",
+          score: 50,
+          warn: true,
+        });
+      if (/brand/i.test(c.name) && c.searchImpressionShare !== null && c.searchImpressionShare < 0.9)
+        queue.push({
+          title: "Brand moat leaky — QS check on brand terms",
+          body: `${Math.round(c.searchImpressionShare * 100)}% overall impression share on our own name — ~${Math.round((1 - c.searchImpressionShare) * 100)}% of brand searches unserved.`,
+          impact: "brand traffic leaking to competitors",
+          confidence: "med",
+          owner: "Eddie",
+          tab: "acquisition",
+          score: 45,
+          warn: true,
+        });
+    }
+  }
+  if (postFixAttrMissing.length > 0)
+    queue.push({
+      title: `${postFixAttrMissing.length} post-fix paid lead${postFixAttrMissing.length === 1 ? "" : "s"} missing campaign attribution`,
+      body: "Paid click proven, campaign unmapped — should trend to zero; investigate tracking if it grows.",
+      impact: "attribution completeness",
+      confidence: "med",
+      owner: "Eddie",
+      tab: "acquisition",
+      score: 30,
+      warn: false,
+    });
+  if (formsNoEstimate.length > 0)
+    queue.push({
+      title: `${formsNoEstimate.length} valid form${formsNoEstimate.length === 1 ? "" : "s"} saw no price`,
+      body: "Pricing API failure or unusual route — agent must quote manually; review if recurring.",
+      impact: `${formsNoEstimate.length} manual quote${formsNoEstimate.length === 1 ? "" : "s"}`,
+      confidence: "high",
+      owner: "Agents / Eddie",
+      tab: "sales",
+      score: 25,
+      warn: false,
+    });
+  if (cohortBlocked.length > 0)
+    queue.push({
+      title: `${cohortBlocked.length} blocked international/invalid submission${cohortBlocked.length === 1 ? "" : "s"}`,
+      body: "Unserviceable demand rejected at the form — referral-partner opportunity (PR/HI receipts also in the price checker).",
+      impact: "possible referral revenue",
+      confidence: "low",
+      owner: "Ben",
+      tab: "lanes",
+      score: 15,
+      warn: false,
+    });
+  queue.sort((a, b) => b.score - a.score);
+
+  /* ── Data health chip ── */
+  const healthIssues: string[] = [];
+  if (syncOk.length > 0 && statusMatched.length / syncOk.length < 0.9)
+    healthIssues.push(
+      `Webhook stamp-backs at ${pct(statusMatched.length, syncOk.length)} of synced forms (Jul 22–27 outage residue — replay pending)`,
+    );
+  if (ordersImportedAt && now.getTime() - ordersImportedAt.getTime() > 3 * 86_400_000)
+    healthIssues.push(
+      `Orders import ${Math.round((now.getTime() - ordersImportedAt.getTime()) / 86_400_000)} days old (book numbers to ${fmtDay(ordersImportedAt)})`,
+    );
+  if (feeCoveragePct !== null && feeCoveragePct < 80)
+    healthIssues.push(`Fee coverage ${feeCoveragePct.toFixed(0)}% — below the 80% contract threshold`);
+  if (ads.state !== "ok") healthIssues.push("Ads API join unavailable");
 
   const updatedAt = now.toLocaleString("en-US", {
     timeZone: PT,
@@ -885,117 +1092,348 @@ export default async function AdminReportPage({
   }
 
   function Overview() {
+    /* ── Overview — the whole machine (rebuilt 2026-07-28, two clocks) ──
+     * metric-contract.md: operating totals (Clock A) are independent
+     * numbers, never a funnel; rates live ONLY in the mature cohort
+     * (Clock B); every block links into its zoom tab; decision queue is
+     * stateless and rule-derived with parity over the old Opportunities
+     * tab (which this build retires).
+     */
+    const stats7 = ads7.state === "ok" ? ads7.stats : null;
+    const spend7 = stats7 ? stats7.campaigns.reduce((s, c) => s + c.costDollars, 0) : null;
+    const actions7 = stats7 ? stats7.campaigns.reduce((s, c) => s + c.conversions, 0) : null;
+
+    const pill: React.CSSProperties = {
+      display: "inline-block",
+      fontSize: 11,
+      border: "1px solid var(--color-gray-200)",
+      background: "var(--color-surface)",
+      borderRadius: 999,
+      padding: "4px 11px",
+      color: MUTED,
+      marginRight: 6,
+      marginBottom: 6,
+    };
+    const pillB: React.CSSProperties = { color: "#1a1a1a", fontWeight: 700 };
+    const tile: React.CSSProperties = {
+      border: "1px solid var(--color-gray-200)",
+      borderRadius: 10,
+      background: "var(--color-surface)",
+      padding: "11px 13px",
+      flex: "1 1 150px",
+      minWidth: 140,
+    };
+    const tileL: React.CSSProperties = {
+      fontSize: 10,
+      fontWeight: 700,
+      letterSpacing: "0.06em",
+      textTransform: "uppercase",
+      color: MUTED,
+    };
+    const tileV: React.CSSProperties = { fontSize: 23, fontWeight: 800, color: INK, margin: "2px 0" };
+    const tileS: React.CSSProperties = { fontSize: 10.5, color: MUTED, lineHeight: 1.45 };
+
+    const stageRow = (label: string, n: number, rateLabel: string | null, width: number) => (
+      <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "7px 0" }}>
+        <div style={{ width: 140, fontSize: 11.5, fontWeight: 600, color: INK, textAlign: "right" }}>{label}</div>
+        <div style={{ flex: 1, background: "var(--color-gray-100)", borderRadius: 5, height: 20, position: "relative" }}>
+          <div style={{ width: `${Math.max(width, 0.5)}%`, height: "100%", background: GREEN, borderRadius: 5 }} />
+          <span
+            style={{
+              position: "absolute",
+              left: width > 12 ? undefined : `calc(${Math.max(width, 0.5)}% + 7px)`,
+              right: width > 12 ? `calc(${100 - width}% + 7px)` : undefined,
+              top: 2,
+              fontSize: 11,
+              fontWeight: 800,
+              color: width > 12 ? "#fff" : INK,
+            }}
+          >
+            {n}
+          </span>
+        </div>
+        <div style={{ width: 135, fontSize: 10.5, color: MUTED }}>{rateLabel ?? "—"}</div>
+      </div>
+    );
+    const mw = (n: number) =>
+      matureEntities.length > 0 ? (n / matureEntities.length) * 100 : 0;
+
+    const decTile = (d: (typeof queue)[number], i: number) => (
+      <div
+        key={d.title}
+        style={{
+          border: "1px solid var(--color-gray-200)",
+          borderLeft: `4px solid ${i === 0 && d.warn ? "#dc2626" : d.warn ? "#d97706" : GREEN}`,
+          borderRadius: 10,
+          background: "var(--color-surface)",
+          padding: "11px 13px",
+          marginBottom: 8,
+        }}
+      >
+        <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" }}>
+          <span style={{ fontSize: 13, fontWeight: 800, color: INK }}>{d.title}</span>
+          <span style={{ fontSize: 10.5, color: MUTED }}>
+            impact: {d.impact} · confidence: {d.confidence} · owner: {d.owner}
+            {d.tab ? (
+              <>
+                {" "}·{" "}
+                <a href={`/admin?view=${d.tab}`} style={{ color: GREEN, fontWeight: 600, textDecoration: "none" }}>
+                  {VIEWS.find((v) => v.id === d.tab)?.label ?? d.tab} →
+                </a>
+              </>
+            ) : null}
+          </span>
+        </div>
+        <div style={{ fontSize: 11.5, color: "#374151", lineHeight: 1.5, marginTop: 3 }}>{d.body}</div>
+      </div>
+    );
+
     return (
       <>
-        <div style={{ ...SUBTLE, marginBottom: 12 }}>
-          <strong style={{ color: "#1a1a1a" }}>{cohortLabel}</strong> — website forms and tracked
-          calls created since the ProABD integration went live; test and blocked-invalid
-          submissions excluded (blocked demand reported separately below).
+        {/* 1 · clocks + health */}
+        <div style={{ marginBottom: 10 }}>
+          <span style={pill}>Operating period: <span style={pillB}>last 7 days</span> · latest day partial</span>
+          <span style={pill}>Mature cohort: <span style={pillB}>created {fmtDay(d44)}–{fmtDay(d14)}</span> · seasoned ≥14d</span>
+          <span style={pill}>Book: <span style={pillB}>Mar 1 → {ordersImportedAt ? fmtDay(ordersImportedAt) : "import date unknown"}</span></span>
+          <span
+            style={{
+              ...pill,
+              background: healthIssues.length > 0 ? "#fffbeb" : "#ecfdf5",
+              borderColor: healthIssues.length > 0 ? "#fde68a" : "#a7f3d0",
+              color: healthIssues.length > 0 ? "#92400e" : "#065f46",
+              fontWeight: 700,
+            }}
+          >
+            {healthIssues.length > 0 ? `⚠ ${healthIssues.length} data issue${healthIssues.length === 1 ? "" : "s"}` : "✓ data healthy"}
+          </span>
         </div>
 
+        {/* 2 · narrative verdict — paid and all-channel kept apart */}
+        <section style={{ ...CARD, marginBottom: 12, borderLeft: `4px solid ${GREEN}` }}>
+          <div style={{ fontSize: 14, lineHeight: 1.6, color: "#1a1a1a" }}>
+            <strong>
+              This week: {spend7 !== null ? money(spend7) : "—"} paid spend produced{" "}
+              {actions7 !== null ? Math.round(actions7) : "—"} paid{" "}
+              <Term k="primaryActions">primary conversion actions</Term>. Across all channels the
+              business received {unique7.length} new <Term k="paidLeadRecords">unique leads</Term>
+            </strong>{" "}
+            ({CHANNEL_ORDER.filter((k) => (branch7.get(k) ?? 0) > 0)
+              .map((k) => `${branch7.get(k)} ${CHANNEL_LABELS[k].toLowerCase()}`)
+              .join(" · ") || "none yet"}
+            ). {bookingsRecorded7} booking{bookingsRecorded7 === 1 ? "" : "s"} recorded (some may belong
+            to older cohorts){feeRecorded7Cents > 0 ? <> · {money(feeRecorded7Cents / 100)} booked broker fee recorded</> : null}.
+            The book stands at <strong>{money(orders.reduce((s, o) => s + o.deposit, 0))} fees · {orders.length} bookings since March</strong>
+            {ordersImportedAt ? ` (as of ${fmtDay(ordersImportedAt)})` : ""}.
+          </div>
+        </section>
+
+        {/* 3 · decision queue */}
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+          <h2 style={{ ...H2, marginBottom: 6 }}>
+            Needs a decision{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>
+              — ranked · stateless: tiles clear when their rule stops firing
+            </span>
+          </h2>
+        </div>
+        {queue.length > 0 ? queue.slice(0, 4).map(decTile) : (
+          <div style={{ ...SUBTLE, marginBottom: 8 }}>No rules firing — nothing needs a decision right now.</div>
+        )}
+        {queue.length > 4 && (
+          <details style={{ marginBottom: 6 }}>
+            <summary style={{ fontSize: 12.5, fontWeight: 700, color: GREEN, cursor: "pointer" }}>
+              View all actions ({queue.length})
+            </summary>
+            <div style={{ marginTop: 8 }}>{queue.slice(4).map(decTile)}</div>
+          </details>
+        )}
+
+        {/* 4a · operating totals — NOT a funnel */}
+        <section style={{ ...CARD, marginBottom: 12, marginTop: 8 }}>
+          <h2 style={H2}>
+            This period — independent operating totals{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>· not a funnel; these share a window, not a population</span>
+          </h2>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
+            <div style={tile}>
+              <div style={tileL}>Paid spend</div>
+              <div style={tileV}>{spend7 !== null ? money(spend7) : "—"}</div>
+              <div style={tileS}>
+                Ads API · last 7 days →{" "}
+                <a href="/admin?view=acquisition" style={{ color: GREEN, fontWeight: 600, textDecoration: "none" }}>Acquisition</a>
+              </div>
+            </div>
+            <div style={tile}>
+              <div style={tileL}>Paid primary actions</div>
+              <div style={tileV}>{actions7 !== null ? Math.round(actions7) : "—"}</div>
+              <div style={tileS}>forms + 90s calls · not deduped into unique leads</div>
+            </div>
+            <div style={tile}>
+              <div style={tileL}>New unique leads · all channels</div>
+              <div style={tileV}>{unique7.length}</div>
+              <div style={tileS}>
+                P4 dedup (phone/email, 30d) over {leads7.length} valid records
+              </div>
+            </div>
+            <div style={tile}>
+              <div style={tileL}>Bookings recorded</div>
+              <div style={tileV}>{bookingsRecorded7}</div>
+              <div style={tileS}>
+                order-stage events this window · may belong to older cohorts →{" "}
+                <a href="/admin?view=sales" style={{ color: GREEN, fontWeight: 600, textDecoration: "none" }}>Sales</a>
+              </div>
+            </div>
+            <div
+              style={{
+                ...tile,
+                ...(feeCoveragePct !== null && feeCoveragePct < 80
+                  ? { background: "#fffbeb", borderColor: "#fde68a" }
+                  : {}),
+              }}
+            >
+              <div style={tileL}>Booked broker fee recorded</div>
+              <div style={tileV}>
+                {ships.length === 0 ? (
+                  <span style={{ fontSize: 14, color: MUTED }}>unavailable</span>
+                ) : (
+                  money(feeRecorded7Cents / 100)
+                )}
+              </div>
+              <div style={tileS}>
+                {feeCoveragePct !== null
+                  ? `deposit present on ${feeCoveragePct.toFixed(0)}% of booked shipments · live to within minutes · understates until the Jul 22–27 replay lands · not revenue`
+                  : "webhook shipments unavailable"}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4b · mature cohort — the only rates */}
+        <section style={{ ...CARD, marginBottom: 12 }}>
+          <h2 style={H2}>
+            Mature cohort — leads created {fmtDay(d44)}–{fmtDay(d14)}{" "}
+            <span style={{ ...SUBTLE, fontWeight: 400 }}>· the only place rates live · each stage nests in the last</span>
+          </h2>
+          {matureEntities.length > 0 ? (
+            <div style={{ marginTop: 6 }}>
+              {stageRow("Unique leads", matureEntities.length, null, 100)}
+              {stageRow(
+                "Serviceable",
+                matureServiceable.length,
+                pct(matureServiceable.length, matureEntities.length) + " of unique",
+                mw(matureServiceable.length),
+              )}
+              {stageRow(
+                "Quoted (forms)",
+                matureQuoted.length,
+                pct(matureQuoted.length, matureServiceable.length) + " of serviceable",
+                mw(matureQuoted.length),
+              )}
+              {stageRow(
+                "ProABD joined",
+                matureJoined.length,
+                pct(matureJoined.length, matureServiceable.length) + " of serviceable",
+                mw(matureJoined.length),
+              )}
+              {stageRow(
+                "Booked",
+                matureBooked.length,
+                pct(matureBooked.length, matureServiceable.length) + " of serviceable",
+                mw(matureBooked.length),
+              )}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "7px 0" }}>
+                <div style={{ width: 140, fontSize: 11.5, fontWeight: 600, color: INK, textAlign: "right" }}>Booked broker fee</div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: matureFeeCents > 0 ? INK : MUTED }}>
+                  {matureFeeCents > 0 ? money(matureFeeCents / 100) : "n too small / fee join thin"}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div style={{ ...SUBTLE, marginTop: 6 }}>No leads in the mature window yet.</div>
+          )}
+          <div style={{ ...SUBTLE, marginTop: 8 }}>
+            {maturePreIntegration ? (
+              <>
+                Part of this cohort predates the ProABD integration ({fmtDay(PROABD_START)}) and the{" "}
+                {fmtDay(TRACKING_FIX_TS)} tracking fix — join and booked rates read LOW and are labeled
+                unreliable.{" "}
+                <strong style={{ color: INK }}>
+                  The first fully-instrumented cohort matures {fmtDay(firstCleanCohortMatures)}
+                </strong>{" "}
+                — this block improves on a schedule, not by wishing.
+              </>
+            ) : (
+              <>Fully instrumented cohort. Source-branch rate split lands with more volume.</>
+            )}{" "}
+            Calls are quoted by humans and never counted in &ldquo;Quoted&rdquo;.
+          </div>
+        </section>
+
+        {/* 4c · the book */}
         <BusinessBaselineCard />
 
-        <section
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
-            gap: 12,
-            marginBottom: 12,
-          }}
-        >
-          <div style={CARD}>
-            <div style={SUBTLE}>Valid leads</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: INK, margin: "2px 0" }}>{cohort.length}</div>
-            <div style={SUBTLE}>
-              {forms.length} forms · {calls.length} tracked calls
-            </div>
-          </div>
-          <div style={CARD}>
-            <div style={SUBTLE}>Form pricing coverage</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: INK, margin: "2px 0" }}>
-              {pricedForms.length} of {forms.length}
-            </div>
-            <div style={SUBTLE}>valid forms with an instant estimate · calls excluded by design</div>
-          </div>
-          <div style={CARD}>
-            <div style={SUBTLE}>Quoted value</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: INK, margin: "2px 0" }}>{money(quotedValue)}</div>
-            <div style={SUBTLE}>
-              across {pricedForms.length} priced form leads · <strong>not revenue or profit</strong>
-            </div>
-          </div>
-        </section>
-
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <h2 style={H2}>Verified data coverage</h2>
-          <div style={{ ...SUBTLE, marginBottom: 8 }}>
-            Independent indicators — each has its own denominator. This is coverage, not a
-            customer conversion funnel.
-          </div>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
-            <tbody>
-              <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                <td style={TD}>Form estimate captured</td>
-                <td style={TDR}>
-                  <strong>{pricedForms.length}/{forms.length}</strong> ({pct(pricedForms.length, forms.length)})
-                </td>
-                <td style={{ ...TD, color: MUTED }}>of valid forms</td>
-              </tr>
-              <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                <td style={TD}>ProABD sync</td>
-                <td style={TDR}>
-                  <strong>{syncOk.length}/{syncEligible.length}</strong> ({pct(syncOk.length, syncEligible.length)})
-                </td>
-                <td style={{ ...TD, color: MUTED }}>of eligible forms (15-min grace)</td>
-              </tr>
-              <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                <td style={TD}>ProABD status/event match</td>
-                <td style={TDR}>
-                  <strong>{statusMatched.length}/{syncOk.length}</strong> ({pct(statusMatched.length, syncOk.length)})
-                </td>
-                <td style={{ ...TD, color: MUTED }}>of synced forms with webhook events (since {WEBHOOK_START_LABEL})</td>
-              </tr>
-              <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                <td style={TD}>Campaign attribution — post-fix paid</td>
-                <td style={TDR}>
-                  <strong>{paidPostMapped.length}/{paidPost.length}</strong> ({pct(paidPostMapped.length, paidPost.length)})
-                </td>
-                <td style={{ ...TD, color: MUTED }}>paid leads after the Jul 20 fix ({TRACKING_FIX_TS.toLocaleString("en-US", { timeZone: PT, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })} PT)</td>
-              </tr>
-              <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                <td style={TD}>Campaign attribution — pre-fix / backfilled paid</td>
-                <td style={TDR}>
-                  <strong>{paidPreMapped.length}/{paidPre.length}</strong> ({pct(paidPreMapped.length, paidPre.length)})
-                </td>
-                <td style={{ ...TD, color: MUTED }}>historical; paid proven by click ID, campaign mostly unrecoverable</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section style={CARD}>
-          <h2 style={H2}>Needs attention</h2>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
-            <thead>
-              <tr>
-                <th style={TH}>Issue</th>
-                <th style={{ ...TH, textAlign: "right" }}>Count</th>
-                <th style={TH}>Why it matters</th>
-                <th style={TH}>Owner</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attention.map((a) => (
-                <tr key={a.issue} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                  <td style={TD}>{a.issue}</td>
-                  <td style={{ ...TDR, fontWeight: 800, color: a.count > 0 ? "#92400e" : INK }}>{a.count}</td>
-                  <td style={{ ...TD, color: MUTED }}>{a.why}</td>
-                  <td style={{ ...TD, whiteSpace: "nowrap" }}>{a.owner}</td>
+        {/* 5 · data health drawer */}
+        <details style={{ ...CARD, marginBottom: 8 }}>
+          <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>
+            Data health — {healthIssues.length > 0 ? `${healthIssues.length} issue${healthIssues.length === 1 ? "" : "s"}` : "healthy"}
+          </summary>
+          <div style={{ marginTop: 10 }}>
+            {healthIssues.length > 0 && (
+              <ul style={{ margin: "0 0 10px", paddingLeft: 18, fontSize: 12.5, color: "#92400e", lineHeight: 1.7 }}>
+                {healthIssues.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+            )}
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
+              <tbody>
+                <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={TD}>Form estimate captured</td>
+                  <td style={TDR}><strong>{pricedForms.length}/{forms.length}</strong> ({pct(pricedForms.length, forms.length)})</td>
+                  <td style={{ ...TD, color: MUTED }}>of valid forms</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
+                <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={TD}>ProABD sync</td>
+                  <td style={TDR}><strong>{syncOk.length}/{syncEligible.length}</strong> ({pct(syncOk.length, syncEligible.length)})</td>
+                  <td style={{ ...TD, color: MUTED }}>of eligible forms (15-min grace)</td>
+                </tr>
+                <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={TD}>ProABD status/event match</td>
+                  <td style={TDR}><strong>{statusMatched.length}/{syncOk.length}</strong> ({pct(statusMatched.length, syncOk.length)})</td>
+                  <td style={{ ...TD, color: MUTED }}>of synced forms with webhook events (since {WEBHOOK_START_LABEL})</td>
+                </tr>
+                <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={TD}>Campaign attribution — post-fix paid</td>
+                  <td style={TDR}><strong>{paidPostMapped.length}/{paidPost.length}</strong> ({pct(paidPostMapped.length, paidPost.length)})</td>
+                  <td style={{ ...TD, color: MUTED }}>paid leads after the Jul 20 fix</td>
+                </tr>
+                <tr style={{ borderTop: "1px solid var(--color-gray-100)" }}>
+                  <td style={TD}>Campaign attribution — pre-fix paid</td>
+                  <td style={TDR}><strong>{paidPreMapped.length}/{paidPre.length}</strong> ({pct(paidPreMapped.length, paidPre.length)})</td>
+                  <td style={{ ...TD, color: MUTED }}>historical; campaign mostly unrecoverable</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style={{ ...SUBTLE, marginTop: 8 }}>
+              Independent indicators, each with its own denominator — coverage, never a funnel. The
+              integration-readiness table at the page bottom carries the longer-horizon gaps.
+            </div>
+          </div>
+        </details>
+
+        {/* 6 · methodology */}
+        <details style={{ ...CARD }}>
+          <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer" }}>Methodology</summary>
+          <div style={{ fontSize: 12.5, lineHeight: 1.7, color: "#1a1a1a", marginTop: 10 }}>
+            Two clocks, never mixed: operating totals cover the last 7 days and are independent
+            numbers; rates appear only on the mature cohort (created {fmtDay(d44)}–{fmtDay(d14)},
+            ≥14 days seasoned — 82% of orders historically resolve within 7 days).{" "}
+            <strong>Unique leads</strong> = records collapsed by normalized phone/email within 30
+            days (read-time, nothing merged in the database). <strong>Booked broker fee</strong> is
+            the booking deposit — not collected revenue, not profit. Full definitions:
+            metric-contract.md; glossary on hover throughout.
+          </div>
+        </details>
       </>
     );
   }
@@ -2010,81 +2448,6 @@ export default async function AdminReportPage({
     );
   }
 
-  function Opportunities() {
-    const opps: { name: string; count: number; rule: string; owner: string; decision: string }[] = [
-      {
-        name: "Valid forms lacking estimates",
-        count: formsNoEstimate.length,
-        rule: "Valid form in cohort with missing/non-numeric estimate.price (calls excluded).",
-        owner: "Agents",
-        decision: "Quote manually today; Eddie reviews pricing-API failures if recurring.",
-      },
-      {
-        name: "Records without a confirmed owner",
-        count: unassigned.length,
-        rule: "No ProABD assignee stamped or observed in event feed.",
-        owner: "Ben / agents",
-        decision: "Assign in ProABD now.",
-      },
-      {
-        name: "Eligible forms failing ProABD sync",
-        count: syncFailed.length,
-        rule: `Form ≥15 min old since ${fmtDay(PROABD_START)} missing proabdAbdId or proabdSyncedAt.`,
-        owner: "Eddie",
-        decision: "Enter manually in ProABD; investigate createLead failure.",
-      },
-      {
-        name: "Post-fix attribution gaps",
-        count: postFixAttrMissing.length,
-        rule: "Paid proof (UTM/GCLID) after the Jul 20 fix but no mapped campaign.",
-        owner: "Eddie",
-        decision: "Investigate tracking if count grows; expect ~0.",
-      },
-      {
-        name: "Blocked international demand",
-        count: cohortBlocked.length,
-        rule: "Submissions rejected/flagged as non-domestic or invalid route in cohort window.",
-        owner: "Ben",
-        decision: "Consider a referral partner for international requests (possible referral revenue).",
-      },
-    ];
-    return (
-      <>
-        <div style={{ ...SUBTLE, marginBottom: 12 }}>
-          Observed problems converted into assigned decisions. Every rule states its definition;
-          evaluation window is the {cohortLabel.toLowerCase()} unless the rule says otherwise.
-          Activity-based rules (uncontacted leads, follow-ups, aging quotes) arrive when contact
-          events exist.
-        </div>
-        <section style={{ ...CARD, overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, minWidth: 560 }}>
-            <thead>
-              <tr>
-                <th style={TH}>Opportunity</th>
-                <th style={{ ...TH, textAlign: "right" }}>Count</th>
-                <th style={TH}>Qualifying rule</th>
-                <th style={TH}>Owner</th>
-                <th style={TH}>Next decision</th>
-              </tr>
-            </thead>
-            <tbody>
-              {opps.map((o) => (
-                <tr key={o.name} style={{ borderTop: "1px solid var(--color-gray-100)" }}>
-                  <td style={{ ...TD, fontWeight: 700 }}>{o.name}</td>
-                  <td style={{ ...TDR, fontWeight: 800, color: o.count > 0 ? "#92400e" : INK }}>{o.count}</td>
-                  <td style={{ ...TD, color: MUTED }}>{o.rule}</td>
-                  <td style={TD}>{o.owner}</td>
-                  <td style={{ ...TD, color: MUTED }}>{o.decision}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      </>
-    );
-  }
-
-
   function Behavior() {
     /* ── Behavior — what visitors do before raising a hand ──
      * Rebuilt 2026-07-28 to the shared grammar (metric-contract.md):
@@ -2850,23 +3213,38 @@ export default async function AdminReportPage({
       </header>
 
       <nav style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16, alignItems: "center" }}>
-        {VIEWS.map((v) => (
-          <a
-            key={v.id}
-            href={v.id === "overview" ? "/admin" : `/admin?view=${v.id}`}
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              textDecoration: "none",
-              padding: "6px 12px",
-              borderRadius: 999,
-              color: view === v.id ? "#fff" : INK,
-              background: view === v.id ? GREEN : "var(--color-gray-100)",
-            }}
-            aria-current={view === v.id ? "page" : undefined}
-          >
-            {v.label}
-          </a>
+        {VIEWS.map((v, i) => (
+          <Fragment key={v.id}>
+            {v.group !== "" && (i === 0 || VIEWS[i - 1].group !== v.group) && (
+              <span
+                style={{
+                  fontSize: 9.5,
+                  fontWeight: 800,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: MUTED,
+                  marginLeft: i === 0 ? 0 : 6,
+                }}
+              >
+                {v.group}
+              </span>
+            )}
+            <a
+              href={v.id === "overview" ? "/admin" : `/admin?view=${v.id}`}
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                textDecoration: "none",
+                padding: "6px 12px",
+                borderRadius: 999,
+                color: view === v.id ? "#fff" : INK,
+                background: view === v.id ? GREEN : "var(--color-gray-100)",
+              }}
+              aria-current={view === v.id ? "page" : undefined}
+            >
+              {v.label}
+            </a>
+          </Fragment>
         ))}
         <a
           href="/admin/report"
@@ -2895,7 +3273,6 @@ export default async function AdminReportPage({
           {view === "acquisition" && <Acquisition />}
           {view === "sales" && <Sales />}
           {view === "lanes" && <Lanes />}
-          {view === "opportunities" && <Opportunities />}
           {view === "behavior" && <Behavior />}
           {view === "business" && <Business />}
 
