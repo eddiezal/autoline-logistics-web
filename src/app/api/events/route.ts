@@ -20,7 +20,13 @@ import { checkRateLimit, getClientIp } from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
 
-const EVENT_TYPES = new Set(["page_view", "form_started", "estimate_shown", "tool_result"]);
+const EVENT_TYPES = new Set([
+  "page_view",
+  "form_started",
+  "estimate_shown",
+  "tool_result",
+  "estimate_email_captured",
+]);
 
 const BOT_UA =
   /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|headless|lighthouse|pingdom|uptime|monitor|python-requests|curl\/|wget\//i;

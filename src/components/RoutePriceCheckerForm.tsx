@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/analytics/events";
-import { sendEvent } from "@/lib/analytics/behavior";
+import { sendEvent, getSessionId, getSessionAttribution } from "@/lib/analytics/behavior";
 
 /**
  * RoutePriceCheckerForm. Client component for /tools/route-price-checker.
@@ -56,6 +56,7 @@ function formatMoney(n: number): string {
 
 export function RoutePriceCheckerForm({
   i18n,
+  locale,
 }: {
   i18n: {
     fromZipLabel: string;
@@ -84,7 +85,18 @@ export function RoutePriceCheckerForm({
     transitLabel: string;
     transitValue: string;
     resultCta: string;
+    capTitle: string;
+    capSub: string;
+    capPlaceholder: string;
+    capButton: string;
+    capSending: string;
+    capFine: string;
+    capErrorEmail: string;
+    capErrorSend: string;
+    capSentTitle: string;
+    capSentBody: string;
   };
+  locale?: string;
 }) {
   const [fromZip, setFromZip] = useState("");
   const [toZip, setToZip] = useState("");
@@ -93,10 +105,71 @@ export function RoutePriceCheckerForm({
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ApiResponse | null>(null);
 
+  /* ── "Email me this estimate" capture (spec 2026-07-29) ──
+   * One transactional email, no CRM push. The event stream never carries
+   * the address; capture→lead joins happen server-side via emailKey. */
+  const [capEmail, setCapEmail] = useState("");
+  const [capState, setCapState] = useState<
+    "idle" | "sending" | "sent" | "error_email" | "error_send"
+  >("idle");
+
+  /** e•••@domain — enough for "sent to you", no full PII on screen. */
+  function maskEmail(e: string): string {
+    const at = e.indexOf("@");
+    if (at <= 0) return e;
+    return e[0] + "•••" + e.slice(at);
+  }
+
+  async function handleCapture(e: React.FormEvent) {
+    e.preventDefault();
+    if (capState === "sending" || result?.status !== "ok") return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(capEmail.trim())) {
+      setCapState("error_email");
+      return;
+    }
+    const sel = result.prices[result.selectedVehicle];
+    if (!sel) return;
+    setCapState("sending");
+    try {
+      // Same ordering rule as sendEvent: session id first (may clear a
+      // stale attribution on rollover), THEN read attribution.
+      const sid = getSessionId();
+      const attr = getSessionAttribution();
+      const res = await fetch("/api/estimate-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: capEmail.trim(),
+          fromZip: result.fromZip,
+          toZip: result.toZip,
+          vehicle: result.selectedVehicle,
+          price: Math.round((sel.low + sel.high) / 2 / 25) * 25,
+          low: sel.low,
+          high: sel.high,
+          locale: locale === "es" ? "es" : "en",
+          sid,
+          attr,
+        }),
+      });
+      const data = (await res.json()) as { ok: boolean; error?: string };
+      if (data.ok) {
+        setCapState("sent");
+        sendEvent("estimate_email_captured", { tool: "route-checker" });
+      } else if (data.error === "invalid_email") {
+        setCapState("error_email");
+      } else {
+        setCapState("error_send");
+      }
+    } catch {
+      setCapState("error_send");
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setResult(null);
+    setCapState("idle");
 
     if (!/^\d{5}$/.test(fromZip) || !/^\d{5}$/.test(toZip)) {
       setError(i18n.errorInvalidZip);
@@ -350,6 +423,67 @@ export function RoutePriceCheckerForm({
                 {i18n.resultCta} →
               </Link>
             </div>
+
+            {/* "Email me this estimate" — signal capture (spec 2026-07-29) */}
+            {capState === "sent" ? (
+              <div className="bg-orange-tint px-5 py-4 border-t border-gray-200">
+                <div className="flex items-start gap-2.5">
+                  <span className="flex-none w-[22px] h-[22px] rounded-full bg-brand-accent text-white text-[13px] font-black flex items-center justify-center mt-0.5">
+                    ✓
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold text-charcoal">
+                      {i18n.capSentTitle.replace("{email}", maskEmail(capEmail.trim()))}
+                    </p>
+                    <p className="text-[12.5px] text-gray-700 mt-0.5 leading-snug">
+                      {i18n.capSentBody}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="px-5 py-4 border-t border-gray-200 bg-[#fafcfa]">
+                <p className="text-sm font-bold text-charcoal">{i18n.capTitle}</p>
+                <p className="text-[12px] text-gray-600 mb-2.5">{i18n.capSub}</p>
+                <form onSubmit={handleCapture} className="flex gap-2">
+                  <input
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    value={capEmail}
+                    onChange={(e) => {
+                      setCapEmail(e.target.value);
+                      if (capState === "error_email") setCapState("idle");
+                    }}
+                    placeholder={i18n.capPlaceholder}
+                    disabled={capState === "sending"}
+                    className={`flex-1 min-w-0 px-3 py-2.5 border rounded-lg text-sm text-charcoal placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange/20 ${
+                      capState === "error_email"
+                        ? "border-red-400 focus:border-red-500"
+                        : "border-gray-200 focus:border-orange"
+                    }`}
+                  />
+                  <button
+                    type="submit"
+                    disabled={capState === "sending"}
+                    className="border-[1.5px] border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-accent-ink font-bold text-[12.5px] px-3.5 py-2.5 rounded-lg transition whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {capState === "sending" ? i18n.capSending : i18n.capButton}
+                  </button>
+                </form>
+                {capState === "error_email" && (
+                  <p className="text-[12px] text-red-600 font-semibold mt-1.5">
+                    {i18n.capErrorEmail}
+                  </p>
+                )}
+                {capState === "error_send" && (
+                  <p className="text-[12px] text-gray-600 mt-1.5">{i18n.capErrorSend}</p>
+                )}
+                {capState !== "error_email" && capState !== "error_send" && (
+                  <p className="text-[10.5px] text-gray-400 mt-1.5">{i18n.capFine}</p>
+                )}
+              </div>
+            )}
           </div>
         );
       })()}

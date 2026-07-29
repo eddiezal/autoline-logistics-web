@@ -1684,6 +1684,18 @@
         "title": "Quote turns into a contract",
         "body": "Click 'Lock this price' when you're ready. We honor what we showed you."
       }
+    },
+    "capture": {
+      "title": "Want to keep this estimate?",
+      "sub": "We'll email it to you — no calls, no spam.",
+      "placeholder": "you@email.com",
+      "button": "Email it to me",
+      "sending": "Sending…",
+      "fine": "One email with this estimate. We won't contact you again unless you ask.",
+      "errorEmail": "Check the email — it looks incomplete.",
+      "errorSend": "Couldn't send right now — you can still get your exact quote above.",
+      "sentTitle": "Sent to {email}",
+      "sentBody": "Your estimate is in your inbox, with a link to lock in your exact quote whenever you're ready."
     }
   },
   "corridorPricing": {

@@ -77,7 +77,18 @@ export default async function RoutePriceCheckerPage({
                   transitLabel: t("routePriceChecker.result.transitLabel"),
                   transitValue: t("routePriceChecker.result.transitValue"),
                   resultCta: t("routePriceChecker.result.cta"),
+                  capTitle: t("routePriceChecker.capture.title"),
+                  capSub: t("routePriceChecker.capture.sub"),
+                  capPlaceholder: t("routePriceChecker.capture.placeholder"),
+                  capButton: t("routePriceChecker.capture.button"),
+                  capSending: t("routePriceChecker.capture.sending"),
+                  capFine: t("routePriceChecker.capture.fine"),
+                  capErrorEmail: t("routePriceChecker.capture.errorEmail"),
+                  capErrorSend: t("routePriceChecker.capture.errorSend"),
+                  capSentTitle: t("routePriceChecker.capture.sentTitle"),
+                  capSentBody: t("routePriceChecker.capture.sentBody"),
                 }}
+                locale={locale}
               />
             </div>
           </Container>

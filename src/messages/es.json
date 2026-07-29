@@ -1684,6 +1684,18 @@
         "title": "La cotización se vuelve un contrato",
         "body": "Cuando esté listo, presione 'Fijar este precio'. Cumplimos lo que le mostramos."
       }
+    },
+    "capture": {
+      "title": "¿Quieres guardar esta cotización?",
+      "sub": "Te la enviamos por correo — sin llamadas, sin spam.",
+      "placeholder": "tu@correo.com",
+      "button": "Enviármela",
+      "sending": "Enviando…",
+      "fine": "Un solo correo con esta cotización. No te volveremos a contactar a menos que tú lo pidas.",
+      "errorEmail": "Revisa el correo — parece incompleto.",
+      "errorSend": "No se pudo enviar ahora — igual puedes obtener tu cotización exacta arriba.",
+      "sentTitle": "Enviado a {email}",
+      "sentBody": "Tu cotización está en tu bandeja, con un enlace para asegurar tu precio exacto cuando quieras."
     }
   },
   "corridorPricing": {

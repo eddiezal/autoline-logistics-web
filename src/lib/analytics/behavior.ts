@@ -116,7 +116,12 @@ export function getSessionAttribution(): SessionAttribution | null {
   }
 }
 
-export type BehaviorEventType = "page_view" | "form_started" | "estimate_shown" | "tool_result";
+export type BehaviorEventType =
+  | "page_view"
+  | "form_started"
+  | "estimate_shown"
+  | "tool_result"
+  | "estimate_email_captured";
 
 /**
  * Send a behavioral event to our first-party collector. Fire-and-forget:

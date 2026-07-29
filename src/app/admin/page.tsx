@@ -759,6 +759,34 @@ export default async function AdminReportPage({
     /* Behavior view renders its empty state */
   }
 
+  /* ── Estimate email captures (spec 2026-07-29) — same 14d window as
+   * site_events so the capture rate shares its denominator. Language
+   * discipline: "captured estimates", never leads. ── */
+  interface CaptureRow {
+    campaignId: string | null;
+    at: Date | null;
+  }
+  let captures: CaptureRow[] = [];
+  try {
+    const d14 = new Date(now.getTime() - 14 * 86_400_000);
+    const capSnap = await getAdminDb()
+      .collection("estimate_captures")
+      .where("createdAt", ">=", d14)
+      .select("attr.campaignId", "createdAt", "emailStatus")
+      .get();
+    captures = capSnap.docs
+      .filter((doc) => doc.get("emailStatus") !== "failed")
+      .map((doc) => ({
+        campaignId:
+          typeof doc.get("attr.campaignId") === "string" && doc.get("attr.campaignId")
+            ? String(doc.get("attr.campaignId"))
+            : null,
+        at: doc.get("createdAt")?.toDate?.() ?? null,
+      }));
+  } catch {
+    /* tile renders zero state */
+  }
+
   /* ── Cohorts (§7) ── */
   // Lead cohort: created since ProABD integration (Jul 14), valid only.
   const cohortAll = all.filter((r) => r.t >= PROABD_START);
@@ -2683,6 +2711,11 @@ export default async function AdminReportPage({
       byCampaign.set(x.campaignId, c);
     }
     const campaignRows = [...byCampaign.entries()].sort((a, b) => b[1].sess - a[1].sess);
+    const capByCampaign = new Map<string, number>();
+    for (const cp of captures) {
+      if (cp.campaignId === null) continue;
+      capByCampaign.set(cp.campaignId, (capByCampaign.get(cp.campaignId) ?? 0) + 1);
+    }
 
     // ── Analyst-drawer aggregates (kept, demoted) ──
     const byDay = new Map<string, { n: number; es: number }>();
@@ -2882,6 +2915,16 @@ export default async function AdminReportPage({
               </>
             )}
           </div>
+          <div style={{ fontSize: 12.5, lineHeight: 1.7, color: "#1a1a1a", marginTop: 4 }}>
+            <strong>Captured estimates: {captures.length}</strong>
+            {estSessCount > 0 && captures.length > 0 && (
+              <> · {pct(captures.length, estSessCount)} of estimate-shown sessions left an email</>
+            )}
+            {captures.length === 0 && <> — accruing since the Jul 29 capture-row deploy</>}
+            <span style={{ color: MUTED }}>
+              {" "}· a capture is a contact, not a lead; capture→lead joins via email identity (P4)
+            </span>
+          </div>
           {bandRows.length > 0 && (
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, maxWidth: 480, marginTop: 8 }}>
               <thead>
@@ -2955,6 +2998,9 @@ export default async function AdminReportPage({
                     <th style={{ ...TH, textAlign: "right" }}>Sessions</th>
                     <th style={{ ...TH, textAlign: "right" }}>Research sessions</th>
                     <th style={{ ...TH, textAlign: "right" }}>Form starts</th>
+                    <th style={{ ...TH, textAlign: "right" }} title="Estimate emails captured — contacts, not leads">
+                      Captures
+                    </th>
                     <th style={{ ...TH, textAlign: "right" }}>Converted visitors</th>
                   </tr>
                 </thead>
@@ -2965,6 +3011,7 @@ export default async function AdminReportPage({
                       <td style={{ ...TDR, fontWeight: 700 }}>{c.sess}</td>
                       <td style={TDR}>{c.est || "—"}</td>
                       <td style={TDR}>{c.started || "—"}</td>
+                      <td style={TDR}>{capByCampaign.get(id) || "—"}</td>
                       <td style={TDR}>{c.convVids.size || "—"}</td>
                     </tr>
                   ))}
