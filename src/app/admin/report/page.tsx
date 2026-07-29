@@ -19,6 +19,7 @@
 import { revalidatePath } from "next/cache";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { fetchAdsStats } from "@/lib/googleAds/client";
+import { ACCOUNT_PHASE, PHASES, PHASE_NARRATIVE } from "@/lib/admin/targets";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -309,6 +310,24 @@ export default async function MonthlyReportPage() {
           {partial ? ` · through the ${dayOfMonth}${ordinal(dayOfMonth)}` : ""}
         </h1>
         <div style={{ fontSize: 12, color: MUTED }}>Prepared {updatedAt} PT · numbers live from ProABD orders + Google Ads</div>
+        <div
+          style={{
+            marginTop: 8,
+            fontSize: 12.5,
+            lineHeight: 1.55,
+            color: "#1a1a1a",
+            border: "1px solid var(--color-gray-200)",
+            borderLeft: `4px solid ${GREEN}`,
+            borderRadius: 8,
+            padding: "8px 12px",
+            background: "var(--color-surface)",
+          }}
+        >
+          <strong>Paid search is in Phase {ACCOUNT_PHASE} of 3 ({PHASES[ACCOUNT_PHASE - 1].title.toLowerCase()}):</strong>{" "}
+          {PHASE_NARRATIVE[ACCOUNT_PHASE]}{" "}
+          {ACCOUNT_PHASE === 1 &&
+            "This month's paid goals are data goals — click volume, instrumentation coverage, and progress toward the 30-actions-per-campaign gate — not cost per lead."}
+        </div>
       </header>
 
       {/* ── Scorecard (D3) ── */}
