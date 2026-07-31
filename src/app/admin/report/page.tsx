@@ -109,6 +109,40 @@ async function saveMemo(formData: FormData): Promise<void> {
 
 /* ── Page ────────────────────────────────────────────────────── */
 
+/**
+ * Memo text renderer: blank-line-separated paragraphs; consecutive lines
+ * starting with "- " become a real bulleted list. Keeps the editor a plain
+ * textarea while the printed page reads like a document.
+ */
+function MemoText({ text }: { text: string }) {
+  const blocks = text.split(/\n\s*\n/).filter((b) => b.trim().length > 0);
+  const bodyStyle = { fontSize: 13.5, lineHeight: 1.55, color: "#1a1a1a" } as const;
+  return (
+    <div>
+      {blocks.map((block, i) => {
+        const lines = block.split("\n").filter((l) => l.trim().length > 0);
+        const isList = lines.length > 0 && lines.every((l) => l.trim().startsWith("- "));
+        if (isList) {
+          return (
+            <ul key={i} style={{ margin: "6px 0 0", paddingLeft: 20 }}>
+              {lines.map((l, j) => (
+                <li key={j} style={{ ...bodyStyle, marginBottom: 3 }}>
+                  {l.trim().slice(2)}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        return (
+          <p key={i} style={{ ...bodyStyle, margin: i === 0 ? 0 : "8px 0 0", whiteSpace: "pre-wrap" }}>
+            {block}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export default async function MonthlyReportPage() {
   const now = new Date();
   const curKey = monthKeyPT(now);
@@ -379,7 +413,7 @@ export default async function MonthlyReportPage() {
           <div key={s.field} style={{ marginBottom: 14 }}>
             <div style={{ fontSize: 13, fontWeight: 800, color: INK, marginBottom: 3 }}>{s.heading}</div>
             {s.text ? (
-              <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.55, color: "#1a1a1a", whiteSpace: "pre-wrap" }}>{s.text}</p>
+              <MemoText text={s.text} />
             ) : (
               <p className="no-print" style={{ margin: 0, fontSize: 12.5, fontStyle: "italic", color: MUTED }}>
                 Not written yet — use the editor below. ({s.hint})

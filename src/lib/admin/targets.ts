@@ -82,9 +82,13 @@ export const RESERVED_TARGETS = [
   "fee per $ spend",
 ];
 
-/** S5 switches to Max Conversions Aug 3 below the gate — logged pilot. */
+/**
+ * S5 bidding upgrade is THRESHOLD-gated, not date-gated (changed 7/31;
+ * the old note scheduled it for Aug 3 while S5 sat at 9/30 trailing
+ * actions — caught by Eddie. Gates, not dates.)
+ */
 export const PHASE2_PILOT_NOTE =
-  "S5 switches to Max Conversions Aug 3 by prior schedule, below the 30-action gate — a deliberate Phase-2 mechanics pilot, not a gate violation.";
+  "S5 moves to Max Conversions when it banks ~15+ primary actions in a trailing 30 days (Google's learning floor) AND the Spanish phone menu is live — no calendar date. The full 30-action gate remains the formal Phase-2 flip.";
 
 /** One plain-English line for the Phase card and the monthly report. */
 export const PHASE_NARRATIVE: Record<1 | 2 | 3, string> = {

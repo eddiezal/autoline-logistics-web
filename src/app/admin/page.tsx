@@ -881,8 +881,8 @@ export default async function AdminReportPage({
   if (syncOk.length > 0 && statusMatched.length / syncOk.length < 0.9)
     queue.push({
       title: "Webhook coverage gap — records missing event stamp-backs",
-      body: `Only ${pct(statusMatched.length, syncOk.length)} of synced forms have webhook events. Jul 22–27 outage residue (~$3.4K July fees invisible) — chase Brian's replay; self-resolves when it lands.`,
-      impact: "~$3.4K July fees + outcome blind spots",
+      body: `Only ${pct(statusMatched.length, syncOk.length)} of synced forms have webhook events — outcome tracking is blind on the rest. Self-resolves as events arrive; if it persists a day, check the receiver and ask Superflo about failed deliveries (Jul 22–27 lesson: their sender doesn't follow redirects or retry).`,
+      impact: "outcome + fee blind spots on unstamped records",
       confidence: "high",
       owner: "Eddie → Brian",
       tab: "",
@@ -983,7 +983,7 @@ export default async function AdminReportPage({
   const healthIssues: string[] = [];
   if (syncOk.length > 0 && statusMatched.length / syncOk.length < 0.9)
     healthIssues.push(
-      `Webhook stamp-backs at ${pct(statusMatched.length, syncOk.length)} of synced forms (Jul 22–27 outage residue — replay pending)`,
+      `Webhook stamp-backs at ${pct(statusMatched.length, syncOk.length)} of synced forms`,
     );
   if (ordersImportedAt && now.getTime() - ordersImportedAt.getTime() > 3 * 86_400_000)
     healthIssues.push(
@@ -1450,7 +1450,7 @@ export default async function AdminReportPage({
               </div>
               <div style={tileS}>
                 {feeCoveragePct !== null
-                  ? `deposit present on ${feeCoveragePct.toFixed(0)}% of booked shipments · live to within minutes · understates until the Jul 22–27 replay lands · not revenue`
+                  ? `deposit present on ${feeCoveragePct.toFixed(0)}% of booked shipments · live to within minutes · not revenue`
                   : "webhook shipments unavailable"}
               </div>
             </div>

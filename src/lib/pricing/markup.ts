@@ -19,11 +19,10 @@
  * Mid-book prices (~$900–1,200 carrier) barely move; only the broken
  * tails change.
  *
- * Shadow logging: /api/lead stores carrierEstimate + legacyPrice (what
- * ×1.225 would have shown) on every lead doc — server-side only, never in
- * an API response — so scripts/compare-quote-prices.mjs can measure the
- * new model against agent quotes as head-to-heads accrue. Revert = put
- * applyCustomerMarkup back on LEGACY_MARKUP_FACTOR.
+ * Shadow logging: /api/lead stores carrierEstimate (raw SD) on every lead
+ * doc — server-side only, never in an API response — so
+ * scripts/compare-quote-prices.mjs can measure the live model against
+ * agent quotes as head-to-heads accrue.
  *
  * Apply this to any number shown to the public OR routed through the lead
  * email to agents. Internal calibration tools call the SD client with
@@ -34,6 +33,9 @@
  * - 2026-07-24: flat-fee discovery (n=6 head-to-head + 345-order book).
  * - 2026-07-28: flat-fee v1 shipped per Eddie ("we could be losing the
  *   heavy deals by overpricing them"). Strategy agreed before the change.
+ * - 2026-07-30: legacy ×1.225 shadow retired per Eddie ("we can forget
+ *   the legacy... we just want to give accurate quotes"). No revert path
+ *   kept — accuracy work continues forward (see pricing strategy doc).
  */
 
 /** Model tag stamped onto lead docs for cohort analysis. */
@@ -42,9 +44,6 @@ export const PRICING_MODEL = "flatfee-v1";
 export const FEE_BASE = 150;
 export const FEE_RATE = 0.09;
 export const FEE_CAP = 400;
-
-/** Legacy percentage model — shadow logging + revert path only. */
-export const LEGACY_MARKUP_FACTOR = 1.225;
 
 export interface MarkupTarget {
   price: number;
@@ -71,9 +70,4 @@ export function applyCustomerMarkup<T extends MarkupTarget>(raw: T): T {
     low: roundTo5(raw.low + customerFee(raw.low)),
     high: roundTo5(raw.high + customerFee(raw.high)),
   };
-}
-
-/** What the retired ×1.225 model would have shown — shadow logging only. */
-export function legacyMarkupPrice(rawPrice: number): number {
-  return Math.round(rawPrice * LEGACY_MARKUP_FACTOR);
 }

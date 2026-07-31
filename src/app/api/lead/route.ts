@@ -27,7 +27,7 @@ import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
 import { OWNER_EMAIL, QA_BCC_EMAIL } from "@/lib/leads/agents";
 import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
-import { applyCustomerMarkup, legacyMarkupPrice, PRICING_MODEL } from "@/lib/pricing/markup";
+import { applyCustomerMarkup, PRICING_MODEL } from "@/lib/pricing/markup";
 import {
   getSdPriceEstimate,
   toSdVehicleType,
@@ -239,12 +239,10 @@ export async function POST(req: Request) {
   // Shadow pricing fields (flat-fee model v1, 2026-07-28): stored on the
   // lead DOC only — the API response is {ok, leadRef}, so the wholesale
   // number never reaches a client. Lets compare-quote-prices.mjs measure
-  // the live model against agent quotes, and legacyPrice shows what the
-  // retired ×1.225 would have quoted the same lead.
+  // the live model against agent quotes. (legacyPrice retired 2026-07-30.)
   let pricingShadow: {
     model: string;
     carrierEstimate: number;
-    legacyPrice: number;
   } | null = null;
   try {
     // One SD call, raw — the customer-facing numbers are derived locally
@@ -275,7 +273,6 @@ export async function POST(req: Request) {
       pricingShadow = {
         model: PRICING_MODEL,
         carrierEstimate: rawSd.price,
-        legacyPrice: legacyMarkupPrice(rawSd.price),
       };
     }
   } catch (err) {
