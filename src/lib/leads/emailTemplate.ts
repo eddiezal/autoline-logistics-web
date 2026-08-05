@@ -1,16 +1,16 @@
 /**
  * Lead notification email builder.
  *
- * Renders the HTML + plain-text owner-visibility copy Ben receives when a
- * new /quote lead lands (cutover 2026-07-20: agents are assigned and
- * notified inside ProABD; this email is for volume + source visibility).
- * Subject pattern is designed to scan at a glance in a busy inbox.
+ * Renders the HTML + plain-text body the assigned agent receives when a
+ * new /quote lead lands. Subject pattern is designed to scan at a glance
+ * in a busy inbox.
  */
 
 import "server-only";
 
 export interface BuildLeadEmailInput {
   leadRef: string;
+  agentFirstName: string;
   customer: {
     firstName: string;
     lastName?: string | null;
@@ -162,7 +162,7 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
     (input.customer.lastName ? " " + input.customer.lastName : "");
 
   const textLines: string[] = [
-    "New lead (" + input.leadRef + "). Assigned + notified inside ProABD.",
+    "New lead routed to you (" + input.leadRef + ").",
     "",
     "Customer: " + fullName + " . " + input.customer.email + " . " + input.customer.phone,
     "Route: " + o + " -> " + d,
@@ -177,6 +177,9 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
   textLines.push("");
   textLines.push("Submitted: " + input.submittedAt);
   textLines.push("Reply to this email to reach the customer directly.");
+  textLines.push(
+    "NOTE: ProABD is the assignment of record — confirm this lead is yours there before contacting the customer.",
+  );
   const text = textLines.join("\n");
 
   const html = renderHtml(input, o, d, vehicle, price, tier);
@@ -233,11 +236,12 @@ function renderHtml(
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Source</td><td style="padding:6px 0;color:' + PINE + ';font-size:14px;font-weight:700;">' + escapeHtml(deriveLeadSource(input.attribution)) + '</td></tr>'
     + '</table>'
     + attribution
-    // Cutover 2026-07-20: ProABD is the only assignment brain. This email
-    // is Ben's visibility copy — the agent was already routed + notified
-    // inside ProABD.
-    + '<div style="margin-top:20px;padding:12px 14px;border-radius:8px;background:#f0f9ff;border:1px solid #bae6fd;font-size:12px;color:#075985;">'
-    + '<strong>Assigned in ProABD.</strong> The agent was routed and notified there automatically — no action needed on this email.'
+    // Assignment-of-record notice. Since the 2026-07-14 ProABD createLead
+    // automation, ProABD applies its own agent routing — this email's
+    // recipient may differ from the ProABD assignee until routing is
+    // unified (see assignment-audit.mjs). Prevents double-working leads.
+    + '<div style="margin-top:20px;padding:12px 14px;border-radius:8px;background:#fffbeb;border:1px solid #fde68a;font-size:12px;color:#92400e;">'
+    + '<strong>ProABD is the assignment of record.</strong> Confirm this lead is yours there before contacting the customer.'
     + '</div>'
     + '<div style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:' + GRAY + ';">'
     + 'Ref: ' + escapeHtml(input.leadRef) + ' . Submitted ' + escapeHtml(input.submittedAt) + '<br>'
@@ -283,7 +287,7 @@ function renderAttribution(a: BuildLeadEmailInput["attribution"]): string {
 // TODO: confirm with the team (Nelson follow-up sent 2026-06-29) which
 // number/area code shows on the customer's caller ID. Update both constants
 // at once when the answer comes back.
-const CUSTOMER_SUPPORT_PHONE = "657-551-2307";
+const CUSTOMER_SUPPORT_PHONE = "(714) 660-7558";
 const CUSTOMER_CALL_AREA_CODE = "657";
 
 export interface BuildCustomerEmailInput {
