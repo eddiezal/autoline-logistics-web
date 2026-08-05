@@ -2,7 +2,7 @@
  * GET /api/cron/weekly-digest
  *
  * Friday morning digest of the past 7 days of leads, emailed to Ben at
- * info@autolinelogistics.com. Replaces per-lead BCC to Ben (he prefers
+ * info@autolineexpress.com. Replaces per-lead BCC to Ben (he prefers
  * Friday cadence per stated email overload).
  *
  * Cron: Friday 8:00 AM PT = 15:00 UTC (Vercel cron expression `0 15 * * 5`)
@@ -24,7 +24,7 @@ import { sendLeadEmail } from "@/lib/email/resend";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DIGEST_TO = "info@autolinelogistics.com";
+const DIGEST_TO = "info@autolineexpress.com";
 
 interface LeadRecord {
   leadRef: string;

@@ -67,4 +67,4 @@ export const QA_BCC_EMAIL = "eddie@zaldivarlabs.com";
 /** Ben — receives the owner-visibility copy of every lead notification
  *  (cutover 2026-07-20: agents are assigned + notified inside ProABD).
  *  Same inbox as the Friday weekly digest (weekly-digest/route.ts). */
-export const OWNER_EMAIL = "info@autolinelogistics.com";
+export const OWNER_EMAIL = "info@autolineexpress.com";
