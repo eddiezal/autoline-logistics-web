@@ -47,6 +47,7 @@ const CATEGORY_COLORS: Record<ChangeCategory, string> = {
   improvement: "#7C3AED",
   fix: "#7C3AED",
   ads: "#C2410C",
+  analysis: "#4338CA",
   tracking: "#0E7490",
   "local-gbp": "#9D174D",
   infra: "#4B5563",

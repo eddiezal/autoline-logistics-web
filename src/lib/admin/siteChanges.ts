@@ -23,6 +23,7 @@ export type ChangeCategory =
   | "improvement"
   | "fix"
   | "ads"
+  | "analysis"
   | "tracking"
   | "local-gbp"
   | "infra";
@@ -50,6 +51,7 @@ export const CATEGORY_LABELS: Record<ChangeCategory, string> = {
   improvement: "Improvement",
   fix: "Fix",
   ads: "Ads management",
+  analysis: "Analysis",
   tracking: "Tracking & analytics",
   "local-gbp": "Local & Business Profile",
   infra: "Infrastructure",
