@@ -8,6 +8,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getStudy, STUDIES, type DeepSection } from "@/lib/admin/analysisLibrary";
+import { getChartSrcdoc } from "@/lib/admin/chartSrcdoc";
 
 export const runtime = "nodejs";
 
@@ -145,11 +146,19 @@ export default async function StudyPage({
 
       {s.chartHref && (
         <Section title="The chart">
+          {/* srcdoc embed: immune to the site's anti-framing headers (no
+              HTTP fetch). The route stays available for full-screen view. */}
           <iframe
-            src={s.chartHref}
+            srcDoc={getChartSrcdoc(s.slug) ?? undefined}
+            src={getChartSrcdoc(s.slug) ? undefined : s.chartHref}
             title={`${s.title} — interactive chart`}
             style={{ width: "100%", height: 720, border: "1px solid var(--color-gray-200)", borderRadius: 12, background: "#fff" }}
           />
+          <p style={{ margin: "8px 0 0", fontSize: 12.5 }}>
+            <a href={s.chartHref} target="_blank" rel="noreferrer" style={{ color: GREEN, fontWeight: 600 }}>
+              Open chart full screen →
+            </a>
+          </p>
         </Section>
       )}
 
