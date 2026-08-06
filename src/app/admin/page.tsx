@@ -3436,9 +3436,23 @@ export default async function AdminReportPage({
           </div>
         ))}
         <a
-          href="/admin/report"
+          href="/admin/changes"
           style={{
             marginLeft: "auto",
+            fontSize: 13,
+            fontWeight: 600,
+            textDecoration: "none",
+            padding: "6px 12px",
+            borderRadius: 999,
+            color: GREEN,
+            border: `1px solid ${GREEN}`,
+          }}
+        >
+          Work Log →
+        </a>
+        <a
+          href="/admin/report"
+          style={{
             fontSize: 13,
             fontWeight: 600,
             textDecoration: "none",
