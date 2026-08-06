@@ -106,6 +106,24 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: SECURITY_HEADERS,
       },
+      {
+        // Analysis Library charts: self-contained HTML documents served
+        // INSIDE the /admin auth boundary and iframed by the study pages
+        // (/admin/analysis/[slug]). The global frame-ancestors 'none' +
+        // X-Frame-Options DENY block that embed ("refused to connect"),
+        // so this more-specific rule (same-key headers: last match wins)
+        // relaxes framing to SAME-ORIGIN ONLY for chart routes, with a
+        // locked-down document CSP (inline script/style only, no network).
+        source: "/admin/analysis/:slug/chart",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; frame-ancestors 'self'; base-uri 'none'; form-action 'none'",
+          },
+        ],
+      },
     ];
   },
   async redirects() {
