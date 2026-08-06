@@ -1,3 +1,4 @@
+import { localeAlternates } from "@/lib/seo/alternates";
 import type { Metadata } from "next";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -16,11 +17,19 @@ import {
   SITE_URL,
 } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Ship a car California to Alaska — PCS, oil/gas, retiree relocations",
   description:
     "California-to-Alaska vehicle transport via overland (Alaska Highway) or ocean (Tacoma to Anchorage). Locked-price quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright.",
-};
+    alternates: localeAlternates(locale, "/corridors/california-alaska"),
+  };
+}
 
 const SPECIALTY_KEYS = [
   "lifted",

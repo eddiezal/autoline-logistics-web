@@ -1,3 +1,4 @@
+import { singleLocaleCanonical } from "@/lib/seo/alternates";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -35,12 +36,14 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const a = getArticleBySlug(slug);
   if (!a) return { title: "Article not found" };
   return {
     title: a.title,
     description: a.metaDescription,
+    // Articles exist in exactly ONE locale — self-canonical, no hreflang pair.
+    alternates: singleLocaleCanonical(locale, `/blog/${a.slug}`),
     openGraph: {
       title: a.title,
       description: a.metaDescription,

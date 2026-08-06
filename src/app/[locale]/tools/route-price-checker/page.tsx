@@ -4,12 +4,21 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { RoutePriceCheckerForm } from "@/components/RoutePriceCheckerForm";
+import { localeAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Car shipping cost calculator. Real prices, no signup.",
   description:
     "Get today's auto-transport price range for any ZIP-to-ZIP route in the continental US. Live carrier pricing, no email gate, no signup. Plus a 30-day average comparison as our pricing data grows.",
-};
+    alternates: localeAlternates(locale, "/tools/route-price-checker"),
+  };
+}
 
 // The form panel is the conversion moment. Page revalidates rarely since the
 // form itself fetches live data on submit.

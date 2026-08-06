@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 /**
  * /services — the depth page for the Services section on the homepage.
@@ -14,11 +15,19 @@ import { Container } from "@/components/Container";
  * so copy stays in sync between the two surfaces.
  */
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Services — Auto Line Logistics",
   description:
     "Three ways to move your vehicle: Open Transport, Enclosed Premium, and Ocean Routes for Hawaii + Alaska. All backed by our Damage Promise.",
-};
+    alternates: localeAlternates(locale, "/services"),
+  };
+}
 
 // Vehicle matrix structure — keys map into i18n services.vehicleMatrix.rows.*
 // statusType controls visual styling (green/amber/gray)
@@ -31,7 +40,6 @@ const VEHICLE_ROWS: ReadonlyArray<{
   { key: "truckStandard", statusType: "ok" },
   { key: "truckLifted", statusType: "warn" },
   { key: "van", statusType: "ok" },
-  { key: "motorcycle", statusType: "ok" },
   { key: "classic", statusType: "ok" },
   { key: "exotic", statusType: "ok" },
   { key: "inoperable", statusType: "warn" },

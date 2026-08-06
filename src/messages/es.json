@@ -345,7 +345,7 @@
     }
   },
   "header": {
-    "tagline": "Transporte confiable de autos, camionetas y motocicletas — En todo el país",
+    "tagline": "Transporte confiable de autos, camionetas y SUVs — En todo el país",
     "ctaQuote": "Obtenga su cotización al instante",
     "nav": {
       "home": "Inicio",
@@ -1115,7 +1115,7 @@
         "price": {
           "eyebrow": "Promesa de Precio",
           "headline": "Cotización = factura →",
-          "description": "Usted elige la velocidad, nosotros fijamos el precio. Sin recargos, nunca."
+          "description": "Usted elige la velocidad, nosotros fijamos el precio. Sin recargos sorpresa."
         },
         "damage": {
           "eyebrow": "Promesa contra Daños",
@@ -2503,9 +2503,9 @@
         "title": "Por que enviar a menudo cuesta menos que manejar",
         "body": {
           "0": "Un viaje de ida de CA a TX cuesta de $400 a $600 en gasolina, mas 2 a 3 noches de hotel, comida, y poner 1,400 millas duras en su vehiculo. Sume el valor de 3 dias de su tiempo.",
-          "1": "Una cotizacion de transporte fija a menudo queda por DEBAJO del costo total de manejar, y usted no pierde los 3 dias. Corremos el corredor semanalmente a traves de nuestra flota familiar y nuestra red de transportistas socios verificados."
+          "1": "Una cotizacion de transporte fija a menudo queda por DEBAJO del costo total de manejar, y usted no pierde los 3 dias. Corremos este corredor a traves de nuestra flota familiar y nuestra red de transportistas socios verificados."
         },
-        "punchline": "La cotizacion fija que acepta al reservar es la factura final. Sin recargo de combustible. Sin sobreprecio del intermediario. Sin sorpresas de tarifas puerta a puerta."
+        "punchline": "La cotizacion fija que acepta al reservar es la factura final. Sin recargo de combustible. Sin aumentos sorpresa. Sin sorpresas de tarifas puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quien ahorra mas",
@@ -2528,7 +2528,7 @@
       "subDest": {
         "eyebrow": "Destinos principales de Texas",
         "title": "Donde aterrizan la mayoria de los envios de CA a TX",
-        "lead": "Dallas-Fort Worth, Houston, Austin, San Antonio. Corremos los cuatro corredores semanalmente. Su coordinador conoce su ZIP de destino y su ventana de tiempo."
+        "lead": "Dallas-Fort Worth, Houston, Austin, San Antonio. Cubrimos los cuatro destinos. Su coordinador conoce su ZIP de destino y su ventana de tiempo."
       },
       "faq": {
         "eyebrow": "Preguntas frecuentes",
@@ -2544,7 +2544,7 @@
           },
           "2": {
             "q": "?Que significa 'precio fijo'?",
-            "a": "La cotizacion que acepta al reservar es la factura final. Sin recargo de combustible. Sin sobreprecio del intermediario. Sin tarifas ocultas puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotizacion que acepta al reservar es la factura final. Sin recargo de combustible. Sin aumentos sorpresa. Sin tarifas ocultas puerta a puerta. Nuestra Promesa de Precio."
           },
           "3": {
             "q": "?Hay cargos adicionales alguna vez?",
@@ -2586,7 +2586,7 @@
           "0": "Un viaje de ida de CA a FL cuesta $750-900 en gasolina, 4 noches de hotel, comida en el camino y 2,800 millas duras de autopista en su vehículo. Sume más de 40 horas al volante.",
           "1": "Una cotización fija de transporte de autos a menudo termina POR DEBAJO del costo total de conducir, y no pierde casi una semana. El tráfico de snowbirds y reubicaciones mantiene este corredor activo todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2609,7 +2609,7 @@
       "subDest": {
         "eyebrow": "Principales destinos en Florida",
         "title": "Dónde aterrizan más los envíos CA-a-FL",
-        "lead": "Miami, Orlando, Tampa, Jacksonville. Cubrimos los cuatro destinos semanalmente. Su coordinador conoce su código postal de destino y ventana de tiempo."
+        "lead": "Miami, Orlando, Tampa, Jacksonville. Cubrimos los cuatro destinos. Su coordinador conoce su código postal de destino y ventana de tiempo."
       },
       "faq": {
         "eyebrow": "Preguntas frecuentes",
@@ -2633,7 +2633,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2656,9 +2656,9 @@
         "title": "Por qué enviar de California a Nueva York a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de CA a NY cuesta $750-900 en gasolina, 4 noches de hotel, comida y 2,900 millas mayormente de interestatal con riesgo climático por las Rocosas y el Medio Oeste. Sume más de 45 horas detrás del parabrisas.",
-          "1": "Una cotización fija de transporte de autos regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias de finanzas y tecnología de la costa este corren este corredor semanalmente."
+          "1": "Una cotización fija de transporte de autos regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias de finanzas y tecnología de la costa este corren este corredor todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2705,7 +2705,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2730,7 +2730,7 @@
           "0": "Un viaje de ida de NY a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida, peajes y 1,200 millas de tráfico en I-95. Sume 18-20 horas al volante.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El volumen de snowbirds mantiene los precios competitivos todo el año, con demanda máxima de octubre a diciembre (sur) y abril a mayo (norte)."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2777,7 +2777,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
           },
           "5": {
             "q": "¿Es más barato el Auto Train que enviar un auto de Nueva York a Florida?",
@@ -2816,7 +2816,7 @@
           "0": "Un viaje de ida de TX a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida y 1,200 millas de autopista I-10. Sume 18-20 horas al volante por Luisiana y Misisipi.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El tráfico de snowbirds de Houston y Dallas, las reubicaciones militares desde Fort Hood y Lackland, y las mudanzas familiares mantienen el corredor competitivo."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2863,7 +2863,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2888,7 +2888,7 @@
           "0": "Un viaje de ida de CA a GA cuesta $650-800 en gasolina, 3 noches de hotel, comida y 2,400 millas de interestatal sureña. Sume más de 35 horas al volante.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. El volumen tecnológico de Atlanta, las reubicaciones sureñas y los traslados universitarios mantienen el carril competitivo."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2935,7 +2935,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2958,9 +2958,9 @@
         "title": "Por qué enviar de California a Carolina del Norte a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de CA a NC cuesta $750-900 en gasolina, 3-4 noches de hotel, comida y 2,800 millas mayormente de interestatal sureña. Sume más de 40 horas al volante.",
-          "1": "Una cotización fija de transporte de autos en este corredor regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias bancarias en Charlotte y tecnológicas en RTP corren este carril semanalmente."
+          "1": "Una cotización fija de transporte de autos en este corredor regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias bancarias en Charlotte y tecnológicas en RTP corren este carril todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -3007,7 +3007,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
           }
         }
       },
@@ -3032,7 +3032,7 @@
           "0": "Un viaje de ida de CA a IL cuesta $550-700 en gasolina, 2-3 noches de hotel, comida y 2,000 millas de autopista I-80 con sensibilidad climática por las Rocosas. Sume más de 30 horas al volante.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. Las transferencias tecnológicas y financieras al área metropolitana de Chicago, más las reubicaciones familiares del Medio Oeste, mantienen el carril activo todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin margen de broker. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -3079,7 +3079,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin margen de broker en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
           }
         }
       },
@@ -3262,8 +3262,8 @@
           "a": "Regla rápida: elija Cerrado si su auto es clásico, exótico, o coleccionable — generalmente de 25+ años o raro como para que una piedra le arruine la semana. Todo lo demás: Abierto. Misma cobertura de la Promesa contra Daños, ~1.5x más barato, y los tráileres Abiertos colocan los autos en la cubierta superior por encima de la mayoría de los escombros de la carretera. Un Tesla no es automáticamente \"exótico\"; Abierto está bien. Un Mustang del '67 sí lo es. Nunca empujaremos Cerrado cuando Abierto es lo que necesita."
         },
         "motorcycle": {
-          "q": "¿Pueden enviar mi motocicleta?",
-          "a": "Sí — de todo tipo: deportiva, cruiser, vintage, motocross. Las motos viajan en caja especial o con correas de sujeción según tamaño y ruta. Usamos conductores con experiencia en motos que saben cómo sujetarlas sin pellizcar cables ni rayar tanques. Pida cotización con marca + modelo + año. Artículos personales pequeños en las alforjas están bien; equipaje más grande agrega un cargo pequeño."
+          "q": "¿Envían motocicletas?",
+          "a": "No. Nos especializamos en autos, camionetas, SUVs y vans, y preferimos decírselo de frente antes que entregar su moto a un equipo que no mueve motocicletas todos los días. Para una moto, lo correcto es un transportista especializado en motocicletas con embalaje adecuado."
         },
         "inoperable": {
           "q": "¿Y si mi auto no arranca?",

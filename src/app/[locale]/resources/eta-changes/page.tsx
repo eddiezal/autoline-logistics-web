@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ResourceArticle, type Section } from "@/components/ResourceArticle";
 import { getShipmentByOrderNumber } from "@/lib/shipments/repository";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 /**
  * /resources/eta-changes — "What if my ETA changes?"
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t("title"),
     description: t("description"),
+    alternates: localeAlternates(locale, "/resources/eta-changes"),
   };
 }
 

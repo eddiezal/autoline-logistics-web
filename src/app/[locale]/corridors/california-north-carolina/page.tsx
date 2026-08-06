@@ -1,3 +1,4 @@
+import { localeAlternates } from "@/lib/seo/alternates";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -17,11 +18,19 @@ import {
   SITE_URL,
 } from "@/lib/seo/schemas";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Ship a car California to North Carolina. Locked-price corridor.",
   description:
     "Auto transport from California to North Carolina. Locked all-in price. No deposit. Real-time portal tracking. Charlotte, Raleigh, Durham, Asheville.",
-};
+    alternates: localeAlternates(locale, "/corridors/california-north-carolina"),
+  };
+}
 
 // Re-read Firestore pricing snapshot at most every 5 minutes. The cron only
 // writes 2x daily so this is more than fresh enough.

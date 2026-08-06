@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ResourceArticle, type Section } from "@/components/ResourceArticle";
 import { getShipmentByOrderNumber } from "@/lib/shipments/repository";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 /**
  * /resources/delivery-day — "What happens at delivery"
@@ -26,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t("title"),
     description: t("description"),
+    alternates: localeAlternates(locale, "/resources/delivery-day"),
   };
 }
 

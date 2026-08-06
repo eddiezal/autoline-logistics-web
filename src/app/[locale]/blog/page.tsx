@@ -7,12 +7,21 @@ import { Container } from "@/components/Container";
 import { getArticlesByCluster } from "@/lib/blog/articles";
 import { getLiveCorridors } from "@/lib/corridors";
 import type { ArticleSummary, ArticleLanguage } from "@/lib/blog/types";
+import { localeAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Car Shipping Guides: Avoid Scams + Deposit Traps",
   description:
     "Plain-English answers to the scary questions before you book auto transport. Honest explainers, plus a realistic quote when you're ready.",
-};
+    alternates: localeAlternates(locale, "/blog"),
+  };
+}
 
 // Articles are static. Daily revalidate keeps the index fresh as we add posts.
 export const revalidate = 86400;

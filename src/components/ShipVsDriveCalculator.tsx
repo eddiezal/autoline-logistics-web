@@ -35,13 +35,13 @@ type VehicleType =
   | "classic"
   | "other";
 
+// "motorcycle" removed from selectable options 2026-08-06 — we don't ship them.
 const VEHICLE_TYPES: ReadonlyArray<VehicleType> = [
   "sedan",
   "suv",
   "truckStandard",
   "truckLifted",
   "van",
-  "motorcycle",
   "classic",
   "other",
 ];

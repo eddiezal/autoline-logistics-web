@@ -1,3 +1,4 @@
+import { localeAlternates } from "@/lib/seo/alternates";
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -12,11 +13,19 @@ import {
   type Corridor,
 } from "@/lib/corridors";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "All corridors — Auto Line Logistics",
   description:
     "Locked-price auto transport on every major US corridor. California to Hawaii, Alaska, Texas, Florida, New York, and more. Door-to-door, named coordinator, no surprises.",
-};
+    alternates: localeAlternates(locale, "/corridors"),
+  };
+}
 
 export default function CorridorsIndex() {
   const t = useTranslations();

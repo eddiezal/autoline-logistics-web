@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 /**
  * /resources — hub page for educational content.
@@ -28,11 +29,19 @@ import { Container } from "@/components/Container";
  * Wire to Resend (or similar) once Ben provisions service accounts —
  * see open action item: [Eddie] Provision service accounts.
  */
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Resources — Auto Line Logistics",
   description:
     "Honest tools and guides for anyone shipping a car. Anti-scam guide, calculators, and monthly articles on the broker industry.",
-};
+    alternates: localeAlternates(locale, "/resources"),
+  };
+}
 
 export default function ResourcesPage() {
   const t = useTranslations();

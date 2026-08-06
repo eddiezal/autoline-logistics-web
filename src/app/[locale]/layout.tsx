@@ -33,15 +33,11 @@ export const metadata: Metadata = {
   description:
     "Locked-price auto transport with real-time tracking, photo evidence, and a coordinator who picks up the phone. Built for individual customers who deserve more than a quote and a hope.",
   metadataBase: new URL("https://www.autolinelogistics.com"),
-  // Tell search engines the real domain is canonical, regardless of which URL
-  // they crawl (staging, preview, etc.). Per-page metadata can override this.
-  alternates: {
-    canonical: "/",
-    languages: {
-      en: "/",
-      es: "/es",
-    },
-  },
+  // DO NOT add `alternates` here. A hardcoded layout-level canonical ("/")
+  // shipped Jun 21 -> Aug 6 and made every page declare itself a duplicate of
+  // the EN homepage (verified live 2026-08-06; suppressed indexation sitewide).
+  // Every indexable page sets its own self-referencing canonical + hreflang
+  // via localeAlternates() in src/lib/seo/alternates.ts.
   openGraph: {
     type: "website",
     locale: "en_US",

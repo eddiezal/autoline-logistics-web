@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { QuoteForm } from "@/components/QuoteForm";
 import { parseQuoteSearchParams, type HeroHandoff } from "@/lib/hero-handoff";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 // Locale-aware canonical: /quote for EN, /es/quote for ES. Without this,
 // every ?from=X&to=Y&dest=Z variant looks like a distinct page to Google
@@ -17,18 +18,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const path = locale === "en" ? "/quote" : "/" + locale + "/quote";
   return {
     title: "Get a locked price — Auto Line Logistics",
     description:
       "Tell us your origin, destination, and vehicle. Your coordinator will lock in a price within 1 business hour. No bait-and-switch. The quote is the contract.",
-    alternates: {
-      canonical: path,
-      languages: {
-        en: "/quote",
-        es: "/es/quote",
-      },
-    },
+    alternates: localeAlternates(locale, "/quote"),
   };
 }
 

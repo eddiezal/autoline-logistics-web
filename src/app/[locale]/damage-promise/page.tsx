@@ -12,12 +12,21 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
 import { PromiseFooterNav } from "@/components/PromiseFooterNav";
+import { localeAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Damage Promise — Coverage beyond the carrier",
   description:
     "$75K bond. $500K contingent cargo liability. 24-hour claim acknowledgment. 14-day resolution target. We handle the carrier so you don't have to.",
-};
+    alternates: localeAlternates(locale, "/damage-promise"),
+  };
+}
 
 // Scenario "covered" status is structural (not translatable copy) — kept here
 // to avoid trying to read booleans through t().

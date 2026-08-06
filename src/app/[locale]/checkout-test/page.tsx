@@ -7,6 +7,11 @@ import { PaymentForm } from "@/components/PaymentForm";
  * REMOVE before production launch — this is a dev-only proving ground, not a
  * real checkout. The real payment UI lives in the portal billing section.
  */
+// Dev-only harness: keep out of the index (it was shipping indexable).
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function CheckoutTestPage() {
   return (
     <main className="max-w-md mx-auto px-4 py-12">

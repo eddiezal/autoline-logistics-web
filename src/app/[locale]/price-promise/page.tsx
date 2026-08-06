@@ -12,12 +12,21 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
 import { PromiseFooterNav } from "@/components/PromiseFooterNav";
+import { localeAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Price Promise — Locked-price auto transport",
   description:
     "Three service tiers. Whichever you pick, the price locks at booking. No post-assignment surcharges. No carrier-cost-overage calls. The quote is the contract.",
-};
+    alternates: localeAlternates(locale, "/price-promise"),
+  };
+}
 
 export default function PricePromisePage() {
   const t = useTranslations();

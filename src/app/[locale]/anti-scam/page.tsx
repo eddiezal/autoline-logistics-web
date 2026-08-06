@@ -8,6 +8,7 @@ import { AntiScamCard } from "@/components/AntiScamCard";
 import { getAllArticleSummaries } from "@/lib/blog/articles";
 import { StructuredData } from "@/components/StructuredData";
 import { breadcrumbSchema, SITE_URL } from "@/lib/seo/schemas";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 /**
  * Anti-Scam Hub — destination page for the homepage's Anti-Scam Educator
@@ -19,11 +20,19 @@ import { breadcrumbSchema, SITE_URL } from "@/lib/seo/schemas";
  * (hero, "coming next" articles, final CTA) lives under antiScamHub.*.
  */
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Anti-scam guide — Auto Line Logistics",
   description:
     "Three questions every customer should ask any broker before booking — plus monthly articles on the games brokers play.",
-};
+    alternates: localeAlternates(locale, "/anti-scam"),
+  };
+}
 
 export default async function AntiScamHubPage({
   params,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
 import { content as contentEn } from "@/content/legal/accessibility";
 import { content as contentEs } from "@/content/legal/accessibility.es";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 export async function generateMetadata({
   params,
@@ -13,6 +14,7 @@ export async function generateMetadata({
   return {
     title: `${content.title} — Auto Line Logistics`,
     description: content.metaDescription,
+    alternates: localeAlternates(locale, "/accessibility"),
   };
 }
 

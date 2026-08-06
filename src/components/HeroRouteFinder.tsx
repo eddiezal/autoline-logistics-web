@@ -49,13 +49,13 @@ type ConditionKey = "drivable" | "nonDrivable";
 type TransportKey = "open" | "enclosed";
 type TimingKey = "flexible" | "withinWeek" | "asap";
 
+// "motorcycle" removed from selectable options 2026-08-06 — we don't ship them.
 const VEHICLE_OPTIONS: ReadonlyArray<VehicleKey> = [
   "sedan",
   "suv",
   "truckStandard",
   "truckLifted",
   "van",
-  "motorcycle",
   "classic",
   "exotic",
 ];

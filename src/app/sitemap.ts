@@ -29,6 +29,18 @@ const STATIC_PATHS = [
   "/tools",
   "/tools/ship-vs-drive",
   "/tools/route-price-checker",
+  // Added 2026-08-06 — these were live + indexable but missing from the
+  // sitemap (51 URLs vs ~70 real). Keep this list in sync with the page tree;
+  // scripts/check-seo.mjs cross-checks it.
+  "/services",
+  "/resources",
+  "/resources/delivery-day",
+  "/resources/eta-changes",
+  "/resources/inspection-photos",
+  "/resources/reach-coordinator",
+  "/privacy-policy",
+  "/terms-conditions",
+  "/accessibility",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -45,9 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: path === "" ? "weekly" : "monthly",
         priority: path === "" ? 1.0 : 0.7,
         alternates: {
-          languages: Object.fromEntries(
-            routing.locales.map((l) => [l, buildUrl(l, path)])
-          ),
+          languages: sitemapLanguages(path),
         },
       });
     }
@@ -63,9 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly",
         priority: 0.8,
         alternates: {
-          languages: Object.fromEntries(
-            routing.locales.map((l) => [l, buildUrl(l, path)])
-          ),
+          languages: sitemapLanguages(path),
         },
       });
     }
@@ -99,6 +107,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
  * Build a full URL for a given locale + path, honoring the
  * `localePrefix: "as-needed"` routing config — EN is unprefixed, ES gets `/es`.
  */
+function sitemapLanguages(path: string): Record<string, string> {
+  // Keys are hreflang values — must match the page-level hreflang set
+  // (localeAlternates in src/lib/seo/alternates.ts).
+  return {
+    "en-US": buildUrl("en", path),
+    "es-US": buildUrl("es", path),
+    "x-default": buildUrl("en", path),
+  };
+}
+
 function buildUrl(locale: string, path: string): string {
   if (locale === routing.defaultLocale) {
     return `${BASE_URL}${path}`;

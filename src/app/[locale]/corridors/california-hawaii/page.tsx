@@ -1,3 +1,4 @@
+import { localeAlternates } from "@/lib/seo/alternates";
 import type { Metadata } from "next";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -27,13 +28,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const es = locale === "es";
+  const alternates = localeAlternates(locale, "/corridors/california-hawaii");
   return es
     ? {
+        alternates,
         title: "Costo de enviar un auto entre California y Hawái — precio bloqueado",
         description:
           "Transporte de vehículos de California a Hawái y de Hawái a California, vía puertos de Long Beach u Oakland. Coordinación puerta-puerto-puerta, todas las islas. Precio bloqueado. Familias militares (PCS) confían en nosotros.",
       }
     : {
+        alternates,
         title: "Cost to Ship a Car from California to Hawaii (and Back) — Locked Price",
         description:
           "Vehicle shipping California to Hawaii AND Hawaii to California via Long Beach or Oakland ports. Door-to-port-to-door, all islands, locked-price quotes. Trusted by military PCS families and relocations.",
@@ -41,7 +45,8 @@ export async function generateMetadata({
 }
 
 const ROUTE_LEGS = ["1", "2", "3", "4", "5", "6"] as const;
-const SPECIALTY_KEYS = ["ev", "classic", "motorcycle", "oversized", "personal", "ag"] as const;
+// "motorcycle" removed 2026-08-06 — Auto Line does not ship motorcycles.
+const SPECIALTY_KEYS = ["ev", "classic", "oversized", "personal", "ag"] as const;
 
 export default function CaliforniaHawaiiCorridor() {
   const t = useTranslations();

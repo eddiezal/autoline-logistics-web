@@ -1,3 +1,4 @@
+import { localeAlternates } from "@/lib/seo/alternates";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -37,7 +38,11 @@ export async function generateMetadata({
   const description = es
     ? `Transporte de autos de California a Florida${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Precio total bloqueado, sin depósito, rastreo en tiempo real. Miami, Orlando, Tampa, Jacksonville.`
     : `Auto transport from California to Florida${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week` : ""}. Locked all-in price, no deposit, real-time tracking. Miami, Orlando, Tampa, Jacksonville.`;
-  return { title, description };
+  return {
+    title,
+    description,
+    alternates: localeAlternates(locale, "/corridors/california-florida"),
+  };
 }
 
 // Re-read Firestore pricing snapshot at most every 5 minutes. The cron only

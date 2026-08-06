@@ -20,7 +20,6 @@ const VEHICLE_TYPE_KEYS = [
   "truckStandard",
   "truckLifted",
   "van",
-  "motorcycle",
   "classic",
   "other",
 ] as const;

@@ -345,7 +345,7 @@
     }
   },
   "header": {
-    "tagline": "Trusted Vehicle Shipping for Cars, Trucks & Motorcycles — Nationwide",
+    "tagline": "Trusted Vehicle Shipping for Cars, Trucks & SUVs — Nationwide",
     "ctaQuote": "Get Your Instant Quote",
     "nav": {
       "home": "Home",
@@ -1115,7 +1115,7 @@
         "price": {
           "eyebrow": "Price Promise",
           "headline": "Quote = invoice →",
-          "description": "You pick the speed, we lock the price. No surcharges, ever."
+          "description": "You pick the speed, we lock the price. No surprise surcharges."
         },
         "damage": {
           "eyebrow": "Damage Promise",
@@ -2503,9 +2503,9 @@
         "title": "Why shipping often costs less than driving",
         "body": {
           "0": "A one-way CA to TX trip costs $400-600 in gas, plus 2-3 hotel nights, food, and 1,400 hard freeway miles on your vehicle. Add the value of 3 days of your time.",
-          "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose 3 days. We run the corridor weekly through our family fleet and our vetted partner network."
+          "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose 3 days. We run this corridor through our family fleet at Auto Line Express and our vetted partner network."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2528,7 +2528,7 @@
       "subDest": {
         "eyebrow": "Top Texas destinations",
         "title": "Where CA-to-TX shipments land most",
-        "lead": "Dallas-Fort Worth, Houston, Austin, San Antonio. We run all four corridors weekly. Your coordinator knows your destination ZIP and timing window."
+        "lead": "Dallas-Fort Worth, Houston, Austin, San Antonio. We cover all four destinations. Your coordinator knows your destination ZIP and timing window."
       },
       "faq": {
         "eyebrow": "Frequently asked",
@@ -2544,7 +2544,7 @@
           },
           "2": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           },
           "3": {
             "q": "Are there ever extra charges?",
@@ -2586,7 +2586,7 @@
           "0": "A one-way CA to FL drive runs $750-900 in gas, 4 hotel nights, food on the road, and 2,800 hard freeway miles on your vehicle. Add 40+ hours behind the wheel.",
           "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose almost a week. Snowbird and relocation traffic keeps this corridor moving year-round."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2609,7 +2609,7 @@
       "subDest": {
         "eyebrow": "Top Florida destinations",
         "title": "Where CA-to-FL shipments land most",
-        "lead": "Miami, Orlando, Tampa, Jacksonville. We run all four destinations weekly. Your coordinator knows your destination ZIP and timing window."
+        "lead": "Miami, Orlando, Tampa, Jacksonville. We cover all four destinations. Your coordinator knows your destination ZIP and timing window."
       },
       "faq": {
         "eyebrow": "Frequently asked",
@@ -2633,7 +2633,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           }
         }
       },
@@ -2656,9 +2656,9 @@
         "title": "Why shipping California to New York often costs less than driving",
         "body": {
           "0": "A one-way CA to NY drive runs $750-900 in gas, 4 hotel nights, food, and 2,900 miles of mostly interstate with weather risk through the Rockies and Midwest. Add 45+ hours of windshield time.",
-          "1": "A locked auto-transport quote regularly beats the all-in cost of driving once you count hotels, food, and time off work. East-coast finance and tech transfers run this corridor weekly."
+          "1": "A locked auto-transport quote regularly beats the all-in cost of driving once you count hotels, food, and time off work. East-coast finance and tech transfers run this corridor year-round."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2705,7 +2705,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           }
         }
       },
@@ -2730,7 +2730,7 @@
           "0": "A one-way NY to FL drive runs $300-450 in gas, 1-2 hotel nights, food, tolls, and 1,200 miles of I-95 traffic. Add 18-20 hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor often runs flat to slightly below the all-in cost of driving. The snowbird volume keeps prices competitive year-round, with peak demand October-December (southbound) and April-May (northbound)."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2777,7 +2777,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           },
           "5": {
             "q": "Is the Auto Train cheaper than shipping a car from New York to Florida?",
@@ -2816,7 +2816,7 @@
           "0": "A one-way TX to FL drive runs $300-450 in gas, 1-2 hotel nights, food, and 1,200 miles of I-10 freeway. Add 18-20 hours behind the wheel through Louisiana and Mississippi.",
           "1": "A locked auto-transport quote on this corridor often runs flat to slightly under the all-in cost of driving. Houston and Dallas snowbird traffic, military relocations from Fort Hood and Lackland, and family relocations keep the corridor competitive."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2863,7 +2863,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           }
         }
       },
@@ -2888,7 +2888,7 @@
           "0": "A one-way CA to GA drive runs $650-800 in gas, 3 hotel nights, food, and 2,400 miles of southern interstate. Add 35+ hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Atlanta tech volume, southern relocations, and college runs keep the lane competitive."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2935,7 +2935,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           }
         }
       },
@@ -2960,7 +2960,7 @@
           "0": "A one-way CA to NC drive runs $750-900 in gas, 3-4 hotel nights, food, and 2,800 miles of mostly southern interstate. Add 40+ hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor regularly beats the all-in cost of driving once you count hotels, food, and time off work. Charlotte banking and Research Triangle tech transfers run this lane weekly."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -3007,7 +3007,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           }
         }
       },
@@ -3032,7 +3032,7 @@
           "0": "A one-way CA to IL drive runs $550-700 in gas, 2-3 hotel nights, food, and 2,000 miles of I-80 freeway with weather sensitivity through the Rockies. Add 30+ hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Chicago metro tech and finance transfers, plus Midwestern family relocations, keep the lane moving year-round."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No broker markup. No hidden door-to-door fees."
+        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -3079,7 +3079,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no broker markup mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
           }
         }
       },
@@ -3262,8 +3262,8 @@
           "a": "Quick rule: pick Enclosed if your car is a classic, exotic, or collector — generally 25+ years old or rare enough that a stone chip would ruin your week. Everything else: Open. Same Damage Promise coverage, ~1.5x cheaper, and Open trailers route cars on the top deck above most road debris. A Tesla isn't automatically \"exotic\"; Open is fine. A '67 Mustang is. We'll never push Enclosed when Open is what you need."
         },
         "motorcycle": {
-          "q": "Can you ship my motorcycle?",
-          "a": "Yes — every type: sportbike, cruiser, vintage, dirt bike. Bikes ride in a specialty crate or with restraint straps depending on size and route. We use bike-trained drivers who know how to tie down without pinching cables or scratching tanks. Get a quote with your make + model + year. Small personal items in saddlebags are fine; larger luggage adds a small fee."
+          "q": "Do you ship motorcycles?",
+          "a": "No. We specialize in cars, trucks, SUVs, and vans, and we'd rather tell you that upfront than hand your bike to a crew that doesn't move motorcycles every day. A dedicated motorcycle transporter with proper crating is the right call for a bike."
         },
         "inoperable": {
           "q": "What if my car isn't running?",

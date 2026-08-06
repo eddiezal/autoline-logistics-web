@@ -6,12 +6,21 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
+import { localeAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Helpful tools — Auto Line Logistics",
   description:
     "Ship vs drive cost calculator, route price checker, price drop alerts, and a printable shipping checklist. Use what helps. No signup required.",
-};
+    alternates: localeAlternates(locale, "/tools"),
+  };
+}
 
 /**
  * /tools — index page for customer-facing utilities (§1 scoped).

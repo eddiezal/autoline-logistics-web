@@ -12,6 +12,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
+import { localeAlternates } from "@/lib/seo/alternates";
 
 /**
  * About page — voice C+D (Modern Trust Operator + Anti-Scam Educator).
@@ -24,11 +25,19 @@ import { FAQ, type FAQItem } from "@/components/FAQ";
  *   - Office address (work address, not home)
  */
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "About Auto Line Logistics. Family-owned auto transport.",
   description:
     "Family-owned auto transport based in Southern California. Locked-price quotes, named coordinators, and coverage beyond the carrier, built for the way real customers ship cars.",
-};
+    alternates: localeAlternates(locale, "/about"),
+  };
+}
 
 const TEAM_KEYS = ["ben", "coordinator", "dispatch"] as const;
 const TEAM_PLACEHOLDER: Record<(typeof TEAM_KEYS)[number], boolean> = {

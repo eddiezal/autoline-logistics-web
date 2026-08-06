@@ -4,12 +4,21 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { ShipVsDriveCalculator } from "@/components/ShipVsDriveCalculator";
+import { localeAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "Ship vs Drive Calculator — Auto Line Logistics",
   description:
     "Compare the real cost of shipping your car vs driving it yourself. Fuel, hotels, food, vehicle wear, and your time — side by side.",
-};
+    alternates: localeAlternates(locale, "/tools/ship-vs-drive"),
+  };
+}
 
 /**
  * /tools/ship-vs-drive — §1 named deliverable.

@@ -8,6 +8,20 @@ import { HeroRouteFinder } from "@/components/HeroRouteFinder";
 import { PortalPreviewCard } from "@/components/PortalPreviewCard";
 import { StructuredData } from "@/components/StructuredData";
 import { localBusinessSchema } from "@/lib/seo/schemas";
+import type { Metadata } from "next";
+import { localeAlternates } from "@/lib/seo/alternates";
+
+// Locale-aware self-canonical + hreflang for the homepage (EN "/", ES "/es").
+// Title/description/OG inherit from the [locale] layout defaults.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return { alternates: localeAlternates(locale, "") };
+}
+
 
 export default function Home() {
   const t = useTranslations();

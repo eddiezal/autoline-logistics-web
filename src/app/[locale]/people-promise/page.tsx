@@ -12,12 +12,21 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
 import { PromiseFooterNav } from "@/components/PromiseFooterNav";
+import { localeAlternates } from "@/lib/seo/alternates";
 
-export const metadata: Metadata = {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
   title: "People Promise — Real people, by name",
   description:
     "Family-owned and operated since 2011. Bilingual coverage in English and Spanish. Named coordinator on every shipment. Real names on the company.",
-};
+    alternates: localeAlternates(locale, "/people-promise"),
+  };
+}
 
 const COMMITMENT_KEYS = ["named", "bilingual", "family", "noScript"] as const;
 const TIMELINE_INDICES = [0, 1, 2, 3, 4, 5] as const;
