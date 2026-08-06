@@ -18,6 +18,11 @@ export default function AnalysisIndex() {
   const studies = [...STUDIES].sort((a, b) => (a.date < b.date ? 1 : -1));
   return (
     <main style={{ maxWidth: 820, margin: "0 auto", padding: "32px 20px 80px" }}>
+      <p style={{ margin: "0 0 14px" }}>
+        <Link href="/admin" style={{ color: GREEN, fontSize: 13, textDecoration: "none", fontWeight: 600 }}>
+          ← Dashboard
+        </Link>
+      </p>
       <header style={{ marginBottom: 24 }}>
         <p style={{ color: GREEN, fontWeight: 700, fontSize: 13, letterSpacing: 1, textTransform: "uppercase", margin: 0 }}>
           Auto Line Logistics

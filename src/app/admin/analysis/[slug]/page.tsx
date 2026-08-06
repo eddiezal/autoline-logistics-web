@@ -90,9 +90,12 @@ export default async function StudyPage({
 
   return (
     <main style={{ maxWidth: 760, margin: "0 auto", padding: "32px 20px 80px" }}>
-      <p style={{ margin: "0 0 14px" }}>
+      <p style={{ margin: "0 0 14px", display: "flex", gap: 14 }}>
         <Link href="/admin/analysis" style={{ color: GREEN, fontSize: 13, textDecoration: "none", fontWeight: 600 }}>
           ← Analysis Library
+        </Link>
+        <Link href="/admin" style={{ color: "var(--color-text-muted)", fontSize: 13, textDecoration: "none", fontWeight: 600 }}>
+          Dashboard
         </Link>
       </p>
 
