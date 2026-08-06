@@ -3439,6 +3439,21 @@ export default async function AdminReportPage({
             one-per-line, at narrow widths. */}
         <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center" }}>
           <a
+            href="/admin/analysis"
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              textDecoration: "none",
+              padding: "6px 12px",
+              borderRadius: 999,
+              color: GREEN,
+              border: `1px solid ${GREEN}`,
+              whiteSpace: "nowrap",
+            }}
+          >
+            Analysis →
+          </a>
+          <a
             href="/admin/changes"
             style={{
               fontSize: 13,
