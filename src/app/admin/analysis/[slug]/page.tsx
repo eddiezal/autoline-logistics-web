@@ -7,7 +7,7 @@
  */
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getStudy, STUDIES } from "@/lib/admin/analysisLibrary";
+import { getStudy, STUDIES, type DeepSection } from "@/lib/admin/analysisLibrary";
 
 export const runtime = "nodejs";
 
@@ -17,6 +17,52 @@ const MUTED = "var(--color-text-muted)";
 
 export function generateStaticParams() {
   return STUDIES.map((s) => ({ slug: s.slug }));
+}
+
+function DeepDive({ sec }: { sec: DeepSection }) {
+  return (
+    <Section title={sec.title}>
+      {sec.body && (
+        <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6, color: "#3f3f3f" }}>{sec.body}</p>
+      )}
+      {sec.bullets && (
+        <ul style={{ margin: sec.body ? "10px 0 0" : 0, paddingLeft: 18, display: "grid", gap: 6 }}>
+          {sec.bullets.map((b, i) => (
+            <li key={i} style={{ fontSize: 14, lineHeight: 1.6, color: "#3f3f3f" }}>{b}</li>
+          ))}
+        </ul>
+      )}
+      {sec.table && (
+        <div style={{ overflowX: "auto", marginTop: sec.body || sec.bullets ? 10 : 0 }}>
+          <table style={{ borderCollapse: "collapse", width: "100%", background: "var(--color-surface)", border: "1px solid var(--color-gray-200)", borderRadius: 10, fontSize: 13.5 }}>
+            <thead>
+              <tr>
+                {sec.table.headers.map((h) => (
+                  <th key={h} style={{ textAlign: "left", padding: "9px 12px", borderBottom: "2px solid var(--color-gray-200)", color: MUTED, fontWeight: 700, fontSize: 12, textTransform: "uppercase", letterSpacing: 0.4 }}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sec.table.rows.map((row, i) => (
+                <tr key={i}>
+                  {row.map((cell, j) => (
+                    <td key={j} style={{ padding: "8px 12px", borderBottom: i < sec.table!.rows.length - 1 ? "1px solid var(--color-gray-200)" : "none", color: j === 0 ? "#1a1a1a" : "#3f3f3f", fontWeight: j === 0 ? 600 : 400 }}>
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {sec.note && (
+        <p style={{ margin: "8px 0 0", fontSize: 12.5, color: MUTED, lineHeight: 1.55 }}>{sec.note}</p>
+      )}
+    </Section>
+  );
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -106,6 +152,10 @@ export default async function StudyPage({
           />
         </Section>
       )}
+
+      {s.sections?.map((sec) => (
+        <DeepDive key={sec.title} sec={sec} />
+      ))}
 
       {s.caveats.length > 0 && (
         <Section title="Honest caveats">

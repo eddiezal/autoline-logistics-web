@@ -34,6 +34,7 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: "https://www.autolinelogistics.com/sitemap.xml",
-    host: "https://www.autolinelogistics.com",
+    // `host` removed 2026-08-06: it's a legacy Yandex-only directive; GSC
+    // flags it as "rule ignored by Googlebot". Harmless but noisy.
   };
 }
