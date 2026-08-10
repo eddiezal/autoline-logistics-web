@@ -158,7 +158,7 @@ async function fireGa4Event(payload: CallRailPayload, callId: string): Promise<v
           call_source: payload.source,
           call_duration_sec: payload.duration ?? 0,
           call_direction: payload.direction ?? "inbound",
-          landing_page: payload.landing_page ?? "",
+          landing_page: payload.landing_page_url ?? "",
           referrer: payload.referrer ?? "",
           utm_source: payload.utm_source ?? "",
           utm_medium: payload.utm_medium ?? "",
@@ -300,6 +300,17 @@ export async function POST(req: Request) {
   }
 
   const submittedAt = payload.start_time ?? new Date().toISOString();
+  // FIELD-NAME FIX (2026-08-10): the mapping below previously read
+  // payload.caller_number / called_number / transcript / landing_page —
+  // names CallRail never sends (the interface above, captured live 7/8,
+  // was right all along; the mapping wasn't updated to match). Result:
+  // every call lead since 6/23 stored null phone, null landing page,
+  // null transcript URL, and duration as a string. Found while trying to
+  // answer "what page were callers on?" for the behavioral-journey study.
+  const durationSec = (() => {
+    const n = Number(payload.duration);
+    return Number.isFinite(n) && n >= 0 ? n : null;
+  })();
   const leadDoc = {
     leadRef: `CALL-${callId}`,
     source: "call" as const,
@@ -312,7 +323,7 @@ export async function POST(req: Request) {
     vehicle: null,
     tier: null,
     contact: {
-      phone: payload.caller_number ?? null,
+      phone: payload.customer_phone_number ?? payload.caller_number ?? null,
       email: null,
       notes: null,
     },
@@ -322,19 +333,26 @@ export async function POST(req: Request) {
     estimate: null,
     callMeta: {
       callrailId: callId,
-      calledNumber: payload.called_number ?? null,
-      durationSec: payload.duration ?? null,
+      calledNumber:
+        payload.tracking_phone_number ?? payload.business_phone_number ?? null,
+      durationSec,
       recordingUrl: payload.recording ?? null,
-      transcriptUrl: payload.transcript ?? null,
+      transcriptUrl: payload.transcription ?? null,
       sourcePool: payload.source,
-      landingPage: payload.landing_page ?? null,
+      // landing_page_url = first page of the session;
+      // last_requested_url = the page the visitor was on when they dialed.
+      // The second one is what behavioral analysis needs (call-landing.mjs).
+      landingPage: payload.landing_page_url ?? null,
+      lastRequestedUrl: payload.last_requested_url ?? null,
+      referringUrl: payload.referring_url ?? null,
     },
     attribution: {
       utmSource: payload.utm_source ?? null,
       utmMedium: payload.utm_medium ?? null,
       utmCampaign: payload.utm_campaign ?? null,
       utmContent: payload.utm_content ?? null,
-      referrer: payload.referrer ?? null,
+      utmTerm: payload.utm_term ?? null,
+      referrer: payload.referrer ?? payload.referring_url ?? null,
     },
     // Status starts as "completed" (the call ended). Agents update with
     // outcome (quoted / booked / lost / unfit) via the Phase 2 dashboard.
@@ -349,6 +367,20 @@ export async function POST(req: Request) {
       { error: 'Failed to persist call lead' },
       { status: 500 },
     );
+  }
+
+  // Preserve the FULL raw payload (2026-08-10). The header comment always
+  // promised this but no code ever did it — which is why the field-name
+  // bug above was unrecoverable for the first 30 calls. Same pattern as
+  // proabd_webhook_events. Non-fatal on failure.
+  try {
+    await db.collection("callrail_webhook_events").doc(callId).set({
+      receivedAt: FieldValue.serverTimestamp(),
+      callId,
+      raw: JSON.parse(JSON.stringify(payload)),
+    });
+  } catch (err) {
+    console.warn("[callrail webhook] raw payload preservation failed (non-fatal)", err);
   }
 
   // Fire GA4 event in the background. Don't block the webhook response
