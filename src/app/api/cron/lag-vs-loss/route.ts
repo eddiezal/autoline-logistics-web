@@ -168,6 +168,13 @@ function assess(date: string, fp: DayCounts["fp"], ga: DayCounts["ga"], alerting
   };
   const breaches: string[] = [];
   if (alerting) {
+    // TOTAL SILENCE overrides the volume guards: GA4 reporting literally
+    // zero while first-party saw real traffic is never sampling noise.
+    // (Caught on the monitor's FIRST run, 2026-08-10: GA4 = 0 across two
+    // weekend days with 17/33 first-party page views — the volume guard
+    // would have suppressed it.)
+    if (fp.pageViews >= 10 && ga.pageViews === 0)
+      breaches.push(`GA4 TOTAL SILENCE: 0 events recorded vs ${fp.pageViews} first-party page views — property misconfigured or collection dead`);
     if (fp.pageViews >= MIN_PV && ratios.pageViews !== null && ratios.pageViews < PV_RATIO_FLOOR)
       breaches.push(`page_view ratio ${ratios.pageViews} < ${PV_RATIO_FLOOR} (GA4 ${ga.pageViews} vs first-party ${fp.pageViews})`);
     if (fp.formStarts >= MIN_FS && ratios.formStarts !== null && ratios.formStarts < FS_RATIO_FLOOR)
