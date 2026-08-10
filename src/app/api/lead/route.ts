@@ -25,7 +25,7 @@ import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
-import { OWNER_EMAIL, QA_BCC_EMAIL } from "@/lib/leads/agents";
+import { OWNER_EMAIL, QA_BCC_EMAIL, AGENT_NOTIFY_EMAILS } from "@/lib/leads/agents";
 import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
 import { applyCustomerMarkup, PRICING_MODEL } from "@/lib/pricing/markup";
 import {
@@ -430,8 +430,15 @@ export async function POST(req: Request) {
     submittedAt,
   });
 
-  // Owner-visibility copy to Ben (agents are notified inside ProABD).
-  const recipientsTo = DEV_OVERRIDE_RECIPIENT ? [DEV_OVERRIDE_RECIPIENT] : [OWNER_EMAIL];
+  // Owner-visibility copy to Ben, PLUS (stop-gap, 2026-08-10) the agents:
+  // ProABD isn't showing them the website's quoted price, and this email
+  // carries the estimate. All three agents receive it; assignment still
+  // happens only in ProABD. Kill switch: SEND_AGENT_LEAD_EMAILS=false.
+  const agentRecipients =
+    process.env.SEND_AGENT_LEAD_EMAILS !== "false" ? AGENT_NOTIFY_EMAILS : [];
+  const recipientsTo = DEV_OVERRIDE_RECIPIENT
+    ? [DEV_OVERRIDE_RECIPIENT]
+    : [OWNER_EMAIL, ...agentRecipients];
   const recipientsBcc = DEV_OVERRIDE_RECIPIENT ? undefined : [QA_BCC_EMAIL];
   if (DEV_OVERRIDE_RECIPIENT) {
     console.warn("[/api/lead] DEV_OVERRIDE_RECIPIENT set . redirecting email to " + DEV_OVERRIDE_RECIPIENT);
