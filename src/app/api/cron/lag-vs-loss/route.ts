@@ -186,6 +186,12 @@ export async function GET(req: Request) {
   }
   const dryRun = new URL(req.url).searchParams.get("dryRun") === "1";
 
+  // Which Google identity this deployment authenticates as (an email is not
+  // a secret; the private key never appears anywhere). Lets a permissions
+  // error be diagnosed against the GA4 access-management list directly.
+  const identity = process.env.FIREBASE_CLIENT_EMAIL ?? "(local ADC)";
+  const propertyId = process.env.GA4_PROPERTY_ID ?? "(not set)";
+
   const d1 = ptDay(1); // informational only — data may not be settled
   const d2 = ptDay(2); // alert basis
 
@@ -213,7 +219,10 @@ export async function GET(req: Request) {
         tags: [{ name: "kind", value: "monitor-error" }],
       }).catch(() => undefined);
     }
-    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: message, identity, propertyId },
+      { status: 500 },
+    );
   }
 
   // Persist for history / future admin chart.
@@ -258,6 +267,8 @@ export async function GET(req: Request) {
   return NextResponse.json({
     ok: true,
     dryRun,
+    identity,
+    propertyId,
     alerted: breached && !dryRun && Boolean(ALERT_TO),
     alertTo: ALERT_TO || "(none configured)",
     days: results,
