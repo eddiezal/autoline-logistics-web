@@ -45,6 +45,94 @@ export interface DeepSection {
 
 export const STUDIES: Study[] = [
   {
+    slug: "behavioral-journey",
+    title: "How visitors actually move through the site",
+    date: "2026-08-10",
+    headline:
+      "Starting the quote form makes a visit 10x more likely to convert, but only 22% who start it finish. And 87% of visitors leave immediately after seeing a price.",
+    status: "Driving the quote-form and estimate-moment fixes",
+    question:
+      "Where do visits die on the site, and what do the visits that turn into leads do differently?",
+    method:
+      "Modeled a month of first-party site activity (2,506 tracked actions across 1,636 visits) as step-by-step journeys: every visit becomes a sequence of pages and actions ending in either a lead or an exit. From those sequences we computed, for every page and action, the probability that a visit standing there eventually converts. Probabilities resting on fewer than 20 observations are withheld rather than reported.",
+    findings: [
+      "The quote form is the site's biggest lever. 192 visits started the form; only 22% finished. A visit that reaches the form is 10x more likely to convert than the average visit, so every extra completion is nearly a lead. Lifting completion from 22% to 30% would add roughly 15 leads a month with zero extra ad spend.",
+      "Seeing a price is where the most visitors leave: 87% exit immediately after an estimate renders, and visits that saw an estimate converted at half the rate of visits that didn't (1.4% vs 2.8%). The likely story: the number satisfies their research and they take it comparison shopping. The moment after the price renders is the most valuable unused screen real estate on the site.",
+      "Where a visit enters matters. Visits entering on the homepage convert at 6.0%, entries straight to the quote page at 3.5%, and entries to the price-checker tool at just 0.7% despite being 28% of all traffic.",
+      "The ship-vs-drive calculator is engagement, not funnel: people cycle it repeatedly and then leave (0.3% eventual conversion). Fine as content; it should hand off harder to the quote form.",
+      "Corridor pages barely register: 13 tracked visits all month. The search-ranking fixes shipped last week should change this; worth re-reading in a month.",
+    ],
+    caveats: [
+      "Descriptive, not causal. People who ask for a price were already hotter or colder on their own; the model ranks where attention and drop-off live, it cannot prove that changing a page changes outcomes.",
+      "Phone calls are invisible here. A visitor who sees a price and dials the number counts as an exit. With roughly 30 calls a month against 44 tracked web conversions, this could soften the price-moment finding. Instrumentation to tie calls to the page the caller was on shipped 2026-08-10; the finding gets re-verified about two weeks later.",
+      "14 of 58 web leads that month could not be matched to a tracked visit (very fast submissions or lost signals), so conversion probabilities are floors.",
+      "One month of data from a young tracking system; small pages are suppressed rather than guessed at.",
+    ],
+    informed: [
+      "Quote-form friction review moved to the top of the site roadmap (fewer fields, lighter verification step).",
+      "The estimate moment gets redesigned: the email-me-this-estimate offer and a stronger lock-this-price handoff belong exactly where 87% currently walk away.",
+      "Confirmed the research-traffic campaign's budget cut from the paid-media side: its landing tool converts 0.7% of entries.",
+      "Corridor-page traffic re-read scheduled after the search fixes settle.",
+    ],
+    bars: [
+      { label: "Started quote form", value: 19.6, display: "19.6%" },
+      { label: "On quote page", value: 5.5, display: "5.5%" },
+      { label: "On homepage", value: 1.7, display: "1.7%" },
+      { label: "On price checker", value: 0.6, display: "0.6%" },
+      { label: "Just saw a price", value: 0.4, display: "0.4%" },
+    ],
+    barCaption:
+      "Chance a visit eventually becomes a lead, given where it is right now.",
+    sections: [
+      {
+        title: "How visits become journeys",
+        body: "The site records a small vocabulary of first-party signals: page views, form starts, price estimates shown, calculator results, and estimate-email captures. Each visit (a 30-minute activity window) becomes an ordered sequence of those steps, collapsed into page groups like Homepage, Quote page, Price checker, Corridor pages. A visit ends in one of two states: it converted (a lead record from the same visitor inside the visit window) or it exited. Duplicate double-clicked submissions are folded into one conversion, and our own test submissions are excluded.",
+      },
+      {
+        title: "Where visits enter, and how each entry converts",
+        table: {
+          headers: ["Entry point", "Visits", "Converted", "Rate"],
+          rows: [
+            ["Quote page", "605", "21", "3.5%"],
+            ["Price checker", "454", "3", "0.7%"],
+            ["Homepage", "316", "19", "6.0%"],
+            ["Promise pages", "82", "0", "0%"],
+            ["Ship-vs-drive calculator", "45", "0", "0%"],
+            ["Everything else", "134", "1", "small"],
+          ],
+        },
+        note: "Homepage entries browse, build trust, and convert best. Paid traffic mostly enters directly on the quote page or the price checker, and the gap between those two rows is the story: the quote page converts 5x better as a front door than the price tool.",
+      },
+      {
+        title: "The chance of converting, from every state",
+        table: {
+          headers: ["State the visit is in", "Visits touching it", "Eventually converts"],
+          rows: [
+            ["Started the quote form", "192", "19.6%"],
+            ["On the quote page", "711", "5.5%"],
+            ["On the homepage", "349", "1.7%"],
+            ["On a promise page", "121", "0.9%"],
+            ["On the price checker", "466", "0.6%"],
+            ["Just saw a price estimate", "141", "0.4%"],
+            ["Using ship-vs-drive", "126", "0.3%"],
+          ],
+        },
+        note: "Reaching the form is the watershed: nothing else on the site comes close to its 19.6%. Everything upstream should be judged by how well it moves people to the form.",
+      },
+      {
+        title: "The two findings that matter",
+        bullets: [
+          "Form abandonment: of 192 form starts, 129 exited without finishing (67%). The captcha and field count are the suspects. This is the cheapest 15 leads a month available anywhere in the business.",
+          "The price cliff: 87.2% of visits exit immediately after an estimate renders, the worst exit rate of any state. Only 2 of 140 estimate-viewing visits converted. Today the moment after the price is a dead end; it should be the strongest ask on the site.",
+        ],
+      },
+      {
+        title: "What we still can't see, and the plan for it",
+        body: "Phone calls are a third of tracked conversions and none of them appear in these journeys: a caller looks like an exit. As of this study's date, call records now capture which page the caller was on when they dialed. Once two weeks of that data accrues, the price-cliff finding gets re-read: if price viewers turn out to be heavy callers, the cliff shrinks and the redesign priority shifts from rescuing those visits to making the call path even easier. Either answer is useful.",
+      },
+    ],
+  },
+  {
     slug: "remoteness-premium",
     sections: [
       {
