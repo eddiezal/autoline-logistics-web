@@ -7,7 +7,7 @@
  *     --cat new-page --scope C --link /corridors/california-washington \
  *     [--date 2026-08-12] [--detail "..."] [--impact "..."] [--internal]
  *
- * Categories: new-page content-update improvement fix ads tracking local-gbp infra
+ * Categories: new-page content-update improvement fix ads analysis tracking local-gbp infra
  * Scope: A B C D E Lab -    (default "-")
  * Date defaults to today (Pacific). Internal entries only show with ?all=1.
  */
@@ -32,7 +32,7 @@ function arg(name, fallback) {
     : fallback;
 }
 
-const CATS = ["new-page", "content-update", "improvement", "fix", "ads", "tracking", "local-gbp", "infra"];
+const CATS = ["new-page", "content-update", "improvement", "fix", "ads", "analysis", "tracking", "local-gbp", "infra"]; // keep in sync with CATEGORY_LABELS in src/lib/admin/siteChanges.ts
 const SCOPES = ["A", "B", "C", "D", "E", "Lab", "-"];
 
 const title = arg("title");
