@@ -312,3 +312,81 @@ export function getFirstTouchAt(): number | undefined {
   const v = m ? Number(m[1]) : NaN;
   return Number.isFinite(v) && v > 0 ? v : undefined;
 }
+
+/** First ATTRIBUTED touch: UTM set + gclid from the visitor's first paid/tagged landing. */
+export interface FirstTouchUtm extends UtmParams {
+  gclid?: string;
+}
+
+/**
+ * Capture the FIRST-touch UTM set (30-day cookie, first attributed landing
+ * wins — the mirror image of captureUtm()'s last-touch-wins).
+ *
+ * Added 2026-08-10 (S1 assist analysis): lead docs recorded first-touch
+ * TIME but not first-touch CAMPAIGN, so "clicked S1 Tuesday, converted via
+ * brand search Friday" was structurally invisible and S1's assisted
+ * conversions could not be measured. This closes that gap at the source.
+ *
+ * Semantics: the cookie is set on the first landing that carries any utm
+ * param or gclid, and never overwritten. A visitor whose literal first
+ * visit is organic gets their first ATTRIBUTED touch recorded when they
+ * later arrive via a tagged click — first_touch_at (set on any landing)
+ * still records the true first visit time. Call from AttributionCapture
+ * on arrival, same as the other capture fns.
+ */
+export function captureFirstTouchUtm(): FirstTouchUtm | undefined {
+  if (typeof window === "undefined") return undefined;
+
+  const existing = getFirstTouchUtm();
+  if (existing) return existing;
+
+  const url = new URL(window.location.href);
+  const fresh: FirstTouchUtm = {};
+  let any = false;
+  for (const key of UTM_KEYS) {
+    const v = url.searchParams.get(key);
+    if (v) {
+      fresh[key] = v.slice(0, 100);
+      any = true;
+    }
+  }
+  const gclid = url.searchParams.get("gclid");
+  if (gclid) {
+    fresh.gclid = gclid.slice(0, 120);
+    any = true;
+  }
+  if (!any) return undefined;
+
+  const thirtyDays = 30 * 24 * 60 * 60;
+  document.cookie =
+    "utm_first=" +
+    encodeURIComponent(JSON.stringify(fresh)) +
+    `; max-age=${thirtyDays}; path=/; SameSite=Lax`;
+  return fresh;
+}
+
+/** Read the first-touch UTM cookie, if present and parseable. */
+export function getFirstTouchUtm(): FirstTouchUtm | undefined {
+  if (typeof document === "undefined") return undefined;
+  const match = document.cookie.match(/(?:^|;\s*)utm_first=([^;]+)/);
+  if (!match) return undefined;
+  try {
+    const parsed = JSON.parse(decodeURIComponent(match[1])) as FirstTouchUtm;
+    const clean: FirstTouchUtm = {};
+    let any = false;
+    for (const key of UTM_KEYS) {
+      const v = parsed[key];
+      if (typeof v === "string" && v) {
+        clean[key] = v;
+        any = true;
+      }
+    }
+    if (typeof parsed.gclid === "string" && parsed.gclid) {
+      clean.gclid = parsed.gclid;
+      any = true;
+    }
+    return any ? clean : undefined;
+  } catch {
+    return undefined;
+  }
+}

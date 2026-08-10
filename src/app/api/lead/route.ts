@@ -89,6 +89,18 @@ interface IncomingPayload {
   visitor_id?: unknown;
   /** First-touch epoch millis (30-day cookie). Added 2026-07-22. */
   first_touch_at?: unknown;
+  /** Last-touch keyword ({keyword} via account URL suffix). Added 2026-08-10. */
+  utm_term?: unknown;
+  /** First-touch UTM set (utm_first 30-day cookie, first attributed landing
+   *  wins). Added 2026-08-10 for the S1 assist analysis — without these,
+   *  "clicked campaign A first, converted via B later" was invisible and
+   *  assisted conversions per campaign could not be counted. */
+  first_utm_source?: unknown;
+  first_utm_medium?: unknown;
+  first_utm_campaign?: unknown;
+  first_utm_content?: unknown;
+  first_utm_term?: unknown;
+  first_gclid?: unknown;
 }
 
 function str(v: unknown): string | undefined {
@@ -303,6 +315,7 @@ export async function POST(req: Request) {
       utmMedium: str(body.utm_medium) ?? null,
       utmCampaign: str(body.utm_campaign) ?? null,
       utmContent: str(body.utm_content) ?? null,
+      utmTerm: str(body.utm_term) ?? null,
       variant: str(body.variant) ?? null,
       referrer: str(body.referrer) ?? null,
       // Google Ads click identifier. Captured client-side via captureGclid()
@@ -323,6 +336,22 @@ export async function POST(req: Request) {
         return Number.isFinite(n) && n > 1_600_000_000_000 && n <= Date.now() + 60_000
           ? new Date(n)
           : null;
+      })(),
+      // First-touch UTM set (2026-08-10): the campaign that STARTED the
+      // journey. null when the visitor never arrived via a tagged click.
+      // scripts/s1-assist.mjs section [2] reads this for assisted-conversion
+      // counts — a lead whose firstTouch.utmCampaign differs from
+      // utmCampaign above is an assist for the first-touch campaign.
+      firstTouch: (() => {
+        const ft = {
+          utmSource: str(body.first_utm_source)?.slice(0, 100) ?? null,
+          utmMedium: str(body.first_utm_medium)?.slice(0, 100) ?? null,
+          utmCampaign: str(body.first_utm_campaign)?.slice(0, 100) ?? null,
+          utmContent: str(body.first_utm_content)?.slice(0, 100) ?? null,
+          utmTerm: str(body.first_utm_term)?.slice(0, 100) ?? null,
+          gclid: str(body.first_gclid)?.slice(0, 120) ?? null,
+        };
+        return Object.values(ft).some((v) => v !== null) ? ft : null;
       })(),
     },
     status: "pending_agent_contact" as const,

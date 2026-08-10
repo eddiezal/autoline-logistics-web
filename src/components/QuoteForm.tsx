@@ -9,6 +9,7 @@ import {
   captureUtm,
   captureLandingPath,
   getFirstTouchAt,
+  getFirstTouchUtm,
 } from "@/lib/analytics/events";
 import { sendEvent, getVisitorId } from "@/lib/analytics/behavior";
 import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
@@ -107,6 +108,17 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     if (utm?.utm_medium) payload.utm_medium = utm.utm_medium;
     if (utm?.utm_campaign) payload.utm_campaign = utm.utm_campaign;
     if (utm?.utm_content) payload.utm_content = utm.utm_content;
+    if (utm?.utm_term) payload.utm_term = utm.utm_term;
+    // First-touch UTM set (2026-08-10, S1 assist analysis): the campaign
+    // that STARTED this visitor's journey, distinct from the last-touch
+    // set above. Lets reporting count assisted conversions per campaign.
+    const firstUtm = getFirstTouchUtm();
+    if (firstUtm?.utm_source) payload.first_utm_source = firstUtm.utm_source;
+    if (firstUtm?.utm_medium) payload.first_utm_medium = firstUtm.utm_medium;
+    if (firstUtm?.utm_campaign) payload.first_utm_campaign = firstUtm.utm_campaign;
+    if (firstUtm?.utm_content) payload.first_utm_content = firstUtm.utm_content;
+    if (firstUtm?.utm_term) payload.first_utm_term = firstUtm.utm_term;
+    if (firstUtm?.gclid) payload.first_gclid = firstUtm.gclid;
     // Page attribution (added 2026-07-22): which page the form was
     // submitted on, which page started the visit (30-day first-touch
     // cookie), and the visitor's language. Locale derives from the URL
