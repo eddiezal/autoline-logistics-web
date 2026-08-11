@@ -18,7 +18,7 @@ import Script from "next/script";
  * collapsing GA4 bounce rate to ~100%). The env var was deleted as
  * mitigation — but NEXT_PUBLIC_* values bake into the client bundle at
  * BUILD time, and a cached build resurrected the old bundle with the dead
- * sGTM URL still baked in. Conversion reconciliation (2026-08-11) brackets
+ * sGTM URL still baked in. Conversion reconciliation (2026-08-10 evening) brackets
  * the bad deploy going live on Friday 2026-08-07 between ~9:00 AM and
  * ~3:30 PM PT; collection then stayed silently dead until the 8/10
  * ~7:30 PM PT fix deploy (caught by the lag-vs-loss monitor's first run;

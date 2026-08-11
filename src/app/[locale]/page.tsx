@@ -12,14 +12,25 @@ import type { Metadata } from "next";
 import { localeAlternates } from "@/lib/seo/alternates";
 
 // Locale-aware self-canonical + hreflang for the homepage (EN "/", ES "/es").
-// Title/description/OG inherit from the [locale] layout defaults.
+// Description/OG inherit from the [locale] layout defaults.
+//
+// Title set here since 8/10 (P1 SEO roadmap): the homepage now carries the
+// primary NON-BRAND phrase instead of the brand-only "Nationwide Vehicle
+// Shipping" (which earned ~90% brand-only clicks). The layout's title
+// template appends " | Auto Line Logistics".
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  return { alternates: localeAlternates(locale, "") };
+  return {
+    title:
+      locale === "es"
+        ? "Transporte de Autos con Precio Fijo"
+        : "Car Shipping With a Locked Price",
+    alternates: localeAlternates(locale, ""),
+  };
 }
 
 

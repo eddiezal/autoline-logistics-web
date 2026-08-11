@@ -5,14 +5,14 @@
  * client-side gtag — and with it GA4-imported Ads conversions — from Friday
  * 2026-08-07 AFTERNOON until the 8/10 ~7:30 PM PT fix deploy (08d8409).
  *
- * VERIFIED TIMELINE (8/11 reconciliation, per-campaign-per-day Firestore vs
+ * VERIFIED TIMELINE (8/10 evening reconciliation, per-campaign-per-day Firestore vs
  * Ads): last conversion that tracked was 8:46 AM PT Friday; first lead that
  * did NOT track was 3:39 PM PT Friday. So the bad cached build went live
  * between ~9 AM and ~3:30 PM Friday — NOT Friday night as first assumed.
  * Verified losses: exactly 9 paid web leads (3 S5 Friday afternoon;
  * 4 S5 + 2 S3 on Monday 8/10). Everything else in Aug 3–7 tracked, except
  * 3 "conversions" on Brand which were our own internal test submissions
- * (test pollution — see monday-read 8/11 addendum).
+ * (test pollution — see monday-read 8/10-evening addendum).
  *
  * WHAT THIS SCRIPT DOES: queries leads in the window (bounded on BOTH ends —
  * 8/7 lesson), keeps paid web leads with a gclid, excludes internal tests,
@@ -27,7 +27,7 @@
  * Firestore paid leads vs Ads conversions per campaign per day, and only
  * upload the verified gaps.
  *
- * ONE-TIME PREREQ (done 8/11, in Ads UI): import conversion action
+ * ONE-TIME PREREQ (done 8/10 evening, in Ads UI): import conversion action
  * "Web lead (backfill)" — Import from clicks, category Submit lead form,
  * Primary in the Submit lead forms goal, count One, value from upload
  * (default $239). New import actions take ~4h to start accepting uploads

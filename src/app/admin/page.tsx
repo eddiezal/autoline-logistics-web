@@ -112,7 +112,7 @@ interface CampaignMeta {
  * Drives verdict flags below + suppresses now-obsolete "wait for data"
  * recommendations for campaigns whose question has been answered.
  *
- * 2026-08-11: S1 PAUSED. The research-feeder hypothesis was MEASURED, not
+ * 2026-08-10 (evening PT): S1 PAUSED. The research-feeder hypothesis was MEASURED, not
  * abandoned: retroactive session join (scripts/s1-assist.mjs) found 0 of 42
  * joinable leads with a cross-campaign prior touch, 88% of leads convert in
  * their FIRST session, and S1 came to $574.85 per influenced lead with every
@@ -121,8 +121,8 @@ interface CampaignMeta {
  */
 const CAMPAIGN_VERDICTS: Record<string, { date: string; verdict: string; detail: string }> = {
   "24034601745": {
-    date: "2026-08-11",
-    verdict: "Paused 8/11 — assist value measured ≈ 0",
+    date: "2026-08-10",
+    verdict: "Paused 8/10 — assist value measured ≈ 0",
     detail:
       "Session join: 0 cross-campaign assists in 42 joinable leads; 88% same-session market; $574.85/influenced lead. Judged on primary CPL and paused. Re-enable only if first-touch data (live 8/10) shows divergence.",
   },
@@ -130,8 +130,8 @@ const CAMPAIGN_VERDICTS: Record<string, { date: string; verdict: string; detail:
 
 const CAMPAIGN_META: Record<string, CampaignMeta> = {
   "24034601745": {
-    role: "research feeder (paused 8/11)",
-    metric: "was: signal→lead rate — measured 8/11: assists ≈ 0",
+    role: "research feeder (paused 8/10)",
+    metric: "was: signal→lead rate — measured 8/10: assists ≈ 0",
     plain: "People googling what shipping a car costs. Hypothesis tested and closed: researchers here don't come back and convert elsewhere — 88% of all leads convert in their first session.",
     examples: "“car shipping cost” · “car shipping calculator” · “car shipping quotes”",
     lands: "price checker + quote page",
@@ -943,9 +943,9 @@ export default async function AdminReportPage({
         });
       const secondary = Math.max(0, c.allConversions - c.conversions);
       const verdict = CAMPAIGN_VERDICTS[c.id];
-      // Secondary-heavy rule, doctrine updated 8/11: the old advice ("hold
+      // Secondary-heavy rule, doctrine updated 8/10: the old advice ("hold
       // budget; signal→lead rate decides") assumed downstream value was
-      // unmeasurable. It was measured on 8/10–11 (session join): assists ≈ 0
+      // unmeasurable. It was measured on 8/10 (session join): assists ≈ 0
       // account-wide and 88% of leads convert same-session — so a campaign
       // rich in signals but poor in primaries is a CUT CANDIDATE judged on
       // primary CPL, not a hold. Campaigns with a recorded verdict (e.g. S1
@@ -965,7 +965,7 @@ export default async function AdminReportPage({
         else
           queue.push({
             title: `${short}: secondary-heavy — judge on primary CPL`,
-            body: `${secondary} secondary events vs ${c.conversions || 0} primary action${c.conversions === 1 ? "" : "s"}. Assist value measured ≈ 0 account-wide (8/11 session join; 88% same-session market) — signals no longer defend spend. If primaries don't materialize, cut per the S1 precedent.`,
+            body: `${secondary} secondary events vs ${c.conversions || 0} primary action${c.conversions === 1 ? "" : "s"}. Assist value measured ≈ 0 account-wide (8/10 session join; 88% same-session market) — signals no longer defend spend. If primaries don't materialize, cut per the S1 precedent.`,
             impact: `$${Math.round(c.costDollars)} window spend riding on primaries`,
             confidence: "med",
             owner: "Eddie",
@@ -975,7 +975,7 @@ export default async function AdminReportPage({
           });
       }
       if (/brand/i.test(c.name) && c.searchImpressionShare !== null && c.searchImpressionShare < 0.9) {
-        // Diagnosis order fixed 8/11: the 8/10 read showed Brand's lost IS
+        // Diagnosis order fixed 8/10: the 8/10 read showed Brand's lost IS
         // was BUDGET (50–75% top-IS lost to budget), not Quality Score —
         // budget went $14→$20/day that day. Blame budget first when the
         // data says budget; only send Eddie on a QS hunt when it doesn't.
@@ -1718,10 +1718,10 @@ export default async function AdminReportPage({
       if (actionLeaders.length > 0 && c.id === actionLeaders[0].id)
         c.flags.push({ text: "Best $/action — validate serviceability", tone: "good" });
       else if (c.primary >= 3) c.flags.push({ text: "Promising — small n", tone: "good" });
-      // Doctrine updated 8/11 (assists measured ≈ 0; 88% same-session):
+      // Doctrine updated 8/10 (assists measured ≈ 0; 88% same-session):
       // secondary-heavy no longer earns a "hold" — it earns scrutiny.
       if (!verdict && c.secondary >= 10 && c.secondary >= 10 * Math.max(1, c.primary))
-        c.flags.push({ text: "Secondary-heavy — judge on primary CPL (assists ≈ 0, 8/11)", tone: "gap" });
+        c.flags.push({ text: "Secondary-heavy — judge on primary CPL (assists ≈ 0, 8/10)", tone: "gap" });
       if (acctCpc !== null && c.cpc !== null && c.clicks < 10 && c.cpc > 2 * acctCpc)
         c.flags.push({ text: "Rebuild relevance, then retest", tone: "gap" });
       else if (c.rankLost !== null && c.rankLost > 0.5)
