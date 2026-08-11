@@ -31,8 +31,11 @@ const CSP_DIRECTIVES = [
   // when DNS cutover happens.
   "script-src 'self' 'unsafe-inline' https://js.authorize.net https://jstest.authorize.net https://*.hcaptcha.com https://hcaptcha.com https://www.googletagmanager.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://apis.google.com https://accounts.google.com https://www.gstatic.com https://va.vercel-scripts.com https://*.callrail.com",
   // Styles: 'unsafe-inline' allows our CSS-variable inline styles.
-  "style-src 'self' 'unsafe-inline' https://*.hcaptcha.com",
-  "font-src 'self' data:",
+  // fonts.googleapis.com: Inter loads via runtime stylesheet since 2026-08-11
+  // (next/font's build-time download hard-failed builds when Google's CDN
+  // 404'd the pinned files — see layout.tsx INTER_CSS_URL comment).
+  "style-src 'self' 'unsafe-inline' https://*.hcaptcha.com https://fonts.googleapis.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://www.google-analytics.com https://*.gstatic.com https://api.mapbox.com https://*.callrail.com",
   // Fetch destinations.
   // sGTM endpoints added for /g/collect routing through Cloud Run (Phase E).

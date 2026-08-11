@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -15,15 +14,21 @@ import "../globals.css";
 // Single-font system: Inter handles BOTH body and display (Stripe/Linear playbook).
 // May 17, 2026 — moved from Newsreader (serif) → Manrope (sans) → Inter (single-font)
 // after Eddie compared all 7 options at hero scale. Inter 900 (Black) carries the
-// hero headline; Inter 400-700 handles body + smaller headings. One HTTP request,
-// one typographic system, max minimalism.
+// hero headline; Inter 400-700 handles body + smaller headings.
 // See: brand-explorations/hero-font-comparison.html
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  display: "swap",
-});
+//
+// 2026-08-11: switched from next/font/google (build-time download) to a
+// runtime stylesheet <link>. Google's font CDN started 404ing the Inter
+// file URLs pinned inside Next 16.2.6's font metadata, which HARD-FAILED
+// every production build that recompiled this layout (42 Turbopack errors)
+// — during an active GA4 outage fix, no less. The runtime css2 API always
+// serves current URLs, so builds no longer depend on Google's CDN at all.
+// Trade-off: marginally later font paint vs next/font's self-hosting;
+// preconnect hints below claw most of that back. The --font-inter CSS
+// variable (referenced by globals.css) is now set inline on <html>.
+// If reverting to next/font someday, verify the pinned URLs resolve first.
+const INTER_CSS_URL =
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap";
 
 export const metadata: Metadata = {
   title: {
@@ -111,8 +116,14 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${inter.variable} h-full antialiased`}
+      className="h-full antialiased"
+      style={{ ["--font-inter" as string]: "'Inter', system-ui, sans-serif" }}
     >
+      {/* React 19 hoists these to <head>. Preconnects keep the runtime font
+          fetch fast; see the INTER_CSS_URL comment for why not next/font. */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link rel="stylesheet" href={INTER_CSS_URL} />
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <Analytics />
