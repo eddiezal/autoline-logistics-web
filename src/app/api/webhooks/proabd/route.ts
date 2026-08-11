@@ -57,6 +57,8 @@ import crypto from "crypto";
 import { FieldValue } from "firebase-admin/firestore";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { sweepShipmentSync } from "@/lib/proabd/shipment-sync";
+import { sendLeadEmail } from "@/lib/email/resend";
+import { agentEmailForUserName, QA_BCC_EMAIL } from "@/lib/leads/agents";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -280,7 +282,8 @@ export async function POST(req: Request) {
         .limit(1)
         .get();
       if (snap.empty) continue; // Lead not from the website (or pre-createLead-era).
-      await snap.docs[0]!.ref.update({
+      const leadRef = snap.docs[0]!.ref;
+      await leadRef.update({
         proabdAssignedAgent: {
           userName: assignee.userName,
           userId: assignee.userId,
@@ -288,6 +291,70 @@ export async function POST(req: Request) {
         proabdAssignmentUpdatedAt: FieldValue.serverTimestamp(),
       });
       stamped++;
+
+      // ---- Assigned-agent price email (2026-08-11) --------------------
+      // ProABD doesn't show agents the website's quoted price, so the full
+      // lead email (rendered + stored on the doc at intake) is delivered to
+      // the ONE agent ProABD assigned — here, because this stamp is the
+      // first moment the assignee is known. Supersedes the 8/10
+      // broadcast-to-all stop-gap (every agent got every lead; pulled
+      // after one lead). Re-sends when the assignee CHANGES (sentTo !=
+      // new agent) so a reassigned lead's new owner gets the price too.
+      // Idempotent per assignee via agentEmail.sentTo. Non-fatal like
+      // everything else in this handler. Kill switch:
+      // SEND_AGENT_LEAD_EMAILS=false.
+      if (process.env.SEND_AGENT_LEAD_EMAILS === "false") continue;
+      try {
+        const lead = snap.docs[0]!.data();
+        const payload = lead.agentEmail as
+          | { subject?: string; text?: string; html?: string; sentTo?: string | null }
+          | undefined;
+        // Pre-8/11 leads and call leads have no stored payload — skip.
+        if (!payload?.subject || !payload.html) continue;
+        const agent = agentEmailForUserName(assignee.userName);
+        if (!agent) {
+          // Admin/unknown ProABD user worked the record — surface it so a
+          // roster change gets noticed, but never guess a recipient.
+          console.warn(
+            "[proabd webhook] no roster email for assignee '" +
+              assignee.userName + "' — agent price email not sent",
+          );
+          continue;
+        }
+        if (payload.sentTo === agent.email) continue; // Already delivered to this assignee.
+        const devOverride = process.env.DEV_OVERRIDE_RECIPIENT;
+        const sent = await sendLeadEmail({
+          to: [devOverride || agent.email],
+          bcc: devOverride ? undefined : [QA_BCC_EMAIL],
+          replyTo:
+            typeof lead.contact?.email === "string" && lead.contact.email
+              ? lead.contact.email
+              : "admin@autolinelogistics.com",
+          subject: payload.subject,
+          text: payload.text ?? "",
+          html: payload.html,
+          tags: [
+            { name: "leadRef", value: String(lead.leadRef ?? abdId) },
+            { name: "emailType", value: "agent-assigned-copy" },
+          ],
+        });
+        if (sent.ok) {
+          await leadRef.update({
+            "agentEmail.sentTo": agent.email,
+            "agentEmail.sentAt": FieldValue.serverTimestamp(),
+          });
+        } else {
+          console.warn(
+            "[proabd webhook] agent price email failed for " +
+              String(lead.leadRef ?? abdId) + ": " + sent.error,
+          );
+        }
+      } catch (err) {
+        console.warn(
+          "[proabd webhook] agent price email errored (non-fatal)",
+          err instanceof Error ? err.message : String(err),
+        );
+      }
     }
   } catch (err) {
     console.warn(

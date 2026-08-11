@@ -62,27 +62,29 @@ export async function pickNextAgent(): Promise<{ agent: Agent; index: number }> 
 }
 
 /**
- * STOP-GAP (2026-08-10, per Eddie): agents are not seeing the website's
- * quoted price inside ProABD, so the full lead email (which carries the
- * estimate) goes directly to the agents again until that passthrough is
- * fixed. Assignment still happens ONLY in ProABD — all three agents get
- * the email; the assigned one acts on it.
+ * ASSIGNED-AGENT PRICE EMAIL (2026-08-11, supersedes the 8/10 broadcast
+ * stop-gap): ProABD doesn't show agents the website's quoted price, so the
+ * full lead email (which carries the estimate) goes to the ONE agent ProABD
+ * assigns. The send happens in the ProABD webhook at assignment-stamp time
+ * (/api/webhooks/proabd), NOT at intake time — the assignee is unknown when
+ * /api/lead runs. The broadcast-to-all version lasted exactly one day:
+ * every agent receiving every lead trains the inbox to be ignored and
+ * re-creates the pre-7/20 "whose lead is this" confusion in reverse
+ * (Eddie, 8/11 morning, after the first broadcast lead).
  *
- * AGENT_LEAD_EMAILS env (comma-separated) overrides the default roster
- * addresses below WITHOUT a code change — set it in Vercel if any of the
- * @autolinelogistics.com mailboxes turn out not to exist (history says
- * verify: info@autolinelogistics.com never existed and sat on Resend's
- * suppression list for weeks). Disable the whole stop-gap with
- * SEND_AGENT_LEAD_EMAILS=false once ProABD shows the quoted price.
+ * Maps ProABD's display name ("Nelson Zaldivar", "Renee Aragon",
+ * "Ginger Marie" — confirmed live via scripts/assignment-audit.mjs) to the
+ * roster email by first-name token, case-insensitive. Unknown names (e.g.
+ * an admin working a record) return null and no email is sent — the
+ * webhook logs a warning so new agent names surface fast. Update AGENTS
+ * above when the roster changes. Kill switch: SEND_AGENT_LEAD_EMAILS=false
+ * (read in the webhook route).
  */
-export const AGENT_NOTIFY_EMAILS: ReadonlyArray<string> = (
-  process.env.AGENT_LEAD_EMAILS ?? ""
-)
-  .split(",")
-  .map((s) => s.trim())
-  .filter(Boolean).length
-  ? (process.env.AGENT_LEAD_EMAILS ?? "").split(",").map((s) => s.trim()).filter(Boolean)
-  : AGENTS.map((a) => a.email);
+export function agentEmailForUserName(userName: string): Agent | null {
+  const first = userName.trim().split(/\s+/)[0]?.toLowerCase() ?? "";
+  if (!first) return null;
+  return AGENTS.find((a) => a.firstName.toLowerCase() === first) ?? null;
+}
 
 /** Where Eddie wants every lead BCC'd for QA + visibility. */
 export const QA_BCC_EMAIL = "eddie@zaldivarlabs.com";

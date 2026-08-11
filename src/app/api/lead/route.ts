@@ -25,7 +25,7 @@ import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
-import { OWNER_EMAIL, QA_BCC_EMAIL, AGENT_NOTIFY_EMAILS } from "@/lib/leads/agents";
+import { OWNER_EMAIL, QA_BCC_EMAIL } from "@/lib/leads/agents";
 import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
 import { applyCustomerMarkup, PRICING_MODEL } from "@/lib/pricing/markup";
 import {
@@ -430,15 +430,37 @@ export async function POST(req: Request) {
     submittedAt,
   });
 
-  // Owner-visibility copy to Ben, PLUS (stop-gap, 2026-08-10) the agents:
-  // ProABD isn't showing them the website's quoted price, and this email
-  // carries the estimate. All three agents receive it; assignment still
-  // happens only in ProABD. Kill switch: SEND_AGENT_LEAD_EMAILS=false.
-  const agentRecipients =
-    process.env.SEND_AGENT_LEAD_EMAILS !== "false" ? AGENT_NOTIFY_EMAILS : [];
+  // Store the rendered lead email on the doc so the ProABD webhook can
+  // deliver it to the ASSIGNED agent once assignment lands (2026-08-11 —
+  // supersedes the 8/10 broadcast-to-all stop-gap after exactly one lead:
+  // every agent got every email. The assignee is unknown HERE — ProABD
+  // routes the lead minutes later; the webhook stamp-back is the first
+  // moment we know who owns it. See /api/webhooks/proabd assigned-agent
+  // send + agents.ts agentEmailForUserName).
+  if (db) {
+    try {
+      await db
+        .collection("leads")
+        .where("leadRef", "==", leadRef)
+        .limit(1)
+        .get()
+        .then((snap) => {
+          if (!snap.empty) {
+            return snap.docs[0]!.ref.update({
+              agentEmail: { subject, text, html, sentTo: null, sentAt: null },
+            });
+          }
+        });
+    } catch (err) {
+      console.warn("[/api/lead] agentEmail payload store failed (non-fatal)", err);
+    }
+  }
+
+  // Owner-visibility copy to Ben only. The assigned agent's copy (with the
+  // quoted price) goes out from the ProABD webhook when assignment is known.
   const recipientsTo = DEV_OVERRIDE_RECIPIENT
     ? [DEV_OVERRIDE_RECIPIENT]
-    : [OWNER_EMAIL, ...agentRecipients];
+    : [OWNER_EMAIL];
   const recipientsBcc = DEV_OVERRIDE_RECIPIENT ? undefined : [QA_BCC_EMAIL];
   if (DEV_OVERRIDE_RECIPIENT) {
     console.warn("[/api/lead] DEV_OVERRIDE_RECIPIENT set . redirecting email to " + DEV_OVERRIDE_RECIPIENT);
