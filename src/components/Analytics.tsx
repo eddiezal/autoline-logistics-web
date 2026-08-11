@@ -7,42 +7,29 @@ import Script from "next/script";
  * the gtag.js library after page interactivity (afterInteractive) so it
  * doesn't block first paint or Core Web Vitals.
  *
- * Architecture (standard sGTM pattern):
+ * Events go DIRECT to google-analytics.com:
  *
- *   1. gtag.js LIBRARY loads from googletagmanager.com (Google's CDN).
- *      Google's sGTM image doesn't natively serve the gtag.js library
- *      without setting up a Web container client. We don't need that;
- *      loading the library from Google is fine.
+ *   Browser → gtag.js (from Google) → google-analytics.com/g/collect
  *
- *   2. Event data POSTs go through transport_url. When NEXT_PUBLIC_SGTM_URL
- *      is set, gtag sends every /g/collect hit to our Cloud Run sGTM
- *      service. sGTM forwards to GA4 via the published GA4 Event
- *      Forwarder tag.
+ * HISTORY — why there is deliberately NO transport_url / sGTM path here:
+ * this component used to route events through a server-side GTM container
+ * on Cloud Run via NEXT_PUBLIC_SGTM_URL. That server failed intermittently
+ * (2026-08-06 incident: majority of events 503'd while page_views landed,
+ * collapsing GA4 bounce rate to ~100%). The env var was deleted as
+ * mitigation — but NEXT_PUBLIC_* values bake into the client bundle at
+ * BUILD time, and a cached build on 2026-08-07 resurrected the old bundle
+ * with the dead sGTM URL still baked in, silently killing GA4 collection
+ * again for 3+ days (caught 2026-08-10 by the lag-vs-loss monitor's first
+ * run). Lesson: an env-var kill switch for a client-side destination is a
+ * cache-resurrection hazard. If sGTM ever comes back, reintroduce it as a
+ * CODE change on a healthy server, never as an env toggle.
  *
- *   Phase 1 (when NEXT_PUBLIC_SGTM_URL is empty):
- *     Browser → gtag.js (from Google) → google-analytics.com/g/collect
- *
- *   Phase E (when NEXT_PUBLIC_SGTM_URL is set):
- *     Browser → gtag.js (from Google) → sGTM endpoint → GA4
- *
- * Net effect of Phase E: ad blocker recognition drops (your sGTM
- * subdomain isn't a known analytics endpoint), data quality improves
- * (no third-party cookie restrictions on your own domain), and
- * Enhanced Conversions + OCI become possible server-side.
- *
- * No-renders without NEXT_PUBLIC_GA_MEASUREMENT_ID set.
+ * Renders nothing without NEXT_PUBLIC_GA_MEASUREMENT_ID set.
  */
 export function Analytics() {
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  const sgtmUrl = process.env.NEXT_PUBLIC_SGTM_URL;
 
   if (!measurementId) return null;
-
-  // Always load gtag.js from Google's CDN. Set transport_url to route
-  // events through sGTM when configured.
-  const transportConfigLine = sgtmUrl
-    ? `transport_url: '${sgtmUrl}',`
-    : "";
 
   return (
     <>
@@ -69,7 +56,6 @@ export function Analytics() {
           });
 
           gtag('config', '${measurementId}', {
-            ${transportConfigLine}
             send_page_view: true,
             anonymize_ip: true,
           });
