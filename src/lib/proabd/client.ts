@@ -65,6 +65,12 @@ export interface CreateLeadInput {
    *  Spanish referrer (PROABD_REFERRER_ID_ES) so ProABD's rules can
    *  assign Spanish-speaking agents. Added 2026-07-22 per Brian. */
   language?: string;
+  /** Lead arrived outside staffed hours (see agents.ts isAfterHoursET).
+   *  Routes via PROABD_REFERRER_ID_AFTERHOURS (a Nelson-routed referrer)
+   *  so ProABD's OWN rules assign the evening agent — same per-referrer
+   *  routing mechanism as the ES referrer (proven 7/24: 18493 → Nelson).
+   *  Added 2026-08-11. */
+  afterHours?: boolean;
   /** ISO date string (YYYY-MM-DD). Optional; ProABD accepts blank. */
   availableDate?: string;
 }
@@ -121,10 +127,20 @@ export async function createLead(
   // referrer. Until the ES env var exists, Spanish leads fall through to
   // the default — no behavior change on deploy.
   const defaultReferrerId = process.env.PROABD_REFERRER_ID ?? "8";
+  // Priority: language first — the ES referrer already routes to Nelson,
+  // so Spanish after-hours leads are covered by the same rule. Then
+  // after-hours (2026-08-11): PROABD_REFERRER_ID_AFTERHOURS should be a
+  // referrer whose ProABD routing rule assigns Nelson. Set the env var
+  // only AFTER that referrer + rule exist in ProABD (Ben's admin, or
+  // temporarily reuse the ES id — trade-off: source reporting inside
+  // ProABD will label those leads Spanish-website). Unset env = default
+  // rotation, no behavior change on deploy.
   const referrerId =
     input.language === "es"
       ? (process.env.PROABD_REFERRER_ID_ES || defaultReferrerId)
-      : defaultReferrerId;
+      : input.afterHours
+        ? (process.env.PROABD_REFERRER_ID_AFTERHOURS || defaultReferrerId)
+        : defaultReferrerId;
   const url = baseUrl + "/createLead/";
 
   // Payload: single bare JSON object (see file header for the empirical

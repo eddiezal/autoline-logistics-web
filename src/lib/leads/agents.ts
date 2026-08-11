@@ -86,6 +86,38 @@ export function agentEmailForUserName(userName: string): Agent | null {
   return AGENTS.find((a) => a.firstName.toLowerCase() === first) ?? null;
 }
 
+/**
+ * After-hours window (2026-08-11, per Eddie): Renee + Ginger stop at
+ * 5 PM Eastern; Nelson keeps working. Used in TWO places that must agree:
+ *  - /api/lead: after-hours leads are created in ProABD under the
+ *    Nelson-routed referrer (PROABD_REFERRER_ID_AFTERHOURS) so ProABD
+ *    itself assigns Nelson — the single-brain rule holds because WE only
+ *    choose the referrer; ProABD's rules do the assigning (same mechanism
+ *    as ES referrer 18493 → Nelson, proven live 7/24).
+ *  - /api/webhooks/proabd: fallback coverage copy to Nelson when an
+ *    after-hours lead was assigned to someone else anyway (referrer env
+ *    unset, or ProABD rules change).
+ * Config: AGENT_EVENING_START_HOUR_ET (default 17),
+ * AGENT_MORNING_START_HOUR_ET (default 8),
+ * AGENT_COVERAGE_WEEKENDS=false to exclude weekends (default covered).
+ */
+export function isAfterHoursET(d: Date): boolean {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "numeric",
+    hour12: false,
+    weekday: "short",
+  }).formatToParts(d);
+  const hour = Number(parts.find((p) => p.type === "hour")?.value ?? "12") % 24;
+  const weekday = parts.find((p) => p.type === "weekday")?.value ?? "Mon";
+  const eveningStart = Number(process.env.AGENT_EVENING_START_HOUR_ET ?? "17");
+  const morningStart = Number(process.env.AGENT_MORNING_START_HOUR_ET ?? "8");
+  const weekendCovered =
+    (weekday === "Sat" || weekday === "Sun") &&
+    process.env.AGENT_COVERAGE_WEEKENDS !== "false";
+  return weekendCovered || hour >= eveningStart || hour < morningStart;
+}
+
 /** Where Eddie wants every lead BCC'd for QA + visibility. */
 export const QA_BCC_EMAIL = "eddie@zaldivarlabs.com";
 

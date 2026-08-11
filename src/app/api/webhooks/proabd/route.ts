@@ -58,7 +58,27 @@ import { FieldValue } from "firebase-admin/firestore";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { sweepShipmentSync } from "@/lib/proabd/shipment-sync";
 import { sendLeadEmail } from "@/lib/email/resend";
-import { agentEmailForUserName, QA_BCC_EMAIL } from "@/lib/leads/agents";
+import {
+  AGENTS,
+  agentEmailForUserName,
+  isAfterHoursET,
+  QA_BCC_EMAIL,
+} from "@/lib/leads/agents";
+
+/**
+ * After-hours coverage (2026-08-11 PM, per Eddie): Renee + Ginger stop at
+ * 5 PM Eastern; Nelson keeps working. PRIMARY mechanism: /api/lead creates
+ * after-hours leads under the Nelson-routed referrer
+ * (PROABD_REFERRER_ID_AFTERHOURS) so ProABD itself assigns Nelson and the
+ * normal single-agent email below just works. The banner/double-send in
+ * this file is the FALLBACK for when the referrer env isn't set (or
+ * ProABD's routing rules change): the price email goes to BOTH Nelson and
+ * the assigned agent with ownership made explicit. ProABD's assignment is
+ * never touched here (single-brain rule from the 7/20 cutover). Window
+ * config lives with isAfterHoursET in agents.ts.
+ */
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -322,20 +342,59 @@ export async function POST(req: Request) {
           continue;
         }
         if (payload.sentTo === agent.email) continue; // Already delivered to this assignee.
+
+        // After-hours coverage: judged on lead CREATION time (the moment
+        // the customer raised their hand), Eastern clock. Nelson gets a
+        // copy when the lead landed after hours and isn't already his.
+        const createdAt: Date =
+          typeof lead.createdAt?.toDate === "function"
+            ? lead.createdAt.toDate()
+            : new Date();
+        const nelson = AGENTS.find((a) => a.firstName === "Nelson");
+        const coverage =
+          isAfterHoursET(createdAt) &&
+          nelson !== undefined &&
+          agent.email !== nelson.email;
+
+        const subject = coverage
+          ? "[After hours — Nelson covering] " + payload.subject
+          : payload.subject;
+        const bannerHtml = coverage
+          ? '<div style="font-family:Segoe UI,Roboto,sans-serif;max-width:600px;padding:12px 16px;margin-bottom:12px;border-radius:8px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:14px;">' +
+            "<strong>After-hours lead.</strong> Assigned to " +
+            escapeHtml(assignee.userName) +
+            " in ProABD. Nelson covers the first call tonight; " +
+            escapeHtml(agent.firstName) +
+            " takes over in the morning." +
+            "</div>"
+          : "";
+        const bannerText = coverage
+          ? "AFTER-HOURS LEAD. Assigned to " + assignee.userName +
+            " in ProABD. Nelson covers the first call tonight; " +
+            agent.firstName + " takes over in the morning.\n\n"
+          : "";
+
         const devOverride = process.env.DEV_OVERRIDE_RECIPIENT;
         const sent = await sendLeadEmail({
-          to: [devOverride || agent.email],
+          to: devOverride
+            ? [devOverride]
+            : coverage && nelson
+              ? [agent.email, nelson.email]
+              : [agent.email],
           bcc: devOverride ? undefined : [QA_BCC_EMAIL],
           replyTo:
             typeof lead.contact?.email === "string" && lead.contact.email
               ? lead.contact.email
               : "admin@autolinelogistics.com",
-          subject: payload.subject,
-          text: payload.text ?? "",
-          html: payload.html,
+          subject,
+          text: bannerText + (payload.text ?? ""),
+          html: bannerHtml + payload.html,
           tags: [
             { name: "leadRef", value: String(lead.leadRef ?? abdId) },
-            { name: "emailType", value: "agent-assigned-copy" },
+            {
+              name: "emailType",
+              value: coverage ? "agent-assigned-copy-afterhours" : "agent-assigned-copy",
+            },
           ],
         });
         if (sent.ok) {

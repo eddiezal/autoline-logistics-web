@@ -25,7 +25,7 @@ import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
-import { OWNER_EMAIL, QA_BCC_EMAIL } from "@/lib/leads/agents";
+import { OWNER_EMAIL, QA_BCC_EMAIL, isAfterHoursET } from "@/lib/leads/agents";
 import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
 import { applyCustomerMarkup, PRICING_MODEL } from "@/lib/pricing/markup";
 import {
@@ -401,6 +401,10 @@ export async function POST(req: Request) {
     // Website Spanish referrer (client.ts picks PROABD_REFERRER_ID_ES).
     // The Note prefix stays as belt-and-suspenders until the referrer is
     // created and Note passthrough is fixed on ProABD's side.
+    // After-hours routing (2026-08-11): outside staffed hours the lead is
+    // created under the Nelson-routed referrer so ProABD itself assigns
+    // the evening agent. No-op until PROABD_REFERRER_ID_AFTERHOURS is set.
+    afterHours: isAfterHoursET(new Date()),
     language: str(body.locale),
     notes:
       str(body.locale) === "es"
