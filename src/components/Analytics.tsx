@@ -17,12 +17,16 @@ import Script from "next/script";
  * (2026-08-06 incident: majority of events 503'd while page_views landed,
  * collapsing GA4 bounce rate to ~100%). The env var was deleted as
  * mitigation — but NEXT_PUBLIC_* values bake into the client bundle at
- * BUILD time, and a cached build on 2026-08-07 resurrected the old bundle
- * with the dead sGTM URL still baked in, silently killing GA4 collection
- * again for 3+ days (caught 2026-08-10 by the lag-vs-loss monitor's first
- * run). Lesson: an env-var kill switch for a client-side destination is a
- * cache-resurrection hazard. If sGTM ever comes back, reintroduce it as a
- * CODE change on a healthy server, never as an env toggle.
+ * BUILD time, and a cached build resurrected the old bundle with the dead
+ * sGTM URL still baked in. Conversion reconciliation (2026-08-11) brackets
+ * the bad deploy going live on Friday 2026-08-07 between ~9:00 AM and
+ * ~3:30 PM PT; collection then stayed silently dead until the 8/10
+ * ~7:30 PM PT fix deploy (caught by the lag-vs-loss monitor's first run;
+ * 9 lost paid conversions restored via offline click upload — see
+ * scripts/backfill-conversions.mjs). Lesson: an env-var kill switch for a
+ * client-side destination is a cache-resurrection hazard. If sGTM ever
+ * comes back, reintroduce it as a CODE change on a healthy server, never
+ * as an env toggle.
  *
  * Renders nothing without NEXT_PUBLIC_GA_MEASUREMENT_ID set.
  */

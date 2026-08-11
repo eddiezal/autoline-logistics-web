@@ -43,3 +43,9 @@ next-env.d.ts
 # local working notes — comms drafts, meeting briefs, walkthroughs
 # (kept on disk but not versioned; they're personal/project workflow, not code)
 /comms/
+
+# generated locally, never committed:
+# - backfill-*.csv: offline-conversion uploads (gclids + timestamps; customer-adjacent data)
+# - digest-preview.html: rebuild-digest.mjs preview output
+backfill-*.csv
+digest-preview.html
