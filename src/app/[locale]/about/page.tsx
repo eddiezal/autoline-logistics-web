@@ -17,12 +17,19 @@ import { localeAlternates } from "@/lib/seo/alternates";
 /**
  * About page — voice C+D (Modern Trust Operator + Anti-Scam Educator).
  *
- * TODO — placeholders awaiting confirmation from Ben:
- *   - Founding year — confirmed 2011 May 13 staging review
- *   - MC#, DOT#, BMC-84 bond number + holder name
- *   - Team member names, titles, bios, headshots beyond Ben
- *   - Real customer testimonials (none reproduced — placeholder only)
- *   - Office address (work address, not home)
+ * PLACEHOLDER PURGE (2026-08-12, per Eddie — Ben declined owner photos):
+ *   - 🚧 build-status banner REMOVED (construction copy on a live trust page)
+ *   - TBD team cards (coordinator/dispatch) REMOVED; Ben's card is now
+ *     text-only — no headshot box anywhere. Real coordinators can be added
+ *     later WITH their consent (names/roles/bios, still no photos needed).
+ *   - Reviews "coming soon" empty-state section REMOVED — returns when the
+ *     GBP review pipeline produces real, attributable quotes
+ *     (see claude/gbp-setup-and-reviews-spec.md).
+ *   - Bond card "pending" chip cleared — the footer already publicly
+ *     states "BMC-84 Bond on file" and the card shows only the standard
+ *     facts (label/$75K/filed-with-FMCSA); no unconfirmed detail rendered.
+ *
+ * Still open with Ben: office address (work, not home).
  */
 
 export async function generateMetadata({
@@ -39,19 +46,11 @@ export async function generateMetadata({
   };
 }
 
-const TEAM_KEYS = ["ben", "coordinator", "dispatch"] as const;
-const TEAM_PLACEHOLDER: Record<(typeof TEAM_KEYS)[number], boolean> = {
-  ben: false,
-  coordinator: true,
-  dispatch: true,
-};
+// Team roster: Ben only until real coordinators opt in (names/roles/bios;
+// no photos — Ben declined owner photos 2026-08-12 and the page now runs
+// photo-free by design).
+const TEAM_KEYS = ["ben"] as const;
 const CRED_KEYS = ["mc", "dot", "bond", "cargo"] as const;
-const CRED_PENDING: Record<(typeof CRED_KEYS)[number], boolean> = {
-  mc: false,
-  dot: false,
-  bond: true,
-  cargo: false,
-};
 const INDUSTRY_BULLETS = [0, 1, 2, 3, 4] as const;
 const OURS_BULLETS = [0, 1, 2, 3, 4] as const;
 
@@ -107,13 +106,6 @@ export default function AboutPage() {
                 {t("about.hero.ctaSecondary")}
               </Link>
             </div>
-          </Container>
-        </section>
-
-        {/* Build status callout */}
-        <section className="py-6 bg-orange-tint border-b border-orange/30">
-          <Container>
-            <p className="text-charcoal text-sm">{t("about.buildStatus")}</p>
           </Container>
         </section>
 
@@ -301,23 +293,16 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {TEAM_KEYS.map((key) => (
                 <TeamCard
                   key={key}
                   name={t(`about.team.members.${key}.name`)}
                   role={t(`about.team.members.${key}.role`)}
                   bio={t(`about.team.members.${key}.bio`)}
-                  headshotLabel={t("about.team.labels.headshot")}
-                  photoPendingLabel={t("about.team.labels.photoPending")}
-                  placeholder={TEAM_PLACEHOLDER[key]}
                 />
               ))}
             </div>
-
-            <p className="text-gray-500 text-sm mt-8 italic max-w-2xl">
-              {t("about.team.footnote")}
-            </p>
           </Container>
         </section>
 
@@ -343,8 +328,6 @@ export default function AboutPage() {
                   label={t(`about.credentials.cards.${key}.label`)}
                   value={t(`about.credentials.cards.${key}.value`)}
                   note={t(`about.credentials.cards.${key}.note`)}
-                  pendingLabel={t("about.credentials.pendingLabel")}
-                  pending={CRED_PENDING[key]}
                 />
               ))}
             </div>
@@ -367,31 +350,10 @@ export default function AboutPage() {
           </Container>
         </section>
 
-        {/* Reviews placeholder */}
-        <section className="py-16 md:py-20 bg-gray-100">
-          <Container>
-            <div className="max-w-2xl mb-10">
-              <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">
-                {t("about.reviews.eyebrow")}
-              </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-charcoal leading-tight">
-                {t("about.reviews.title")}
-              </h2>
-              <p className="text-gray-700 text-lg mt-4 leading-relaxed">
-                {t("about.reviews.description")}
-              </p>
-            </div>
-
-            <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-8 text-center max-w-2xl">
-              <p className="text-gray-600 text-sm italic">
-                {t("about.reviews.emptyState")}
-              </p>
-              <p className="text-gray-500 text-xs mt-3">
-                {t("about.reviews.footnote")}
-              </p>
-            </div>
-          </Container>
-        </section>
+        {/* Reviews section intentionally ABSENT (2026-08-12): the previous
+            dashed "coming soon" empty-state was a placeholder on a trust
+            page. It returns when the GBP pipeline yields real, attributable
+            customer quotes (claude/gbp-setup-and-reviews-spec.md). */}
 
         {/* FAQ */}
         <section className="py-16 md:py-20 bg-white">
@@ -438,40 +400,20 @@ export default function AboutPage() {
 
 /* ────────────────────────────────────────────────────────────────────────── */
 
+// Text-only by design — no headshot box. Ben declined owner photos
+// (2026-08-12), and a labeled empty photo frame reads as "unfinished," the
+// opposite of what a trust page is for.
 function TeamCard({
   name,
   role,
   bio,
-  headshotLabel,
-  photoPendingLabel,
-  placeholder = false,
 }: {
   name: string;
   role: string;
   bio: string;
-  headshotLabel: string;
-  photoPendingLabel: string;
-  placeholder?: boolean;
 }) {
   return (
-    <article
-      className={`bg-white border rounded-2xl p-6 ${
-        placeholder ? "border-dashed border-gray-300" : "border-gray-200"
-      }`}
-    >
-      <div
-        className={`w-full aspect-[4/5] rounded-xl mb-5 flex items-center justify-center ${
-          placeholder ? "bg-gray-100" : "bg-orange-tint"
-        }`}
-      >
-        <span
-          className={`text-sm uppercase tracking-wider font-semibold ${
-            placeholder ? "text-gray-400" : "text-orange"
-          }`}
-        >
-          {placeholder ? photoPendingLabel : headshotLabel}
-        </span>
-      </div>
+    <article className="bg-white border border-gray-200 rounded-2xl p-6">
       <p className="text-xl font-bold text-charcoal">{name}</p>
       <p className="text-orange font-semibold text-sm mt-1">{role}</p>
       <p className="text-gray-700 text-sm mt-3 leading-relaxed">{bio}</p>
@@ -483,39 +425,18 @@ function CredentialCard({
   label,
   value,
   note,
-  pendingLabel,
-  pending = false,
 }: {
   label: string;
   value: string;
   note: string;
-  pendingLabel: string;
-  pending?: boolean;
 }) {
   return (
-    <div
-      className={`rounded-2xl p-5 border ${
-        pending
-          ? "bg-gray-100 border-dashed border-gray-300"
-          : "bg-white border-gray-200"
-      }`}
-    >
+    <div className="rounded-2xl p-5 border bg-white border-gray-200">
       <p className="text-charcoal/60 text-xs font-semibold uppercase tracking-wider">
         {label}
       </p>
-      <p
-        className={`text-2xl font-bold mt-2 ${
-          pending ? "text-gray-400" : "text-charcoal"
-        }`}
-      >
-        {value}
-      </p>
+      <p className="text-2xl font-bold mt-2 text-charcoal">{value}</p>
       <p className="text-gray-700 text-xs mt-2 leading-relaxed">{note}</p>
-      {pending && (
-        <p className="text-orange text-[0.7rem] font-semibold uppercase tracking-wider mt-3">
-          {pendingLabel}
-        </p>
-      )}
     </div>
   );
 }
