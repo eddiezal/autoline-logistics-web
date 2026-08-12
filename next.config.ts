@@ -36,13 +36,30 @@ const CSP_DIRECTIVES = [
   // 404'd the pinned files — see layout.tsx INTER_CSS_URL comment).
   "style-src 'self' 'unsafe-inline' https://*.hcaptcha.com https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://www.google-analytics.com https://*.gstatic.com https://api.mapbox.com https://*.callrail.com",
+  // GA endpoints wildcarded per Google's official CSP guidance (see the
+  // 2026-08-11 incident note on connect-src below — img-src is gtag's
+  // pixel-transport fallback and must match).
+  "img-src 'self' data: blob: https://*.googleusercontent.com https://*.firebasestorage.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://stats.g.doubleclick.net https://www.google.com https://*.gstatic.com https://api.mapbox.com https://*.callrail.com",
   // Fetch destinations.
   // sGTM endpoints added for /g/collect routing through Cloud Run (Phase E).
   // www.google-analytics.com stays as fallback for when NEXT_PUBLIC_SGTM_URL
   // is unset. Add the custom domain (sgtm.autolinelogistics.com) when DNS
   // cutover happens.
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://www.google-analytics.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com https://api.mapbox.com https://events.mapbox.com https://*.callrail.com",
+  //
+  // ⚠️ INCIDENT 2026-08-11 (silent GA4 outage #3): Google server-side
+  // rolled out new gtag collect endpoints — hits now POST to
+  // analytics.google.com/g/collect (+ stats.g.doubleclick.net sibling and
+  // www.google.com/ccm/collect with Google signals), NOT just
+  // www.google-analytics.com. Our connect-src only allowed the old host,
+  // so EVERY GA4 hit from every visitor was CSP-blocked silently (gtag
+  // detects the blocked transport and gives up without a console error;
+  // pages with no CSP — the RawTest smoke page — tracked fine, which
+  // masked it). Fix: allowlist per Google's documented CSP set:
+  // *.google-analytics.com (regional endpoints incl. region1),
+  // *.analytics.google.com, *.googletagmanager.com, stats.g.doubleclick.net,
+  // www.google.com (ccm/collect). NEVER pin a single Google collect host
+  // again — Google moves these under our feet.
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebasestorage.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://apitest.authorize.net https://api.authorize.net https://pricing-insights.superdispatch.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com https://*.googletagmanager.com https://stats.g.doubleclick.net https://www.google.com https://gtm-server-184060108234.us-central1.run.app https://sgtm.autolinelogistics.com https://*.hcaptcha.com https://hcaptcha.com https://accounts.google.com https://*.ingest.sentry.io https://*.vercel.app https://vercel.live wss://*.firebaseio.com https://api.mapbox.com https://events.mapbox.com https://*.callrail.com",
   // iframes for: Google sign-in popup, Auth.net Accept.js, hCaptcha challenge, Firebase auth handler.
   "frame-src 'self' https://accounts.google.com https://*.authorize.net https://js.authorize.net https://jstest.authorize.net https://*.hcaptcha.com https://hcaptcha.com https://*.firebaseapp.com",
   // Disallow inline plugins entirely.
