@@ -73,16 +73,29 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   // (Release 1) per-field focus/complete events — names only, never values.
   const formStartedSent = useRef(false);
   const fieldEventsSent = useRef<Set<string>>(new Set());
+  // Narrow the focus/blur target to an actual form control (excludes the
+  // hCaptcha iframe and the form element itself). instanceof both narrows
+  // the TS type and guarantees .name/.value exist.
+  function asFormControl(
+    target: EventTarget | null,
+  ): HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null {
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLSelectElement ||
+      target instanceof HTMLTextAreaElement
+    ) {
+      return target;
+    }
+    return null;
+  }
   function onFocusInstrument(e: React.FocusEvent<HTMLFormElement>) {
-    // Only count focus on actual form fields (not the hCaptcha iframe).
-    const el = e.target as HTMLInputElement | null;
-    const tag = el?.tagName;
-    if (tag !== "INPUT" && tag !== "SELECT" && tag !== "TEXTAREA") return;
+    const el = asFormControl(e.target);
+    if (!el) return;
     if (!formStartedSent.current) {
       formStartedSent.current = true;
       sendEvent("form_started", { fv: FORM_VERSION });
     }
-    const name = el?.name;
+    const name = el.name;
     if (!name) return;
     const key = "focus:" + name;
     if (fieldEventsSent.current.has(key)) return;
@@ -90,11 +103,10 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     sendEvent("form_field", { field: name, action: "focus", fv: FORM_VERSION });
   }
   function onBlurInstrument(e: React.FocusEvent<HTMLFormElement>) {
-    const el = e.target as HTMLInputElement | null;
-    const tag = el?.tagName;
-    if (tag !== "INPUT" && tag !== "SELECT" && tag !== "TEXTAREA") return;
-    const name = el?.name;
-    if (!name || !el?.value?.trim()) return;
+    const el = asFormControl(e.target);
+    if (!el) return;
+    const name = el.name;
+    if (!name || !el.value.trim()) return;
     const key = "complete:" + name;
     if (fieldEventsSent.current.has(key)) return;
     fieldEventsSent.current.add(key);
