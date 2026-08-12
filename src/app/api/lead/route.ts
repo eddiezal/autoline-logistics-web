@@ -176,7 +176,10 @@ export async function POST(req: Request) {
   const vehicleModel = requireStr(body.vehicle_model, 60);
   const vehicleType = requireStr(body.vehicle_type, 30);
   const firstName = requireStr(body.first_name, 80);
-  const lastName = requireStr(body.last_name, 80);
+  // Release 1 (2026-08-12): last name is OPTIONAL. The form no longer asks
+  // for it (perceived-work cut per the form-optimization spec); ProABD
+  // accepts an empty Last_Name. Collected at booking when needed.
+  const lastName = str(body.last_name)?.slice(0, 80) ?? null;
   const email = requireStr(body.email, 200);
   const phone = requireStr(body.phone, 30);
   const notes = str(body.notes);
@@ -203,7 +206,6 @@ export async function POST(req: Request) {
   if (!vehicleModel) missing.push("vehicle_model");
   if (!vehicleType) missing.push("vehicle_type");
   if (!firstName) missing.push("first_name");
-  if (!lastName) missing.push("last_name");
   if (!email) missing.push("email");
   if (!phone) missing.push("phone");
   if (missing.length) {
@@ -304,7 +306,7 @@ export async function POST(req: Request) {
     destination: { zip: destinationZip, state: destinationState },
     vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType, condition: vehicleCondition, transportPref },
     tier,
-    contact: { firstName: firstName!, lastName: lastName!, email, phone, notes: notes ?? null },
+    contact: { firstName: firstName!, lastName: lastName ?? "", email, phone, notes: notes ?? null },
     // Retired 2026-07-20: round-robin assignment. ProABD routes the lead;
     // the webhook receiver stamps proabdAssignedAgent when the event lands.
     assignedAgent: null,
@@ -383,7 +385,7 @@ export async function POST(req: Request) {
   const proabdPromise = proabdCreateLead({
     leadRef,
     firstName: firstName!,
-    lastName: lastName!,
+    lastName: lastName ?? "",
     email: email!,
     phone: phone!,
     origin: { state: originState!, zip: originZip! },
@@ -417,7 +419,7 @@ export async function POST(req: Request) {
 
   const { subject, text, html } = buildLeadEmail({
     leadRef,
-    customer: { firstName: firstName!, lastName: lastName!, email: email!, phone: phone!, notes },
+    customer: { firstName: firstName!, lastName: lastName ?? "", email: email!, phone: phone!, notes },
     origin: { city: "", state: originState!, zip: originZip! },
     destination: { city: "", state: destinationState!, zip: destinationZip! },
     vehicle: { year: vehicleYear!, make: vehicleMake!, model: vehicleModel!, type: vehicleType! },
@@ -631,7 +633,7 @@ export async function POST(req: Request) {
           "Enter it into ProABD manually and assign an agent.",
           "",
           "Ref: " + leadRef,
-          "Customer: " + firstName + " " + lastName + " . " + email + " . " + phone,
+          "Customer: " + firstName + (lastName ? " " + lastName : "") + " . " + email + " . " + phone,
           "Route: " + originState + " " + originZip + " -> " + destinationState + " " + destinationZip,
           "Vehicle: " + vehicleYear + " " + vehicleMake + " " + vehicleModel + " (" + vehicleType + ")",
           "Tier: " + tier,

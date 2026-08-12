@@ -26,6 +26,12 @@ const EVENT_TYPES = new Set([
   "estimate_shown",
   "tool_result",
   "estimate_email_captured",
+  // Release 1 (2026-08-12): field-level funnel + technical-abandonment
+  // events from the quote form. See behavior.ts header for the vocabulary.
+  "form_field",
+  "form_friction",
+  "submit_attempted",
+  "lead_persisted",
 ]);
 
 const BOT_UA =
@@ -111,6 +117,20 @@ export async function POST(req: NextRequest) {
       if (verdict) meta.verdict = verdict;
       const delta = Number(b.meta.delta);
       if (Number.isFinite(delta) && Math.abs(delta) < 100000) meta.delta = Math.round(delta);
+      // Release 1 form-funnel meta. Field NAMES only — never field values
+      // (the no-PII contract of this collector is load-bearing).
+      const field = str(b.meta.field, 30);
+      if (field) meta.field = field;
+      const action = str(b.meta.action, 12);
+      if (action === "focus" || action === "complete") meta.action = action;
+      const kind = str(b.meta.kind, 30);
+      if (kind) meta.kind = kind;
+      const reason = str(b.meta.reason, 40);
+      if (reason) meta.reason = reason;
+      const status = Number(b.meta.status);
+      if (Number.isInteger(status) && status >= 100 && status <= 599) meta.status = status;
+      const fv = str(b.meta.fv, 24);
+      if (fv) meta.fv = fv;
       if (Object.keys(meta).length === 0) meta = null;
     }
 

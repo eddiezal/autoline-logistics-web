@@ -13,6 +13,20 @@
  *   form_started    first interaction with the quote form
  *   estimate_shown  a live price rendered pre-submit (meta.price)
  *   (submit)        not an event — the lead doc itself, joined by vid
+ *
+ * Release 1 additions (2026-08-12, form-optimization spec): field-level
+ * funnel + technical-abandonment discrimination. The 8/6–8/11 outages
+ * taught us that "drop-off" can be broken machinery in disguise, so the
+ * form now reports WHERE people stop and WHETHER it was voluntary:
+ *   form_field       meta {field, action: focus|complete, fv}
+ *   form_friction    meta {kind: validation_error|captcha_error|
+ *                    captcha_expired|api_error|network_error, reason?,
+ *                    status?, fv}
+ *   submit_attempted meta {fv}
+ *   lead_persisted   meta {fv} — client-side confirmation the API
+ *                    accepted; joins against the lead doc via vid
+ * fv = form version tag (release stamp) so every funnel read can split
+ * by form release without correlating deploy timestamps by hand.
  */
 
 const VID_COOKIE = "alv_vid";
@@ -121,7 +135,11 @@ export type BehaviorEventType =
   | "form_started"
   | "estimate_shown"
   | "tool_result"
-  | "estimate_email_captured";
+  | "estimate_email_captured"
+  | "form_field"
+  | "form_friction"
+  | "submit_attempted"
+  | "lead_persisted";
 
 /**
  * Send a behavioral event to our first-party collector. Fire-and-forget:

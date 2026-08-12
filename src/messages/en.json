@@ -346,7 +346,7 @@
   },
   "header": {
     "tagline": "Trusted Vehicle Shipping for Cars, Trucks & SUVs — Nationwide",
-    "ctaQuote": "Get Your Instant Quote",
+    "ctaQuote": "Get Your Locked Price",
     "nav": {
       "home": "Home",
       "services": "Services",
@@ -581,8 +581,8 @@
         "lock": {
           "label": "Step 1",
           "title": "Lock your price.",
-          "description": "Tell us where it's coming from, where it's going, and what you're shipping. You'll see your locked, all-in price in under a minute — no surprise upcharges later.",
-          "proof1": "Instant quote",
+          "description": "Tell us where it's coming from, where it's going, and what you're shipping. Request your locked, all-in price in under a minute — no surprise upcharges later.",
+          "proof1": "Instant estimate",
           "proof2": "Price = final invoice"
         },
         "pickup": {
@@ -664,14 +664,14 @@
     },
     "finalCta": {
       "eyebrow": "Ready to ship?",
-      "title": "Lock your price instantly.",
-      "lead": "Type your origin, destination, and vehicle. Get your locked all-in price instantly. Your named coordinator takes over from booking. The price stays locked for 7 days, no obligation until you book.",
+      "title": "Lock your price today.",
+      "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then a locked all-in price within 1 business hour. Your named coordinator takes over from booking. The price stays locked for 7 days, no obligation until you book.",
       "button": "Get my locked price",
-      "trustLine": "Instant quote · Price = final invoice · No deposit to quote"
+      "trustLine": "Instant estimate · Price = final invoice · No deposit to quote"
     },
     "heroRouteFinder": {
       "title": "Get your locked price.",
-      "subtitle": "Instant pricing from our carrier network. Locked for 7 days, no obligation.",
+      "subtitle": "Instant estimates from our carrier network. Your locked price holds for 7 days, no obligation.",
       "fromZip": {
         "label": "From ZIP",
         "placeholder": "e.g. 90210"
@@ -828,8 +828,8 @@
       }
     },
     "cta": {
-      "title": "See your locked price in 60 seconds.",
-      "description": "Enter your origin, destination, and vehicle. We'll show three tiered prices instantly. Pick one, lock it, done.",
+      "title": "Request your locked price in 60 seconds.",
+      "description": "Enter your origin, destination, and vehicle. Your coordinator locks your all-in price in writing within 1 business hour. Pick your tier, lock it, done.",
       "primary": "Get my locked price",
       "secondary": "See how the People Promise works →"
     },
@@ -965,7 +965,7 @@
     },
     "cta": {
       "title": "Ship with the broker that owns the claim.",
-      "description": "Locked price. $500K of contingent cargo coverage. A 14-day claim resolution target. Real coordinators. Get a quote in 60 seconds.",
+      "description": "Locked price. $500K of contingent cargo coverage. A 14-day claim resolution target. Real coordinators. Request your quote in 60 seconds.",
       "primary": "Get my locked price",
       "secondary": "Read the People Promise →"
     }
@@ -1066,7 +1066,7 @@
     },
     "cta": {
       "title": "One named person. One phone number. One accountable point of contact.",
-      "description": "Get a locked price in 60 seconds. Then meet your coordinator — by name, with their direct line.",
+      "description": "Request your locked price in 60 seconds. Then meet your coordinator — by name, with their direct line.",
       "primary": "Get my locked price",
       "secondary": "Meet the team →"
     }
@@ -1254,7 +1254,7 @@
     },
     "cta": {
       "title": "Ready to lock a price?",
-      "description": "Type your origin, destination, and vehicle. Get your locked price instantly. Your named coordinator takes over from booking. No obligation until you book.",
+      "description": "Type your origin, destination, and vehicle. Get your instant estimate, then a locked price within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
       "primary": "Get my locked price",
       "secondary": "Talk to a coordinator"
     }
@@ -1360,7 +1360,7 @@
       },
       "submit": {
         "button": "Submit quote request",
-        "footnote": "Get your locked price instantly online. No deposit required to receive the quote.",
+        "footnote": "Your coordinator will lock in your price within 1 business hour. No deposit required to receive the quote.",
         "pending": "Sending..."
       },
       "verification": {
@@ -1591,7 +1591,7 @@
       "primary": "Get my locked price →",
       "secondary": "Set a price-drop alert (coming soon)"
     },
-    "footnote": "The estimated ship price is our best guess, not your locked price. Get a real locked price instantly at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
+    "footnote": "The estimated ship price is our best guess, not your locked price. Request your real locked price at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
   },
   "blog": {
     "hero": {
@@ -1717,7 +1717,7 @@
     "quietLink": "Get my quote",
     "fallback": {
       "eyebrow": "Live pricing",
-      "body": "Today's range hasn't refreshed yet. Get a real locked price in under a minute. No deposit to receive the quote.",
+      "body": "Today's range hasn't refreshed yet. Request your real locked price in under a minute. No deposit to receive the quote.",
       "cta": "Get today's locked price"
     },
     "anchorCaption": "Sedan, open trailer. Other vehicles below."
@@ -2289,7 +2289,7 @@
         }
       },
       "finalCta": {
-        "title": "See your locked Hawaii price in 60 seconds.",
+        "title": "Request your locked Hawaii price in 60 seconds.",
         "description": "Pickup ZIP, destination island, vehicle type. We'll show three tiered prices. Pick one, lock it, and your coordinator takes it from there.",
         "primary": "Get my CA → HI price",
         "secondary": "See California ↔ Alaska →"
@@ -2470,7 +2470,7 @@
         }
       },
       "finalCta": {
-        "title": "See your locked Alaska price in 60 seconds.",
+        "title": "Request your locked Alaska price in 60 seconds.",
         "description": "Pickup ZIP, destination, vehicle type. We'll quote both routes and recommend the right one. Pick a tier, lock the price, and your coordinator takes it from there.",
         "primary": "Get my CA → AK price",
         "secondary": "See California ↔ Hawaii →"
@@ -2558,7 +2558,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to TX shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       },
       "reverse": {
@@ -2639,7 +2639,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to FL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2711,7 +2711,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to NY shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2787,7 +2787,7 @@
       },
       "finalCta": {
         "title": "Locked-price NY to FL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       },
       "autoTrain": {
@@ -2869,7 +2869,7 @@
       },
       "finalCta": {
         "title": "Locked-price TX to FL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -2941,7 +2941,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to GA shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -3013,7 +3013,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to NC shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -3085,7 +3085,7 @@
       },
       "finalCta": {
         "title": "Locked-price CA to IL shipment. Run the math.",
-        "body": "Real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my locked price"
       }
     },
@@ -3293,7 +3293,7 @@
     },
     "cta": {
       "eyebrow": "Ready to ship?",
-      "title": "Get your locked price instantly.",
+      "title": "Get your locked price today.",
       "lead": "No deposit to get a quote. The number we send is the number you pay — same Price Promise on all three tiers.",
       "button": "Get my locked price"
     },
