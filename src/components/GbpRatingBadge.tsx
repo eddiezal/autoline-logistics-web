@@ -30,6 +30,16 @@ import { getAdminDb } from "@/lib/firebase/admin";
 const MAX_AGE_DAYS = 7;
 const MIN_COUNT = 5;
 
+/**
+ * Link target. The generic `maps/place/?q=place_id:` format lands on a
+ * random map area for this profile because it's a hidden-address
+ * service-area business (no pin to center on) — confirmed live 8/12.
+ * The CID link is Maps' native identifier for the listing and always
+ * opens the profile panel. CID 2626016846281494172 = 0x24717c6890ccce9c,
+ * the second half of the listing's FTID (see the gbp spec doc).
+ */
+const PROFILE_URL = "https://maps.google.com/?cid=2626016846281494172";
+
 interface GbpRatingDoc {
   ok?: boolean;
   rating?: number;
@@ -83,7 +93,7 @@ export async function GbpRatingBadge({
 
   return (
     <a
-      href={`https://www.google.com/maps/place/?q=place_id:${data.placeId}`}
+      href={PROFILE_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t("ariaLabel", {
