@@ -13,6 +13,11 @@ import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { FAQ, type FAQItem } from "@/components/FAQ";
 import { localeAlternates } from "@/lib/seo/alternates";
+import { GbpRatingBadge } from "@/components/GbpRatingBadge";
+
+// Revalidate daily: the GBP rating badge in the hero reads a Firestore doc
+// refreshed each morning by the gbp-rating cron.
+export const revalidate = 86400;
 
 /**
  * About page — voice C+D (Modern Trust Operator + Anti-Scam Educator).
@@ -105,6 +110,11 @@ export default function AboutPage() {
               >
                 {t("about.hero.ctaSecondary")}
               </Link>
+            </div>
+            {/* Live Google rating — real third-party proof on the trust page.
+                Renders nothing until the gbp-rating cron has fresh data. */}
+            <div className="mt-8">
+              <GbpRatingBadge variant="dark" />
             </div>
           </Container>
         </section>

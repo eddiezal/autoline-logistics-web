@@ -3539,5 +3539,9 @@
       "comingSoonTitle": "More controls coming soon",
       "comingSoonBody": "Profile details, payment methods, and notification preferences will live here in the next release. For now, your coordinator can update anything on your shipment, just reach out."
     }
+  },
+  "gbpBadge": {
+    "reviewsOnGoogle": "{count} Google reviews",
+    "ariaLabel": "Rated {rating} out of 5 from {count} Google reviews. Opens our Google Business Profile in a new tab."
   }
 }

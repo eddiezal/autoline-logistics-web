@@ -3539,5 +3539,9 @@
       "comingSoonTitle": "Más controles próximamente",
       "comingSoonBody": "Detalles del perfil, métodos de pago y preferencias de notificación vivirán aquí en el próximo lanzamiento. Por ahora, su coordinador puede actualizar cualquier cosa en su envío, solo contáctenos."
     }
+  },
+  "gbpBadge": {
+    "reviewsOnGoogle": "{count} reseñas en Google",
+    "ariaLabel": "Calificación de {rating} de 5 según {count} reseñas en Google. Abre nuestro perfil de Google en una pestaña nueva."
   }
 }

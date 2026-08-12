@@ -7,9 +7,15 @@ import { Container } from "@/components/Container";
 import { HeroRouteFinder } from "@/components/HeroRouteFinder";
 import { PortalPreviewCard } from "@/components/PortalPreviewCard";
 import { StructuredData } from "@/components/StructuredData";
+import { GbpRatingBadge } from "@/components/GbpRatingBadge";
 import { localBusinessSchema } from "@/lib/seo/schemas";
 import type { Metadata } from "next";
 import { localeAlternates } from "@/lib/seo/alternates";
+
+// Revalidate daily: the GBP rating badge reads a Firestore doc that the
+// gbp-rating cron refreshes each morning (~8:30 AM PT). Without this the
+// statically-built page would freeze whatever rating existed at deploy time.
+export const revalidate = 86400;
 
 // Locale-aware self-canonical + hreflang for the homepage (EN "/", ES "/es").
 // Description/OG inherit from the [locale] layout defaults.
@@ -706,6 +712,12 @@ export default function Home() {
               <p className="text-sm text-gray-400 mt-6">
                 {t("home.finalCta.trustLine")}
               </p>
+              {/* Live Google rating — third-party proof, kept visually
+                  separate from our own trustLine claims above (spec §7).
+                  Renders nothing until the gbp-rating cron has fresh data. */}
+              <div className="mt-5">
+                <GbpRatingBadge variant="dark" />
+              </div>
             </div>
           </Container>
         </section>
