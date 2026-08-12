@@ -157,7 +157,12 @@ export async function createLead(
     Note: input.notes ?? "",
     Shipper: {
       First_Name: input.firstName,
-      Last_Name: input.lastName ?? "",
+      // ProABD REQUIRES a non-empty Last_Name — confirmed live 2026-08-12
+      // when the Release-1 form (last name removed) got rejected with
+      // "Shipper - Last_Name needs a value" (test lead AL-260812-PW9ULQ).
+      // The form no longer collects last names, so send a placeholder;
+      // agents capture the real surname at first contact / booking.
+      Last_Name: input.lastName?.trim() ? input.lastName.trim() : "-",
       Email: input.email,
       Phone_1: input.phone,
     },
