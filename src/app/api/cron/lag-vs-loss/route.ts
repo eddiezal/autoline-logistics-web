@@ -11,8 +11,10 @@
  * 503s), Ads showed 1 conversion on a ~dozen-conversion day, and the only
  * detector was Eddie's gut. Rules learned there and encoded here:
  *   - server 200s don't prove fleet health; compare COUNTS, not statuses
- *   - same-day data is never evidence: D-1 is reported as informational
- *     only; alerts fire on D-2, when both pipes have settled
+ *   - same-day data is never evidence for SUBTLE divergence: fine-grained
+ *     alerts fire on D-2, when both pipes have settled. But (8/11 lesson,
+ *     outage #3) TOTAL SILENCE or a sub-0.1 ratio on D-1 is never
+ *     processing lag — those alert the same morning as CATASTROPHIC.
  *   - low volume makes ratios noisy: no alert unless the first-party side
  *     cleared a minimum count
  *
@@ -159,7 +161,28 @@ async function ga4Counts(dates: string[]): Promise<Map<string, { pageViews: numb
   return out;
 }
 
-function assess(date: string, fp: DayCounts["fp"], ga: DayCounts["ga"], alerting: boolean): DayCounts {
+/**
+ * Alert tiers:
+ *  - "settled" (D-2): full threshold set. Data has settled; subtle
+ *    divergence here is real.
+ *  - "yesterday" (D-1): CATASTROPHIC-ONLY. GA4 processing lag makes fine
+ *    ratios unreliable this fresh, but a whole day at ~zero is never lag.
+ *    Added 2026-08-11 after outage #3 (CSP vs Google's new collect
+ *    endpoints): the 8/11 9 AM run SAW Monday at ratio 0.01 but reported
+ *    it as informational-only — the outage ran 9 more hours until Eddie
+ *    eyeballed conversions. Total silence and sub-0.1 ratios must scream
+ *    the same morning.
+ *  - "info": no alerting (not currently used, kept for clarity).
+ */
+type Tier = "settled" | "yesterday" | "info";
+
+// Catastrophic same-day thresholds (D-1). Deliberately far below any
+// value GA4 processing lag can produce by 9 AM PT for the prior PT day:
+// healthy days read 0.75–1.1 by then; the 8/10 outage day read 0.01.
+const D1_CATASTROPHIC_RATIO = 0.1;
+const D1_MIN_PV = 30;
+
+function assess(date: string, fp: DayCounts["fp"], ga: DayCounts["ga"], tier: Tier): DayCounts {
   const ratio = (num: number, den: number) => (den > 0 ? Math.round((num / den) * 100) / 100 : null);
   const ratios = {
     pageViews: ratio(ga.pageViews, fp.pageViews),
@@ -167,14 +190,18 @@ function assess(date: string, fp: DayCounts["fp"], ga: DayCounts["ga"], alerting
     leads: ratio(ga.leadSubmits, fp.leads),
   };
   const breaches: string[] = [];
-  if (alerting) {
-    // TOTAL SILENCE overrides the volume guards: GA4 reporting literally
-    // zero while first-party saw real traffic is never sampling noise.
-    // (Caught on the monitor's FIRST run, 2026-08-10: GA4 = 0 across two
-    // weekend days with 17/33 first-party page views — the volume guard
-    // would have suppressed it.)
-    if (fp.pageViews >= 10 && ga.pageViews === 0)
-      breaches.push(`GA4 TOTAL SILENCE: 0 events recorded vs ${fp.pageViews} first-party page views — property misconfigured or collection dead`);
+  // TOTAL SILENCE overrides the volume guards on BOTH alerting tiers: GA4
+  // reporting literally zero while first-party saw real traffic is never
+  // sampling noise or processing lag. (Caught on the monitor's FIRST run,
+  // 2026-08-10: GA4 = 0 across two weekend days with 17/33 first-party
+  // page views — the volume guard would have suppressed it.)
+  if (tier !== "info" && fp.pageViews >= 10 && ga.pageViews === 0)
+    breaches.push(`GA4 TOTAL SILENCE: 0 events recorded vs ${fp.pageViews} first-party page views — property misconfigured or collection dead`);
+  if (tier === "yesterday") {
+    if (fp.pageViews >= D1_MIN_PV && ratios.pageViews !== null && ratios.pageViews > 0 && ratios.pageViews < D1_CATASTROPHIC_RATIO)
+      breaches.push(`CATASTROPHIC same-day page_view ratio ${ratios.pageViews} < ${D1_CATASTROPHIC_RATIO} (GA4 ${ga.pageViews} vs first-party ${fp.pageViews}) — this is NOT processing lag; treat as a live collection outage (runbook below)`);
+  }
+  if (tier === "settled") {
     if (fp.pageViews >= MIN_PV && ratios.pageViews !== null && ratios.pageViews < PV_RATIO_FLOOR)
       breaches.push(`page_view ratio ${ratios.pageViews} < ${PV_RATIO_FLOOR} (GA4 ${ga.pageViews} vs first-party ${fp.pageViews})`);
     if (fp.formStarts >= MIN_FS && ratios.formStarts !== null && ratios.formStarts < FS_RATIO_FLOOR)
@@ -210,8 +237,8 @@ export async function GET(req: Request) {
       ga4Counts([d1.date, d2.date]),
     ]);
     results = [
-      assess(d2.date, fp2, ga.get(d2.date)!, true),
-      assess(d1.date, fp1, ga.get(d1.date)!, false),
+      assess(d2.date, fp2, ga.get(d2.date)!, "settled"),
+      assess(d1.date, fp1, ga.get(d1.date)!, "yesterday"),
     ];
   } catch (err) {
     // The monitor failing IS a monitoring event — say so instead of dying quietly.
@@ -246,25 +273,47 @@ export async function GET(req: Request) {
   }
 
   const settled = results[0]!;
-  const breached = settled.breaches.length > 0;
+  const yesterday = results[1]!;
+  const breachedDays = results.filter((r) => r.breaches.length > 0);
+  const breached = breachedDays.length > 0;
+  const totalBreaches = breachedDays.reduce((n, r) => n + r.breaches.length, 0);
 
   if (breached && !dryRun && ALERT_TO) {
-    const lines = [
-      `Tracking divergence on ${settled.date} (settled data, alert thresholds):`,
-      ...settled.breaches.map((b) => `  - ${b}`),
-      "",
-      `Yesterday (${results[1]!.date}, informational — may not be settled):`,
-      `  page_view GA4/${results[1]!.fp.pageViews} fp ratio=${results[1]!.ratios.pageViews}`,
-      "",
-      "Runbook (from the 8/6 incident):",
-      "  1. GA4 Realtime + a live test: do gtag events 503/fail while the site works?",
-      "  2. Check bounce rate for the day — collapsed 90%+ bounce = events dying after page_view.",
-      "  3. Same-day Ads conversion columns are NEVER evidence either way.",
-      "  4. First-party (site_events) is ground truth; GA4 is the patient.",
-    ];
+    const lines: string[] = [];
+    if (yesterday.breaches.length > 0) {
+      lines.push(
+        `🔴 SAME-DAY CATASTROPHIC on ${yesterday.date} (yesterday — act NOW, this is not lag):`,
+        ...yesterday.breaches.map((b) => `  - ${b}`),
+        "",
+      );
+    }
+    if (settled.breaches.length > 0) {
+      lines.push(
+        `Tracking divergence on ${settled.date} (settled data, alert thresholds):`,
+        ...settled.breaches.map((b) => `  - ${b}`),
+        "",
+      );
+    }
+    if (yesterday.breaches.length === 0) {
+      lines.push(
+        `Yesterday (${yesterday.date}, informational — may not be settled):`,
+        `  page_view GA4 ${yesterday.ga.pageViews} / fp ${yesterday.fp.pageViews} ratio=${yesterday.ratios.pageViews}`,
+        "",
+      );
+    }
+    lines.push(
+      "Runbook (from the 8/6 + 8/11 incidents):",
+      "  1. GA4 Realtime + a live test FROM A CLEAN DEVICE (phone on cellular; never a browser with Tag Assistant).",
+      "  2. On the site, listen for securitypolicyviolation events — gtag fails SILENT under CSP (8/11 root cause).",
+      "  3. Check bounce rate for the day — collapsed 90%+ bounce = events dying after page_view.",
+      "  4. Same-day Ads conversion columns are NEVER evidence either way.",
+      "  5. First-party (site_events) is ground truth; GA4 is the patient.",
+    );
+    const worst = yesterday.breaches.length > 0 ? yesterday.date : settled.date;
+    const prefix = yesterday.breaches.length > 0 ? "🔴 LIVE OUTAGE?" : "[MONITOR]";
     await sendLeadEmail({
       to: [ALERT_TO],
-      subject: `[MONITOR] GA4 undercounting on ${settled.date} — ${settled.breaches.length} threshold(s) breached`,
+      subject: `${prefix} GA4 undercounting on ${worst} — ${totalBreaches} threshold(s) breached`,
       text: lines.join("\n"),
       html: `<pre style="font-family:ui-monospace,monospace;font-size:13px;">${lines.join("\n").replace(/</g, "&lt;")}</pre>`,
       tags: [{ name: "kind", value: "monitor-alert" }],
