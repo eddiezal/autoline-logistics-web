@@ -990,7 +990,7 @@ export default async function AdminReportPage({
         else
           queue.push({
             title: `${short}: secondary-heavy — judge on primary CPL`,
-            body: `${secondary} secondary events vs ${c.conversions || 0} primary action${c.conversions === 1 ? "" : "s"}. Assist value measured ≈ 0 account-wide (8/10 session join; 88% same-session market) — signals no longer defend spend. If primaries don't materialize, cut per the S1 precedent.`,
+            body: `${secondary} secondary events vs ${c.conversions || 0} primary action${c.conversions === 1 ? "" : "s"}. Assist value measured ≈ 0 account-wide (8/10 session join; 88% same-session market) — signals no longer defend spend. Mondays = delivery checkpoint only (spend up? budget-lost down? CPC stable? terms clean?) — conversion n is too small for a weekly CPL verdict. CPL verdict after ≥8 clean post-change serving days AND ≥$650 clean spend (S3: ~Mon 8/24): 0–1 primaries → revert per the S1 precedent; 3+ → continue provisionally on booking quality. (Rule adopted 8/13, external audit.)`,
             impact: `$${Math.round(c.costDollars)} window spend riding on primaries`,
             confidence: "med",
             owner: "Eddie",
