@@ -244,7 +244,7 @@ export async function LeadPulse() {
           <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", color: MUTED }}>
             Weekly trend — leads &amp; CPL
           </span>
-          <span style={{ fontSize: 11.5, color: FAINT }}>weeks are Mon–Sun PT</span>
+          <span style={{ fontSize: 11.5, color: FAINT }}>weeks are Mon–Sun PT · since ads relaunch (Jul 20)</span>
         </div>
         <div style={{ display: "flex", gap: 16, fontSize: 12, color: MUTED, margin: "6px 0 2px" }}>
           <span>

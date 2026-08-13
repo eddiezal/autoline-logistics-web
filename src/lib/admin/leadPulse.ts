@@ -164,6 +164,16 @@ export interface LeadPulseData {
 
 const FETCH_DAYS = 63; // 8 trend weeks + pace baselines, spec §5
 
+/**
+ * Weekly-trend epoch: the PT Monday of the first week the RELAUNCHED ads
+ * account served continuously (campaign UTM templates live ~Jul 20–22).
+ * Weeks before this mix legacy-account spend with modern lead flow and
+ * produce misleading CPL points (a ~$150 legacy week, a fake-cheap
+ * transition week), so the trend starts here. The pulse cards (today /
+ * last-7) are unaffected — they only look back 4 weeks.
+ */
+const TREND_EPOCH_MONDAY = "2026-07-20";
+
 export async function computeLeadPulse(now: Date = new Date()): Promise<LeadPulseData> {
   const since = new Date(now.getTime() - FETCH_DAYS * 86_400_000);
   const db = getAdminDb();
@@ -281,13 +291,16 @@ export async function computeLeadPulse(now: Date = new Date()): Promise<LeadPuls
     else row.web += 1;
     if (e.paid) row.paid += 1;
   }
-  // Drop leading empty weeks (account is young); always keep ≥ 2 buckets.
-  let weeks: WeekBucket[] = weekKeys.map((k) => ({
-    mondayKey: k,
-    label: shortDateLabel(k),
-    isCurrent: k === currentMonday,
-    ...(byWeek.get(k) as PulseCounts),
-  }));
+  // Clip to the relaunch epoch, then drop leading empty weeks (account is
+  // young); always keep ≥ 2 buckets.
+  let weeks: WeekBucket[] = weekKeys
+    .filter((k) => k >= TREND_EPOCH_MONDAY)
+    .map((k) => ({
+      mondayKey: k,
+      label: shortDateLabel(k),
+      isCurrent: k === currentMonday,
+      ...(byWeek.get(k) as PulseCounts),
+    }));
   while (weeks.length > 2 && weeks[0].blended === 0) weeks = weeks.slice(1);
 
   const asOfPt = now.toLocaleTimeString("en-US", {
