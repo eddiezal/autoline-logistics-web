@@ -108,7 +108,7 @@ async function accessToken(): Promise<string> {
 
 interface GaqlRow {
   campaign?: { id?: string | number; name?: string };
-  segments?: { conversionActionName?: string };
+  segments?: { conversionActionName?: string; date?: string };
   metrics?: {
     costMicros?: string | number;
     clicks?: string | number;
@@ -263,5 +263,57 @@ export async function fetchAdsStats(since: Date): Promise<AdsResult> {
   }
 
   cacheByWindow.set(windowKey, { at: Date.now(), result });
+  return result;
+}
+
+/* ── Cost by day (Lead Pulse) ──────────────────────────────────────── */
+
+export type AdsCostByDayResult =
+  | { state: "ok"; byDay: Map<string, number>; fetchedAt: Date }
+  | { state: "unconfigured"; missing: string[] }
+  | { state: "error"; message: string };
+
+let costCache: { at: number; sinceKey: string; result: AdsCostByDayResult } | null = null;
+
+/**
+ * Daily account spend (dollars) from `since` through today, keyed by
+ * YYYY-MM-DD in the Ads account timezone (Pacific). Powers the Lead
+ * Pulse weekly CPL panel — spend is the ONLY thing the dashboard takes
+ * from the Ads API; lead counts stay first-party (spec: claude/
+ * lead-pulse-dashboard-spec.md). Never throws: errors return as a typed
+ * state so the CPL series can render "spend unavailable" without
+ * touching the lead panels.
+ */
+export async function fetchAdsCostByDay(since: Date): Promise<AdsCostByDayResult> {
+  const missing = adsMissingEnv();
+  if (missing.length > 0) return { state: "unconfigured", missing };
+
+  const sinceKey = ptDateString(since);
+  if (costCache && costCache.sinceKey === sinceKey) {
+    const age = Date.now() - costCache.at;
+    const ttl = costCache.result.state === "error" ? 60_000 : CACHE_TTL_MS;
+    if (age < ttl) return costCache.result;
+  }
+
+  let result: AdsCostByDayResult;
+  try {
+    const token = await accessToken();
+    const rows = await gaqlSearch(
+      token,
+      `SELECT segments.date, metrics.cost_micros
+       FROM customer
+       WHERE segments.date BETWEEN '${sinceKey}' AND '${ptDateString(new Date())}'`,
+    );
+    const byDay = new Map<string, number>();
+    for (const r of rows) {
+      const day = r.segments?.date;
+      if (!day) continue;
+      byDay.set(day, (byDay.get(day) ?? 0) + num(r.metrics?.costMicros) / 1_000_000);
+    }
+    result = { state: "ok", byDay, fetchedAt: new Date() };
+  } catch (err) {
+    result = { state: "error", message: err instanceof Error ? err.message : String(err) };
+  }
+  costCache = { at: Date.now(), sinceKey, result };
   return result;
 }

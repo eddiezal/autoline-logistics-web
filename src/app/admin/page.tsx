@@ -42,6 +42,7 @@ import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
 import { classifyRecord, type RecordOutcome } from "@/lib/proabd/statuses";
 import { roadMilesBetweenZips } from "@/lib/geo/zip3";
 import { dedupeLeads, normalizePhoneKey, normalizeEmailKey } from "@/lib/leads/identity";
+import { LeadPulse } from "@/components/admin/LeadPulse";
 import {
   ACCOUNT_PHASE,
   PHASES,
@@ -3558,6 +3559,8 @@ export default async function AdminReportPage({
         </div>
       ) : (
         <>
+          {/* Lead Pulse — always-on glance strip (spec: claude/lead-pulse-dashboard-spec.md) */}
+          <LeadPulse />
           {view === "overview" && <Overview />}
           {view === "acquisition" && <Acquisition />}
           {view === "sales" && <Sales />}
