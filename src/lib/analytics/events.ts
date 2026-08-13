@@ -91,6 +91,18 @@ type FunnelEvent =
         to_zip: string;
         vehicle_type: string;
       };
+    }
+  | {
+      /** Estimate-moment primary CTA on the price checker (2026-08-13):
+       *  the click that carries route+vehicle into /quote prefilled.
+       *  Measures whether the redesigned handoff moves the ~2% rate the
+       *  behavioral-journey study found. */
+      name: "pc_quote_handoff_click";
+      props: {
+        from_zip: string;
+        to_zip: string;
+        vehicle_type: string;
+      };
     };
 
 /**

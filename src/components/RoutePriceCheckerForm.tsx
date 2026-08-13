@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { track } from "@/lib/analytics/events";
 import { sendEvent, getSessionId, getSessionAttribution } from "@/lib/analytics/behavior";
+import { buildQuoteHref } from "@/lib/hero-handoff";
 
 /**
  * RoutePriceCheckerForm. Client component for /tools/route-price-checker.
@@ -21,6 +22,17 @@ import { sendEvent, getSessionId, getSessionAttribution } from "@/lib/analytics/
  */
 
 type Vehicle = "sedan" | "suv" | "pickup";
+
+/**
+ * Map the checker's 3 vehicle options onto QuoteForm's VEHICLE_TYPE_KEYS
+ * so the handoff preselects the right dropdown entry ("pickup" is
+ * "truckStandard" on the quote side).
+ */
+const HANDOFF_VEHICLE: Record<Vehicle, string> = {
+  sedan: "sedan",
+  suv: "suv",
+  pickup: "truckStandard",
+};
 
 interface PriceBracket {
   low: number;
@@ -95,6 +107,11 @@ export function RoutePriceCheckerForm({
     capErrorSend: string;
     capSentTitle: string;
     capSentBody: string;
+    handoffTitle: string;
+    handoffSub: string;
+    handoffButton: string;
+    callPrompt: string;
+    phone: string;
   };
   locale?: string;
 }) {
@@ -313,11 +330,14 @@ export function RoutePriceCheckerForm({
           <p className="text-sm text-gray-700 leading-relaxed mb-4">
             {i18n.unsupportedBody}
           </p>
+          {/* HANDOFF FIX (2026-08-13): was {fromZip, toZip} — param names the
+              /quote page never parsed, so customers re-typed their route.
+              buildQuoteHref is the single source of truth; see hero-handoff.ts. */}
           <Link
-            href={{
-              pathname: "/quote",
-              query: { fromZip: result.fromZip, toZip: result.toZip },
-            }}
+            href={buildQuoteHref({
+              originZip: result.fromZip,
+              destinationZip: result.toZip,
+            })}
             className="inline-block bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-sm px-5 py-2.5 rounded-lg transition"
           >
             {i18n.unsupportedCta} →
@@ -372,6 +392,55 @@ export function RoutePriceCheckerForm({
                 </p>
               ) : null}
 
+              {/* ESTIMATE-MOMENT PRIMARY ASK (2026-08-13, behavioral-journey
+                  study: 87% of visits exit immediately after this number
+                  renders and only ~2% continue to the quote form). Audit-
+                  approved hierarchy: primary = turn the range into a locked
+                  quote with route+vehicle prefilled; secondary = talk to a
+                  person; tertiary = the email capture below. The prefill
+                  claim in the sub-line is honest ONLY because the handoff
+                  params are fixed (see HANDOFF FIX comments). */}
+              <div className="mt-5 bg-orange-tint border border-orange/30 rounded-xl p-4">
+                <p className="text-[15px] font-bold text-charcoal leading-snug">
+                  {i18n.handoffTitle}
+                </p>
+                <p className="text-[12.5px] text-gray-700 mt-1 leading-snug">
+                  {i18n.handoffSub}
+                </p>
+                <Link
+                  href={buildQuoteHref({
+                    originZip: result.fromZip,
+                    destinationZip: result.toZip,
+                    vehicleType: HANDOFF_VEHICLE[result.selectedVehicle],
+                  })}
+                  onClick={() =>
+                    track({
+                      name: "pc_quote_handoff_click",
+                      props: {
+                        from_zip: result.fromZip,
+                        to_zip: result.toZip,
+                        vehicle_type: result.selectedVehicle,
+                      },
+                    })
+                  }
+                  className="mt-3 inline-block bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-sm px-5 py-2.5 rounded-lg transition"
+                >
+                  {i18n.handoffButton} →
+                </Link>
+                <p className="text-[12px] text-gray-600 mt-2.5">
+                  {i18n.callPrompt}{" "}
+                  <a
+                    href={`tel:${i18n.phone.replace(/[^0-9+]/g, "")}`}
+                    onClick={() =>
+                      track({ name: "lead_phone_call", props: { source: "tel_link" } })
+                    }
+                    className="font-bold text-charcoal underline decoration-orange/50 underline-offset-2 whitespace-nowrap"
+                  >
+                    {i18n.phone}
+                  </a>
+                </p>
+              </div>
+
               {/* Quiet supporting rows for the other two vehicles. */}
               <div className="mt-4 pt-3 border-t border-gray-200">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-2">
@@ -409,15 +478,15 @@ export function RoutePriceCheckerForm({
                 {i18n.transitLabel}:{" "}
                 <strong className="text-charcoal">{i18n.transitValue}</strong>
               </span>
+              {/* HANDOFF FIX (2026-08-13): was {fromZip, toZip, vehicleType} —
+                  none of which /quote parses (it reads from/to/vehicle_type).
+                  Every click landed on an EMPTY form since launch. */}
               <Link
-                href={{
-                  pathname: "/quote",
-                  query: {
-                    fromZip: result.fromZip,
-                    toZip: result.toZip,
-                    vehicleType: result.selectedVehicle,
-                  },
-                }}
+                href={buildQuoteHref({
+                  originZip: result.fromZip,
+                  destinationZip: result.toZip,
+                  vehicleType: HANDOFF_VEHICLE[result.selectedVehicle],
+                })}
                 className="bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-sm px-4 py-2 rounded-lg transition"
               >
                 {i18n.resultCta} →

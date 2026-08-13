@@ -96,6 +96,11 @@ export default async function RoutePriceCheckerPage({
                   capErrorSend: t("routePriceChecker.capture.errorSend"),
                   capSentTitle: t("routePriceChecker.capture.sentTitle"),
                   capSentBody: t("routePriceChecker.capture.sentBody"),
+                  handoffTitle: t("routePriceChecker.result.handoffTitle"),
+                  handoffSub: t("routePriceChecker.result.handoffSub"),
+                  handoffButton: t("routePriceChecker.result.handoffButton"),
+                  callPrompt: t("routePriceChecker.result.callPrompt"),
+                  phone: t("common.phone"),
                 }}
                 locale={locale}
               />

@@ -1666,7 +1666,11 @@
       "unsupportedCta": "Get my quote",
       "anchorEyebrow": "Estimated price ({vehicle})",
       "rangeLabel": "Market range ${low} to ${high}",
-      "alsoConsider": "Other vehicles on this route"
+      "alsoConsider": "Other vehicles on this route",
+    "handoffTitle": "Make this range an exact locked price",
+    "handoffSub": "Takes about 60 seconds. Your route and vehicle carry over automatically, no retyping.",
+    "handoffButton": "Request my locked quote",
+    "callPrompt": "Prefer to talk it through first?"
     },
     "callouts": {
       "1": {

@@ -1666,7 +1666,11 @@
       "unsupportedCta": "Obtener mi cotización",
       "anchorEyebrow": "Precio estimado ({vehicle})",
       "rangeLabel": "Rango del mercado ${low} a ${high}",
-      "alsoConsider": "Otros vehículos en esta ruta"
+      "alsoConsider": "Otros vehículos en esta ruta",
+    "handoffTitle": "Convierta este rango en un precio exacto y fijo",
+    "handoffSub": "Toma alrededor de 60 segundos. Su ruta y vehículo se transfieren automáticamente, sin volver a escribir.",
+    "handoffButton": "Solicitar mi cotización fija",
+    "callPrompt": "¿Prefiere hablarlo primero?"
     },
     "callouts": {
       "1": {
