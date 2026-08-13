@@ -836,6 +836,30 @@ export default async function AdminReportPage({
 
   /* ── Operational conditions (feed the decision queue) ── */
   const formsNoEstimate = forms.filter((r) => r.price === null);
+  // 8/13 split (data-driven): the 10 historical no-price forms were exactly
+  // 4 off-mainland routes (HI/AK/PR — SD carrier pricing structurally can't
+  // price ocean moves; expected forever) + 6 mainland forms ALL on Jul 30
+  // (6:38 AM–3:33 PM PT — a ~9h SD pricing outage we never detected).
+  // So: off-mainland = quiet informational; mainland = real engine failure,
+  // and 2+ mainland misses on one PT day is the outage signature → loud.
+  const OFF_MAINLAND = new Set(["HI", "AK", "PR"]);
+  const formsNoEstimateIsland = formsNoEstimate.filter(
+    (r) => OFF_MAINLAND.has(r.originState) || OFF_MAINLAND.has(r.destState),
+  );
+  const formsNoEstimateMainland = formsNoEstimate.filter(
+    (r) => !OFF_MAINLAND.has(r.originState) && !OFF_MAINLAND.has(r.destState),
+  );
+  const noPriceByDay = new Map<string, number>();
+  for (const r of formsNoEstimateMainland) {
+    const k = r.t.toLocaleDateString("en-CA", { timeZone: PT });
+    noPriceByDay.set(k, (noPriceByDay.get(k) ?? 0) + 1);
+  }
+  // Only a RECENT cluster warns (last 7 days) — Jul 30's historical cluster
+  // must not keep a red card alive forever. en-CA keys sort lexicographically.
+  const noPriceRecentCutoff = new Date(now.getTime() - 7 * 864e5).toLocaleDateString("en-CA", { timeZone: PT });
+  const noPriceOutageDays = [...noPriceByDay.entries()].filter(
+    ([d, n]) => n >= 2 && d >= noPriceRecentCutoff,
+  );
   // Calls excluded: CALL- docs never flow through createLead, so they have
   // no ProABD link to confirm ownership against (CallRail→ProABD mapping TBD).
   const unassigned = cohort.filter(
@@ -1012,15 +1036,38 @@ export default async function AdminReportPage({
       score: 30,
       warn: false,
     });
-  if (formsNoEstimate.length > 0)
+  if (formsNoEstimateMainland.length > 0) {
+    const outage = noPriceOutageDays.length > 0;
     queue.push({
-      title: `${formsNoEstimate.length} valid form${formsNoEstimate.length === 1 ? "" : "s"} saw no price`,
-      body: "Pricing API failure or unusual route — agent must quote manually; review if recurring.",
-      impact: `${formsNoEstimate.length} manual quote${formsNoEstimate.length === 1 ? "" : "s"}`,
+      title: `${formsNoEstimateMainland.length} mainland form${formsNoEstimateMainland.length === 1 ? "" : "s"} saw no price`,
+      body: outage
+        ? `Pricing engine failure signature: ${noPriceOutageDays
+            .map(([d, n]) => `${n} misses on ${d}`)
+            .join(", ")} — same pattern as the Jul 30 SD pricing outage. Check SD API health if the latest day is recent.`
+        : `Mainland routes the pricing engine couldn't price — agents quoted manually. ${
+            formsNoEstimateMainland.some(
+              (r) => r.t.toLocaleDateString("en-CA", { timeZone: PT }) >= noPriceRecentCutoff,
+            )
+              ? "Includes misses in the last 7 days — watch for a same-day cluster (outage signature)."
+              : "None in the last 7 days — engine currently healthy (6 of these were the known Jul 30 outage)."
+          }`,
+      impact: `${formsNoEstimateMainland.length} manual quote${formsNoEstimateMainland.length === 1 ? "" : "s"}`,
       confidence: "high",
       owner: "Agents / Eddie",
       tab: "sales",
-      score: 25,
+      score: outage ? 55 : 25,
+      warn: outage,
+    });
+  }
+  if (formsNoEstimateIsland.length > 0)
+    queue.push({
+      title: `${formsNoEstimateIsland.length} island/overseas route${formsNoEstimateIsland.length === 1 ? "" : "s"} — manual quote (expected)`,
+      body: "HI/AK/PR routes can't be priced by SD's carrier market — agents quote via port partners. Normal operation, not a defect.",
+      impact: "expected manual quotes",
+      confidence: "high",
+      owner: "Agents",
+      tab: "sales",
+      score: 8, // informational — sorts to the bottom
       warn: false,
     });
   if (cohortBlocked.length > 0)
