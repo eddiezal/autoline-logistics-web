@@ -1311,122 +1311,16 @@ export default async function AdminReportPage({
 
     return (
       <>
-        {/* 1 · clocks + health */}
-        <div style={{ marginBottom: 10 }}>
-          <span style={pill}>Operating period: <span style={pillB}>last 7 days</span> · latest day partial</span>
-          <span style={pill}>Mature cohort: <span style={pillB}>created {fmtDay(d44)}–{fmtDay(d14)}</span> · seasoned ≥14d</span>
-          <span style={pill}>Book: <span style={pillB}>Mar 1 → {ordersImportedAt ? fmtDay(ordersImportedAt) : "import date unknown"}</span></span>
-          <span
-            style={{
-              ...pill,
-              background: healthIssues.length > 0 ? "#fffbeb" : "#ecfdf5",
-              borderColor: healthIssues.length > 0 ? "#fde68a" : "#a7f3d0",
-              color: healthIssues.length > 0 ? "#92400e" : "#065f46",
-              fontWeight: 700,
-            }}
-          >
-            {healthIssues.length > 0 ? `⚠ ${healthIssues.length} data issue${healthIssues.length === 1 ? "" : "s"}` : "✓ data healthy"}
-          </span>
-        </div>
+        {/* 0 · data-health warning — rendered only when an issue could affect the numbers below */}
+        {healthIssues.length > 0 && (
+          <div style={{ marginBottom: 10, padding: "8px 12px", borderRadius: 10, background: "#fffbeb", border: "1px solid #fde68a", color: "#92400e", fontSize: 12.5, fontWeight: 600, lineHeight: 1.5 }}>
+            ⚠ {healthIssues[0]}
+            {healthIssues.length > 1 ? ` · +${healthIssues.length - 1} more` : ""} — details in Data health below.
+          </div>
+        )}
 
-        {/* 2 · narrative verdict — paid and all-channel kept apart */}
-        <section style={{ ...CARD, marginBottom: 12, borderLeft: `4px solid ${GREEN}` }}>
-          <div style={{ fontSize: 14, lineHeight: 1.6, color: "#1a1a1a" }}>
-            <strong>
-              This week: {spend7 !== null ? money(spend7) : "—"} paid spend produced{" "}
-              {actions7 !== null ? Math.round(actions7) : "—"} paid{" "}
-              <Term k="primaryActions">primary conversion actions</Term>. Across all channels the
-              business received {unique7.length} new <Term k="paidLeadRecords">unique leads</Term>
-            </strong>{" "}
-            ({CHANNEL_ORDER.filter((k) => (branch7.get(k) ?? 0) > 0)
-              .map((k) => `${branch7.get(k)} ${CHANNEL_LABELS[k].toLowerCase()}`)
-              .join(" · ") || "none yet"}
-            ). {bookingsRecorded7} booking{bookingsRecorded7 === 1 ? "" : "s"} recorded (some may belong
-            to older cohorts){feeRecorded7Cents > 0 ? <> · {money(feeRecorded7Cents / 100)} booked broker fee recorded</> : null}.
-            The book stands at <strong>{money(orders.reduce((s, o) => s + o.deposit, 0))} fees · {orders.length} bookings since March</strong>
-            {ordersImportedAt ? ` (as of ${fmtDay(ordersImportedAt)})` : ""}.
-          </div>
-        </section>
-
-        {/* 2b · phase card — contract §10: the optimization ladder */}
-        <section style={{ ...CARD, marginBottom: 12 }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
-            <h2 style={H2}>Where we are — the optimization ladder</h2>
-            <span style={{ fontSize: 10.5, color: MUTED }}>
-              contract §10 · provisional targets set Jul 29 · Ben ratifies Jul 31
-            </span>
-          </div>
-          <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
-            {PHASES.map((p) => {
-              const active = p.n === ACCOUNT_PHASE;
-              const past = p.n < ACCOUNT_PHASE;
-              return (
-                <div
-                  key={p.n}
-                  style={{
-                    flex: "1 1 180px",
-                    minWidth: 170,
-                    border: active ? `2px solid ${GREEN}` : "1px solid var(--color-gray-200)",
-                    borderRadius: 10,
-                    padding: "9px 12px",
-                    background: active ? "#f0fdf4" : "var(--color-surface)",
-                    opacity: past ? 0.75 : 1,
-                  }}
-                >
-                  <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.07em", textTransform: "uppercase", color: active ? GREEN : MUTED }}>
-                    Phase {p.n} · {p.title} {active ? "— NOW" : past ? "— done" : ""}
-                  </div>
-                  <div style={{ fontSize: 12.5, fontWeight: 700, color: INK, margin: "3px 0 1px" }}>
-                    Optimize for {p.optimize}
-                  </div>
-                  <div style={{ fontSize: 10.5, color: MUTED, lineHeight: 1.45 }}>
-                    {p.bidding} · judged on {p.judgedOn}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div style={{ fontSize: 12.5, color: "#1a1a1a", lineHeight: 1.55, marginTop: 9 }}>
-            <strong><Term k="learningPhase">Learning phase</Term>:</strong> {PHASE_NARRATIVE[ACCOUNT_PHASE]}
-          </div>
-          {ads.state === "ok" && (
-            <div style={{ marginTop: 9 }}>
-              <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: MUTED, marginBottom: 5 }}>
-                Gate to Phase 2 — {GATE_ACTIONS_30D} primary actions / 30d per campaign (era began Jul 20)
-              </div>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                {ads.stats.campaigns
-                  .filter((c) => ADS_CAMPAIGN_NAMES[c.id])
-                  .sort((a, b) => b.conversions - a.conversions)
-                  .map((c) => {
-                    const n = Math.round(c.conversions);
-                    const w = Math.min(100, (n / GATE_ACTIONS_30D) * 100);
-                    return (
-                      <div key={c.id} style={{ flex: "1 1 130px", minWidth: 120 }}>
-                        <div style={{ fontSize: 10.5, color: INK, fontWeight: 600, marginBottom: 2 }}>
-                          {(ADS_CAMPAIGN_NAMES[c.id] ?? c.id).replace(" Español", " ES")}{" "}
-                          <span style={{ color: MUTED, fontWeight: 400 }}>{n}/{GATE_ACTIONS_30D}</span>
-                        </div>
-                        <div style={{ height: 5, background: "var(--color-gray-100)", borderRadius: 3 }}>
-                          <div style={{ height: 5, width: `${w}%`, background: w >= 100 ? GREEN : "#86efac", borderRadius: 3 }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-              <div style={{ fontSize: 10.5, color: MUTED, lineHeight: 1.5, marginTop: 7 }}>
-                {PHASE2_PILOT_NOTE} Gate to Phase 3: fee coverage ≥80% (measured {feeCoveragePct !== null ? `${feeCoveragePct.toFixed(0)}% ✓` : "—"}) ·
-                conversion-value import (not built) · first mature instrumented cohort read (Aug 27+).
-              </div>
-            </div>
-          )}
-          <div style={{ fontSize: 11, color: "#1a1a1a", marginTop: 8, borderTop: "1px solid var(--color-gray-100)", paddingTop: 7, lineHeight: 1.55 }}>
-            Declared <Term k="affordabilityCeiling">affordability ceiling</Term>:{" "}
-            <strong>${CPL_CEILING.value} per unique serviceable paid lead</strong> (activates Phase 2) —{" "}
-            {CPL_CEILING.basis}. Rate targets (click→lead, lead→book, cost per booking) are
-            deliberately unset until our first mature instrumented cohort — Aug 27, not invented from industry benchmarks.
-          </div>
-        </section>
+        {/* Lead Pulse — the canonical summary; lives ONLY on Overview (spec: claude/lead-pulse-dashboard-spec.md) */}
+        <LeadPulse />
 
         {/* 3 · decision queue */}
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
@@ -1448,6 +1342,34 @@ export default async function AdminReportPage({
             <div style={{ marginTop: 8 }}>{queue.slice(4).map(decTile)}</div>
           </details>
         )}
+
+        {/* 2 · narrative verdict — paid and all-channel kept apart */}
+        <section style={{ ...CARD, marginBottom: 12, borderLeft: `4px solid ${GREEN}` }}>
+          <div style={{ fontSize: 14, lineHeight: 1.6, color: "#1a1a1a" }}>
+            <strong>
+              This week: {spend7 !== null ? money(spend7) : "—"} in Google Ads spend was associated
+              with {actions7 !== null ? Math.round(actions7) : "—"} paid{" "}
+              <Term k="primaryActions">primary conversion actions</Term> reported by Google — a
+              floor while restatements settle.
+            </strong>{" "}
+            Across all channels: {unique7.length} <Term k="paidLeadRecords">unique leads</Term>
+            {" "}(live counts in the Pulse above){" "}
+            ({CHANNEL_ORDER.filter((k) => (branch7.get(k) ?? 0) > 0)
+              .map((k) => `${branch7.get(k)} ${CHANNEL_LABELS[k].toLowerCase()}`)
+              .join(" · ") || "none yet"}
+            ). {bookingsRecorded7} booking{bookingsRecorded7 === 1 ? "" : "s"} recorded (some may belong
+            to older cohorts){feeRecorded7Cents > 0 ? <> · {money(feeRecorded7Cents / 100)} booked broker fee recorded</> : null}.
+            The book stands at <strong>{money(orders.reduce((s, o) => s + o.deposit, 0))} fees · {orders.length} bookings since March</strong>
+            {ordersImportedAt ? ` (as of ${fmtDay(ordersImportedAt)})` : ""}.
+          </div>
+        </section>
+
+        {/* context chips — the windows the evidence tables below run on */}
+        <div style={{ marginBottom: 10 }}>
+          <span style={pill}>Operating period: <span style={pillB}>last 7 days</span> · latest day partial</span>
+          <span style={pill}>Mature cohort: <span style={pillB}>created {fmtDay(d44)}–{fmtDay(d14)}</span> · seasoned ≥14d</span>
+          <span style={pill}>Book: <span style={pillB}>Mar 1 → {ordersImportedAt ? fmtDay(ordersImportedAt) : "import date unknown"}</span></span>
+        </div>
 
         {/* 4a · operating totals — NOT a funnel */}
         <section style={{ ...CARD, marginBottom: 12, marginTop: 8 }}>
@@ -1577,6 +1499,91 @@ export default async function AdminReportPage({
 
         {/* 4c · the book */}
         <BusinessBaselineCard />
+
+        {/* optimization ladder — strategic context, collapsed by default (changes monthly, not daily) */}
+        <details style={{ marginBottom: 12 }}>
+          <summary style={{ fontSize: 13, fontWeight: 700, color: INK, cursor: "pointer", padding: "10px 14px", border: "1px solid var(--color-gray-200)", borderRadius: 12, background: "var(--color-surface)" }}>
+            Current phase: Phase {ACCOUNT_PHASE} · {PHASES.find((p) => p.n === ACCOUNT_PHASE)?.title} — view the optimization ladder
+          </summary>
+        <section style={{ ...CARD, marginBottom: 12, marginTop: 8 }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
+            <h2 style={H2}>Where we are — the optimization ladder</h2>
+            <span style={{ fontSize: 10.5, color: MUTED }}>
+              contract §10 · provisional targets set Jul 29 · Ben ratifies Jul 31
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+            {PHASES.map((p) => {
+              const active = p.n === ACCOUNT_PHASE;
+              const past = p.n < ACCOUNT_PHASE;
+              return (
+                <div
+                  key={p.n}
+                  style={{
+                    flex: "1 1 180px",
+                    minWidth: 170,
+                    border: active ? `2px solid ${GREEN}` : "1px solid var(--color-gray-200)",
+                    borderRadius: 10,
+                    padding: "9px 12px",
+                    background: active ? "#f0fdf4" : "var(--color-surface)",
+                    opacity: past ? 0.75 : 1,
+                  }}
+                >
+                  <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.07em", textTransform: "uppercase", color: active ? GREEN : MUTED }}>
+                    Phase {p.n} · {p.title} {active ? "— NOW" : past ? "— done" : ""}
+                  </div>
+                  <div style={{ fontSize: 12.5, fontWeight: 700, color: INK, margin: "3px 0 1px" }}>
+                    Optimize for {p.optimize}
+                  </div>
+                  <div style={{ fontSize: 10.5, color: MUTED, lineHeight: 1.45 }}>
+                    {p.bidding} · judged on {p.judgedOn}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ fontSize: 12.5, color: "#1a1a1a", lineHeight: 1.55, marginTop: 9 }}>
+            <strong><Term k="learningPhase">Learning phase</Term>:</strong> {PHASE_NARRATIVE[ACCOUNT_PHASE]}
+          </div>
+          {ads.state === "ok" && (
+            <div style={{ marginTop: 9 }}>
+              <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: MUTED, marginBottom: 5 }}>
+                Gate to Phase 2 — {GATE_ACTIONS_30D} primary actions / 30d per campaign (era began Jul 20)
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                {ads.stats.campaigns
+                  .filter((c) => ADS_CAMPAIGN_NAMES[c.id])
+                  .sort((a, b) => b.conversions - a.conversions)
+                  .map((c) => {
+                    const n = Math.round(c.conversions);
+                    const w = Math.min(100, (n / GATE_ACTIONS_30D) * 100);
+                    return (
+                      <div key={c.id} style={{ flex: "1 1 130px", minWidth: 120 }}>
+                        <div style={{ fontSize: 10.5, color: INK, fontWeight: 600, marginBottom: 2 }}>
+                          {(ADS_CAMPAIGN_NAMES[c.id] ?? c.id).replace(" Español", " ES")}{" "}
+                          <span style={{ color: MUTED, fontWeight: 400 }}>{n}/{GATE_ACTIONS_30D}</span>
+                        </div>
+                        <div style={{ height: 5, background: "var(--color-gray-100)", borderRadius: 3 }}>
+                          <div style={{ height: 5, width: `${w}%`, background: w >= 100 ? GREEN : "#86efac", borderRadius: 3 }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+              <div style={{ fontSize: 10.5, color: MUTED, lineHeight: 1.5, marginTop: 7 }}>
+                {PHASE2_PILOT_NOTE} Gate to Phase 3: fee coverage ≥80% (measured {feeCoveragePct !== null ? `${feeCoveragePct.toFixed(0)}% ✓` : "—"}) ·
+                conversion-value import (not built) · first mature instrumented cohort read (Aug 27+).
+              </div>
+            </div>
+          )}
+          <div style={{ fontSize: 11, color: "#1a1a1a", marginTop: 8, borderTop: "1px solid var(--color-gray-100)", paddingTop: 7, lineHeight: 1.55 }}>
+            Declared <Term k="affordabilityCeiling">affordability ceiling</Term>:{" "}
+            <strong>${CPL_CEILING.value} per unique serviceable paid lead</strong> (activates Phase 2) —{" "}
+            {CPL_CEILING.basis}. Rate targets (click→lead, lead→book, cost per booking) are
+            deliberately unset until our first mature instrumented cohort — Aug 27, not invented from industry benchmarks.
+          </div>
+        </section>
+        </details>
 
         {/* 5 · data health drawer */}
         <details style={{ ...CARD, marginBottom: 8 }}>
@@ -3559,8 +3566,6 @@ export default async function AdminReportPage({
         </div>
       ) : (
         <>
-          {/* Lead Pulse — always-on glance strip (spec: claude/lead-pulse-dashboard-spec.md) */}
-          <LeadPulse />
           {view === "overview" && <Overview />}
           {view === "acquisition" && <Acquisition />}
           {view === "sales" && <Sales />}
