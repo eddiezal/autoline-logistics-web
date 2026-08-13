@@ -85,7 +85,7 @@ for (const r of rows) {
     availableAt: pt(val(r, "available_date")),
     price: Number(val(r, "price")) || 0,
     deposit: Number(val(r, "deposit")) || 0,
-    source: "proabd-export-2026-07",
+    source: "proabd-export-2026-08",
     importedAt: Timestamp.now(),
   }, { merge: true });
   written++;
