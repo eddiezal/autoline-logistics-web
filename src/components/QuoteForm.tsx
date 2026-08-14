@@ -94,6 +94,16 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     if (!formStartedSent.current) {
       formStartedSent.current = true;
       sendEvent("form_started", { fv: FORM_VERSION });
+      // GA4 twin of form_started — MUST fire at the same moment, because the
+      // lag-vs-loss monitor compares GA4 `quote_started` to first-party
+      // `form_started` 1:1 (api/cron/lag-vs-loss, FS_RATIO_FLOOR).
+      // The variant has existed in the FunnelEvent union since launch but
+      // NOTHING ever emitted it, so that ratio was a structural 0 and the
+      // monitor reported the "events die after page_view" signature on
+      // 2026-08-12 — the first CLEAN settled day with >=5 form starts.
+      // Earlier zeros were masked because they fell on the genuine 8/7 and
+      // 8/11 outage days, where a 0 looked like corroboration.
+      track({ name: "quote_started", props: {} });
     }
     const name = el.name;
     if (!name) return;
