@@ -77,7 +77,7 @@ for (const doc of leadSnap.docs) {
   console.log(`\n  ${d.leadRef ?? doc.id}  ${created ? fmtPT(created) + " PT" : "?"}`);
   console.log(`    name: ${JSON.stringify(c.firstName)} / lastName: ${JSON.stringify(c.lastName)} ${c.lastName === "" ? "← empty as designed" : ""}`);
   console.log(`    tier: ${JSON.stringify(d.tier)}  (server default is "priority" when the form sends none)`);
-  console.log(`    proabd: ${d.proabd?.abdId ? "✓ ABD_Id " + d.proabd.abdId : (d.proabd ? JSON.stringify(d.proabd).slice(0, 80) : "✗ MISSING")}`);
+  console.log(`    proabd: ${d.proabdAbdId ? "✓ ABD_Id " + d.proabdAbdId : "✗ not stamped (check agentEmail.sentTo — webhook assignment proves ProABD accepted)"}`);
   console.log(`    agentEmail stored: ${d.agentEmail ? "✓ (sentTo: " + JSON.stringify(d.agentEmail.sentTo) + ")" : "—"}`);
   console.log(`    attribution: gclid=${d.attribution?.gclid ? "PRESENT (should be ABSENT on an untagged test!)" : "none ✓"}`);
 }

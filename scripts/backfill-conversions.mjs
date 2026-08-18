@@ -18,8 +18,8 @@
  * 8/7 lesson), keeps paid web leads with a gclid, excludes internal tests,
  * and writes a CSV in Google Ads' Click Conversions upload format. It does
  * NOT talk to Google — review the printed table, then upload in the Ads UI.
- * The default window covers the full verified loss window: a plain run
- * regenerates all 9 lost conversions in one CSV.
+ * Windows are NAMED and ledgered in WINDOWS below (upload status included);
+ * a bare run lists them and writes nothing.
  *
  * ⚠️ DOUBLE-COUNT WARNING: the upload action ("Web lead (backfill)") is a
  * SEPARATE conversion action from lead_form_submit; Google does NOT dedup
@@ -37,9 +37,16 @@
  * Diagnostics can take ~15 min; conversions appear under the CLICK date.
  *
  * Usage:
- *   node scripts/backfill-conversions.mjs                # verified loss window
+ *   node scripts/backfill-conversions.mjs                    # lists windows + status, writes nothing
+ *   node scripts/backfill-conversions.mjs --window csp-outage
  *   node scripts/backfill-conversions.mjs --start 2026-08-07T15:00:00-07:00 \
  *     --end 2026-08-10T19:30:00-07:00 --value 239 --action "Web lead (backfill)"
+ *
+ * SAFETY CHANGE 2026-08-11 evening: a bare run used to default to the
+ * Aug 7–10 window — which is ALREADY UPLOADED. Regenerating that CSV left
+ * a double-count one careless upload away. Now: no default window. Bare
+ * runs print the known incident windows with their upload status and exit.
+ * Already-uploaded windows refuse to generate without --force.
  */
 import { writeFileSync } from "node:fs";
 import { config as loadEnv } from "dotenv";
@@ -54,14 +61,82 @@ const argVal = (name, dflt) => {
   return i !== -1 && args[i + 1] ? args[i + 1] : dflt;
 };
 
-// Verified loss window (see header): first missed lead 8/7 15:39 PT, fix
-// deployed 8/10 ~19:30 PT. Default regenerates all 9 lost conversions.
-const START = new Date(argVal("start", "2026-08-07T15:00:00-07:00"));
-const END = new Date(argVal("end", "2026-08-10T19:30:00-07:00"));
+// Known incident windows. Keep every window here FOREVER with its upload
+// status — this list is the double-count ledger.
+//
+// ⚠ HARD-LEARNED RULE (Google support case 7-8363000040761): after creating
+// a NEW conversion action, wait a FULL 6 HOURS before the first upload.
+// We uploaded 4.5h after creating "Web lead (backfill)" — Google accepted
+// all rows ("# OK" in results) but never restated them into reports, and
+// dedup then blocked every re-upload with "No changes". Recovery required
+// a support case + re-upload with each Conversion Time shifted +1 second
+// (their instruction; dedup keys on gclid+action+timestamp).
+const WINDOWS = {
+  "aug7-outage": {
+    start: "2026-08-07T15:00:00-07:00",
+    end: "2026-08-10T19:30:00-07:00",
+    status:
+      "✅ UPLOADED 2026-08-11 12:43 + 12:51 AM PT (9 conversions: backfill-conversions.csv ×6 + backfill-week1.csv ×3). DO NOT re-upload. " +
+      "⚠ HISTORY: the ×6 file was uploaded 4.5h after the action was created (inside the 6h propagation window) — accepted but never restated; " +
+      "re-uploaded 2026-08-13 as backfill-conversions-retry.csv with times +1s per Google support case 7-8363000040761. " +
+      "WATCH: expected Aug 7–11 end state = 12 Conversions / 13 all-conv. If it ever reads ~18 (the stuck originals restating on top of the retry), " +
+      "upload RETRACTIONS for the +1s copies, citing the case.",
+    uploaded: true,
+  },
+  "csp-outage": {
+    // Outage #3: Google moved gtag collect endpoints; our CSP blocked them
+    // (see claude/incident-2026-08-11-csp-collect-endpoints.md). Starts one
+    // second after aug7-outage's inclusive end; ends at the CSP-fix deploy
+    // (~7:40 PM PT Tue, padded to 19:45). GRAY ZONE: any lead after
+    // ~19:20 PT on 8/11 must be cross-checked against GA4 before upload —
+    // if GA4 caught it post-fix, uploading it here DOUBLE-COUNTS (Google
+    // does not dedup across conversion actions).
+    start: "2026-08-10T19:30:01-07:00",
+    end: "2026-08-11T19:45:00-07:00",
+    status: "✅ UPLOADED 2026-08-11 ~9:25 PM PT (backfill-csp-outage.csv, 2 successful: Brand 8:07 AM + S5 11:30 AM). DO NOT re-upload. 1 known permanent miss: AL-260811-7LYTF8 (S5 by UTM, no gclid captured).",
+    uploaded: true,
+  },
+};
+
+const windowName = argVal("window", null);
+const startArg = argVal("start", null);
+const endArg = argVal("end", null);
+const force = args.includes("--force");
+
+if (!windowName && !(startArg && endArg)) {
+  console.log("No window selected — nothing generated. Known incident windows:\n");
+  for (const [name, w] of Object.entries(WINDOWS)) {
+    console.log(`  --window ${name}`);
+    console.log(`      ${w.start} → ${w.end}`);
+    console.log(`      ${w.status}\n`);
+  }
+  console.log("Or explicit bounds: --start <ISO+offset> --end <ISO+offset>");
+  console.log("Reconcile Firestore vs Ads per campaign per day BEFORE any upload.");
+  process.exit(1);
+}
+
+let startStr = startArg, endStr = endArg;
+if (windowName) {
+  const w = WINDOWS[windowName];
+  if (!w) {
+    console.error(`Unknown window "${windowName}". Known: ${Object.keys(WINDOWS).join(", ")}`);
+    process.exit(1);
+  }
+  if (w.uploaded && !force) {
+    console.error(`REFUSING: window "${windowName}" is already uploaded — ${w.status}`);
+    console.error("Re-uploading double-counts. If you really need to regenerate the CSV (not upload!), add --force.");
+    process.exit(1);
+  }
+  startStr = w.start;
+  endStr = w.end;
+}
+
+const START = new Date(startStr);
+const END = new Date(endStr);
 const VALUE = Number(argVal("value", "239")); // matches lead_form_submit's median-fee value convention
 const CURRENCY = argVal("currency", "USD");
 const ACTION = argVal("action", "Web lead (backfill)");
-const OUT = argVal("out", "backfill-conversions.csv");
+const OUT = argVal("out", windowName ? `backfill-${windowName}.csv` : "backfill-conversions.csv");
 
 if (Number.isNaN(START.getTime()) || Number.isNaN(END.getTime())) {
   console.error("Bad --start/--end. Use ISO with offset, e.g. 2026-08-07T15:00:00-07:00");
