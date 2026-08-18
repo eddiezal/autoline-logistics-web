@@ -18,6 +18,11 @@
  *
  * Added 2026-07-09 for lead delivery disruption incident (Nelson + Ginger
  * report from same day).
+ *
+ * 2026-08-16: fixed a counting bug — `taylor` only matched referrer 503 and
+ * dropped referrer 18 (the shared feed) into `other`. Taylor volume was
+ * under-reported by roughly two thirds. The two ids are now counted together
+ * AND reported separately, because they are different products.
  */
 
 import { NextResponse } from "next/server";
@@ -39,9 +44,27 @@ function isTimestampLike(v: unknown): v is FirestoreTimestampLike {
   );
 }
 
+/**
+ * Tony Taylor sells TWO different products under TWO referrer ids:
+ *   503 — premium / exclusive feed
+ *    18 — cheaper feed, resold to competing brokers
+ * They are priced and sold differently and must never be averaged into one
+ * number. Splitting them here so `taylor` is the honest total and the two
+ * products stay separable.
+ *
+ * BUG FIXED 2026-08-16: this endpoint counted ONLY 503 as Taylor and silently
+ * dropped 18 into `other`, under-reporting Taylor volume by roughly two thirds
+ * (346 records vs 176 in the Jul 8 - Aug 2 cohort). Found while building
+ * scripts/source-comparison.mjs.
+ */
+const TAYLOR_PREMIUM_ID = "503";
+const TAYLOR_SHARED_ID = "18";
+
 interface HourBucket {
   total: number;
-  taylor: number;
+  taylor: number;          // both products — the corrected total
+  taylorPremium: number;   // 503, exclusive
+  taylorShared: number;    // 18, resold to other brokers
   other: number;
   byType: Record<string, number>;
   bySource: Record<string, number>;
@@ -93,11 +116,15 @@ export async function GET(req: Request) {
     });
 
     if (!hourly.has(hourKey)) {
-      hourly.set(hourKey, { total: 0, taylor: 0, other: 0, byType: {}, bySource: {} });
+      hourly.set(hourKey, {
+        total: 0, taylor: 0, taylorPremium: 0, taylorShared: 0, other: 0,
+        byType: {}, bySource: {},
+      });
     }
     const b = hourly.get(hourKey)!;
     b.total++;
-    if (referrerId === "503") b.taylor++;
+    if (referrerId === TAYLOR_PREMIUM_ID) { b.taylor++; b.taylorPremium++; }
+    else if (referrerId === TAYLOR_SHARED_ID) { b.taylor++; b.taylorShared++; }
     else b.other++;
     b.byType[itemType] = (b.byType[itemType] ?? 0) + 1;
     b.bySource[referrer] = (b.bySource[referrer] ?? 0) + 1;
