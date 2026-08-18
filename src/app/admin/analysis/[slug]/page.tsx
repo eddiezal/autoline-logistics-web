@@ -85,7 +85,7 @@ function FunnelBlock({ funnel }: { funnel: Funnel }) {
         <span style={{ fontSize: 12.5, color: MUTED, textAlign: "right" }}>{st.label}</span>
         <div style={{ position: "relative", height: 22 }}>
           <div style={{ position: "absolute", left: 0, top: 0, height: 22, width: `${w}%`, background: GREEN, borderRadius: "0 4px 4px 0" }} />
-          <span style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", whiteSpace: "nowrap", fontSize: 12.5, color: INK, ...(w > 55 ? { right: `${100 - w + 1.2}%`, color: "#fff" } : { left: `calc(${w}% + 8px)` }) }}>
+          <span style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", whiteSpace: "nowrap", fontSize: 12.5, ...(w > 55 ? { right: `${100 - w + 1.2}%`, color: "#fff" } : { left: `calc(${w}% + 8px)`, color: INK }) }}>
             <strong>{st.count.toLocaleString()}</strong>{st.detail ? ` · ${st.detail}` : ""}
           </span>
         </div>
