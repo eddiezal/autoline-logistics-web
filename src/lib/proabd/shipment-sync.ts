@@ -106,18 +106,67 @@ function firstVehicle(item: Raw): Raw | undefined {
   return undefined;
 }
 
+const PROABD_TZ = "America/New_York";
+
 /**
- * ProABD datetimes are Pacific local with no offset (same convention as
- * the CSV export / scripts/import-orders.mjs). Store as ISO with a fixed
- * -07:00 — good enough for lifecycle display; SD overlay provides the
- * authoritative operational timestamps when linked.
+ * Milliseconds to ADD to a wall clock read as if it were UTC, to get the true
+ * instant. New York in July: +4h. In December: +5h.
+ */
+function zoneShiftMs(instant: Date, timeZone: string): number {
+  const p = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
+  })
+    .formatToParts(instant)
+    .reduce<Record<string, string>>((a, x) => ((a[x.type] = x.value), a), {});
+  const wallAsUTC = Date.UTC(
+    +p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second,
+  );
+  return instant.getTime() - wallAsUTC;
+}
+
+/**
+ * ProABD datetimes are naive (no offset) and are stored EASTERN.
+ *
+ * This function said "Pacific" and appended -07:00 from the day it was written
+ * until 2026-08-17, which put every portal createdAt and bookedAt three hours
+ * late. That was not a judgement call that went the wrong way — it was a guess
+ * copied from scripts/import-orders.mjs and never tested. It is now measured:
+ * scripts/attribution-order.mjs compares ProABD Create_Date against our own
+ * Firestore lead timestamps on the records our createLead integration itself
+ * created, where the true gap is zero by construction. Across 10 such records
+ * the observed gap was -3.00h with a spread of 0.00h. Eastern minus Pacific.
+ *
+ * Resolved through the IANA zone rather than a hardcoded -04:00, so it stays
+ * correct across the DST boundary and for pre-March historical records.
+ *
+ * Mirror of scripts/lib/proabd-time.mjs — keep the two in step.
  */
 function ptToIso(s: string | undefined): ISODate | undefined {
   if (!s) return undefined;
-  const normalized = s.includes("T") ? s : s.replace(" ", "T");
-  const d = new Date(
-    /Z|[+-]\d{2}:?\d{2}$/.test(normalized) ? normalized : `${normalized}-07:00`,
+  const v = s.trim();
+  if (!v) return undefined;
+
+  if (/Z|[+-]\d{2}:?\d{2}$/.test(v)) {
+    const d = new Date(v);
+    return Number.isNaN(d.getTime()) ? undefined : (d.toISOString() as ISODate);
+  }
+
+  const m = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?/.exec(v);
+  if (!m) {
+    const d = new Date(v);
+    return Number.isNaN(d.getTime()) ? undefined : (d.toISOString() as ISODate);
+  }
+
+  const wallAsUTC = Date.UTC(
+    +m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] ?? 0),
   );
+  // Two passes converge even when the first guess lands across a DST edge.
+  let ts = wallAsUTC;
+  for (let i = 0; i < 2; i++) ts = wallAsUTC + zoneShiftMs(new Date(ts), PROABD_TZ);
+
+  const d = new Date(ts);
   return Number.isNaN(d.getTime()) ? undefined : (d.toISOString() as ISODate);
 }
 
