@@ -86,6 +86,8 @@ export interface Study {
   informed: string[];
   /** Route to an interactive chart served inside /admin, when one exists. */
   chartHref?: string;
+  /** Structured drop-off waterfall, rendered on the detail page (see Funnel). */
+  funnel?: Funnel;
   /** Simple bar data rendered inline on the detail page (label, value, display). */
   bars?: { label: string; value: number; display: string }[];
   barCaption?: string;
@@ -99,6 +101,53 @@ export interface DeepSection {
   bullets?: string[];
   table?: { headers: string[]; rows: string[][] };
   note?: string;
+}
+
+/* ---- Drop-off funnel (waterfall) — added 2026-08-18 -----------------------
+ * A structured leak funnel rendered on the study detail page. The geometry is
+ * a waterfall: each leak bar spans exactly the width REMOVED between one stage
+ * and the next, so the subtraction is drawn, not implied. Counts must
+ * reconcile: stages[i].count = stages[i+1].count + leaks[i].count — the
+ * renderer trusts this, so keep it true (the 2026-08-16 audit existed because
+ * counts that "should" reconcile didn't).
+ * Leaks and the feeder cross-link to Decision Registry entries (see
+ * decisionRegistry.ts) so the funnel's "what we're doing about it" and the
+ * registry's decision rules can never drift apart. */
+
+export interface FunnelStage {
+  label: string;
+  count: number;
+  /** Rate string with its denominator NAMED (e.g. "28.1% of arrivals"). */
+  detail?: string;
+}
+
+export interface FunnelLeak {
+  /** First-class leak identity, e.g. "LEAK 1 — FAILURE TO START". */
+  code: string;
+  count: number;
+  /** Share string with its denominator NAMED (the two leaks have different denominators — that distinction is the point). */
+  share: string;
+  /** What we're doing about it — observational language unless causation is established. */
+  note: string;
+  /** Decision Registry entry aimed at this leak. */
+  registrySlug?: string;
+}
+
+export interface FunnelFeeder {
+  label: string;
+  total: number;
+  classes: { label: string; count: number; kind: "continues" | "other" | "nothing" }[];
+  note: string;
+  registrySlug?: string;
+}
+
+export interface Funnel {
+  title: string;
+  subtitle: string;
+  /** stages.length must equal leaks.length + 1; leaks[i] sits between stages[i] and stages[i+1]. */
+  stages: FunnelStage[];
+  leaks: FunnelLeak[];
+  feeder?: FunnelFeeder;
 }
 
 export const DRAFT_STUDIES: Study[] = [
@@ -268,7 +317,7 @@ export const STUDIES: Study[] = [
       "Modeled a month of first-party site activity (3,412 tracked actions across 2,008 visits, Jul 14 - Aug 13) as step-by-step journeys: every visit becomes a sequence of pages and actions ending in either a lead (67 in the window, duplicates folded) or an exit. From those sequences we computed, for every page and action, the probability that a visit standing there eventually converts. Probabilities resting on fewer than 20 observations are withheld rather than reported. Refreshed Aug 13 with the same method and vocabulary as the original Aug 10 read, so the two runs are directly comparable; the new field-level form telemetry added Aug 12 is deliberately excluded from journeys to keep it that way. Restated Aug 18 with strict per-visit accounting - every count below shares one denominator, so visits that started minus visits that completed equals visits that abandoned, and visits that reached the quote page minus visits that started equals visits that never started, exactly. The baseline window for those counts is Jul 14 - Aug 14 (before the August site changes); the early-read section at the bottom reads Aug 14 onward separately.",
     findings: [
       "The quote path is the site's biggest lever, and it has two loss pools. The bigger one comes first: of the 919 visits that reached the quote page in the baseline month, 661 left without ever starting the form - 3.4x the 196 who started and then abandoned. Of the 258 visits that started, 62 finished: 24% completion. A visit that starts the form converts at about 8x the site average, so both pools are worth real money: lifting completion from 24% to 30% at current volume adds roughly 15 leads a month with zero extra ad spend, and converting even a tenth of the never-starters into starters is worth about as much again.",
-      "Seeing a price in the route price-checker is where visits go to die: of 162 visits that saw an estimate in the baseline month, 146 (90%) did nothing at all afterward - no further page, no form, no capture - and only 5 continued to the quote page. This is specifically a price-checker finding: nearly all measured estimates come from that tool. The quote form also shows prices but does not yet emit this event, so its own price moment is not measured yet; instrumentation for that ships with the next form release. The Aug 13 estimate-moment redesign places a lock-this-price handoff exactly here; the early-read section below tracks whether it moves.",
+      "Seeing a price in the route price-checker is where visits go to die: of 162 visits that saw an estimate in the baseline month, 146 (90%) did nothing at all afterward - no further page, no form, no capture. Of the rest, 5 continued to the quote page and 11 kept browsing without ever touching the form - different evidence about the price moment than vanishing, and worth separating at the next read. This is specifically a price-checker finding: nearly all measured estimates come from that tool. The quote form also shows prices but does not yet emit this event, so its own price moment is not measured yet; instrumentation for that ships with the next form release. The Aug 13 estimate-moment redesign places a lock-this-price handoff exactly here; the early-read section below tracks whether it moves.",
       "Where a visit enters matters. Visits entering on the homepage convert at 5.8%, entries straight to the quote page at 3.6%, and entries to the price-checker tool at 0.6% despite being about a quarter of all traffic.",
       "The ship-vs-drive calculator is engagement, not funnel: people cycle it repeatedly and then leave (0.4% eventual conversion once a visit is in it). Fine as content; it should hand off harder to the quote form.",
       "Corridor pages have started to register: 27 tracked visits this month (up from 13), converting at rates comparable to the quote page, though the sample is still small. Early sign the search-ranking fixes shipped Aug 10 are working; worth a proper read next month.",
@@ -290,6 +339,43 @@ export const STUDIES: Study[] = [
       "Confirmed the research-traffic campaign's pause from the paid-media side: its landing tool converts 0.6% of entries.",
       "Corridor-page re-read scheduled now that traffic is arriving after the search fixes.",
     ],
+    funnel: {
+      title: "Where quote-path visits go",
+      subtitle:
+        "Jul 14 – Aug 14 · every bar shares one scale (919 = full width) · each red bar spans exactly the width removed from the stage above it, so the counts reconcile in the geometry itself: 919 = 258 + 661, and 258 = 62 + 196.",
+      stages: [
+        { label: "Reached the quote page", count: 919 },
+        { label: "Started the form", count: 258, detail: "28.1% of arrivals" },
+        { label: "Became a lead", count: 62, detail: "24.0% of starters · 6.7% end-to-end" },
+      ],
+      leaks: [
+        {
+          code: "LEAK 1 — FAILURE TO START",
+          count: 661,
+          share: "72% of arrivals",
+          note: "Largest conversion opportunity on the site: 72% of addressable quote-page traffic never reaches the form Release 1 is optimizing. The Release-2 quote-path redesign aims here.",
+          registrySlug: "quote-path-r2",
+        },
+        {
+          code: "LEAK 2 — FORM ABANDONMENT",
+          count: 196,
+          share: "76% of starters",
+          note: "Observed abandonment concentrations (last field touched before giving up — observational, not proven causes): the vehicle-type step, ZIP validation errors, captcha expiry. Release 1 iterates here.",
+          registrySlug: "quote-form-r1",
+        },
+      ],
+      feeder: {
+        label: "Price-checker feeder",
+        total: 162,
+        classes: [
+          { label: "continued to the quote page", count: 5, kind: "continues" },
+          { label: "kept browsing, never touched the form", count: 11, kind: "other" },
+          { label: "no tracked activity after the price", count: 146, kind: "nothing" },
+        ],
+        note: "162 visits saw a price. The Aug 13 lock-this-price block is the experiment aimed at this edge. The 11 who browsed on are different evidence than the 146 who vanished; the next script revision separates what they did.",
+        registrySlug: "pc-estimate-moment",
+      },
+    },
     bars: [
       { label: "Started quote form", value: 19.7, display: "19.7%" },
       { label: "On quote page", value: 5.7, display: "5.7%" },

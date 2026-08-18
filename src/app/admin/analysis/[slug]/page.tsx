@@ -7,7 +7,8 @@
  */
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getStudy, STUDIES, type DeepSection } from "@/lib/admin/analysisLibrary";
+import { getStudy, STUDIES, type DeepSection, type Funnel } from "@/lib/admin/analysisLibrary";
+import { getRegistryEntry } from "@/lib/admin/decisionRegistry";
 import { getChartSrcdoc } from "@/lib/admin/chartSrcdoc";
 
 export const runtime = "nodejs";
@@ -15,6 +16,7 @@ export const runtime = "nodejs";
 const GREEN = "#128A3A";
 const INK = "#1a1a1a";
 const MUTED = "var(--color-text-muted)";
+const LEAK_RED = "#C0392B";
 
 export function generateStaticParams() {
   return STUDIES.map((s) => ({ slug: s.slug }));
@@ -62,6 +64,110 @@ function DeepDive({ sec }: { sec: DeepSection }) {
       {sec.note && (
         <p style={{ margin: "8px 0 0", fontSize: 12.5, color: MUTED, lineHeight: 1.55 }}>{sec.note}</p>
       )}
+    </Section>
+  );
+}
+
+/**
+ * Waterfall drop-off funnel. Geometry rule: every bar shares stage[0]'s scale,
+ * and each leak bar spans exactly the width REMOVED between one stage and the
+ * next (left edge = next stage's width), so the subtraction is drawn, not
+ * implied. Data contract: stages[i].count = stages[i+1].count + leaks[i].count.
+ */
+function FunnelBlock({ funnel }: { funnel: Funnel }) {
+  const full = funnel.stages[0].count;
+  const rows: React.ReactNode[] = [];
+
+  funnel.stages.forEach((st, i) => {
+    const w = (st.count / full) * 100;
+    rows.push(
+      <div key={`s${i}`} style={{ display: "grid", gridTemplateColumns: "150px 1fr", gap: 12, alignItems: "center" }}>
+        <span style={{ fontSize: 12.5, color: MUTED, textAlign: "right" }}>{st.label}</span>
+        <div style={{ position: "relative", height: 22 }}>
+          <div style={{ position: "absolute", left: 0, top: 0, height: 22, width: `${w}%`, background: GREEN, borderRadius: "0 4px 4px 0" }} />
+          <span style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", whiteSpace: "nowrap", fontSize: 12.5, color: INK, ...(w > 55 ? { right: `${100 - w + 1.2}%`, color: "#fff" } : { left: `calc(${w}% + 8px)` }) }}>
+            <strong>{st.count.toLocaleString()}</strong>{st.detail ? ` · ${st.detail}` : ""}
+          </span>
+        </div>
+      </div>,
+    );
+
+    const leak = funnel.leaks[i];
+    if (!leak) return;
+    const next = funnel.stages[i + 1];
+    const leftPct = (next.count / full) * 100;
+    const widthPct = ((st.count - next.count) / full) * 100;
+    const reg = leak.registrySlug ? getRegistryEntry(leak.registrySlug) : undefined;
+    rows.push(
+      <div key={`l${i}`} style={{ display: "grid", gridTemplateColumns: "150px 1fr", gap: 12, padding: "2px 0 10px" }}>
+        <span />
+        <div>
+          <div style={{ position: "relative", height: 13 }}>
+            <div style={{ position: "absolute", left: `${leftPct}%`, top: 0, height: 13, width: `${widthPct}%`, background: LEAK_RED, opacity: 0.85, borderRadius: "0 3px 3px 0" }} />
+          </div>
+          <p style={{ margin: "5px 0 0", fontSize: 12.5 }}>
+            <strong style={{ color: LEAK_RED, letterSpacing: 0.4 }}>{leak.code}</strong>
+            <span style={{ color: INK }}> · {leak.count.toLocaleString()} visits · {leak.share}</span>
+          </p>
+          <p style={{ margin: "3px 0 0", fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>
+            {leak.note}
+            {reg && (
+              <>
+                {" "}
+                <Link href={`/admin/analysis#registry-${reg.slug}`} style={{ color: GREEN, fontWeight: 600 }}>
+                  Decision rule: {reg.title} →
+                </Link>
+              </>
+            )}
+          </p>
+        </div>
+      </div>,
+    );
+  });
+
+  const feeder = funnel.feeder;
+  const feederReg = feeder?.registrySlug ? getRegistryEntry(feeder.registrySlug) : undefined;
+  const feederColor = (kind: string) => (kind === "continues" ? GREEN : kind === "other" ? "#9ca3af" : LEAK_RED);
+
+  return (
+    <Section title="Where the visits go">
+      <div style={{ background: "var(--color-surface)", border: "1px solid var(--color-gray-200)", borderRadius: 12, padding: "18px 20px" }}>
+        <p style={{ margin: "0 0 14px", fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>{funnel.subtitle}</p>
+        <div style={{ display: "grid", gap: 8 }}>{rows}</div>
+
+        {feeder && (
+          <div style={{ marginTop: 16, borderTop: "1px solid var(--color-gray-200)", paddingTop: 14 }}>
+            <p style={{ margin: "0 0 6px", fontSize: 12.5, fontWeight: 700, color: INK }}>
+              {feeder.label} · {feeder.total.toLocaleString()} visits saw a price
+            </p>
+            <div style={{ display: "flex", height: 14, borderRadius: 4, overflow: "hidden", gap: 2 }}>
+              {feeder.classes.map((c) => (
+                <div key={c.label} style={{ flexGrow: c.count, flexBasis: 0, background: feederColor(c.kind) }} title={`${c.label}: ${c.count} of ${feeder.total}`} />
+              ))}
+            </div>
+            <p style={{ margin: "6px 0 0", fontSize: 12.5, color: "#3f3f3f" }}>
+              {feeder.classes.map((c, i) => (
+                <span key={c.label}>
+                  {i > 0 && " · "}
+                  <span style={{ display: "inline-block", width: 9, height: 9, borderRadius: 2, background: feederColor(c.kind), marginRight: 5, verticalAlign: "-1px" }} />
+                  <strong>{c.count}</strong> {c.label}
+                </span>
+              ))}
+            </p>
+            <p style={{ margin: "6px 0 0", fontSize: 12.5, color: MUTED, lineHeight: 1.5 }}>
+              {feeder.note}
+              {feederReg && (
+                <>
+                  {" "}
+                  <Link href={`/admin/analysis#registry-${feederReg.slug}`} style={{ color: GREEN, fontWeight: 600 }}>
+                    Decision rule: {feederReg.title} →
+                  </Link>
+                </>
+              )}
+            </p>
+          </div>
+        )}
+      </div>
     </Section>
   );
 }
@@ -127,6 +233,8 @@ export default async function StudyPage({
           ))}
         </ul>
       </Section>
+
+      {s.funnel && <FunnelBlock funnel={s.funnel} />}
 
       {s.bars && (
         <Section title="The pattern">
