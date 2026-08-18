@@ -10,8 +10,8 @@
       "schedule": "0 0 * * *"
     },
     {
-      "path": "/api/cron/weekly-digest",
-      "schedule": "0 2 * * 6"
+      "path": "/api/cron/weekly-report",
+      "schedule": "0 13 * * 1"
     },
     {
       "path": "/api/cron/sync-shipments",
