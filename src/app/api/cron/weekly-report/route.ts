@@ -35,8 +35,11 @@ import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { sendLeadEmail } from "@/lib/email/resend";
 import { fetchAdsCostByDay } from "@/lib/googleAds/client";
-// @ts-expect-error — plain-JS module shared with scripts/; allowJs is on, but it
-// ships no type declarations by design (it must stay importable from node).
+// @ts-ignore — plain-JS module shared with scripts/; it ships no type
+// declarations by design (it must stay importable from plain node). ts-ignore,
+// not ts-expect-error: whether TS flags an untyped .mjs import varies by
+// Next/TS version, and an unused expect-error fails the build (learned
+// 2026-08-18, first deploy).
 import { computeFigures, renderWeeklyReport, ymd } from "@/lib/reports/weeklyReport.mjs";
 
 export const runtime = "nodejs";
