@@ -1,11 +1,69 @@
 /**
  * Analysis Library registry — the studies behind the decisions.
  *
+ * ⚠️ PUBLICATION GATE (2026-08-16). An external audit of this library found
+ * arithmetic errors, unsupported causal language, and internal contradictions
+ * across SEVERAL studies — not only the newest one. Its verdict, verified:
+ *
+ *   lead-economics    WITHDRAWN, not merely blocked. Rerunning at the 21-day
+ *                     maturity the audit demanded returns 23 website records and
+ *                     ZERO bookings. All 4 bookings behind the $21.62 headline
+ *                     come from records created Jul 27 - Aug 2, which are NOT
+ *                     mature. Older half 0/23, newer half 4/22, Fisher p=0.049 -
+ *                     and the same week carries a pricing change (flatfee-v1,
+ *                     7/28) and a 2.6x volume ramp, so three changes are
+ *                     confounded across four bookings. There is no stable
+ *                     website close rate to report, therefore no measured net
+ *                     fee and no value per lead. The study's central number does
+ *                     not exist yet. Do not resurrect it by picking the cohort
+ *                     that produces a number.
+ *                     Also fixed while it was open: two derived figures survived
+ *                     the correction of
+ *                     their own input ($78 fee gap should be $43.29; 1.4x ratio
+ *                     should be 1.67x) and a false platform claim about bidding
+ *                     eligibility. It sits in DRAFT_STUDIES and does NOT render.
+ *   behavioral-journey UNBLOCKED 2026-08-18. All three items closed by a full
+ *                     restatement on session-level accounting (one denominator,
+ *                     so started − completed = abandoned and reached − started =
+ *                     never-started, by construction): 919 reached / 258 started
+ *                     / 62 completed / 196 abandoned / 661 never-started for the
+ *                     Jul 14–Aug 14 baseline window. The restated rates land on
+ *                     the published ones (28.1% vs 27.8%, 24.0% vs 22.0%), so the
+ *                     errors were bookkeeping, not data. Model-derived figures
+ *                     (the 19.7/5.7/1.6/0.6/0.4 ladder) are now labeled as model
+ *                     estimates, never as raw rates. Early read of the Aug 12/13
+ *                     changes added as a dated section.
+ *   search-terms      BLOCKED. $3,454 of $6,072 was never observable at query
+ *                     level. The honest claim is 7.9% CONFIRMED relevant and
+ *                     56.9% unclassifiable, not "under 8% reached real searches".
+ *   serving-days      RECLASSIFY as an intervention note. $224x30 and $269x21
+ *                     do not reconcile; 30/21 is +42.9% not +25%; $224 to $269
+ *                     is +20.1%; 79%->50% is a 37% relative fall, not "halved".
+ *                     Caveats array is empty, which is never appropriate.
+ *   bid-cap           RECLASSIFY as an early read. Method says two-week test;
+ *                     the verdict rests on two serving days. Remove "permanent".
+ *   remoteness        Publish after methodological edits (CI on the coefficient,
+ *                     robust SEs, controls, sensitivity to the metro list and
+ *                     the 50-mile threshold). Replace causal wording.
+ *   flat-fee          Publish as DESCRIPTIVE booked-order modelling only. "Every
+ *                     booked order decomposes into carrier cost plus fee" is
+ *                     tautological — fee is DEFINED as price minus carrier pay.
+ *                     Booked orders cannot show that the old model lost leads.
+ *   order-book        Publish after wording edits: "booked transport value" not
+ *                     "gross moved"; fees are before cancellations and refunds.
+ *
+ * The pattern across all of them: a useful descriptive signal gets promoted
+ * into a causal or economic conclusion the design does not support. For a
+ * client-facing library, that distinction has to be airtight.
+ *
  * Each entry is a full write-up: the question, the method in plain English,
  * findings, honest caveats, and the decision the study informed. Rendered at
  * /admin/analysis (index) and /admin/analysis/[slug] (detail). Client-visible
  * (Ben has /admin) — write for his eyes; keep pricing-model internals at the
  * level already shared in the quarterly deck, no deeper.
+ *
+ * DRAFT_STUDIES is deliberately NOT exported into the rendered list. Move an
+ * entry into STUDIES only when its blocking items are closed.
  *
  * Registry lives in code, not Firestore: studies are few, rich, and versioned
  * with the site. Add a study = add an object here + a Work Log entry linking
@@ -43,36 +101,192 @@ export interface DeepSection {
   note?: string;
 }
 
+export const DRAFT_STUDIES: Study[] = [
+  {
+    slug: "lead-economics",
+    title: "What a lead is worth, and how fast it stops being worth it",
+    date: "2026-08-16",
+    headline:
+      "A website lead generated $21.62 of gross broker fee on average and a purchased iRelocation lead $9.14 - before cancellations and servicing cost - and booking value is heavily front-loaded, with no booking observed later than 20.3 days.",
+    status: "New Aug 16 - sets the affordability ceiling and reframes follow-up as a speed problem",
+    question:
+      "What is one lead actually worth in dollars, how does that change with age, and how much can we afford to pay for one?",
+    method:
+      "Rebuilt every lead in the CRM from its own change history: 15,972 status events collapsed into 1,289 records created between Jul 8 and Aug 2, each aged at least 14 days so a non-booking means something. For each record we read the booked price and the carrier payment, so the broker fee is measured rather than assumed. Value per lead is the share of records that book multiplied by the average fee those bookings earned. The decay curve comes from the gap between when a lead arrived and when it booked, measured across all 62 bookings in the window. Test submissions and records with corrupted fee entries are excluded and the exclusions are reported.",
+    findings: [
+      "Gross fee expectancy ranged from $9.14 to $21.62 across the source-and-period combinations observed: website $21.62, Taylor premium $19.52, Taylor shared $11.68, iRelocation $9.14. Because each vendor ran in a different stretch of weeks, these differences cannot yet be attributed to source quality - see the caveats. Read each figure as gross broker fee generated per acquired lead, an upper bound on what a lead can be worth, not a spending ceiling: cancellations, card fees, locked-price losses and the cost of working the lead all come out of it.",
+      "Booking value is heavily front-loaded. Across 1,289 records and 62 bookings, no order was observed booking more than 20.3 days after the lead arrived, and half of all bookings happened within a day. Applied to a typical $1,000 move, expected value falls from $8.14 at arrival to $3.97 after a day and $2.01 after five. Because follow-up behaviour was not randomised, this motivates a speed-to-lead test; it does not on its own prove that contacting faster causes more bookings.",
+      "Because of that decay, the open backlog is worth far less than its size suggests. All 1,265 currently open leads inside the 21-day window are worth about $1,900 together, roughly $1.51 each, because most are already old. The 375 records past 21 days are worth nothing. Set against that: raising the booking rate across the whole book by a single percentage point would be worth roughly $1,030 a week at current volume and fee. Clearing the backlog is a one-time $1,900. The two are different kinds of move, and the second is the larger one.",
+      "Booking rate alone ranks sources misleadingly. Taylor premium books at twice the rate of Taylor shared, but the shared feed earns $43.29 more per booking, so in dollars the gap narrows from 2.0x to 1.67x - the booking-rate ratio overstates the dollar ratio by about 20%. Any comparison that stops at booking percentage is reading the wrong number.",
+      "The measured fee corroborates the order book from a completely independent direction. This study reads price minus carrier payment from CRM change events and lands at $247 average; the order-book study reads booked deposits from the monthly export and lands at $253. Two methods, two datasets, six dollars apart.",
+      "A small unattributed group - 14 records with no source recorded - books at 28.6% and is worth $63.57 a lead, several times any tracked source. It is too small to trust and we cannot yet say what it is, but it is the most valuable thing in the data we do not understand.",
+    ],
+    caveats: [
+      "The website figure rests on 4 bookings. The honest range around 8.9% is 3.5% to 20.7%, which is why the affordability ceiling is being held where it is rather than moved to match. Twelve bookings is the point at which that number becomes worth acting on. Every dollar figure derived from it - including the roughly $8,400 a year attributed to quote-form work - carries the same width and should be read as a base case, not a forecast.",
+      "The cohort is not fully mature and the booking rates are therefore floors. Records were required to be at least 14 days old, but the study also argues that bookings can occur out to 21 days. The youngest records had seen only about 90% of their booking window when this was measured, so some bookings are simply not yet observable and every close rate here is understated by a small amount. Rerunning at a 21-day maturity requirement, or a survival model that handles censoring properly, settles it.",
+      "Three orders whose price exactly equalled the carrier payment were excluded from fee averages on the grounds that three delivered loads earning nothing looks like a data-entry pattern. That is a judgement, not a verified fact, and it removes economically unfavourable observations. Treat it as a sensitivity choice: the excluded orders would lower the Taylor premium fee average, and the finding should be confirmed against the source records before it is relied on.",
+      "We cannot rank the sources against each other, and this study does not. The lead vendors were switched on one at a time in different weeks - one in early July, the next mid-month, the third late - so each vendor's numbers reflect a different period as much as a different source. After correcting for the number of comparisons made, no difference between any two sources is statistically distinguishable from chance. Settling it needs two feeds running side by side for about three weeks.",
+      "The decay curve is measured from leads we actually worked. If nobody calls a five-day-old lead, no five-day-old lead ever books, and the data would then report that five-day-old leads are dead. The strongest evidence against that reading is a group of 176 leads watched for 34 to 39 days that were being worked and still produced no booking after day 13. Treat the tail of the curve as a floor on what an old lead is worth, not a precise measurement.",
+      "Fee here means price minus what the carrier is paid. It is before card processing, cancellations, and the cost of honoring a locked price when the carrier market moves against us. True contribution is somewhat lower and is not yet measured.",
+      "We know what every source is worth but not what each one costs. Purchased-lead invoices are the missing input; without them the comparison between buying leads and generating them cannot be completed.",
+      "Six test submissions were being counted as real website leads until this analysis, including the record created when the CRM connection was first tested in July. Removing them moved the website close rate from 7.8% to 8.9%. Three booked orders also carried a carrier payment exactly equal to the price with no fee recorded, which is a data-entry pattern rather than three deliveries made for free; they are now excluded from fee averages and still counted as bookings.",
+    ],
+    informed: [
+      "Holding the cost-per-lead ceiling where it is until there are twelve website bookings rather than four. The rule was written before these numbers existed, and it held against four defensible ways of counting that implied ceilings from $21.62 to $48.65.",
+      "Reframing quote-form work as the largest lever on cost per lead - cost per lead is spend divided by completed forms, so lifting completion cuts it proportionally on traffic already paid for - while placing it correctly against the whole business, where a single point of booking rate across all sources is worth roughly six times more.",
+      "Correcting the expected payoff of that form work, which had been overstated twice over: the value of a lead was costed at roughly $48 against a measured $21.62, and the volume it would act on was taken from an early single-day sample of about 150 form starts a week against a measured 57. Lifting completion from 22% to 35% was budgeted near $48,000 a year and is worth about $8,400. Still clearly worth having, and no longer the largest number on the board.",
+      "Shifting follow-up priority from persistence to speed. The backlog is a reporting problem worth clearing; the revenue is in the first hour.",
+      "A standing request for purchased-lead invoices, and a recommendation to run two vendor feeds concurrently before the next buying decision rather than one at a time.",
+    ],
+    bars: [
+      { label: "Website", value: 21.62, display: "$21.62" },
+      { label: "Taylor premium", value: 19.52, display: "$19.52" },
+      { label: "Taylor shared", value: 11.68, display: "$11.68" },
+      { label: "iRelocation", value: 9.14, display: "$9.14" },
+    ],
+    barCaption:
+      "Dollars of broker fee expected per lead, by source - booking rate multiplied by the average fee those bookings earned. This is the break-even price for a lead, not a ranking: the sources ran in different weeks and cannot be compared to each other.",
+    sections: [
+      {
+        title: "What a lead is worth as it ages",
+        body:
+          "Taking a typical $1,000 move from a purchased source and following it through the booking curve measured across all 62 bookings in the window.",
+        table: {
+          headers: ["Lead age", "Still worth", "Booking chance remaining"],
+          rows: [
+            ["Brand new", "$8.14", "100%"],
+            ["6 hours", "$6.87", "84%"],
+            ["1 day", "$3.97", "49%"],
+            ["2 days", "$3.46", "43%"],
+            ["5 days", "$2.01", "25%"],
+            ["10 days", "$1.34", "16%"],
+            ["15 days", "$0.67", "8%"],
+            ["21 days", "$0.00", "0%"],
+          ],
+        },
+        note:
+          "Half a lead's value is gone within a day and 87% by day twelve. This is why the first hour matters more than any follow-up sequence.",
+      },
+      {
+        title: "Why booking rate alone is the wrong ranking",
+        bullets: [
+          "Taylor premium books 8.0% of its leads; Taylor shared books 4.0%. On rate alone the premium feed looks twice as good.",
+          "But the shared feed's bookings carry a $288.79 average fee against the premium feed's $245.50 - $43.29 more per booking, which claws back part of the gap.",
+          "In dollars per lead the ratio is 1.67x rather than 2.0x, so booking percentage overstates the dollar difference by about 20%.",
+          "A feed resold to several brokers at once is also being measured differently: its booking rate reflects our share of a contested lead, not the quality of the lead itself.",
+        ],
+      },
+      {
+        title: "The open pipeline, priced",
+        table: {
+          headers: ["Group", "Records", "Value still winnable"],
+          rows: [
+            ["Open, inside the 21-day window", "1,265", "$1,916"],
+            ["Open, past 21 days", "375", "$0"],
+            ["Never contacted, over a day old", "107", "$424"],
+          ],
+        },
+        note:
+          "The backlog should still be cleared - every open record nobody is working sits inside the denominator of every performance number in the business and makes results look worse than they are. But it is a reporting task, not a revenue-recovery task. The revenue is in the next table.",
+      },
+      {
+        title: "The levers, priced",
+        body:
+          "About 417 leads reach the business every week across all sources, of which roughly 19 come from the website quote form. Each lever below is valued at the measured fee of $247 per booking, using the volumes each one actually operates on.",
+        table: {
+          headers: ["Lever", "Per week", "Per year"],
+          rows: [
+            ["Booking rate across the whole book, +1 point (4.8% to 5.8%)", "$1,030", "$53,500"],
+            ["Website booking rate, 8.9% to 13%", "$188", "$9,800"],
+            ["Quote-form completion, 22% to 35%", "$161", "$8,400"],
+            ["Quote-form completion, 22% to 32%", "$124", "$6,400"],
+            ["Clearing the entire open backlog", "one time", "$1,900"],
+          ],
+        },
+        note:
+          "The first row dwarfs the rest for one reason: the website supplies about 4.5% of all leads. Improving how every lead is worked pays roughly five times more than improving the website channel end to end. Both are worth doing, but they answer different questions - the website levers decide whether the advertising is worth funding, while the booking-rate lever is where the money in the business actually sits.",
+      },
+      {
+        title: "The website levers specifically",
+        body:
+          "Cost per lead is advertising spend divided by completed forms, so the funnel sits in the denominator: improving it lowers cost per lead on traffic already paid for, without spending another dollar.",
+        bullets: [
+          "Quote-form completion, 22% today. Of every hundred people who start the form, 78 leave. Lifting completion to 35% cuts cost per lead by 37% and adds about $8,400 a year in booked fees. It is the only lever that produces more leads without more spend.",
+          "Reaching the form at all, 27.8% today. Roughly 615 visits a month leave the quote page without touching the form - a pool nearly four times larger than the one that starts and abandons. Same work, one step earlier.",
+          "The price moment, where 87% currently leave. Part of that is form friction and part is a reaction to the number itself, which means the fix runs through pricing calibration as much as through design.",
+          "Booking rate on website leads, 8.9% today. Half of all bookings happen within a day of the lead arriving, so this is a speed lever rather than a follow-up lever.",
+          "Bid efficiency. Thirty conversions is our own evaluation threshold for trusting an automated-bidding read, not a platform requirement - Google allows conversion-based bidding without conversion history and recommends roughly 30 for a reliable assessment. The account is at 21, so better form completion brings that evaluation point forward; the funnel lever pulls the advertising decision with it.",
+        ],
+        note:
+          "None of these closes the gap alone, and neither does any pair of them. Run together at moderate improvement they do.",
+      },
+      {
+        title: "How the fee is measured",
+        bullets: [
+          "Every CRM change event carries the total price and the carrier payment. The broker fee is the difference, measured per order rather than assumed from an average.",
+          "Coverage is complete: all 62 bookings in the window carry both figures.",
+          "Average measured fee is $247.18 against the order-book study's $253 from monthly booked-order exports - independent confirmation from a separate dataset and method.",
+          "Three orders showed a carrier payment exactly equal to the price, producing a zero fee, with no deposit recorded. Three delivered loads earning nothing is not a plausible reading; they are excluded from fee averages and reported rather than quietly dropped.",
+        ],
+      },
+      {
+        title: "Provenance",
+        bullets: [
+          "Unit of analysis: one CRM record, reconstructed from its full change history.",
+          "Data window: records created Jul 8 to Aug 2, 2026; change events read through Aug 16, 2026.",
+          "Sample: 1,289 records, 62 bookings. Website subset 45 records, 4 bookings.",
+          "Primary outcome: gross broker fee - booked price minus carrier payment - per acquired lead.",
+          "Evidence type: observational and descriptive. No randomisation, no control group, no causal claim.",
+          "Open-pipeline figures come from a separate live snapshot taken Aug 16 across a 60-day window, not from the 1,289-record study cohort; the two populations are different by design.",
+          "Source: scripts/source-comparison.mjs and scripts/stale-leads.mjs. Next review when website bookings reach 12.",
+        ],
+      },
+      {
+        title: "What we still cannot answer",
+        bullets: [
+          "Which lead source is best. The vendors were run one at a time, so source and calendar period cannot be separated. Three weeks of concurrent delivery settles it.",
+          "What each purchased source costs. This study measures value per lead; the invoices hold the other half.",
+          "Whether an old lead worked properly would convert. We have very few examples of one, which is the honest limit on the decay curve.",
+          "What the unattributed group is. Fourteen records, the best economics in the data, and no recorded source.",
+        ],
+      },
+    ],
+  },
+];
+
 export const STUDIES: Study[] = [
   {
     slug: "behavioral-journey",
     title: "How visitors actually move through the site",
-    date: "2026-08-13",
+    date: "2026-08-18",
     headline:
-      "Starting the quote form makes a visit ~8x more likely to convert, but the bigger loss pool never starts: 615 visits a month leave the quote page without touching the form. And 87% of price-checker visitors leave immediately after seeing a number.",
-    status: "Refreshed Aug 13 - drove the Aug 12 form release; quote-path redesign test is next",
+      "Starting the quote form makes a visit ~8x more likely to convert, but the bigger loss pool never starts: 661 of the 919 visits that reached the quote page last month left without touching the form. And 90% of price-checker visitors do nothing after seeing a number.",
+    status: "Restated Aug 18 on corrected arithmetic; first early read of the Aug 12/13 changes included",
     question:
       "Where do visits die on the site, and what do the visits that turn into leads do differently?",
     method:
-      "Modeled a month of first-party site activity (3,412 tracked actions across 2,008 visits, Jul 14 - Aug 13) as step-by-step journeys: every visit becomes a sequence of pages and actions ending in either a lead (67 in the window, duplicates folded) or an exit. From those sequences we computed, for every page and action, the probability that a visit standing there eventually converts. Probabilities resting on fewer than 20 observations are withheld rather than reported. Refreshed Aug 13 with the same method and vocabulary as the original Aug 10 read, so the two runs are directly comparable; the new field-level form telemetry added Aug 12 is deliberately excluded from journeys to keep it that way.",
+      "Modeled a month of first-party site activity (3,412 tracked actions across 2,008 visits, Jul 14 - Aug 13) as step-by-step journeys: every visit becomes a sequence of pages and actions ending in either a lead (67 in the window, duplicates folded) or an exit. From those sequences we computed, for every page and action, the probability that a visit standing there eventually converts. Probabilities resting on fewer than 20 observations are withheld rather than reported. Refreshed Aug 13 with the same method and vocabulary as the original Aug 10 read, so the two runs are directly comparable; the new field-level form telemetry added Aug 12 is deliberately excluded from journeys to keep it that way. Restated Aug 18 with strict per-visit accounting - every count below shares one denominator, so visits that started minus visits that completed equals visits that abandoned, and visits that reached the quote page minus visits that started equals visits that never started, exactly. The baseline window for those counts is Jul 14 - Aug 14 (before the August site changes); the early-read section at the bottom reads Aug 14 onward separately.",
     findings: [
-      "The quote path is the site's biggest lever, and it has two loss pools. The bigger one comes first: 615 visits a month reach the quote page and leave without ever starting the form, nearly 4x the 167 who start it and then abandon. Of those who start, 22% finish. A visit that starts the form converts at about 8x the site average, so both pools are worth real money: lifting completion from 22% to 30% at current volume adds roughly 19 leads a month with zero extra ad spend, and converting even a tenth of the never-starters into starters is worth about as much again.",
-      "Seeing a price in the route price-checker is where visitors leave fastest: 87% exit immediately after an estimate renders, the worst exit rate of any state, and the tool hands only about 2% of its traffic onward to the quote form. This is specifically a price-checker finding: nearly all measured estimates (156 of 161) come from that tool. The quote form also shows prices but does not yet emit this event, so its own price moment is not measured yet; instrumentation for that ships with the next form release. Either way, the moment after a price renders remains the most valuable unused screen real estate on the site.",
+      "The quote path is the site's biggest lever, and it has two loss pools. The bigger one comes first: of the 919 visits that reached the quote page in the baseline month, 661 left without ever starting the form - 3.4x the 196 who started and then abandoned. Of the 258 visits that started, 62 finished: 24% completion. A visit that starts the form converts at about 8x the site average, so both pools are worth real money: lifting completion from 24% to 30% at current volume adds roughly 15 leads a month with zero extra ad spend, and converting even a tenth of the never-starters into starters is worth about as much again.",
+      "Seeing a price in the route price-checker is where visits go to die: of 162 visits that saw an estimate in the baseline month, 146 (90%) did nothing at all afterward - no further page, no form, no capture - and only 5 continued to the quote page. This is specifically a price-checker finding: nearly all measured estimates come from that tool. The quote form also shows prices but does not yet emit this event, so its own price moment is not measured yet; instrumentation for that ships with the next form release. The Aug 13 estimate-moment redesign places a lock-this-price handoff exactly here; the early-read section below tracks whether it moves.",
       "Where a visit enters matters. Visits entering on the homepage convert at 5.8%, entries straight to the quote page at 3.6%, and entries to the price-checker tool at 0.6% despite being about a quarter of all traffic.",
       "The ship-vs-drive calculator is engagement, not funnel: people cycle it repeatedly and then leave (0.4% eventual conversion once a visit is in it). Fine as content; it should hand off harder to the quote form.",
       "Corridor pages have started to register: 27 tracked visits this month (up from 13), converting at rates comparable to the quote page, though the sample is still small. Early sign the search-ranking fixes shipped Aug 10 are working; worth a proper read next month.",
+      "Early read on the August changes (four days of data - direction only, no verdicts): the redesigned form is completing at 27% vs 24% on the old form, a gap well inside the noise at this sample size. More useful already: the new field-level telemetry names where people stop - the vehicle-type step is the most common last touch before abandoning, ZIP validation errors fired 7 times, and the captcha expired on 3 visits mid-form. Those are the first three targets for the next form release.",
     ],
     caveats: [
       "Descriptive, not causal. People who ask for a price were already hotter or colder on their own; the model ranks where attention and drop-off live, it cannot prove that changing a page changes outcomes.",
       "Phone calls are invisible here. A visitor who sees a price and dials the number counts as an exit. With roughly 30 calls a month against 57 tracked web conversions, this could soften the price-moment finding. Call records started capturing the caller's page on Aug 10; because call volume is thin, that re-verification needs 4 to 6 weeks of data, around mid-September.",
       "10 of 67 web leads this month could not be matched to a tracked visit (very fast submissions or lost signals), so conversion probabilities are floors.",
       "This refresh includes about one day of the redesigned form released Aug 12 (fewer fields, friction telemetry), far too little to move any number here; the next refresh will read the new form separately. A handful of internal test submissions also sit in the form-start pool as non-completions, slightly understating completion.",
-      "The original Aug 10 run's window contained only about 19 days of collected data versus a full 30 here, so raw visit counts between the two runs are not a traffic trend. The rates, which is what this study is about, moved barely at all: completion 22.2% to 22.0%, price-moment exits 87.2% to 87.0%.",
+      "Event collection began Jul 23, so any window opening earlier holds fewer data days than calendar days; raw visit counts between runs are not a traffic trend. The rates, which is what this study is about, have been stable across three reads (completion 22.2% / 22.0% / 24.0% under progressively corrected accounting).",
+      "The Aug 18 restatement changed bookkeeping, not data: earlier versions of this page mixed step-to-step transition counts into totals, so its counts did not reconcile with each other (an external audit caught it). Every count now shares one per-visit definition and reconciles by construction. The restated rates land within about two points of the originals.",
+      "One of our own verification visits (Aug 18, checking the price-checker handoff live) is in the data as a price-checker session that continued to the quote form; future reads should remember it inflates that tiny pool by one.",
     ],
     informed: [
       "The Aug 12 form release: removed the last-name field and the plan-selection step, corrected the pricing copy to promise exactly what the process delivers, and added field-level drop-off telemetry so the next read shows which fields lose people.",
       "A redesigned quote flow (asking for delivery timing before showing a price) is specified for a five-week A/B test once a baseline accrues on the new telemetry.",
-      "The estimate-moment redesign: a stronger lock-this-price handoff belongs exactly where 87% currently walk away.",
+      "The estimate-moment redesign, shipped Aug 13 and verified working end-to-end Aug 18: a lock-this-price handoff with the route and vehicle carried over, placed exactly where 90% currently walk away.",
       "Confirmed the research-traffic campaign's pause from the paid-media side: its landing tool converts 0.6% of entries.",
       "Corridor-page re-read scheduled now that traffic is arriving after the search fixes.",
     ],
@@ -84,7 +298,7 @@ export const STUDIES: Study[] = [
       { label: "Just saw a price", value: 0.4, display: "0.4%" },
     ],
     barCaption:
-      "Chance a visit eventually becomes a lead, given where it is right now. Descriptive of where converting visits pass through, not a ranking of page value.",
+      "MODEL ESTIMATES (Aug 13 run), not raw conversion rates: the model's view of a visit's chance of eventually becoming a lead from each state, looking one step at a time. Raw rates differ (homepage entries convert at 5.8% raw; the model shows 1.6% here because it forgets history). The form leads by construction — it is the last step — so the useful comparison is among the states before it, and the useful question is how fast a visit gets from one of them into the form.",
     sections: [
       {
         title: "How visits become journeys",
@@ -121,14 +335,15 @@ export const STUDIES: Study[] = [
             ["Using ship-vs-drive", "155", "0.4%"],
           ],
         },
-        note: "Reaching the form is the watershed: nothing else comes close to its 19.7%. Read this table as a description of where converting visits pass through, not a ranking of what each page is worth: homepage entries convert at 5.8% while the homepage state shows 1.6%, because the model only looks one step at a time and misses history. Judge pages by how well they move people toward the form.",
+        note: "These are MODEL ESTIMATES from the Aug 13 run — the model's one-step view, not raw page conversion rates. The form's 19.7% is arithmetic, not insight — it is the last step before the lead, so of course it leads the table. What the table is good for is sizing the two rates that actually decide lead volume, and they multiply: REACH (919 quote-page visits produced 258 form starts — 28.1%, restated Aug 18; the table's 913/254 are the Aug 13 model run's counts, within 2% of the same thing) times COMPLETION (24.0% of starters finish) lands near the quote page's modeled 5.7%. Those are the only two numbers on this page worth optimizing; every other row is geography, not a scoreboard. Reach is the larger prize today because the pool is bigger — 661 visits reached the quote page and never started. And beware reading the rest as page value: homepage entries convert at 5.8% raw while the homepage state shows 1.6% here, because the model looks one step at a time and forgets history.",
       },
       {
-        title: "The quote path in numbers",
+        title: "The quote path in numbers (restated Aug 18 — every line reconciles)",
         bullets: [
-          "Pre-form loss, the bigger pool: 615 visits left the quote page this month without starting the form; only 27.8% of quote-page departures go into the form.",
-          "Post-start loss: of 245 visits that started the form, 167 abandoned (about two-thirds of starters). Completion is 22%, unchanged from the Aug 10 read. The captcha and field count remain the suspects; the field-level telemetry now live will name the exact fields.",
-          "The price cliff: 87.0% of visits exit immediately after the price checker renders an estimate, and only 2 of 160 estimate-viewing visits converted. Today the moment after the price is a dead end; it should be the strongest ask on the site.",
+          "919 visits reached the quote page in the baseline month (Jul 14 – Aug 14).",
+          "258 of them started the form (28.1%), which means 661 never started — the pre-form pool, by subtraction.",
+          "62 of the 258 starters finished (24.0%), which means 196 abandoned — the post-start pool, by subtraction. The captcha and field count were the suspects; the field-level telemetry now live is naming exact fields (see the early read below).",
+          "The price cliff: 146 of 162 visits that saw a price-checker estimate (90%) did nothing afterward, and only 5 continued to the quote page. Today the moment after the price is a dead end; the Aug 13 redesign puts the strongest ask on the site exactly there.",
         ],
       },
       {
@@ -144,6 +359,17 @@ export const STUDIES: Study[] = [
           "The pass-through table's authority was softened: it describes where converting visits travel, it does not rank page value.",
           "What the study drove since Aug 10: the Aug 12 form release (fewer fields, honest price copy, field-level drop-off telemetry) and the specification of a five-week quote-flow test.",
         ],
+      },
+      {
+        title: "Early read, Aug 18 — how the August changes are tracking",
+        body: "Two changes shipped mid-August: the redesigned quote form (Aug 12) and the price-checker fix-plus-redesign (Aug 13 — the tool's get-a-quote buttons had been sending visitors to an EMPTY form since launch because of mismatched link parameters, now fixed, plus a prominent lock-this-price block under every estimate). Four days of data is enough to check direction and plumbing, not to declare results.",
+        bullets: [
+          "New form vs old, completion: 27% (20 of 74 starts) vs 24% (55 of 225). Right direction, but the gap is well inside the noise at this sample size — no call yet.",
+          "Where the new form loses people (first field-level read, 54 abandoned visits): the vehicle-type step is the most common last touch before giving up (13 visits), ZIP entry drew 7 validation errors, and the captcha expired mid-form 3 times. Concrete, fixable, and exactly what this telemetry was added to find.",
+          "Price-checker handoff: 0 of 18 post-fix estimate visits continued to the quote page, against a 3% pre-fix baseline. Eighteen visits can't distinguish 0% from 15%, so before reading anything into it we verified the mechanics live on Aug 18: ran a real route, clicked the new block, and the quote form arrived with route and vehicle correctly pre-filled. The plumbing works; the behavioral question needs roughly a month of estimate traffic (~150 visits) for a real answer.",
+          "Overall funnel, post-change window: 26% of quote-page visits started the form (vs 28% baseline) and 32% of starters finished (vs 24%) — both consistent with no change at this sample size. Next scheduled reads: price-checker handoff mid-September alongside the call-page re-read; form completion when the new form has ~200 starts.",
+        ],
+        note: "Everything in this section is deliberately phrased as an early read. The window is four days and it spans a weekend, so weekday-heavy baselines are not directly comparable. This section will be replaced by measured results at the next refresh.",
       },
     ],
   },
