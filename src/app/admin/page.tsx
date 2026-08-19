@@ -49,6 +49,8 @@ import { computeRevenueLive } from "@/lib/admin/revenueLive";
 import { RevenueSection } from "./RevenueSection";
 import { computeCallsLive } from "@/lib/admin/callsLive";
 import { UnloggedCallsQueue } from "./UnloggedCallsQueue";
+import { computeOpsLive } from "@/lib/admin/opsLive";
+import { OpsBlocks } from "./OpsBlocks";
 import { LeadPulse } from "@/components/admin/LeadPulse";
 import {
   ACCOUNT_PHASE,
@@ -855,6 +857,10 @@ export default async function AdminReportPage({
   });
   const callsLive = await computeCallsLive().catch((err) => {
     console.error("[admin] computeCallsLive failed", err);
+    return null;
+  });
+  const opsLive = await computeOpsLive().catch((err) => {
+    console.error("[admin] computeOpsLive failed", err);
     return null;
   });
 
@@ -3664,7 +3670,7 @@ export default async function AdminReportPage({
         <>
           {view === "overview" && <Overview />}
           {view === "acquisition" && (<><Acquisition /><RevenueSection data={revenueLive} /></>)}
-          {view === "sales" && (<><Sales /><UnloggedCallsQueue data={callsLive} /></>)}
+          {view === "sales" && (<><Sales /><UnloggedCallsQueue data={callsLive} /><OpsBlocks data={opsLive} /></>)}
           {view === "lanes" && <Lanes />}
           {view === "behavior" && <Behavior />}
           {view === "business" && <Business />}
