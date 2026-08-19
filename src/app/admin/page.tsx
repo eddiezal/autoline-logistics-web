@@ -45,6 +45,8 @@ import { dedupeLeads, normalizePhoneKey, normalizeEmailKey } from "@/lib/leads/i
 import { computeDecisionsLive, reviewDueEntries } from "@/lib/admin/activeDecisions";
 import { DECISION_REGISTRY } from "@/lib/admin/decisionRegistry";
 import { ActiveDecisionsStrip } from "./ActiveDecisionsStrip";
+import { computeRevenueLive } from "@/lib/admin/revenueLive";
+import { RevenueSection } from "./RevenueSection";
 import { LeadPulse } from "@/components/admin/LeadPulse";
 import {
   ACCOUNT_PHASE,
@@ -845,6 +847,10 @@ export default async function AdminReportPage({
     console.error("[admin] computeDecisionsLive failed", err);
     return null;
   });
+  const revenueLive = await computeRevenueLive().catch((err) => {
+    console.error("[admin] computeRevenueLive failed", err);
+    return null;
+  });
 
   /* ── Operational conditions (feed the decision queue) ── */
   const formsNoEstimate = forms.filter((r) => r.price === null);
@@ -1438,6 +1444,13 @@ export default async function AdminReportPage({
             to older cohorts){feeRecorded7Cents > 0 ? <> · {money(feeRecorded7Cents / 100)} booked broker fee recorded</> : null}.
             The book stands at <strong>{money(orders.reduce((s, o) => s + o.deposit, 0))} fees · {orders.length} bookings since March</strong>
             {ordersImportedAt ? ` (as of ${fmtDay(ordersImportedAt)})` : ""}.
+            {revenueLive?.totalPaidSpend ? (
+              <>
+                {" "}Mature-cohort paid web leads banked{" "}
+                <strong>{"$" + Math.round((revenueLive.totalsPaid.matureFeeNet / revenueLive.totalPaidSpend) * 100)} net per $100 spent</strong>{" "}
+                (cohort through {revenueLive.matureCutoff.toLocaleDateString("en-US", { timeZone: "America/Los_Angeles", month: "short", day: "numeric" })} · advances daily · a floor — phone bookings aren&apos;t click-attributable yet). Detail in Acquisition →
+              </>
+            ) : null}
           </div>
         </section>
 
@@ -3644,7 +3657,7 @@ export default async function AdminReportPage({
       ) : (
         <>
           {view === "overview" && <Overview />}
-          {view === "acquisition" && <Acquisition />}
+          {view === "acquisition" && (<><Acquisition /><RevenueSection data={revenueLive} /></>)}
           {view === "sales" && <Sales />}
           {view === "lanes" && <Lanes />}
           {view === "behavior" && <Behavior />}
