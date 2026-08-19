@@ -1,8 +1,14 @@
 /**
- * Unlogged-calls queue — shared OBJECTIVE classification (2026-08-19).
+ * Unmatched-calls queue — shared OBJECTIVE classification (2026-08-19).
+ *
+ * Terminology (v2.1): UNMATCHED = "no automated CRM match" — not "no CRM
+ * trace"/"unlogged". Human review can find the caller was an existing
+ * customer on another number; the automated match failed, not the CRM
+ * relationship. The exported function keeps the name `unloggedCalls` for API
+ * stability; renaming it would churn both callers for zero behavior change.
  *
  * This module carries only the parts of the call cross-check that need no
- * provisional thresholds: a call is UNLOGGED when it ran ≥60s (the
+ * provisional thresholds: a call is UNMATCHED when it ran ≥60s (the
  * conversions definition, ratified 8/5), was not spam, and the caller's
  * number matches no CRM record or web lead created BEFORE the call nor any
  * CRM record created within 72h AFTER it. Objective facts only — the chase /

@@ -7,6 +7,7 @@
  */
 import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
+import { isCallLabelKey, UNMATCHED_TAXONOMY_VERSION, type LatestCallLabel } from "@/lib/admin/callLabelTaxonomy";
 // @ts-ignore — plain-JS shared module (no declarations by design).
 import { phoneKey, unloggedCalls, CALLS_COVERAGE_START } from "@/lib/admin/callQueue.mjs";
 
@@ -17,12 +18,44 @@ export interface UnloggedCall {
   campaign: string | null;
   source: string | null;
   timelineUrl: string | null;
+  /** Latest human label event, if Eddie has reviewed this call. Labels
+   *  ANNOTATE — a labeled row never leaves `unlogged` (denominator rule). */
+  latestLabel: LatestCallLabel | null;
 }
 export interface CallsLive {
   unlogged: UnloggedCall[];
   totalRealCalls: number;
   coverageStart: string;
   mirrorStart: string;
+  /** true when the queue computed but the label fetch failed — the UI shows
+   *  rows unlabeled with an explicit note, never silently label-free. */
+  labelsUnavailable: boolean;
+}
+
+/** Latest label event per call from the append-only `call_label_events`
+ *  collection (written by src/app/admin/labelActions.ts — see its header for
+ *  why the store is flat). Latest labeledAt wins; older events remain as the
+ *  audit trail and are simply skipped here. */
+async function fetchLatestLabels(db: ReturnType<typeof getAdminDb>): Promise<Map<string, LatestCallLabel>> {
+  const snap = await db.collection("call_label_events").orderBy("labeledAt", "asc").get();
+  const latest = new Map<string, LatestCallLabel>();
+  for (const doc of snap.docs) {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    const d: any = doc.data();
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+    if (d.taxonomyVersion !== UNMATCHED_TAXONOMY_VERSION) continue;
+    if (typeof d.callId !== "string" || !isCallLabelKey(d.label)) continue;
+    const at = d.labeledAt?.toDate?.();
+    latest.set(d.callId, {
+      key: d.label,
+      labeledBy: typeof d.labeledBy === "string" ? d.labeledBy : "?",
+      labeledAtISO: at instanceof Date ? at.toISOString() : "",
+      note: typeof d.note === "string" && d.note ? d.note : null,
+      spanishNotServed: d.spanishNotServed === true,
+      relatedRecordId: typeof d.relatedRecordId === "string" && d.relatedRecordId ? d.relatedRecordId : null,
+    });
+  }
+  return latest;
 }
 
 const MIRROR_START = new Date("2026-07-08T00:00:00-07:00");
@@ -104,9 +137,21 @@ export async function computeCallsLive(): Promise<CallsLive | null> {
       webByPhone.get(key)!.push(at);
     }
 
-    const unlogged = unloggedCalls({ calls, crmByPhone, webByPhone });
+    const rows = unloggedCalls({ calls, crmByPhone, webByPhone }) as Omit<UnloggedCall, "latestLabel">[];
+
+    /* ---- human labels (annotate only; failure here never hides the queue) ---- */
+    let labels = new Map<string, LatestCallLabel>();
+    let labelsUnavailable = false;
+    try {
+      labels = await fetchLatestLabels(db);
+    } catch (err) {
+      console.error("[callsLive] label fetch failed — rendering unlabeled", err);
+      labelsUnavailable = true;
+    }
+    const unlogged: UnloggedCall[] = rows.map((r) => ({ ...r, latestLabel: labels.get(r.id) ?? null }));
+
     const totalRealCalls = calls.filter((c) => !c.spam && c.durationSec >= 60).length;
-    return { unlogged, totalRealCalls, coverageStart: CALLS_COVERAGE_START, mirrorStart: "2026-07-08" };
+    return { unlogged, totalRealCalls, coverageStart: CALLS_COVERAGE_START, mirrorStart: "2026-07-08", labelsUnavailable };
   } catch (err) {
     console.error("[callsLive] computation failed", err);
     return null;
