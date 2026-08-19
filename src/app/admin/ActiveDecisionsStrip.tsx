@@ -41,6 +41,8 @@ const CALL_READ = new Date("2026-09-14T00:00:00-07:00"); // Aug 10 + 5 weeks
 interface CardModel {
   slug: string;
   name: string;
+  /** Human name for the heartbeat line. */
+  display: string;
   /** Sort key: projected gate-cross time (ms). Crossed gates sort first. */
   etaMs: number;
   etaLabel: string | null;
@@ -92,7 +94,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
       const crossed = starts >= reg.exposure.gate;
       cards.push({
         slug: reg.slug,
-        name: "FORM R1",
+        name: "FORM R1", display: "Form R1",
         etaMs: e.ms, etaLabel: e.label,
         numMain: pct !== null ? `${pct.toFixed(1)}%` : "—",
         numSub: "vs 24.4% bar",
@@ -131,7 +133,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
       const early = n < (reg.meter?.unlockN ?? 50);
       cards.push({
         slug: reg.slug,
-        name: "PC HANDOFF",
+        name: "PC HANDOFF", display: "PC handoff",
         etaMs: e.ms, etaLabel: e.label,
         numMain: `${k} / ${n}`,
         numSub: early ? null : `${pct.toFixed(1)}%`,
@@ -163,7 +165,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
       const weeks = live?.callWeeks ?? reg.exposure.current;
       cards.push({
         slug: reg.slug,
-        name: "CALL-PAGE CAPTURE",
+        name: "CALL-PAGE CAPTURE", display: "Call-page capture",
         etaMs: CALL_READ.getTime(),
         etaLabel: "~Sep 14",
         numMain: "reading pending",
@@ -183,7 +185,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
     if (reg) {
       cards.push({
         slug: reg.slug,
-        name: "CORRIDOR PAGES",
+        name: "CORRIDOR PAGES", display: "Corridor pages",
         etaMs: new Date("2026-09-13T00:00:00-07:00").getTime(),
         etaLabel: "monthly",
         numMain: "27",
@@ -222,7 +224,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
             <span style={{ color: "var(--color-gray-200)" }}>·</span>
             <span>
               <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".8px", color: MUTED }}>NEXT DECISION</span>{" "}
-              <b style={{ color: INK }}>{next.name.charAt(0) + next.name.slice(1).toLowerCase()} · {next.etaLabel}</b>
+              <b style={{ color: INK }}>{next.display} · {next.etaLabel}</b>
             </span>
           </>
         )}
