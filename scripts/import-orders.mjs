@@ -3,9 +3,17 @@
  *
  * Feeds the /admin Business Baseline card + Business view. Idempotent:
  * documents are keyed by order_id, so re-running with a newer export
- * upserts rather than duplicates. Timestamps in the CSV are Pacific
- * local (ProABD display TZ pending Kacy's confirmation) and stored as
- * naive PT via an explicit -07:00 offset.
+ * upserts rather than duplicates.
+ *
+ * TIMEZONE (corrected 2026-08-19): ProABD datetimes are EASTERN, not
+ * Pacific — measured 2026-08-17 via id-linked calibration against our own
+ * createLead records (-3.00h median, 0.00h spread; see
+ * scripts/lib/proabd-time.mjs and the fixed prod mirror in
+ * src/lib/proabd/shipment-sync.ts). This script guessed Pacific from its
+ * creation until today, putting every order timestamp three hours late —
+ * enough to move late-evening bookings onto the wrong calendar day.
+ * Re-running a full import with this fix silently corrects historical
+ * docs (idempotent upsert).
  *
  * Usage: node scripts/import-orders.mjs "../orders-import-jul2026.csv"
  * (CSV lives at the AutoExpress folder root, OUTSIDE this repo, on purpose —
@@ -59,8 +67,14 @@ const idx = Object.fromEntries(header.map((h, i) => [h.trim(), i]));
 const need = ["order_id", "email", "order_created", "price", "deposit"];
 for (const k of need) if (!(k in idx)) { console.error(`CSV missing column: ${k}`); process.exit(1); }
 
-/** CSV datetimes are Pacific local; July offset is -07:00. Good enough for daily/monthly grouping. */
-const pt = (s) => (s ? Timestamp.fromDate(new Date(`${s}-07:00`)) : null);
+import { parseProabdDate } from "./lib/proabd-time.mjs";
+
+/** CSV datetimes are ProABD-Eastern wall clock (see header). */
+const pt = (s) => {
+  if (!s) return null;
+  const d = parseProabdDate(s);
+  return d && !Number.isNaN(d.getTime()) ? Timestamp.fromDate(d) : null;
+};
 const val = (r, k) => (idx[k] != null ? (r[idx[k]] ?? "").trim() : "");
 
 let written = 0;
