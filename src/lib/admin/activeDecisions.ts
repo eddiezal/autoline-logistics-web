@@ -97,6 +97,14 @@ export async function computeDecisionsLive(): Promise<DecisionsLive> {
       const arr = sessions.get(key);
       if (arr) arr.push(e); else sessions.set(key, [e]);
     }
+    // Known internal test sessions — excluded from every metric here. Must
+    // stay in lockstep with KNOWN_TEST_SESSIONS in
+    // scripts/behavior-journey-early-read.mjs. Currently: the 2026-08-18
+    // 08:47 PT browser verification of the PC->quote prefill (the registry's
+    // "discount one internal verification visit" note, now mechanical).
+    for (const k of [
+      "640dd30b-1aa2-4855-9e57-1f4fc4557d78|751954f9-5329-48f8-8abb-fac64336a4ec",
+    ]) sessions.delete(k);
 
     let starts = 0, completed = 0, pcSessions = 0, pcToQuote = 0;
     for (const evs of sessions.values()) {

@@ -130,13 +130,15 @@ const leadsRaw = leadSnap.docs.map((d) => {
 const isTest = (l) => /test|zaldivar|example\.com/.test(l.email);
 const testN = leadsRaw.filter(isTest).length;
 let leads = leadsRaw.filter((l) => !isTest(l));
-// Fold double-submits: same vid within 10 minutes.
+// Fold double-submits: same vid within 10 minutes. Dropped ones are KEPT in
+// foldsDropped so the QC section can reconcile lead_persisted vs completed.
 leads.sort((a, b) => a.at - b.at);
 const folded = [];
+const foldsDropped = [];
 const lastByVid = new Map();
 for (const l of leads) {
   const prev = l.vid ? lastByVid.get(l.vid) : null;
-  if (prev && l.at - prev < 10 * 60_000) continue;
+  if (prev && l.at - prev < 10 * 60_000) { foldsDropped.push(l); continue; }
   folded.push(l);
   if (l.vid) lastByVid.set(l.vid, l.at);
 }
@@ -144,13 +146,33 @@ console.log(`  ${leadsRaw.length} leads → ${testN} test excluded, ${leads.leng
 leads = folded;
 
 /* ---------------- sessions ---------------- */
-const sessions = new Map(); // key → {events:[], vid}
+/** Sessions KNOWN to be internal tests (e.g. the 8/14 browser verification of
+ *  the PC→quote prefill, which otherwise counts as a real handoff). Excluded
+ *  from ALL metrics here — and the same list must be mirrored in
+ *  src/lib/admin/activeDecisions.ts so the dashboard meter agrees. Whenever
+ *  this list changes, add a dated annotation to the registry entry naming
+ *  what was excluded and why. Keys exactly as printed by the "handoff
+ *  session fingerprints" block below ("vid|sid"). */
+const KNOWN_TEST_SESSIONS = new Set([
+  // 2026-08-18 08:47 PT — Claude browser verification of the PC→quote prefill
+  // (driven from Eddie's Chrome; the registry's pc-estimate-moment note
+  // "discount one internal verification visit (Aug 18)" refers to this).
+  // Excluded 2026-08-19; mirrored in src/lib/admin/activeDecisions.ts.
+  "640dd30b-1aa2-4855-9e57-1f4fc4557d78|751954f9-5329-48f8-8abb-fac64336a4ec",
+]);
+
+const sessions = new Map(); // key → {events:[], vid, key}
 for (const e of events) {
   if (!e.vid) continue;
   const key = `${e.vid}|${e.sid ?? "nosid:" + (e.day ?? dayPT(e.ts))}`;
   let s = sessions.get(key);
-  if (!s) sessions.set(key, (s = { vid: e.vid, events: [] }));
+  if (!s) sessions.set(key, (s = { vid: e.vid, key, events: [] }));
   s.events.push(e);
+}
+let excludedTests = 0;
+for (const key of KNOWN_TEST_SESSIONS) if (sessions.delete(key)) excludedTests++;
+if (KNOWN_TEST_SESSIONS.size) {
+  console.log(`  known test sessions excluded from ALL metrics: ${excludedTests} (of ${KNOWN_TEST_SESSIONS.size} listed)`);
 }
 
 // Price-checker paths derived from the data itself (estimate_shown with
@@ -224,6 +246,13 @@ for (const [name, a, b] of windows) {
   console.log(`    → quote page after est. ${hand.length}  = ${pct(hand.length, pc.length)}  CI ${wilson(hand.length, pc.length)}   [baseline ${BASE.handoff.label}]`);
   console.log(`    → started form after    ${handStart.length}  = ${pct(handStart.length, pc.length)}`);
   console.log(`    session ends on estimate ${estExit.length}  = ${pct(estExit.length, pc.length)}   [baseline ~${BASE.estExit.label}]`);
+  if (hand.length && hand.length <= 5) {
+    console.log(`    handoff session fingerprints (verify none are internal tests → KNOWN_TEST_SESSIONS):`);
+    for (const s of hand) {
+      const entry = s.events[0];
+      console.log(`      key ${s.key} · started ${entry.ts.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })} PT · ${s.events.length} events · entry ${entry.path ?? "?"}`);
+    }
+  }
 }
 
 /* ---------------- form-version split (all data, stamp-defined) ---------------- */
@@ -297,7 +326,32 @@ console.log(`  event days ${daysList[0]}…${daysList[daysList.length - 1]}, day
 const low = daysList.filter((d) => byDay.get(d) < 30);
 console.log(`  days under 30 events (possible collection trouble): ${low.length ? low.map((d) => `${d}(${byDay.get(d)})`).join(", ") : "none"}`);
 const persistedPost = [...sessions.values()].filter((s) => inWin(s, SPLIT, NOW) && s.persisted).length;
-console.log(`  cross-check: POST sessions with lead_persisted event = ${persistedPost} (should sit near POST completed count)`);
+const compPost = [...sessions.values()].filter((s) => inWin(s, SPLIT, NOW) && s.started && s.converted).length;
+const foldsPost = foldsDropped.filter((l) => l.at >= SPLIT && l.at <= NOW).length;
+const qcGap = persistedPost - compPost - foldsPost;
+console.log(`  reconciliation (POST): lead_persisted sessions ${persistedPost} = completed ${compPost} + double-submits folded ${foldsPost}` +
+  (qcGap === 0 ? "  ✓ reconciles exactly"
+   : `  ⚠ GAP ${qcGap} — decomposing:`));
+if (qcGap !== 0) {
+  // Explain each persisted-but-not-completed POST session instead of hand-waving.
+  const testByVid = new Map();
+  for (const l of leadsRaw) {
+    if (!isTest(l) || !l.vid || !l.at) continue;
+    if (!testByVid.has(l.vid)) testByVid.set(l.vid, []);
+    testByVid.get(l.vid).push(l.at);
+  }
+  let testExplained = 0, noStart = 0, other = 0;
+  for (const s of [...sessions.values()].filter((x) => inWin(x, SPLIT, NOW) && x.persisted && !(x.started && x.converted))) {
+    const t0 = s.events[0].ts, t1 = s.events[s.events.length - 1].ts;
+    const joinsTestLead = (testByVid.get(s.vid) ?? []).some((at) => at >= t0 && at - t1 < 35 * 60_000);
+    if (joinsTestLead) testExplained++;
+    else if (!s.started) noStart++;
+    else other++;
+  }
+  console.log(`    ${testExplained} test-lead session(s) (persisted, lead excluded by the test filter — correct behavior)`);
+  console.log(`    ${noStart} persisted without a form_started event (instrumentation edge — form_started missed?)`);
+  console.log(`    ${other} genuinely unexplained` + (other ? "  ⚠ investigate before treating funnel as canonical" : ""));
+}
 if (VERBOSE) {
   const types = new Map();
   for (const e of events) types.set(e.type, (types.get(e.type) ?? 0) + 1);
