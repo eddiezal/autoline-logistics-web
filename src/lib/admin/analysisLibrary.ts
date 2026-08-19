@@ -305,6 +305,84 @@ export const DRAFT_STUDIES: Study[] = [
 
 export const STUDIES: Study[] = [
   {
+    slug: "conversion-signal-integrity",
+    title: "Conversion signal integrity — what Google is told, and what it hears",
+    date: "2026-08-19",
+    headline:
+      "Two plumbing faults found in one evening: engagement events were bidding-eligible “conversions,” and 6 of 11 uploaded backfill conversions vanished inside Google despite per-row success. Both are now ledgered; one is fixed, one is escalated.",
+    status: "Living doc — updated as discoveries land · gate 2 of 6 closed",
+    question:
+      "Before any automated bidding is trusted with budget: does the conversion signal this account sends Google actually mean “a lead,” and does what we upload actually arrive?",
+    method:
+      "Read-only API audit of every conversion action's configuration and daily counts on both date bases (scripts/check-oci-status.mjs), cross-checked against the raw upload files and Google's own per-row upload results in the Ads UI. Every change that followed was registered in the intervention ledger BEFORE execution and verified by re-reading the API afterward.",
+    findings: [
+      "Three engagement events — deep blog reads, corridor page views, portal sign-ins — were configured as PRIMARY conversions, meaning they counted in the “Conversions” column and were eligible to steer automated bidding. Volume was small (8 events Jul 1–Aug 18 vs ~25 web leads in August alone) but definitionally wrong: a blog read is not a lead. All three were demoted to observation-only on Aug 18, effective Aug 19.",
+      "The offline-conversion pipeline drops data silently: across three backfill upload files, 11 distinct conversions were accepted — zero errors, every row individually marked Successful in Google's own results — yet only 5 appear in any report, on either date basis. The gap (6) matches the original support claim exactly. Escalated to Google with execution IDs; no client-side explanation survives the evidence.",
+      "Bookings cannot be the training signal at current scale: roughly 3 paid bookings a month, with half arriving within a day but a tail out to ~20 days. Google's own guidance wants ~15 events/month at the chosen funnel stage with a short delay — and value corrections uploaded more than ~7 days after a conversion update reporting, not the bidder's learning.",
+    ],
+    caveats: [
+      "The engagement-event contamination was small in this window; the fix matters for what the bidder would have learned later, not for restating past performance. Comparisons of the “Conversions” column that cross Aug 19 cross a definition change (and a GA4 wiring change on Aug 14) — both are ledgered.",
+      "The cause of the 6 uncounted conversions is not yet known — candidates (invalid-traffic filtering, click-attribution failure) are only visible inside Google. Until their answer arrives, “uploads pass diagnostics” cannot be treated as proof of delivery.",
+      "Nothing in this study measures ad performance; it measures whether the measurement itself can be trusted. No bidding-strategy change has been made or scheduled.",
+    ],
+    informed: [
+      "The Value-Based Bidding Readiness plan: a six-gate decision tree that must complete before any campaign moves to conversion- or value-based automated bidding. Gate 2 (this cleanup) closed Aug 18; the remaining gates run through the Aug 24 fee/cancellation definition, the Aug 26 Spanish-campaign maturity read, and a funnel-volume audit that picks the deepest timely signal — possibly “qualified lead,” not raw lead and not booking.",
+    ],
+    sections: [
+      {
+        title: "How this surfaced",
+        body: "A routine claim to Google support (“6 backfill conversions missing”) got a checklist reply: check your columns, check dedup, wait longer. Instead of adjudicating in the UI, we queried the account's configuration and upload diagnostics directly — and the columns question turned out to be the small one. The same configuration pull that answered it showed engagement events sitting in the primary conversion set, days before a planned move toward automated bidding that would have optimized toward them.",
+      },
+      {
+        title: "The missing six, precisely",
+        table: {
+          headers: ["Upload file", "Rows (distinct clicks)", "Google's per-row result", "Counted in reports"],
+          rows: [
+            ["backfill-week1 (Aug 7 leads)", "3", "3/3 Successful, 0 errors", "2"],
+            ["backfill-csp-outage (Aug 11 leads)", "2", "2/2 Successful, 0 errors", "2"],
+            ["backfill-conversions (Aug 10 leads)", "6", "6/6 Successful, 0 errors", "1"],
+            ["re-uploads of the same 6 (×4)", "6 each", "“6 successful” each", "no-ops (correct dedup)"],
+          ],
+        },
+        note: "No overlap between files — 11 distinct ad clicks uploaded once each, plus retries that correctly changed nothing. Accepted with zero errors, 5 counted. Escalation is with Google; their answer is a readiness input for any future value pipeline, because daily value uploads would ride this exact path.",
+      },
+      {
+        title: "Discoveries log",
+        table: {
+          headers: ["Date", "Discovery", "Status"],
+          rows: [
+            ["Aug 18", "Upload diagnostics: every UI-uploaded event accepted, zero rejected — the missing conversions are not a rejection problem", "Closed"],
+            ["Aug 18", "11 uploaded / 5 counted / 0 errors — six conversions vanish between acceptance and reporting", "Escalated to Google (execution IDs on file)"],
+            ["Aug 18", "blog_read_deep, corridor_view, lead_portal_signin configured as primary (bidding-eligible)", "Fixed — demoted to secondary, effective Aug 19 (ledger: conversion-primary-cleanup-20260818)"],
+            ["Aug 18", "CallRail's uploaded call conversions vs the ads-native 60s+ call action — possible double counting across the two call paths", "Open — resolve before any bidding transition"],
+            ["Aug 24", "Canonical fee / cancellation definition (with Ben) — defines what a conversion is worth", "Pending"],
+            ["Aug 26", "Spanish-campaign maturity read — demand quality vs service capacity vs immature evidence", "Pending"],
+          ],
+        },
+        note: "This table is the living part of the study — new rows are appended as gates close or Google responds; existing rows are never rewritten.",
+      },
+      {
+        title: "The plan — six gates before any automated bidding",
+        bullets: [
+          "1 · Freeze the canonical revenue definition (Aug 24, with Ben): what a booked fee is worth after cancellations, decided once, used everywhere.",
+          "2 · ✓ DONE — conversion hygiene: engagement events demoted to observation-only, so “Conversions” means leads and real calls, and nothing else can define success for a bidder.",
+          "3 · Spanish-campaign maturity read (Aug 26): if Spanish-language demand exists but can't be served, the fix is operational, not algorithmic — no bidder repairs a staffing gap.",
+          "4 · Funnel-volume audit: measure trailing-30-day volume and delay for lead → qualified/serviceable → booked, from our own CRM event stream. The deepest stage with ~15+ timely events a month becomes the optimization signal.",
+          "5 · Choose the value architecture: optimize to a qualified-lead event if it has the volume; otherwise keep the lead event and assign expected economic value at lead time (route- and estimate-based, recalibrated only from matured cohorts). Late restatements validate — they do not train.",
+          "6 · Readiness checklist, then a preregistered switch: identifiers on ~all paid leads, daily uploads passing diagnostics, genuinely differentiated values, one to two clean conversion cycles of history — and only then a bidding change, with its own registered thresholds.",
+        ],
+      },
+      {
+        title: "Method notes",
+        bullets: [
+          "Configuration and counts read via the Google Ads API (GAQL), not the UI — both date bases checked, because offline conversions report on the ad-click date, not the upload date.",
+          "Upload ground truth is Google's own per-execution results (Changes / Successful / Errors per row), captured with execution IDs.",
+          "The demotion was executed by script with a dry-run, exact-name matching, and post-change verification; the intervention ledger entry was registered before execution and carries the confounder notes.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "behavioral-journey",
     title: "How visitors actually move through the site",
     date: "2026-08-18",
