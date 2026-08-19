@@ -50,6 +50,25 @@ export interface Verdict {
   evidence: string;
 }
 
+/**
+ * Threshold meter configuration for the Overview band. The color grammar is a
+ * dashboard-wide rule (adopted 2026-08-19): color describes the CURRENT VALUE'S
+ * RELATIONSHIP TO THE PRECOMMITTED RULE, never anyone's judgment —
+ *   gray  = accumulating evidence (n below unlockN)
+ *   green = currently clears the keep/validate mark
+ *   amber = between the failure and success marks (inconclusive region)
+ *   red   = currently below the failure mark
+ * The bar always shows the actual position; only its COLOR is withheld until
+ * the sample can carry a verdict.
+ */
+export interface MeterSpec {
+  /** Axis maximum, in the metric's own percent units. */
+  scaleMax: number;
+  /** Sample size below which the fill stays gray. */
+  unlockN: number;
+  marks: { value: number; label: string; kind: "revert" | "keep" | "baseline" | "target" }[];
+}
+
 export interface RegistryEntry {
   slug: string;
   title: string;
@@ -74,7 +93,21 @@ export interface RegistryEntry {
   studySlug?: string;
   /** Anything the reader must discount when the review runs. */
   notes?: string;
+  /** Overview band: primary cards get the full four-question treatment. */
+  primary?: boolean;
+  /** Overview band: threshold meter, when the rule is numeric. */
+  meter?: MeterSpec;
 }
+
+/**
+ * CURRENT FOCUS — exactly one at a time, on purpose. If a new optimization is
+ * proposed, the dashboard itself makes the tradeoff visible: is it important
+ * enough to displace this? (Adopted 2026-08-19.)
+ */
+export const FOCUS = {
+  title: "Quote-path conversion",
+  line: "72% of quote-page visitors never start the form · R1 accruing · PC handoff accruing · R2 queued",
+} as const;
 
 export const DECISION_REGISTRY: RegistryEntry[] = [
   {
@@ -92,6 +125,15 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
       "Review at 200 new-form starts. KEEP if completion ≥ 24.4% (no worse than baseline). REVERT only if < 20%. Either way, ITERATE on the top-3 observed abandonment concentrations from the field telemetry (currently: vehicle-type step, ZIP validation errors, captcha expiry).",
     status: "accruing",
     studySlug: "behavioral-journey",
+    primary: true,
+    meter: {
+      scaleMax: 35,
+      unlockN: 50,
+      marks: [
+        { value: 20, label: "revert 20%", kind: "revert" },
+        { value: 24.4, label: "keep 24.4%", kind: "keep" },
+      ],
+    },
   },
   {
     slug: "pc-estimate-moment",
@@ -109,6 +151,15 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
     status: "accruing",
     studySlug: "behavioral-journey",
     notes: "Discount one internal verification visit (Aug 18) from the numerator at review time.",
+    primary: true,
+    meter: {
+      scaleMax: 10,
+      unlockN: 50,
+      marks: [
+        { value: 3.1, label: "baseline 3.1%", kind: "baseline" },
+        { value: 6.2, label: "validate ≥6.2%", kind: "target" },
+      ],
+    },
   },
   {
     slug: "call-landing-read",

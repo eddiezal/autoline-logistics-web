@@ -42,6 +42,9 @@ import { fetchAdsStats, type AdsResult } from "@/lib/googleAds/client";
 import { classifyRecord, type RecordOutcome } from "@/lib/proabd/statuses";
 import { roadMilesBetweenZips } from "@/lib/geo/zip3";
 import { dedupeLeads, normalizePhoneKey, normalizeEmailKey } from "@/lib/leads/identity";
+import { computeDecisionsLive, reviewDueEntries } from "@/lib/admin/activeDecisions";
+import { DECISION_REGISTRY } from "@/lib/admin/decisionRegistry";
+import { ActiveDecisionsStrip } from "./ActiveDecisionsStrip";
 import { LeadPulse } from "@/components/admin/LeadPulse";
 import {
   ACCOUNT_PHASE,
@@ -834,6 +837,15 @@ export default async function AdminReportPage({
   // Status/event match coverage among synced forms.
   const statusMatched = syncOk.filter((r) => abdStates.has(r.abdId));
 
+  /* ── Active Decisions strip + review-due detection (2026-08-19). Live
+   *    exposure is best-effort: a failed computation returns null and the
+   *    strip renders the registry's hand-stamped values with their asOf
+   *    visible — stale is shown as stale, never disguised as fresh. ── */
+  const decisionsLive = await computeDecisionsLive().catch((err) => {
+    console.error("[admin] computeDecisionsLive failed", err);
+    return null;
+  });
+
   /* ── Operational conditions (feed the decision queue) ── */
   const formsNoEstimate = forms.filter((r) => r.price === null);
   // 8/13 split (data-driven): the 10 historical no-price forms were exactly
@@ -914,6 +926,19 @@ export default async function AdminReportPage({
     warn: boolean;
   }
   const queue: QueueItem[] = [];
+  // Registry gate-crossings join THIS queue — one canonical action surface.
+  for (const due of reviewDueEntries(decisionsLive, DECISION_REGISTRY)) {
+    queue.push({
+      title: `${due.title} — evidence gate crossed`,
+      body: `${Math.round(due.current)} / ${due.gate} ${due.unit} accrued and no verdict recorded. The threshold decided WHEN to read; read it and record the verdict in the Decision Registry (/admin/analysis).`,
+      impact: "an experiment is running past its precommitted review point",
+      confidence: "high",
+      owner: "Eddie",
+      tab: "",
+      score: 95,
+      warn: true,
+    });
+  }
   if (syncFailed.length > 0)
     queue.push({
       title: `${syncFailed.length} form lead${syncFailed.length === 1 ? "" : "s"} never reached ProABD`,
@@ -1368,6 +1393,11 @@ export default async function AdminReportPage({
 
         {/* Lead Pulse — the canonical summary; lives ONLY on Overview (spec: claude/lead-pulse-dashboard-spec.md) */}
         <LeadPulse />
+
+        {/* Active Decisions strip — what we're learning. Charts answer "how
+            are we doing"; this answers "what are we changing and when will we
+            know". Registry: decisionRegistry.ts (v3 design, 2026-08-19). */}
+        <ActiveDecisionsStrip live={decisionsLive} />
 
         {/* 3 · decision queue */}
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
