@@ -1,0 +1,66 @@
+{
+  "id": "pacing-trim-s2-s4-20260817",
+  "executed_at": "2026-08-17T08:30:00-07:00",
+  "effective_date": "2026-08-18",
+  "entity": "account:google-ads",
+  "lever": "budget",
+  "from": "S2 $25/day + S4 $30/day (account set budgets $250/day)",
+  "to": "AS EXECUTED: S4 $30/day to $15/day only. S2 deliberately LEFT at $25/day (month tracking under budget; the entry's own below-$6,600 over-correction rule). Account set budgets $235/day, not the $220/day originally planned. See 2026-08-27 amendment.",
+  "executed_by": "eddie (manual UI edit; budget dialog resists automation — verify by reload)",
+  "registration_type": "prospective",
+  "snapshot_quality": "captured",
+  "evidence_source": "live admin dashboard Sat 2026-08-15 15:09 PT (Lead Pulse weekly table) + weekday-count arithmetic; S2 diagnosis in claude/s2-near-me-diagnosis-2026-08-13.md",
+  "hypothesis": "August is projecting ~$7,428 against Ben's $7,000 ceiling — the pre-registered ceiling guardrail fires. Trimming the two weakest campaigns lands the month at ~$6,950 without touching S3 (whose exposure-based probe needs its budget held to 8/24) and without touching S5 or Brand (the two producers). Expected: total spend falls ~$30/day of set budget; lead volume falls by less than proportionally, because S2 and S4 are the account's least productive dollars.",
+  "max_exposure_usd": 0,
+  "snapshot": {
+    "window": "2026-08-03..2026-08-15 (August month-to-date; Aug 1-2 were a dark weekend)",
+    "spend_usd": 3537,
+    "serving_days": 10,
+    "clicks": null,
+    "conversions": null,
+    "conversion_action_set": "n/a — this is a spend-pacing correction, not a conversion judgement",
+    "attribution_basis": "n/a (account spend)",
+    "data_source": "admin Lead Pulse weekly spend (Ads API): Aug 3 week $1,746 + Aug 10 week-to-date $1,791",
+    "settlement_status": "spend settles same-day; no restatement risk on cost",
+    "notes": "Run rate $353.70/serving day over 21 August serving days → projection $7,428, ~$428 over ceiling. Root cause is NOT the 8/12 S3 raise: Aug 3-7 ran $349/day and Aug 10-14 ran $358/day, i.e. essentially flat across the raise. The real error is the weekday-overdelivery assumption — declared 1.3x, actual 1.41x. Remaining allowance $3,463 over 11 serving days = $315/serving day → set budgets ~$223/day. S2 -$15 and S4 -$15 gives $220/day → projected ~$6,950. Monday 8/17 is a PARTIAL-effect day (edit lands ~8:30 AM after serving begins), so the first clean day at the new budgets is Tue 8/18; the projection above treats 8/17 as roughly half-effect."
+  },
+  "review_gates": {
+    "earliest_review_date": "2026-08-24",
+    "minimum_serving_days": 5,
+    "minimum_post_change_spend_usd": 0,
+    "settlement_lag_days": 0,
+    "note": "Pacing correction, not an economic probe. The gate is enough serving days to re-measure the run rate, not exposure to conversions."
+  },
+  "decision_rule": {
+    "prose": "At the 8/24 pacing re-check, recompute the month-end projection on the post-trim run rate. Land $6,800-$7,000: hold. Above $7,000: trim again, next lever S2 to pause (see S2 diagnosis — it buys generic queries at ~4x S3's price). Below $6,600: we over-corrected and are wasting approved envelope — restore S4 first, never S2.",
+    "primary_metric": "projected_august_spend_vs_7000_ceiling",
+    "continue_if": {
+      "projection_usd_gte": 6800,
+      "projection_usd_lte": 7000
+    },
+    "revert_if": {
+      "projection_usd_lt": 6600
+    },
+    "guardrails": {
+      "s3_budget_untouched": "S3 stays at $75 through the 8/24 exposure gate — protecting the probe is why this lever was chosen",
+      "s5_and_brand_untouched": "the two producers are not funded down for pacing",
+      "lead_volume": "blended weekly leads must not fall more than proportionally to the spend reduction; if they do, the cut hit productive traffic and reverses"
+    }
+  },
+  "confounders": [
+    "intervention:s3-budget-raise-20260812 — this changes account composition inside S3's evaluation window; S3's own budget is untouched but account-level spend mix changes. Recorded as a reconsideration review on that entry.",
+    "S2's cut is simultaneously a pacing lever and a response to the S2 diagnosis (generic close-variant cannibalization) — the two motives are entangled and this entry must not later be read as clean evidence for either."
+  ],
+  "amendments": [
+    {
+      "date": "2026-08-15",
+      "what": "The ceiling pre-commitment (registered 8/13) named S3 as the designated lever if the August projection exceeded $7,000. Firing it as written would have ended the S3 probe four serving days into an eight-day exposure gate. Designated lever changed to S2 + S4, which are defensible on merit independently of pacing.",
+      "where_documented": "claude/pacing-check-2026-08-15.md; reconsideration review on s3-budget-raise-20260812; claude/intervention-ledger-guide.md two-pathway rule"
+    },
+    {
+      "date": "2026-08-27",
+      "what": "TWO corrections at Firestore registration time. (1) LATE REGISTRATION: this entry was drafted and file-registered 2026-08-17 but the Firestore create step never ran; created 2026-08-27 when the 8/24 review found no document to append to. The prospective registration_type refers to the 8/17 file, honestly disclosed here. (2) PARTIAL EXECUTION: only the S4 half was executed. Eddie deliberately left S2 at $25/day because August was tracking under budget — consistent with this entry's own revert_if branch (below $6,600 = over-correction). The 'to' field above was corrected to as-executed BEFORE creation so the immutable record is accurate; the original plan text is preserved in this amendment: planned was S2 $25→$10 + S4 $30→$15 (set budgets $220/day). The 8/27 checkpoint review (verdict: hold, projection ~$6,750-6,800 in-band) covers the pacing outcome.",
+      "where_documented": "ledger/review-pacing-trim-20260827.json; claude/spend-expansion-proposal-2026-08-27.md"
+    }
+  ]
+}

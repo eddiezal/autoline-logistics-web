@@ -1,0 +1,25 @@
+{
+  "review_type": "checkpoint",
+  "data_cutoff": "2026-08-27",
+  "gates_satisfied": {
+    "earliest_review_date": "2026-08-24 passed (review run 2026-08-27, 3 days late)",
+    "minimum_serving_days": "met (5+ serving days post-trim)"
+  },
+  "findings": "EXECUTION CORRECTION, disclosed first: the registered change (S2 $25 to $10, S4 $30 to $15) was only HALF executed. S4 was trimmed to $15/day and remains there. S2 was deliberately LEFT AT $25/day by Eddie because the month was tracking under budget - which is precisely the entry's own re-restore condition ('below $6,600 = over-corrected'). The account set-budget total is therefore $235/day, not the $220/day the entry recorded. This review corrects the record; the original entry stays immutable per ledger doctrine. PACING RE-CHECK (the 8/24 rule): August 1-27 actual spend $6,136.44 (Ads UI, 64 primary conversions, $95.88/conv). Remaining serving days: Fri 8/28 and Mon 8/31 only (weekends dark by schedule), at ~$300-315/weekday recent run rate. Month-end projection: approximately $6,750-6,800, inside (or marginally below) the $6,800-7,000 hold band. Per the rule: HOLD - no further trim, no restore beyond current settings. The S2-at-$25 outcome lands the month roughly where the band intended; had S2 been cut to $10, August would have projected ~$6,400-6,500, below the entry's own $6,600 over-correction floor.",
+  "verdict": "continue",
+  "data": {
+    "window": "2026-08-01..2026-08-27",
+    "spend_usd": 6136.44,
+    "conversions": 64,
+    "cost_per_conversion_usd": 95.88,
+    "clicks": 1785,
+    "set_budgets_actual_per_day": 235,
+    "set_budgets_registered_per_day": 220,
+    "projection_month_end_usd": "6750-6800",
+    "hold_band_usd": "6800-7000",
+    "s2_actual_budget": "25/day (trim not applied, deliberate)",
+    "s4_actual_budget": "15/day (trim applied as registered)",
+    "remaining_serving_days": "2 (Fri 8/28, Mon 8/31; weekends dark)",
+    "note_for_future_reads": "Any analysis assuming S2 at $10/day after 8/17 is wrong; S2 served at $25/day throughout. S2 Aug 13-27: $236.94 spend, 3 conversions, $78.98/conv, >90% rank-lost, bid-strategy-limited - the pause/fold question (board #1) is unchanged by this correction."
+  }
+}

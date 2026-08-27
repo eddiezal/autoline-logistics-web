@@ -1,0 +1,51 @@
+{
+  "id": "qualified-shadow-uploads-20260827",
+  "executed_at": "2026-08-27T13:30:00-07:00",
+  "effective_date": "2026-08-27",
+  "entity": "tracking:google-ads-conversion-goals",
+  "lever": "tracking",
+  "from": "no offline qualified-lead signal in Google Ads; conversion actions cover form submits, calls, and the backfill action only",
+  "to": "new SECONDARY conversion action 'Qualified lead (priced)' (customers/8519808841/conversionActions/7736301731; UPLOAD_CLICKS, category QUALIFIED_LEAD, ONE_PER_CLICK, 90d lookback) receiving daily shadow uploads of the Q1 'priced' event for website leads, with provisional per-lead values (Transport.Deposit at quote, else min($400, $150+9%*price))",
+  "executed_by": "eddie (asked for the build in chat 8/27); action created via scripts/upload-qualified-shadow.mjs --setup --apply; uploads via --csv through the UI Data manager flow (Ads-API OCI blocked since 2026-06-15 platform cutover)",
+  "registration_type": "prospective",
+  "snapshot_quality": "captured",
+  "evidence_source": "scripts/funnel-volume-audit.mjs run 2026-08-27 (Gate 4: Q1 priced = 79/30d website, sustained 12-24/wk, median delay 0.0d, 100% <=7d); first window census 8/27: 11 qualified, 11/11 with GCLID, values $150-$595; claude/value-bidding-readiness-spec.md",
+  "hypothesis": "A daily 'qualified lead' offline conversion stream at the Q1 (priced) stage, run as a SECONDARY action, has ZERO bidding effect by construction while banking (1) upload-pipeline diagnostics history, (2) the 1-2 clean conversion cycles the readiness checklist requires before any value-bidding transition, and (3) fresh evidence for the open OCI reporting ticket (accepted-vs-reported on the same pipeline). The action must NEVER be promoted to primary before the Gate 1 value-definition freeze and a preregistered transition entry; the script aborts if it finds the action primary.",
+  "max_exposure_usd": 0,
+  "snapshot": {
+    "window": "shadow begins 2026-08-27",
+    "spend_usd": null,
+    "conversions": null,
+    "clicks": null,
+    "serving_days": null,
+    "conversion_action_set": "primary set unchanged: lead_form_submit, Phone Calls from Ads (60s+), First Time Phone Call, Web lead (backfill). New action is SECONDARY.",
+    "attribution_basis": "GCLID click conversions, conversion time = mirror received_at of first priced event (PT)",
+    "data_source": "proabd_webhook_events + leads (Firestore) -> CSV -> Google Ads UI Data manager",
+    "settlement_status": "OCI ticket 3-2641000040864 open (accepted-but-unreported rows on this same pipeline)",
+    "notes": "Values are PROVISIONAL pending the Gate 1 fee/cancellation definition freeze (Ben, targeted Sep 2). Shadow status makes them observational, not load-bearing. First upload file: qualified-shadow-20260827.csv, 11 rows, values $150-$595. Coverage: 11/11 window GCLID; the all-time 'cpc-but-no-gclid 42' count is NOT the >=95% denominator (includes pre-integration era) - formal coverage check pending."
+  },
+  "review_gates": {
+    "earliest_review_date": "2026-09-03",
+    "minimum_serving_days": 0,
+    "minimum_post_change_spend_usd": 0,
+    "settlement_lag_days": 0,
+    "note": "One week of daily uploads: verify accepted rows appear in reporting (all_conversions for the action), values differentiated, no duplicates. If accepted-but-unreported recurs here, add to ticket 3-2641000040864 as systematic evidence."
+  },
+  "decision_rule": {
+    "prose": "Shadow continues indefinitely at zero bidding risk. There is no economic revert condition. HARD RULE: promotion to primary (or any value-bidding transition using this action) requires its own prospective registry entry AND the Gate 1 definition freeze AND the Gate 6 checklist - never a silent flip. If the weekly re-run of funnel-volume-audit shows the Q1 distribution shifting after agents learn uploads exist (Goodhart check), pause and investigate before continuing.",
+    "primary_metric": "accepted_vs_reported_rows_weekly",
+    "continue_if": { "action_primary_for_goal": false },
+    "revert_if": {},
+    "guardrails": {
+      "never_primary_without_registry_entry": "script-enforced abort if action found primary",
+      "goodhart_watch": "weekly funnel-volume-audit re-run during shadow; watch Q1 volume/delay distribution for behaviour shifts",
+      "pipeline_dependency": "uploads ride the UI Data manager flow until a Data Manager API integration is built; Ads-API path is platform-blocked (2026-06-15 cutover)"
+    }
+  },
+  "confounders": [
+    "OCI ticket 3-2641000040864: same pipeline previously accepted 11 rows and reported 5 - shadow counts in reporting may understate accepted uploads",
+    "review-suppression week (Mesa review, replied 8/26) depresses website lead volume in the first shadow days",
+    "budget sprint + S5 Max Conversions transition (both pending) will change website lead volume mid-shadow - volume changes are expected and are NOT a shadow-pipeline signal"
+  ],
+  "amendments": []
+}

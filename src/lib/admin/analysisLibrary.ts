@@ -307,10 +307,10 @@ export const STUDIES: Study[] = [
   {
     slug: "conversion-signal-integrity",
     title: "Conversion signal integrity — what Google is told, and what it hears",
-    date: "2026-08-19",
+    date: "2026-08-27",
     headline:
-      "Two plumbing faults found in one evening: engagement events were bidding-eligible “conversions,” and 6 of 11 uploaded backfill conversions vanished inside Google despite per-row success. Both are now ledgered; one is fixed, one is escalated.",
-    status: "Living doc — updated as discoveries land · gate 2 of 6 closed",
+      "Two plumbing faults found and ledgered (engagement events were bidding-eligible “conversions”; 6 of 11 uploaded conversions vanished inside Google despite per-row success) — and the audit that followed has now chosen the account's future optimization signal: a same-day “qualified lead” event running at 5x Google's volume bar, streaming in shadow since Aug 27.",
+    status: "Living doc — updated as discoveries land · gates 2 and 4 of 6 closed · shadow stream live",
     question:
       "Before any automated bidding is trusted with budget: does the conversion signal this account sends Google actually mean “a lead,” and does what we upload actually arrive?",
     method:
@@ -319,14 +319,21 @@ export const STUDIES: Study[] = [
       "Three engagement events — deep blog reads, corridor page views, portal sign-ins — were configured as PRIMARY conversions, meaning they counted in the “Conversions” column and were eligible to steer automated bidding. Volume was small (8 events Jul 1–Aug 18 vs ~25 web leads in August alone) but definitionally wrong: a blog read is not a lead. All three were demoted to observation-only on Aug 18, effective Aug 19.",
       "The offline-conversion pipeline drops data silently: across three backfill upload files, 11 distinct conversions were accepted — zero errors, every row individually marked Successful in Google's own results — yet only 5 appear in any report, on either date basis. The gap (6) matches the original support claim exactly. Escalated to Google with execution IDs; no client-side explanation survives the evidence.",
       "Bookings cannot be the training signal at current scale: roughly 3 paid bookings a month, with half arriving within a day but a tail out to ~20 days. Google's own guidance wants ~15 events/month at the chosen funnel stage with a short delay — and value corrections uploaded more than ~7 days after a conversion update reporting, not the bidder's learning.",
+      "The funnel-volume audit (gate 4, run Aug 27) found the signal that DOES work: “a quote was built” — an agent engaged the lead and priced it. On website leads it ran 79 events in the trailing 30 days (five times the ~15 bar, sustained at 12–24 a week), resolving same-day (90% within 3 days, 100% within 7). It is fully machine-derived from the CRM event stream — no human-applied “qualified” checkbox to drift or game — and the ~35% of leads that never get priced are exactly the unserviceable tail a bidder should be steered away from.",
+      "Two tempting alternatives failed the same audit. Bookings technically touched 15/30d — but on a single 8-booking week (weekly series 0, 0, 0, 1, 4, 8, 1, 1), a spike, not a signal. And “any status change” had the most volume of all yet was disqualified outright: most status-moved website records end in a LOST status, so optimizing to it would train Google to find leads agents can quickly mark dead.",
+      "A shadow conversion stream went live Aug 27: a SECONDARY action (“Qualified lead (priced)”) that never feeds bidding, carrying per-lead dollar values from the quote itself. First window: 11 qualified leads, all 11 linked to their ad click, values $150–$595 — genuinely differentiated, no flat placeholders. Its job is to bank months of delivery diagnostics before any bidding change is considered.",
+      "One platform discovery made en route: Google closed the Ads-API offline-conversion upload path on June 15, 2026 (migrated to a new Data Manager API; only accounts already using the old path kept legacy access). Our first API upload attempt returned “not allowlisted” on all rows — caught from our own failed upload, not a changelog. The proven file-upload flow remains the path until a Data Manager integration is built.",
     ],
     caveats: [
       "The engagement-event contamination was small in this window; the fix matters for what the bidder would have learned later, not for restating past performance. Comparisons of the “Conversions” column that cross Aug 19 cross a definition change (and a GA4 wiring change on Aug 14) — both are ledgered.",
-      "The cause of the 6 uncounted conversions is not yet known — candidates (invalid-traffic filtering, click-attribution failure) are only visible inside Google. Until their answer arrives, “uploads pass diagnostics” cannot be treated as proof of delivery.",
-      "Nothing in this study measures ad performance; it measures whether the measurement itself can be trusted. No bidding-strategy change has been made or scheduled.",
+      "The cause of the 6 uncounted conversions is not yet known — candidates (invalid-traffic filtering, click-attribution failure) are only visible inside Google. Until their answer arrives, “uploads pass diagnostics” cannot be treated as proof of delivery. Escalation advanced Aug 27: evidence recording shared with Google's team and the affected action confirmed by name; awaiting their backend trace. The shadow stream doubles as a repeatable probe — if its rows are also accepted but unreported, that is systematic evidence, not a one-off.",
+      "The shadow stream's dollar values are provisional: the quote-time value formula is a stand-in until the canonical fee-and-cancellation definition is frozen with ownership (targeted for the Sep 2 definitions freeze). Shadow status is what makes that safe — the values are observational, not load-bearing.",
+      "Click-identifier coverage looked complete in the first shadow window (11 of 11), but the formal ≥95% coverage check on the full paid-lead population has not run yet; the small sample is encouraging, not conclusive.",
+      "Nothing in this study measures ad performance; it measures whether the measurement itself can be trusted. No bidding-strategy change has been made. One count-based transition (the Spanish campaign to conversion-optimized bidding) has PASSED its volume gate but is deliberately sequenced behind the pending budget decision, so the two changes never land on the same campaign at once.",
     ],
     informed: [
-      "The Value-Based Bidding Readiness plan: a six-gate decision tree that must complete before any campaign moves to conversion- or value-based automated bidding. Gate 2 (this cleanup) closed Aug 18; the remaining gates run through the Aug 24 fee/cancellation definition, the Aug 26 Spanish-campaign maturity read, and a funnel-volume audit that picks the deepest timely signal — possibly “qualified lead,” not raw lead and not booking.",
+      "The Value-Based Bidding Readiness plan: a six-gate decision tree that must complete before any campaign moves to conversion- or value-based automated bidding. Gate 2 (conversion hygiene) closed Aug 18; gate 4 (the funnel-volume audit) closed Aug 27 and chose “qualified lead = priced” as the signal; gate 5's architecture is provisionally selected and running in shadow. Still open: the fee/cancellation definition freeze (Sep 2), delivery-pipeline trust (the Google escalation), and the formal identifier-coverage check.",
+      "The decision to sequence, not stack, the two Spanish-campaign changes: its move to conversion-optimized bidding passed the volume gate on Aug 27 (33 primaries/30d against a 15 bar) but waits until roughly two weeks after the pending budget change, so the bidder never starts learning mid-change or on a review-suppressed week.",
     ],
     sections: [
       {
@@ -355,8 +362,14 @@ export const STUDIES: Study[] = [
             ["Aug 18", "11 uploaded / 5 counted / 0 errors — six conversions vanish between acceptance and reporting", "Escalated to Google (execution IDs on file)"],
             ["Aug 18", "blog_read_deep, corridor_view, lead_portal_signin configured as primary (bidding-eligible)", "Fixed — demoted to secondary, effective Aug 19 (ledger: conversion-primary-cleanup-20260818)"],
             ["Aug 18", "CallRail's uploaded call conversions vs the ads-native 60s+ call action — possible double counting across the two call paths", "Open — resolve before any bidding transition"],
-            ["Aug 24", "Canonical fee / cancellation definition (with Ben) — defines what a conversion is worth", "Pending"],
+            ["Aug 24", "Canonical fee / cancellation definition (with Ben) — defines what a conversion is worth", "Pending — retargeted to the Sep 2 definitions freeze"],
             ["Aug 26", "Spanish-campaign maturity read — demand quality vs service capacity vs immature evidence", "Pending"],
+            ["Aug 27", "Spanish campaign cleared the volume gate for conversion-optimized bidding: 33 primaries/30d vs the 15 bar (was 10 on Aug 4)", "Passed — switch deliberately sequenced behind the pending budget decision"],
+            ["Aug 27", "Gate 4 funnel-volume audit: “priced” runs 79/30d on website leads, sustained, resolving same-day — chosen as the qualified-lead signal", "Closed — definition to be frozen before it ever feeds bidding"],
+            ["Aug 27", "“Booked” touched 15/30d on one spike week (0,0,0,1,4,8,1,1); “any status change” had the most volume but mostly ends in LOST statuses", "Closed — both rejected as training signals, reasons on record"],
+            ["Aug 27", "Google closed the Ads-API offline upload path on Jun 15, 2026 (Data Manager migration); our first API upload returned not-allowlisted on all rows", "Open — file-upload flow is the interim path; Data Manager API integration queued"],
+            ["Aug 27", "Shadow stream live: SECONDARY action “Qualified lead (priced)”, 11 conversions in the first window, 11/11 with click identifiers, values $150–$595", "Live — weekly accepted-vs-reported check; script aborts if the action is ever found promoted to primary"],
+            ["Aug 27", "Escalation advanced: evidence recording shared, affected action confirmed by name with Google's support team", "Awaiting Google's backend trace"],
           ],
         },
         note: "This table is the living part of the study — new rows are appended as gates close or Google responds; existing rows are never rewritten.",
@@ -364,12 +377,12 @@ export const STUDIES: Study[] = [
       {
         title: "The plan — six gates before any automated bidding",
         bullets: [
-          "1 · Freeze the canonical revenue definition (Aug 24, with Ben): what a booked fee is worth after cancellations, decided once, used everywhere.",
-          "2 · ✓ DONE — conversion hygiene: engagement events demoted to observation-only, so “Conversions” means leads and real calls, and nothing else can define success for a bidder.",
-          "3 · Spanish-campaign maturity read (Aug 26): if Spanish-language demand exists but can't be served, the fix is operational, not algorithmic — no bidder repairs a staffing gap.",
-          "4 · Funnel-volume audit: measure trailing-30-day volume and delay for lead → qualified/serviceable → booked, from our own CRM event stream. The deepest stage with ~15+ timely events a month becomes the optimization signal.",
-          "5 · Choose the value architecture: optimize to a qualified-lead event if it has the volume; otherwise keep the lead event and assign expected economic value at lead time (route- and estimate-based, recalibrated only from matured cohorts). Late restatements validate — they do not train.",
-          "6 · Readiness checklist, then a preregistered switch: identifiers on ~all paid leads, daily uploads passing diagnostics, genuinely differentiated values, one to two clean conversion cycles of history — and only then a bidding change, with its own registered thresholds.",
+          "1 · Freeze the canonical revenue definition (with Ben, targeted Sep 2): what a booked fee is worth after cancellations, decided once, used everywhere. Blocked on establishing a cancellation-recording rule first.",
+          "2 · ✓ DONE Aug 18 — conversion hygiene: engagement events demoted to observation-only, so “Conversions” means leads and real calls, and nothing else can define success for a bidder.",
+          "3 · Spanish-campaign maturity read: the volume half is answered (the campaign cleared its bidding gate Aug 27); the demand-quality-vs-service-capacity half stays open until the Spanish cohort matures.",
+          "4 · ✓ DONE Aug 27 — funnel-volume audit: “priced” (a quote was built) is the deepest stage clearing ~15+ timely events a month on website leads — 79 in 30 days, resolving same-day. Bookings and raw status changes both measured and rejected, with reasons.",
+          "5 · Value architecture provisionally chosen: the qualified-lead event has the volume, so it wins over lead-time value assignment. Now streaming in shadow with quote-derived values; the definition freezes formally before it ever becomes a bidding target. Late restatements validate — they do not train.",
+          "6 · Readiness checklist, then a preregistered switch: identifiers on ~all paid leads (first window 11/11; formal check pending), daily uploads passing diagnostics (blocked on the Google escalation), genuinely differentiated values (✓ by design, $150–$595 in the first window), one to two clean conversion cycles of history — and only then a bidding change, with its own registered thresholds.",
         ],
       },
       {

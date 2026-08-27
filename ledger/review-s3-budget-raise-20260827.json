@@ -1,0 +1,34 @@
+{
+  "review_type": "checkpoint",
+  "data_cutoff": "2026-08-27",
+  "gates_satisfied": {
+    "earliest_review_date": "2026-08-24 passed (review run 2026-08-27)",
+    "minimum_serving_days": "15 of 8 required (Aug 13-27, incl. partial 8/27)",
+    "minimum_post_change_spend_usd": "1110.28 of 650 required",
+    "settlement_lag_days": "PARTIAL: last 3 days (Aug 25-27) unsettled; restatements can only ADD conversions, so the continue verdict is robust to it"
+  },
+  "findings": "Post-change window Aug 13-27 (Ads UI, custom range, click-date basis): S3 spend $1,110.28, 389 clicks, $2.85 avg CPC, 8 primary conversions, $138.78/primary, 2.06% conv rate. Decision-time baseline (7/30-8/12): $1,289 spend, 4 primaries, $322.25/primary, 0.93% conv rate. Cost per primary roughly HALVED and conv rate roughly doubled post-raise, in a window that includes the review-suppression week (Aug 21-26, biases AGAINST S3) - the raise did not just buy more of the same, efficiency improved. Watch items: (1) invalid clicks 56 of 389 (14.4%) - elevated, Google credits them but the junk-click pressure on S3 terms continues from the 8/24-27 observation; (2) rank-lost IS still binding at 70.1% - the $6 training bid cap remains the designed next single lever, sequenced as its own change; (3) budget-lost IS now 26.4% - post-raise, S3 is beginning to press its new $75 cap too. Per the decision rule (3+ primaries): continue provisionally and evaluate bookings/fees - the fee-quality half (S3-attributed bookings and net fees via scripts/revenue-by-campaign.mjs) has NOT run yet and is required before any further S3 escalation.",
+  "verdict": "continue",
+  "data": {
+    "window": "2026-08-13..2026-08-27",
+    "spend_usd": 1110.28,
+    "conversions": 8,
+    "clicks": 389,
+    "serving_days": 15,
+    "cost_per_conversion_usd": 138.78,
+    "conversion_rate": 0.0206,
+    "avg_cpc_usd": 2.85,
+    "invalid_clicks": 56,
+    "search_lost_abs_top_is_budget": 0.2639,
+    "search_lost_top_is_rank": 0.7012,
+    "baseline_window": "2026-07-30..2026-08-12",
+    "baseline_spend_usd": 1289,
+    "baseline_conversions": 4,
+    "baseline_cost_per_conversion_usd": 322.25,
+    "confounders_in_window": [
+      "review-suppression week Aug 21-26 (Mesa 1-star live, resolved 8/26)",
+      "conversion-primary-cleanup effective 8/19 (Conversions column definition change mid-window; baseline window used OLD definition - direction of bias: baseline conversions slightly INFLATED by engagement actions, so the improvement is understated, not overstated)",
+      "price-promise language deploy 8/26 (site-side, same funnel)"
+    ]
+  }
+}
