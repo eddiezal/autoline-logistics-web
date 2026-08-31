@@ -476,7 +476,7 @@
           "eyebrow": "Promesa de Precio",
           "headline": "Usted elige la velocidad. Nosotros fijamos el precio.",
           "conditionLine": "Si nuestro costo sube después de cotizarle…",
-          "consequenceLine": "Ese es nuestro problema. Su factura no cambia.",
+          "consequenceLine": "Ese es nuestro problema. Ningún cambio sin avisarle primero.",
           "clarifier": "El precio se fija al confirmar ruta, vehículo, acceso de recogida y fechas.",
           "cta": "Ver la Promesa de Precio →"
         },
@@ -583,7 +583,7 @@
           "title": "Fije su precio.",
           "description": "Díganos de dónde sale, a dónde va, y qué está enviando. Solicite su precio fijo todo incluido en menos de un minuto — sin recargos sorpresa después.",
           "proof1": "Estimado al instante",
-          "proof2": "Cotización = factura final"
+          "proof2": "Sin precios sorpresa"
         },
         "pickup": {
           "label": "Paso 2",
@@ -667,7 +667,7 @@
       "title": "Fije su precio hoy.",
       "lead": "Escriba su origen, destino, y vehículo. Obtenga su estimado al instante y su precio fijo todo incluido dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. El precio queda fijado por 7 días, sin obligación hasta que reserve.",
       "button": "Obtenga su precio fijo",
-      "trustLine": "Estimado al instante · Cotización = factura final · Sin depósito para cotizar"
+      "trustLine": "Estimado al instante · Sin precios sorpresa · Sin depósito para cotizar"
     },
     "heroRouteFinder": {
       "title": "Obtenga su precio fijo.",
@@ -759,8 +759,8 @@
     },
     "tiers": {
       "eyebrow": "Elija su velocidad",
-      "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
-      "intro": "El precio escala con la urgencia. Sea cual sea el nivel que elija, la garantía es idéntica: el precio de reserva es el precio final.",
+      "title": "Tres niveles. La misma Promesa de Precio en los tres.",
+      "intro": "El precio escala con la urgencia. Sea cual sea el nivel que elija, la promesa es idéntica: ningún cambio de precio sin avisarle primero.",
       "cards": {
         "standby": {
           "tier": "En Espera",
@@ -785,7 +785,7 @@
     },
     "commitment": {
       "eyebrow": "La promesa en sí",
-      "headline": "El número en su confirmación de reserva es el número en su factura final.",
+      "headline": "El precio en su confirmación de reserva es el precio con el que trabajamos, y nunca cambia sin que usted lo escuche de nosotros primero.",
       "items": {
         "0": "Sin recargos después de la asignación",
         "1": "Sin llamadas de “el mercado cambió”",
@@ -799,7 +799,7 @@
       "items": {
         "0": {
           "q": "¿Qué pasa si un transportista quiere más dinero para llevar mi auto?",
-          "a": "Ese es nuestro problema, no el suyo. El precio que reservó es el precio que paga. Si un transportista quiere cobrar más, o buscamos otro transportista o absorbemos la diferencia. Su factura no cambia después de reservar."
+          "a": "Ese es nuestro problema a resolver primero. Volvemos a nuestra red para encontrar un transportista a su tarifa cotizada. En el caso poco común de que no podamos confirmarlo, se lo decimos antes de que algo cambie y usted decide: mantener la reserva, ajustar, o un reembolso completo de su depósito. Nunca un aumento sin avisar."
         },
         "1": {
           "q": "¿Qué incluye el precio fijo?",
@@ -819,7 +819,7 @@
         },
         "5": {
           "q": "¿Por qué otros corredores no hacen esto?",
-          "a": "La mayoría de los corredores operan con un modelo de subasta: publican su envío en un mercado de transportistas y aceptan la oferta ganadora. La cotización original es solo una suposición — cuando los costos reales salen más altos, usted paga la diferencia o su envío se queda atascado. Nosotros negociamos las tarifas con los transportistas por adelantado y absorbemos la variación de precio nosotros mismos. Es un modelo de negocio diferente, no una industria diferente."
+          "a": "La mayoría de los corredores operan con un modelo de subasta: publican su envío en un mercado de transportistas y aceptan la oferta ganadora. La cotización original es solo una suposición — cuando los costos reales salen más altos, usted paga la diferencia o su envío se queda atascado. Nosotros negociamos las tarifas por adelantado para que su cotización refleje el mercado de hoy, y si el mercado se mueve se lo decimos antes de que algo cambie, no después. Es un modelo de negocio diferente, no una industria diferente."
         },
         "6": {
           "q": "¿Cobran un depósito de reserva?",
@@ -1734,7 +1734,7 @@
       },
       "hero": {
         "eyebrow": "Corredores",
-        "title": "Cada corredor importante de EE. UU. La misma garantía de precio fijo.",
+        "title": "Cada corredor importante de EE. UU. La misma Promesa de Precio.",
         "description": "Sea que su envío cruce un océano o tres husos horarios, la promesa es la misma: la cotización es el contrato.",
         "cta": "¿No ve su ruta? Obtenga una cotización de todos modos →"
       },
@@ -1754,7 +1754,7 @@
         "cards": {
           "price": {
             "eyebrow": "Promesa de Precio",
-            "headline": "Cotización = factura final →"
+            "headline": "Sin precios sorpresa →"
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
@@ -2220,7 +2220,7 @@
       },
       "tiers": {
         "eyebrow": "Niveles de servicio",
-        "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
+        "title": "Tres niveles. La misma Promesa de Precio en los tres.",
         "description": "Elija el nivel de urgencia que se ajuste a su calendario. El precio en vivo viene a través de la herramienta de cotización — sacado de nuestra red verificada de transportistas en el momento que reserva.",
         "tiles": {
           "standby": {
@@ -2247,7 +2247,7 @@
         "cards": {
           "price": {
             "eyebrow": "Promesa de Precio",
-            "headline": "Cotización = factura final →"
+            "headline": "Sin precios sorpresa →"
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
@@ -2401,7 +2401,7 @@
       },
       "tiers": {
         "eyebrow": "Niveles de servicio",
-        "title": "Tres niveles. La misma garantía de precio fijo en los tres.",
+        "title": "Tres niveles. La misma Promesa de Precio en los tres.",
         "description": "Elija el nivel de urgencia que se ajuste a su calendario. El precio en vivo viene a través de la herramienta de cotización — sacado de nuestra red verificada de transportistas en el momento que reserva.",
         "tiles": {
           "standby": {
@@ -2428,7 +2428,7 @@
         "cards": {
           "price": {
             "eyebrow": "Promesa de Precio",
-            "headline": "Cotización = factura final →"
+            "headline": "Sin precios sorpresa →"
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
@@ -2509,7 +2509,7 @@
           "0": "Un viaje de ida de CA a TX cuesta de $400 a $600 en gasolina, mas 2 a 3 noches de hotel, comida, y poner 1,400 millas duras en su vehiculo. Sume el valor de 3 dias de su tiempo.",
           "1": "Una cotizacion de transporte fija a menudo queda por DEBAJO del costo total de manejar, y usted no pierde los 3 dias. Corremos este corredor a traves de nuestra flota familiar y nuestra red de transportistas socios verificados."
         },
-        "punchline": "La cotizacion fija que acepta al reservar es la factura final. Sin recargo de combustible. Sin aumentos sorpresa. Sin sorpresas de tarifas puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quien ahorra mas",
@@ -2548,7 +2548,7 @@
           },
           "2": {
             "q": "?Que significa 'precio fijo'?",
-            "a": "La cotizacion que acepta al reservar es la factura final. Sin recargo de combustible. Sin aumentos sorpresa. Sin tarifas ocultas puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           },
           "3": {
             "q": "?Hay cargos adicionales alguna vez?",
@@ -2556,7 +2556,7 @@
           },
           "4": {
             "q": "?Y si el precio cambia despues de reservar?",
-            "a": "No cambia. Nuestra Promesa de Precio. La cotizacion fija es lo que paga."
+            "a": "Nuestra Promesa de Precio: ningún cambio silencioso. Si alguna vez se necesita un ajuste antes del despacho, se lo decimos primero y usted elige: mantener, ajustar, o reembolsar su depósito."
           }
         }
       },
@@ -2590,7 +2590,7 @@
           "0": "Un viaje de ida de CA a FL cuesta $750-900 en gasolina, 4 noches de hotel, comida en el camino y 2,800 millas duras de autopista en su vehículo. Sume más de 40 horas al volante.",
           "1": "Una cotización fija de transporte de autos a menudo termina POR DEBAJO del costo total de conducir, y no pierde casi una semana. El tráfico de snowbirds y reubicaciones mantiene este corredor activo todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2637,7 +2637,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2662,7 +2662,7 @@
           "0": "Un viaje de ida de CA a NY cuesta $750-900 en gasolina, 4 noches de hotel, comida y 2,900 millas mayormente de interestatal con riesgo climático por las Rocosas y el Medio Oeste. Sume más de 45 horas detrás del parabrisas.",
           "1": "Una cotización fija de transporte de autos regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias de finanzas y tecnología de la costa este corren este corredor todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2709,7 +2709,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2734,7 +2734,7 @@
           "0": "Un viaje de ida de NY a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida, peajes y 1,200 millas de tráfico en I-95. Sume 18-20 horas al volante.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El volumen de snowbirds mantiene los precios competitivos todo el año, con demanda máxima de octubre a diciembre (sur) y abril a mayo (norte)."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2781,7 +2781,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           },
           "5": {
             "q": "¿Es más barato el Auto Train que enviar un auto de Nueva York a Florida?",
@@ -2820,7 +2820,7 @@
           "0": "Un viaje de ida de TX a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida y 1,200 millas de autopista I-10. Sume 18-20 horas al volante por Luisiana y Misisipi.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El tráfico de snowbirds de Houston y Dallas, las reubicaciones militares desde Fort Hood y Lackland, y las mudanzas familiares mantienen el corredor competitivo."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2867,7 +2867,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2892,7 +2892,7 @@
           "0": "Un viaje de ida de CA a GA cuesta $650-800 en gasolina, 3 noches de hotel, comida y 2,400 millas de interestatal sureña. Sume más de 35 horas al volante.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. El volumen tecnológico de Atlanta, las reubicaciones sureñas y los traslados universitarios mantienen el carril competitivo."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -2939,7 +2939,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
@@ -2964,7 +2964,7 @@
           "0": "Un viaje de ida de CA a NC cuesta $750-900 en gasolina, 3-4 noches de hotel, comida y 2,800 millas mayormente de interestatal sureña. Sume más de 40 horas al volante.",
           "1": "Una cotización fija de transporte de autos en este corredor regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias bancarias en Charlotte y tecnológicas en RTP corren este carril todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -3011,7 +3011,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
@@ -3036,7 +3036,7 @@
           "0": "Un viaje de ida de CA a IL cuesta $550-700 en gasolina, 2-3 noches de hotel, comida y 2,000 millas de autopista I-80 con sensibilidad climática por las Rocosas. Sume más de 30 horas al volante.",
           "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. Las transferencias tecnológicas y financieras al área metropolitana de Chicago, más las reubicaciones familiares del Medio Oeste, mantienen el carril activo todo el año."
         },
-        "punchline": "La cotización fija que acepta al reservar es la factura final. Sin recargo por combustible. Sin aumentos sorpresa. Sin tarifas ocultas de puerta a puerta."
+        "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
       "customers": {
         "eyebrow": "Quiénes ahorran más",
@@ -3083,7 +3083,7 @@
           },
           "4": {
             "q": "¿Qué significa 'precio fijo'?",
-            "a": "La cotización que acepta al reservar es la factura final. Sin recargo por combustible, sin aumentos sorpresa en ruta, sin tarifas ocultas de puerta a puerta. Nuestra Promesa de Precio."
+            "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
@@ -3298,7 +3298,7 @@
     "cta": {
       "eyebrow": "¿Listo para enviar?",
       "title": "Obtenga su precio fijo hoy.",
-      "lead": "Sin depósito para cotizar. El número que enviamos es el que paga — misma Promesa de Precio en los tres niveles.",
+      "lead": "Sin depósito para cotizar, sin tarifas ocultas y sin cambios silenciosos: la misma Promesa de Precio en los tres niveles.",
       "button": "Obtenga su precio fijo"
     },
     "tiers": {

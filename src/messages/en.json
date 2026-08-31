@@ -476,7 +476,7 @@
           "eyebrow": "Price Promise",
           "headline": "You pick the speed. We lock the price.",
           "conditionLine": "If our cost goes up after we quote you…",
-          "consequenceLine": "That's our problem. Your invoice doesn't change.",
+          "consequenceLine": "That's our problem. No changes without telling you first.",
           "clarifier": "Locked once your route, vehicle, pickup access, and timeline are confirmed.",
           "cta": "See the Price Promise →"
         },
@@ -583,7 +583,7 @@
           "title": "Lock your price.",
           "description": "Tell us where it's coming from, where it's going, and what you're shipping. Request your locked, all-in price in under a minute — no surprise upcharges later.",
           "proof1": "Instant estimate",
-          "proof2": "Price = final invoice"
+          "proof2": "No surprise pricing"
         },
         "pickup": {
           "label": "Step 2",
@@ -667,7 +667,7 @@
       "title": "Lock your price today.",
       "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then a locked all-in price within 1 business hour. Your named coordinator takes over from booking. The price stays locked for 7 days, no obligation until you book.",
       "button": "Get my locked price",
-      "trustLine": "Instant estimate · Price = final invoice · No deposit to quote"
+      "trustLine": "Instant estimate · No surprise pricing · No deposit to quote"
     },
     "heroRouteFinder": {
       "title": "Get your locked price.",
@@ -759,8 +759,8 @@
     },
     "tiers": {
       "eyebrow": "Pick your speed",
-      "title": "Three tiers. Same price-lock guarantee on all three.",
-      "intro": "Pricing scales with urgency. Whichever tier you pick, the guarantee is identical: the booking price is the final price.",
+      "title": "Three tiers. The same Price Promise on all three.",
+      "intro": "Pricing scales with urgency. Whichever tier you pick, the promise is identical: no silent changes to your price, ever.",
       "cards": {
         "standby": {
           "tier": "Standby",
@@ -785,7 +785,7 @@
     },
     "commitment": {
       "eyebrow": "The promise itself",
-      "headline": "The number on your booking confirmation is the number on your final invoice.",
+      "headline": "The price on your booking confirmation is the price we work from, and it never changes without you hearing from us first.",
       "items": {
         "0": "No post-assignment surcharges",
         "1": "No “the market shifted” calls",
@@ -799,7 +799,7 @@
       "items": {
         "0": {
           "q": "What if a carrier wants more money to take my car?",
-          "a": "That's our problem, not yours. The price you booked is the price you pay. If a carrier wants to charge more, we either find a different carrier or absorb the difference. Your invoice does not change after booking."
+          "a": "That's our problem to solve first. We go back to our network to find a carrier at your quoted rate. In the rare case we can't confirm one, we tell you before anything changes and you decide: keep the booking, adjust, or take a full refund of your deposit. No silent increases, ever."
         },
         "1": {
           "q": "What does the locked price include?",
@@ -819,7 +819,7 @@
         },
         "5": {
           "q": "Why don't other brokers do this?",
-          "a": "Most brokers operate on a bid model: they post your shipment to a carrier marketplace and accept whichever bid wins. The original quote is just a guess — when actual costs come in higher, you eat the difference or your shipment gets stuck. We pre-negotiate carrier rates and absorb price variance ourselves. It's a different business model, not a different industry."
+          "a": "Most brokers operate on a bid model: they post your shipment to a carrier marketplace and accept whichever bid wins. The original quote is just a guess — when actual costs come in higher, you eat the difference or your shipment gets stuck. We pre-negotiate carrier rates so your quote reflects today's market, and if the market moves we tell you before anything changes instead of after. It's a different business model, not a different industry."
         },
         "6": {
           "q": "Do you charge a booking deposit?",
@@ -1734,7 +1734,7 @@
       },
       "hero": {
         "eyebrow": "Corridors",
-        "title": "Every major US corridor. Same locked-price guarantee.",
+        "title": "Every major US corridor. The same Price Promise.",
         "description": "Whether your shipment crosses an ocean or three time zones, the promise is the same: the quote is the contract.",
         "cta": "Don't see your route? Get a quote anyway →"
       },
@@ -1754,7 +1754,7 @@
         "cards": {
           "price": {
             "eyebrow": "Price Promise",
-            "headline": "Quote = final invoice →"
+            "headline": "No surprise pricing →"
           },
           "damage": {
             "eyebrow": "Damage Promise",
@@ -2220,7 +2220,7 @@
       },
       "tiers": {
         "eyebrow": "Service tiers",
-        "title": "Three tiers. Same locked-price guarantee on all three.",
+        "title": "Three tiers. The same Price Promise on all three.",
         "description": "Pick the urgency level that fits your timeline. Live pricing comes through the quote tool — pulled from our verified carrier network at the moment you book.",
         "tiles": {
           "standby": {
@@ -2247,7 +2247,7 @@
         "cards": {
           "price": {
             "eyebrow": "Price Promise",
-            "headline": "Quote = final invoice →"
+            "headline": "No surprise pricing →"
           },
           "damage": {
             "eyebrow": "Damage Promise",
@@ -2401,7 +2401,7 @@
       },
       "tiers": {
         "eyebrow": "Service tiers",
-        "title": "Three tiers. Same locked-price guarantee on all three.",
+        "title": "Three tiers. The same Price Promise on all three.",
         "description": "Pick the urgency level that fits your timeline. Live pricing comes through the quote tool — pulled from our verified carrier network at the moment you book.",
         "tiles": {
           "standby": {
@@ -2428,7 +2428,7 @@
         "cards": {
           "price": {
             "eyebrow": "Price Promise",
-            "headline": "Quote = final invoice →"
+            "headline": "No surprise pricing →"
           },
           "damage": {
             "eyebrow": "Damage Promise",
@@ -2509,7 +2509,7 @@
           "0": "A one-way CA to TX trip costs $400-600 in gas, plus 2-3 hotel nights, food, and 1,400 hard freeway miles on your vehicle. Add the value of 3 days of your time.",
           "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose 3 days. We run this corridor through our family fleet at Auto Line Express and our vetted partner network."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2548,7 +2548,7 @@
           },
           "2": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           },
           "3": {
             "q": "Are there ever extra charges?",
@@ -2556,7 +2556,7 @@
           },
           "4": {
             "q": "What if the price changes after booking?",
-            "a": "It doesn't. Our Price Promise. The locked quote is what you pay."
+            "a": "Our Price Promise: no silent changes. If an adjustment is ever needed before dispatch, we tell you first and you choose: keep, adjust, or refund your deposit."
           }
         }
       },
@@ -2590,7 +2590,7 @@
           "0": "A one-way CA to FL drive runs $750-900 in gas, 4 hotel nights, food on the road, and 2,800 hard freeway miles on your vehicle. Add 40+ hours behind the wheel.",
           "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose almost a week. Snowbird and relocation traffic keeps this corridor moving year-round."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2637,7 +2637,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
@@ -2662,7 +2662,7 @@
           "0": "A one-way CA to NY drive runs $750-900 in gas, 4 hotel nights, food, and 2,900 miles of mostly interstate with weather risk through the Rockies and Midwest. Add 45+ hours of windshield time.",
           "1": "A locked auto-transport quote regularly beats the all-in cost of driving once you count hotels, food, and time off work. East-coast finance and tech transfers run this corridor year-round."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2709,7 +2709,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
@@ -2734,7 +2734,7 @@
           "0": "A one-way NY to FL drive runs $300-450 in gas, 1-2 hotel nights, food, tolls, and 1,200 miles of I-95 traffic. Add 18-20 hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor often runs flat to slightly below the all-in cost of driving. The snowbird volume keeps prices competitive year-round, with peak demand October-December (southbound) and April-May (northbound)."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2781,7 +2781,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           },
           "5": {
             "q": "Is the Auto Train cheaper than shipping a car from New York to Florida?",
@@ -2820,7 +2820,7 @@
           "0": "A one-way TX to FL drive runs $300-450 in gas, 1-2 hotel nights, food, and 1,200 miles of I-10 freeway. Add 18-20 hours behind the wheel through Louisiana and Mississippi.",
           "1": "A locked auto-transport quote on this corridor often runs flat to slightly under the all-in cost of driving. Houston and Dallas snowbird traffic, military relocations from Fort Hood and Lackland, and family relocations keep the corridor competitive."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2867,7 +2867,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
@@ -2892,7 +2892,7 @@
           "0": "A one-way CA to GA drive runs $650-800 in gas, 3 hotel nights, food, and 2,400 miles of southern interstate. Add 35+ hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Atlanta tech volume, southern relocations, and college runs keep the lane competitive."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -2939,7 +2939,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
@@ -2964,7 +2964,7 @@
           "0": "A one-way CA to NC drive runs $750-900 in gas, 3-4 hotel nights, food, and 2,800 miles of mostly southern interstate. Add 40+ hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor regularly beats the all-in cost of driving once you count hotels, food, and time off work. Charlotte banking and Research Triangle tech transfers run this lane weekly."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -3011,7 +3011,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
@@ -3036,7 +3036,7 @@
           "0": "A one-way CA to IL drive runs $550-700 in gas, 2-3 hotel nights, food, and 2,000 miles of I-80 freeway with weather sensitivity through the Rockies. Add 30+ hours behind the wheel.",
           "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Chicago metro tech and finance transfers, plus Midwestern family relocations, keep the lane moving year-round."
         },
-        "punchline": "The locked quote you accept at booking is the final invoice. No fuel surcharge. No surprise increases. No hidden door-to-door fees."
+        "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
       "customers": {
         "eyebrow": "Who saves the most",
@@ -3083,7 +3083,7 @@
           },
           "4": {
             "q": "What does 'locked price' mean?",
-            "a": "The quote you accept at booking is the final invoice. No fuel surcharge, no surprise increases mid-route, no hidden door-to-door fees. Our Price Promise."
+            "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
@@ -3298,7 +3298,7 @@
     "cta": {
       "eyebrow": "Ready to ship?",
       "title": "Get your locked price today.",
-      "lead": "No deposit to get a quote. The number we send is the number you pay — same Price Promise on all three tiers.",
+      "lead": "No deposit to get a quote, no hidden fees, and no silent changes: the same Price Promise on all three tiers.",
       "button": "Get my locked price"
     },
     "tiers": {

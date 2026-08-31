@@ -1,0 +1,64 @@
+{
+  "id": "price-promise-language-20260824",
+  "executed_at": "2026-08-24T15:00:00-07:00",
+  "effective_date": "2026-08-24",
+  "entity": "site:content",
+  "lever": "other",
+  "from": "absolute price promise across EN+ES site copy: 'the price you booked is the price you pay / we absorb the difference / your invoice does not change after booking / Quote = final invoice / same locked-price guarantee' (~25 strings)",
+  "to": "Price Promise brand retained, content redefined to what practice supports: no silent changes — customer hears first and decides (keep, adjust, or full deposit refund). FAQ item 6 (already honest) untouched and used as the model. Full sweep via scripts/sweep-price-promise.mjs.",
+  "executed_by": "eddie (agreed with Kacy in 2026-08-24 working session; her ask after refunding a customer who had AGREED to an increase but was owed under the absolute language)",
+  "registration_type": "prospective",
+  "snapshot_quality": "captured",
+  "evidence_source": "Kacy 8/24: refunds being issued because customers cite the absolute language even after consenting to increases; review order 37348381; 38/38 lowball read; call log showing 11 of 18 recent calls from price-promise pages",
+  "hypothesis": "Removing the absolute claim eliminates the refund-on-consent legal exposure without killing the promise's conversion value, because the honest version (no silent changes + refundable deposit) retains the differentiator. Risk: website conversion rate may dip if the absolute promise was doing conversion work — watch form-start and completion rates for 2 weeks against the pre-change baseline.",
+  "max_exposure_usd": 0,
+  "snapshot": {
+    "window": "site language era boundary at deploy time",
+    "spend_usd": null,
+    "conversions": null,
+    "clicks": null,
+    "serving_days": null,
+    "conversion_action_set": "n/a",
+    "attribution_basis": "n/a",
+    "data_source": "site content (src/messages/en.json, es.json)",
+    "settlement_status": "n/a",
+    "notes": "INTERPRETATION-THREATENING for the ongoing post-lock website read: this creates a SECOND era boundary (price lock 8/10, language change 8/24 deploy time). All post-lock cohort reads must note which language era a record was created in. Record the exact deploy timestamp in an amendment. ALSO: do not deploy while the form-completion anomaly (Fri-Mon low completions) is under investigation — one site change at a time; deploy after the form issue is resolved or ruled out."
+  },
+  "review_gates": {
+    "earliest_review_date": "2026-09-08",
+    "minimum_serving_days": 14,
+    "minimum_post_change_spend_usd": 0,
+    "settlement_lag_days": 0,
+    "note": "Two weeks of post-change funnel data; compare form starts and completion rate to the 8/10-8/20 baseline (excluding the anomaly window if one is confirmed)."
+  },
+  "decision_rule": {
+    "prose": "Keep the honest language regardless of conversion impact (the absolute claim is not returnable while practice cannot support it). The review question is only HOW MUCH conversion the absolute promise was buying, to size the value of shipping the controls (live pricing tool + no-raise gate) that would let a truthful scoped promise ('book online and your price is locked') return.",
+    "primary_metric": "form_start_rate_and_completion_rate_vs_baseline",
+    "continue_if": { "always": true },
+    "revert_if": {},
+    "guardrails": {
+      "no_reintroduction": "no absolute price claim returns to the site until the quote-floor and no-raise controls are live and verified",
+      "era_annotation": "post-lock reads split cohorts at the deploy timestamp"
+    }
+  },
+  "confounders": [
+    "form-completion anomaly under investigation 8/21-8/24 (may overlap the change window)",
+    "one-star review live on GBP since 8/21 (affects the same funnel)",
+    "price lock era (8/10) still maturing in the same cohorts"
+  ],
+  "amendments": [
+    {
+      "date": "2026-08-26",
+      "note": "DEPLOYED 2026-08-26 ~16:40 PT (Eddie: 'just redeployed'; build clean, 108 pages). Sweep ran with ZERO misses (29 replacement groups, EN+ES); one variant string caught in the residual scan post-run: 8 EN corridor punchlines ('The locked quote you accept at booking is the final invoice...') patched to the baseline/no-silent-change wording before build. FAQ 6 (deposit) untouched as the honest model; scoped 'locked price / precio fijo' claims for the ONLINE quote flow deliberately retained (price lock live since 8/10 makes them true for website quotes).",
+      "era_boundary": "language change live 2026-08-26 ~16:40 PT. All post-lock website cohort reads now split at this timestamp (era 1: lock only 8/10-8/26; era 2: lock + honest language).",
+      "same_window_events": [
+        "Mesa review reply posted ~14:00 PT 2026-08-26 (refund confirmed, customer called, apology accepted) - claude/review-order-37348381-findings.md",
+        "9 five-star review replies posted same afternoon",
+        "1-star review live since 8/21 (review-drag confounder, calls at zero Tue-Wed)",
+        "new purchased vendor Live Transport Leads (15315) live since 8/25 - purchased-feed population change, does not touch website cohort",
+        "GA4 measurement degradation 8/24-25 under investigation - two-week read uses FIRST-PARTY form starts/completions only (verified clean 8/26)"
+      ],
+      "review_note": "The two-week funnel read (earliest 2026-09-09) measures the review-recovery arc and the language change TOGETHER - they are inseparable by design (both are the same trust repair). Compare form starts and completion rate to the 8/10-8/20 baseline; expect recovery + honest-language effects confounded; the read's question remains sizing, not keep/revert (decision_rule.continue_if.always stands)."
+    }
+  ]
+}
