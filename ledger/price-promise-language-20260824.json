@@ -34,7 +34,9 @@
   "decision_rule": {
     "prose": "Keep the honest language regardless of conversion impact (the absolute claim is not returnable while practice cannot support it). The review question is only HOW MUCH conversion the absolute promise was buying, to size the value of shipping the controls (live pricing tool + no-raise gate) that would let a truthful scoped promise ('book online and your price is locked') return.",
     "primary_metric": "form_start_rate_and_completion_rate_vs_baseline",
-    "continue_if": { "always": true },
+    "continue_if": {
+      "always": true
+    },
     "revert_if": {},
     "guardrails": {
       "no_reintroduction": "no absolute price claim returns to the site until the quote-floor and no-raise controls are live and verified",
@@ -59,6 +61,10 @@
         "GA4 measurement degradation 8/24-25 under investigation - two-week read uses FIRST-PARTY form starts/completions only (verified clean 8/26)"
       ],
       "review_note": "The two-week funnel read (earliest 2026-09-09) measures the review-recovery arc and the language change TOGETHER - they are inseparable by design (both are the same trust repair). Compare form starts and completion rate to the 8/10-8/20 baseline; expect recovery + honest-language effects confounded; the read's question remains sizing, not keep/revert (decision_rule.continue_if.always stands)."
+    },
+    {
+      "date": "2026-08-31",
+      "note": "DEPLOYED. Held 8/24-8/31 behind the form-completion investigation (resolved 8/26 as review-driven demand suppression, not a form defect; deploy not circled back to until Kacy's 8/31 email). Pushed to main as commit 9038843 at ~2026-08-31T22:30Z (~3:30 PM PT); revised text verified live on /price-promise EN+ES at ~2026-08-31T22:35Z. Era boundary for post-lock reads: language change live 8/31 ~3:30 PM PT, NOT 8/24. One string the sweep missed (EN homepage price-card consequenceLine 'Your invoice doesn't change.') was fixed in the same commit to mirror the revised ES twin."
     }
   ]
 }
