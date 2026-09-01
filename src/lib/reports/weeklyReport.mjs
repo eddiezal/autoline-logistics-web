@@ -378,9 +378,9 @@ ${overPct ? `<td width="${overPct}%" bgcolor="#eb6834" height="18" style="backgr
 </div></td></tr>
 
 <tr><td class="pad" style="padding:24px 28px 0;"><div style="border-top:1px solid #eef0f2;padding-top:20px;">
-<div style="font:700 17px/1.35 Arial,sans-serif;color:#1a1a1a;margin-bottom:9px;">What remains unproven</div>
+<div style="font:700 17px/1.35 Arial,sans-serif;color:#1a1a1a;margin-bottom:9px;">What remains unproven</div><!-- Reviewed 2026-08-31: keep this block durable (no dated claims). 8/07 incident rule: state only what is measured. -->
 <div style="font:400 14px/1.7 Arial,sans-serif;color:#374151;">
-<strong style="color:#1a1a1a;">Lead quality.</strong> More leads at a lower cost is not the same as more booked business, and we are not claiming it is. The first group of leads tracked end to end reaches its revenue-read date on <strong style="color:#1a1a1a;">Aug 27</strong>. That report gives us our first real read on cost per lead tied to booked business. Until it exists, any target would be a guess.
+<strong style="color:#1a1a1a;">Lead quality.</strong> More leads at a lower cost is not the same as more booked business, and we are not claiming it is. The first lead-to-revenue read is now in: booked-business value per website lead has a measured baseline, tracked weekly alongside cost. What remains unproven is whether that quality holds as volume grows &mdash; the sample is still small and the honest error bars are wide. Each week of data narrows them.
 </div></div></td></tr>
 
 <tr><td class="pad" style="padding:24px 28px 0;"><div style="border-top:1px solid #eef0f2;padding-top:20px;">
