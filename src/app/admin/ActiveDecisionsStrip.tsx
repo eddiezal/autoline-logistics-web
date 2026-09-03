@@ -18,6 +18,9 @@
  *  · A gate-crossed card hides its live metric (no procrastination-watching)
  *    and points at the Needs-a-decision queue, where reviewDueEntries() has
  *    already pushed the action item.
+ *  · A DECIDED entry renders its verdict in green and sorts last — finished
+ *    experiments trail, pending decisions lead. (First exercised by
+ *    quote-form-r1, 2026-09-01.)
  *  · Live numbers from computeDecisionsLive(); on failure the registry's
  *    hand-stamped exposure renders WITH its asOf date, so staleness is
  *    visible rather than disguised.
@@ -52,6 +55,8 @@ interface CardModel {
   up: boolean;
   early: boolean;
   crossed: boolean;
+  /** Verdict display for a decided entry — replaces both live metric and alarm. */
+  decided: { outcome: string; dateLabel: string } | null;
   meter: { valuePct: number; scaleMax: number; color: string; marks: { left: number }[] } | null;
   /** Plain progress fraction 0–1 when there is no threshold meter. */
   progress: number | null;
@@ -91,15 +96,25 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
       const pct = live?.r1?.completionPct ?? null;
       const liveOk = !!live?.r1;
       const e = eta(nowMs, R1_SHIP.getTime(), starts, reg.exposure.gate);
-      const crossed = starts >= reg.exposure.gate;
+      const verdict =
+        reg.status === "decided" && reg.verdict
+          ? {
+              outcome: reg.verdict.outcome.toUpperCase(),
+              dateLabel: new Date(reg.verdict.date + "T12:00:00-07:00").toLocaleDateString("en-US", {
+                timeZone: "America/Los_Angeles", month: "short", day: "numeric",
+              }),
+            }
+          : null;
+      const crossed = !verdict && starts >= reg.exposure.gate;
       cards.push({
         slug: reg.slug,
         name: "FORM R1", display: "Form R1",
-        etaMs: e.ms, etaLabel: e.label,
+        etaMs: verdict ? Number.MAX_SAFE_INTEGER : e.ms,
+        etaLabel: verdict ? null : e.label,
         numMain: pct !== null ? `${pct.toFixed(1)}%` : "—",
         numSub: "vs 24.4% bar",
         up: pct !== null && pct >= 24.4,
-        early: false, crossed,
+        early: false, crossed, decided: verdict,
         meter: reg.meter && pct !== null
           ? {
               valuePct: Math.min(100, (pct / reg.meter.scaleMax) * 100),
@@ -115,7 +130,9 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
             {!liveOk && <> · as of {reg.exposure.asOf.slice(5)}</>}
           </>
         ),
-        hover: `Quote form Release 1 — completion (client-confirmed lead_persisted ÷ stamped starts). Rule: keep ≥24.4%, revert <20%, review at 200 starts. Full rule in the Decision Registry.`,
+        hover: verdict && reg.verdict
+          ? `Decided ${reg.verdict.date}: ${reg.verdict.decision}`
+          : `Quote form Release 1 — completion (client-confirmed lead_persisted ÷ stamped starts). Rule: keep ≥24.4%, revert <20%, review at 200 starts. Full rule in the Decision Registry.`,
       });
     }
   }
@@ -137,7 +154,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
         etaMs: e.ms, etaLabel: e.label,
         numMain: `${k} / ${n}`,
         numSub: early ? null : `${pct.toFixed(1)}%`,
-        up: false, early, crossed,
+        up: false, early, crossed, decided: null,
         meter: reg.meter
           ? {
               valuePct: Math.min(100, (pct / reg.meter.scaleMax) * 100),
@@ -171,6 +188,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
         numMain: "reading pending",
         numSub: null, up: false, early: false,
         crossed: weeks >= reg.exposure.gate,
+        decided: null,
         meter: null,
         progress: Math.min(1, weeks / reg.exposure.gate),
         gateLine: <><b style={{ color: INK }}>{weeks.toFixed(1)} / {reg.exposure.gate}</b> weeks</>,
@@ -190,7 +208,7 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
         etaLabel: "monthly",
         numMain: "27",
         numSub: "vs 13 /mo",
-        up: true, early: false, crossed: false,
+        up: true, early: false, crossed: false, decided: null,
         meter: null,
         progress: 0.54,
         gateLine: <>next <b style={{ color: INK }}>monthly</b> read</>,
@@ -239,7 +257,16 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
         {cards.map((c) => (
           <Link key={c.slug} href={`/admin/analysis#registry-${c.slug}`} style={mcStyle} title={c.hover}>
             <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".7px", color: MUTED }}>{c.name}</div>
-            {c.crossed ? (
+            {c.decided ? (
+              <>
+                <div style={{ fontSize: 13, fontWeight: 800, color: GREEN, marginTop: 3 }}>
+                  DECIDED · {c.decided.outcome}
+                </div>
+                <div style={{ fontSize: 10.5, color: MUTED, marginTop: 5 }}>
+                  {c.decided.dateLabel} · full verdict in the <b>Decision Registry</b>
+                </div>
+              </>
+            ) : c.crossed ? (
               <>
                 <div style={{ fontSize: 13, fontWeight: 800, color: RED, marginTop: 3 }}>REVIEW DUE</div>
                 <div style={{ fontSize: 10.5, color: MUTED, marginTop: 5 }}>
