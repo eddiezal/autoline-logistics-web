@@ -33,6 +33,9 @@ import {
   toSdVehicleType,
   type SdVehicleType,
 } from "@/lib/superdispatch/pricing";
+import { evaluateEligibility } from "@/lib/pricing/eligibility";
+import { roadMilesBetweenZips } from "@/lib/geo/zip3";
+
 import { sendLeadEmail } from "@/lib/email/resend";
 import { createLead as proabdCreateLead } from "@/lib/proabd/client";
 import { zipPrefixToState, lookupZipApprox } from "@/data/zip-metros";
@@ -296,6 +299,48 @@ export async function POST(req: Request) {
 
   const leadRef = generateLeadRef();
   const submittedAt = new Date().toISOString();
+  // Pricing input-integrity gate (spec v3.4) — INSTRUMENTATION ONLY for now:
+  // evaluate eligibility on truthful inputs and record the snapshot. Does NOT
+  // change the SD call, the agent email, or the customer price. Never throws.
+  let pricingEligibility: Record<string, unknown> | null = null;
+  try {
+    const eligMiles = roadMilesBetweenZips(originZip!, destinationZip!);
+    const eligTransport =
+      transportPref && /enclos/i.test(transportPref) ? "enclosed"
+      : transportPref && /open/i.test(transportPref) ? "open"
+      : null;
+    const elig = evaluateEligibility({
+      origin: { zip: originZip, state: originState },
+      destination: { zip: destinationZip, state: destinationState },
+      vehicle: {
+        year: vehicleYear,
+        make: vehicleMake,
+        model: vehicleModel,
+        type: vehicleType,
+        category: vehicleType,
+        operable:
+          vehicleCondition === "operable" ? true
+          : vehicleCondition === "inoperable" ? false
+          : null,
+      },
+      transportType: eligTransport,
+      miles: eligMiles,
+    });
+    pricingEligibility = {
+      rulesetVersion: elig.snapshot.rulesetVersion,
+      status: elig.status,
+      reasons: elig.status === "auto_eligible" ? [] : elig.reasons,
+      resolvedVehicle: elig.snapshot.resolvedVehicle,
+      resolvedOperability: elig.snapshot.resolvedOperability,
+      resolvedTransport: elig.snapshot.resolvedTransport,
+      miles: elig.snapshot.miles,
+      sdRequest: elig.snapshot.sdRequest,
+      evaluatedAt: elig.snapshot.evaluatedAt,
+    };
+  } catch (err) {
+    console.warn("[/api/lead] pricing eligibility eval failed (non-fatal)", err);
+  }
+
 
   const db = DEV_SKIP_FIRESTORE ? null : getAdminDb();
   const leadDoc = {
@@ -312,6 +357,7 @@ export async function POST(req: Request) {
     assignedAgent: null,
     proabdAssignedAgent: null,
     estimate: pricingShadow ? { ...estimate, ...pricingShadow } : estimate,
+    pricingEligibility,
     attribution: {
       utmSource: str(body.utm_source) ?? null,
       utmMedium: str(body.utm_medium) ?? null,

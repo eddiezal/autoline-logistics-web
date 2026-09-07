@@ -305,6 +305,68 @@ export const DRAFT_STUDIES: Study[] = [
 
 export const STUDIES: Study[] = [
   {
+    slug: "pricing-sd-accuracy",
+    title: "SuperDispatch accuracy and the auto-pricing gate",
+    date: "2026-09-06",
+    headline:
+      "On standard cars at normal distances SD + our markup holds; the one catastrophic miss was an RV priced as a sedan — a fixable input bug, now gated.",
+    status: "Informing Phase 1 — provisional, forward data pending",
+    question:
+      "When can a purchased or phone lead be auto-priced from the SuperDispatch estimate, and when must a human price it instead?",
+    method:
+      "For every settled website order we compared the SD carrier estimate CAPTURED AT QUOTE TIME (stored on the lead, so it is point-in-time, not a drift-contaminated re-query) against the eventual settled carrier pay. Primary metric is the margin lens: would our marked-up formula price have cleared carrier pay plus a $150 minimum fee? Segmented by resolved vehicle class and by route distance (ZIP3 road miles). Two external AI red-team reviews stress-tested the reading.",
+    findings: [
+      "Resolved standard vehicles, n=10: 8 cleared the $150 margin floor; every order under ~2,000 mi cleared comfortably.",
+      "The two below-cost misses were both long-haul standard cars (>=2,500 mi): CA->FL -$265 and CA->WV -$130 on the formula.",
+      "The single catastrophic case (NH->CO, -$1,440 on the formula) was NOT a distance problem: a 21-ft RV travel trailer entered as vehicle type 'other', which the code silently mapped to 'sedan'. SD priced the wrong shipment. It did not actually lose money — an agent caught it and re-quoted to a profit.",
+      "'other' is a noisy field: of three 'other' orders only one was a genuine oddball (the RV); the other two were ordinary cars (a Mazda 3 and a Chevy Equinox SD priced correctly). The reliable signal is make/model resolution, not the raw type field.",
+      "SD's own confidence score did not discriminate good estimates from bad (compressed 68-88; the worst misses scored high).",
+    ],
+    caveats: [
+      "n=10 standard vehicles is directional, not conclusive; two orders drive the long-haul finding.",
+      "Settlement selection bias: only booked-and-settled orders are visible — too-high quotes that never booked and too-low quotes that cancelled or refunded are absent, so the true error rate could be worse.",
+      "Distance is a PRECAUTIONARY boundary, not a validated model: with the RV removed, distance barely correlates with margin (Spearman rho about -0.15), and two nearly identical ~2,790-mi SUV runs settled opposite ways.",
+      "Ground truth should be the final AUDITED carrier payment, not a mutable CRM field; the forward instrumentation will use the audited value.",
+      "The real proof is forward accrual with correct vehicle classification logged on every quote — this backtest is a head start, not the verdict.",
+    ],
+    informed: [
+      "PRIMARY GATE — input integrity: auto-price only when every material field maps losslessly into the SD request; never a silent default (see registry: pricing-auto-gate).",
+      "Vehicle resolution by make/model to a supported class (Phase 1 structured category + seed map; Phase 2 NHTSA vPIC VIN decode), never 'other -> sedan'.",
+      "Distance kept as a secondary precautionary REVIEW boundary (~1,299 mi), explicitly not a validated threshold.",
+      "Three outcomes, not two: AUTO_ELIGIBLE / NEEDS_INPUT / SPECIALTY_REVIEW.",
+      "Instrument every quote (not just settlements) and record the reviewer's pre-settlement estimate (see: pricing-review-protocol).",
+    ],
+    sections: [
+      {
+        title: "Margin by distance (resolved standard vehicles, n=10)",
+        body: "Failure = the marked-up formula price would not clear carrier pay + $150. Under ~2,000 mi every order held; the below-cost cases sit at the long extreme. Mazda 3 and Equinox are counted as standard here though they were entered as 'other'.",
+        table: {
+          headers: ["Road miles", "n", "Floor-fails", "Median margin", "Worst margin"],
+          rows: [
+            ["0-500", "1", "0", "$215", "$215"],
+            ["500-1000", "3", "0", "$340", "$245"],
+            ["1000-1500", "2", "0", "$353", "$170"],
+            ["2000-2500", "1", "0", "$300", "$300"],
+            ["2500+", "3", "2", "-$130", "-$265"],
+          ],
+        },
+        note: "AUTO <=1,299 mi cleared in every cut so far; the 1,300-2,367 mi band is essentially untested (one order at 2,368 held).",
+      },
+      {
+        title: "The three 'other'-typed orders — a classification failure, not a distance failure",
+        table: {
+          headers: ["Route", "Miles", "Vehicle (as entered)", "SD est", "Settled", "Formula margin"],
+          rows: [
+            ["NH->CO", "2075", "other: Cruiser RV Hitch (21-ft trailer)", "$1,386", "$3,100", "-$1,440"],
+            ["CA->WV", "2508", "other: Mazda 3 (a real car)", "$1,486", "$1,900", "-$130"],
+            ["TX->AL", "1015", "other: Chevrolet Equinox (priced fine)", "$843", "$900", "+$170"],
+          ],
+        },
+        note: "One genuine non-car (the RV) drove the catastrophic loss; the other two were ordinary cars mis-filed as 'other'. Gate on make/model resolution, not the type field.",
+      },
+    ],
+  },
+  {
     slug: "conversion-signal-integrity",
     title: "Conversion signal integrity — what Google is told, and what it hears",
     date: "2026-08-27",

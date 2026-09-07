@@ -256,6 +256,66 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
     status: "specified",
     studySlug: "behavioral-journey",
   },
+  {
+    slug: "pricing-phase0-observation",
+    title: "Pricing readiness — agent observation (Phase 0)",
+    change:
+      "Before the pricing tool writes any real price, we observe how agents actually quote (Nelson first) to resolve the facts the automation depends on: which ProABD field is the total customer price vs deposit vs carrier balance, when the price is committed relative to telling the customer, and whether operability and open/enclosed are real selections or silent defaults. Time-boxed field worksheet; operations runs it and signs off.",
+    type: "measurement",
+    owner: "Zaldivar Labs / Eddie",
+    metric: "Phase-0 blocking facts resolved (price-field semantics · commitment moment · defaults-vs-selected)",
+    exposure: {
+      current: 0,
+      gate: 1,
+      unit: "signed agent-observation runs",
+      asOf: "2026-09-07",
+    },
+    decisionRule:
+      "Run the observation worksheet with an agent and have operations sign off. GATE: no live pricing intervention — the PR4 worker touching real ProABD price fields, or in-card below-floor warnings — ships until sign-off confirms (1) which field is the total customer price, (2) an observable commitment event OR a written 'set and check the price in ProABD before communicating it' fallback, and (3) whether operability and transport are selected or silently defaulted. If no commitment event is observable, the operating procedure becomes the control. Resolves the offline discovery half of Phase 0; the historical review-volume replay resolves the rest.",
+    status: "specified",
+    studySlug: "pricing-sd-accuracy",
+    notes:
+      "Blocks pricing-auto-gate and the PR4 worker from touching real price fields until signed. The offline engine (assessment.ts PR1 + policy.ts PR2, both built and tested) does NOT depend on this — only the live intervention does. First run: Eddie observes Nelson. Worksheet: pricing-observation-worksheet-pr3.md (project doc). Internal ops readiness — keep this card at readiness level, not per-agent detail.",
+  },
+  {
+    slug: "pricing-auto-gate",
+    title: "Automated pricing gate (input integrity + distance)",
+    change:
+      "Built the input-integrity gate: a shipment is auto-priced only when every material field (vehicle class, operability, open/enclosed, route) maps losslessly into the SuperDispatch request — otherwise it is NEEDS_INPUT or SPECIALTY_REVIEW. Distance over ~1,299 mi is a separate precautionary REVIEW boundary. Module + 16-case test matrix landed 2026-09-06; not yet wired to the live lead flow.",
+    type: "measurement",
+    owner: "Zaldivar Labs",
+    metric: "Share of AUTO-eligible (standard-vehicle) orders whose settled margin clears the $150 floor",
+    baseline:
+      "Backtest, resolved-standard n=10: 8 cleared the $150 floor, 2 long-haul (>=2,500 mi) settled below carrier cost.",
+    current: "AUTO 0% on 305 leads today — the form captures operability on 0/305 and open/enclosed on ~9% (the blocker). Backtest: 8/10 resolved-standard settled orders cleared the floor.",
+    exposure: {
+      current: 10,
+      gate: 30,
+      unit: "settled standard-vehicle orders",
+      asOf: "2026-09-06",
+    },
+    decisionRule:
+      "Review at 30 settled standard-vehicle AUTO-eligible orders. WIDEN auto (raise or drop the 1,299-mi boundary) only if >= 90% clear the $150 floor and no below-cost case appears in the widened band. HOLD at 80-90%. TIGHTEN / keep the distance REVIEW if < 80% or any below-cost case recurs. NOT up for review: the input-integrity rule itself — never sending SD a lossy shipment is a safety invariant, not a bet.",
+    status: "specified",
+    studySlug: "pricing-sd-accuracy",
+    notes:
+      "BLOCKER (9/6 retroactive read): AUTO 0% on today's 305 leads — the intake form never captures operability (0/305) or open/enclosed (~9%). The R2 form fix (add a transport toggle, derive class from make/model, keep operability) is the unlock for the CUSTOMER-WEBSITE auto-quote track only (a later phase); it does NOT gate the agent-side approved-pricing workflow, which is the priority and reads the same fields from ProABD orders that already exist. See pricing-form-requirements-2026-09-06.md and agent-pricing-portal-spec.md v3.5. Honest framing: n is tiny and directional. The distance boundary is precautionary, NOT a validated model — with the RV removed, distance barely correlates with margin (Spearman rho about -0.15). The one catastrophic miss (an RV priced as a sedan) was a deterministic input bug, now prevented by the integrity gate; it did not actually lose money (an agent re-quoted it). Forward accrual with correct vehicle classification is the real proof.",
+  },
+  {
+    slug: "pricing-review-protocol",
+    title: "What a pricing REVIEW must produce",
+    change:
+      "Open decision: when a lane is routed to SPECIALTY_REVIEW, must the reviewer produce something SD lacks (a soft carrier bid, a comparable lane, endpoint/timing knowledge) under a response SLA — or is it a glance at the same SD number? And does human review actually beat SD?",
+    type: "measurement",
+    owner: "Zaldivar Labs / Kacy",
+    metric: "Reviewer estimate vs SD vs settled carrier pay (does the reviewer beat SD?)",
+    decisionRule:
+      "Instrument first: log the reviewer's estimate BEFORE settlement, whether they saw SD first, evidence consulted, and time spent. Read at 20 reviewed-and-settled orders. If reviewer estimates are not closer to settled carrier pay than SD alone, REVIEW is ceremony — collapse it toward an SD band + $150 floor. If they beat SD, define the minimum evidence + SLA and keep REVIEW. Anchoring caveat: if reviewers see SD first this measures SD+human, not an independent benchmark.",
+    status: "specified",
+    studySlug: "pricing-sd-accuracy",
+    notes:
+      "Phase it for a 3-agent shop: start with a senior-estimator glance that logs a pre-settlement number; add the evidence/SLA requirement only once volume and tooling justify it.",
+  },
 ];
 
 /** True once exposure has crossed its precommitted gate — the review is due. */
