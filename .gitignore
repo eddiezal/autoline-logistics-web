@@ -49,3 +49,6 @@ next-env.d.ts
 # - digest-preview.html: rebuild-digest.mjs preview output
 backfill-*.csv
 digest-preview.html
+
+.vercel
+.env*
