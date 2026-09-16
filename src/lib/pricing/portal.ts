@@ -20,6 +20,7 @@ import { assessShipment, ASSESSMENT_VERSION } from "@/lib/pricing/assessment";
 import { applyCustomerMarkup, PRICING_MODEL } from "@/lib/pricing/markup";
 import { getSdPriceEstimate } from "@/lib/superdispatch/pricing";
 import { shipmentFromProabd, sourceLabel, type CardFlag } from "@/lib/pricing/proabd-shipment";
+import { recordPricedQuote } from "@/lib/pricing/quote-ledger";
 
 export type CardStatus = "READY" | "NEEDS_INPUT" | "UNSUPPORTED" | "PRICE_UNAVAILABLE";
 
@@ -97,7 +98,8 @@ export async function latestRecords(limit: number): Promise<LatestEvent[]> {
 /* Short in-memory cache keyed by the truthful shipment hash: same shipment, same answer,
  * for CACHE_TTL_MS. Keeps repeated card renders from re-hitting SD (50 req / 10 s). */
 const CACHE_TTL_MS = 15 * 60 * 1000;
-const cache = new Map<string, { at: number; price: { price: number; low: number; high: number; confidence: number | null } }>();
+type RawEst = { price: number; low: number; high: number; confidence: number | null; sdVehicleType: string };
+const cache = new Map<string, { at: number; price: { price: number; low: number; high: number; confidence: number | null }; raw: RawEst }>();
 
 const MISSING_LABEL: Record<string, string> = {
   route: "Origin or destination ZIP missing",
@@ -154,10 +156,11 @@ export async function priceRecord(ev: LatestEvent): Promise<PricingCard> {
   const hit = cache.get(hash);
   const now = Date.now();
   let priced: { price: number; low: number; high: number; confidence: number | null } | null = null;
+  let rawEst: RawEst | null = null;
   let cached = false;
   let pricedAt = now;
   if (hit && now - hit.at < CACHE_TTL_MS) {
-    priced = hit.price; cached = true; pricedAt = hit.at;
+    priced = hit.price; rawEst = hit.raw; cached = true; pricedAt = hit.at;
   } else {
     const req = assessment.sdRequest;
     const raw = await getSdPriceEstimate(
@@ -173,14 +176,38 @@ export async function priceRecord(ev: LatestEvent): Promise<PricingCard> {
     if (raw) {
       const c = applyCustomerMarkup(raw);
       priced = { price: c.price, low: c.low, high: c.high, confidence: c.confidence };
-      cache.set(hash, { at: now, price: priced });
+      rawEst = { price: raw.price, low: raw.low, high: raw.high, confidence: raw.confidence, sdVehicleType: raw.sdVehicleType };
+      cache.set(hash, { at: now, price: priced, raw: rawEst });
       // raw.price (the carrier estimate) is intentionally NOT kept on the card.
+      // It IS persisted server-side to the quote ledger (all sources) for the backtest.
     }
   }
 
   if (!priced) {
     return { ...unpriced("PRICE_UNAVAILABLE", "Live price unavailable — no stale fallback"),
       meta: { assessmentVersion: ASSESSMENT_VERSION, pricingModel: PRICING_MODEL, normalizedShipmentHash: hash, cached: false } };
+  }
+  if (rawEst) {
+    const req = assessment.sdRequest;
+    await recordPricedQuote({
+      abdId: ev.entityId,
+      stage: ev.entityType,
+      referrerId: sh.referrerId,
+      source: base.source,
+      route: sh.route,
+      pickup: { state: req.pickup.state, zip: req.pickup.zip },
+      delivery: { state: req.delivery.state, zip: req.delivery.zip },
+      vehicle: sh.vehicleLabel,
+      inputs: { ...base.inputs, sdVehicleType: rawEst.sdVehicleType },
+      carrierEstimate: { price: rawEst.price, low: rawEst.low, high: rawEst.high, confidence: rawEst.confidence },
+      recommended: { price: priced.price, low: priced.low, high: priced.high },
+      crmPriceAtPricing: sh.crmPrice,
+      mileage: sh.mileage,
+      normalizedShipmentHash: hash,
+      assessmentVersion: ASSESSMENT_VERSION,
+      pricingModel: PRICING_MODEL,
+      pricedAt,
+    });
   }
   return {
     ...base,
