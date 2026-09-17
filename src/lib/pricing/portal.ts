@@ -50,7 +50,7 @@ export interface PricingCard {
   };
   crmPrice: number | null;     // what ProABD currently holds (0/null = unpriced)
   mileage: number | null;
-  meta: { assessmentVersion: string; pricingModel: string; normalizedShipmentHash: string | null; cached: boolean };
+  meta: { assessmentVersion: string; pricingModel: string; normalizedShipmentHash: string | null; cached: boolean; crmEventAt: string | null };
 }
 
 interface LatestEvent { entityId: string; entityType: string; receivedAt: Date | null; raw: unknown }
@@ -142,7 +142,7 @@ export async function priceRecord(ev: LatestEvent): Promise<PricingCard> {
   };
   const unpriced = (status: CardStatus, needsInput: string | null): PricingCard => ({
     ...base, status, recommended: null, pricedAt: null, marketSource: null, needsInput,
-    meta: { assessmentVersion: ASSESSMENT_VERSION, pricingModel: PRICING_MODEL, normalizedShipmentHash: null, cached: false },
+    meta: { assessmentVersion: ASSESSMENT_VERSION, pricingModel: PRICING_MODEL, normalizedShipmentHash: null, cached: false, crmEventAt: ev.receivedAt ? ev.receivedAt.toISOString() : null },
   });
 
   if (assessment.status === "needs_input") {
@@ -185,7 +185,7 @@ export async function priceRecord(ev: LatestEvent): Promise<PricingCard> {
 
   if (!priced) {
     return { ...unpriced("PRICE_UNAVAILABLE", "Live price unavailable — no stale fallback"),
-      meta: { assessmentVersion: ASSESSMENT_VERSION, pricingModel: PRICING_MODEL, normalizedShipmentHash: hash, cached: false } };
+      meta: { assessmentVersion: ASSESSMENT_VERSION, pricingModel: PRICING_MODEL, normalizedShipmentHash: hash, cached: false, crmEventAt: ev.receivedAt ? ev.receivedAt.toISOString() : null } };
   }
   if (rawEst) {
     const req = assessment.sdRequest;
@@ -219,6 +219,6 @@ export async function priceRecord(ev: LatestEvent): Promise<PricingCard> {
     pricedAt,
     marketSource: "Live Super Dispatch",
     needsInput: null,
-    meta: { assessmentVersion: ASSESSMENT_VERSION, pricingModel: PRICING_MODEL, normalizedShipmentHash: hash, cached },
+    meta: { assessmentVersion: ASSESSMENT_VERSION, pricingModel: PRICING_MODEL, normalizedShipmentHash: hash, cached, crmEventAt: ev.receivedAt ? ev.receivedAt.toISOString() : null },
   };
 }
