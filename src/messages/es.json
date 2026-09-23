@@ -386,11 +386,11 @@
       "badge": "Con licencia, fianza y seguro",
       "title": "Sin sorpresas.",
       "titleAccent": "Sin trampas ni anzuelos.",
-      "description": "Envíe su auto con precio fijo, fotos documentadas de recogida y entrega, transportistas verificados, y un coordinador con nombre, con sede en EE. UU., desde la cotización hasta la entrega.",
+      "description": "Envíe su auto con una cotización honesta, fotos documentadas de recogida y entrega, transportistas verificados, y un coordinador con nombre, con sede en EE. UU., desde la cotización hasta la entrega.",
       "ctaPrimary": "Obtenga su cotización",
       "ctaSecondary": "Vea la lista anti-estafas",
       "proofChips": {
-        "lockedPrice": "Precio fijo",
+        "lockedPrice": "Cotización honesta",
         "photos": "Fotos de recogida y entrega",
         "coordinator": "Coordinador en EE. UU.",
         "insured": "Con fianza, licencia y seguro"
@@ -412,9 +412,9 @@
         "etaValue": "Jue, 22 may · 3:30 PM"
       },
       "lockedPriceCard": {
-        "label": "Precio fijo",
+        "label": "Cotización honesta",
         "price": "$875",
-        "tagline": "Sin recargos. Sin sorpresas."
+        "tagline": "Sin cambios sin avisarle."
       }
     },
     "trustStrip": {
@@ -446,14 +446,14 @@
     },
     "triplePromise": {
       "eyebrow": "Nuestra triple promesa",
-      "title": "<line>Precio fijo.</line> <line>Auto documentado.</line> <line>Una persona responsable.</line>",
+      "title": "<line>Cotización honesta.</line> <line>Auto documentado.</line> <line>Una persona responsable.</line>",
       "lead": "Construimos nuestro proceso alrededor de las tres cosas que más preocupan a los clientes: precios sorpresa, condición del vehículo, y poder hablar con alguien.",
       "seeHowLink": "Vea cómo funciona",
       "simpleCards": {
         "lockedPrice": {
           "num": "1",
-          "title": "Precio fijo después de confirmar",
-          "description": "Las cotizaciones de gancho suelen cambiar después de que el cliente ya se comprometió. Confirmamos su ruta, vehículo, acceso y ventana de recogida primero, luego fijamos el precio.",
+          "title": "Confirmado antes de reservar",
+          "description": "Las cotizaciones de gancho suelen cambiar después de que el cliente ya se comprometió. Confirmamos su ruta, vehículo, acceso y ventana de recogida primero. Si algo necesita cambiar después, usted lo escucha de nosotros primero y usted decide.",
           "link": "Vea cómo funciona el precio"
         },
         "photoProof": {
@@ -472,12 +472,12 @@
       "cards": {
         "price": {
           "stat": "$0",
-          "statLabel": "Recargos sorpresa, jamás",
+          "statLabel": "Cargos ocultos, jamás",
           "eyebrow": "Promesa de Precio",
-          "headline": "Usted elige la velocidad. Nosotros fijamos el precio.",
+          "headline": "Usted elige la velocidad. Nosotros confirmamos el precio.",
           "conditionLine": "Si nuestro costo sube después de cotizarle…",
           "consequenceLine": "Ese es nuestro problema. Ningún cambio sin avisarle primero.",
-          "clarifier": "El precio se fija al confirmar ruta, vehículo, acceso de recogida y fechas.",
+          "clarifier": "Su coordinador confirma el precio exacto una vez definidos ruta, vehículo, acceso de recogida y fechas.",
           "cta": "Ver la Promesa de Precio →"
         },
         "damage": {
@@ -515,9 +515,9 @@
           "whyMatters": "Si no generaron su cotización, usted no es su cliente — es la información de otro."
         },
         "2": {
-          "title": "¿Este precio queda fijo después de que confirme los detalles?",
+          "title": "¿Puede cambiar mi precio después de que confirme los detalles?",
           "body": "Las cotizaciones de gancho suelen subir cuando el corredor tiene que encontrar un transportista real para su ruta.",
-          "whyMatters": "Una empresa real fija el precio por adelantado para que nunca le sorprendan con aumentos de última hora."
+          "whyMatters": "Una empresa real cotiza según el mercado real de transportistas para que no le sorprendan con aumentos de última hora."
         },
         "3": {
           "title": "¿Quién es responsable de mi envío desde la recogida hasta la entrega?",
@@ -581,9 +581,9 @@
         "lock": {
           "label": "Paso 1",
           "title": "Fije su precio.",
-          "description": "Díganos de dónde sale, a dónde va, y qué está enviando. Solicite su precio fijo todo incluido en menos de un minuto — sin recargos sorpresa después.",
+          "description": "Díganos de dónde sale, a dónde va, y qué está enviando. Solicite su cotización todo incluido en menos de un minuto.",
           "proof1": "Estimado al instante",
-          "proof2": "Sin precios sorpresa"
+          "proof2": "Sin cambios sin avisarle"
         },
         "pickup": {
           "label": "Paso 2",
@@ -665,9 +665,9 @@
     "finalCta": {
       "eyebrow": "¿Listo para enviar?",
       "title": "Fije su precio hoy.",
-      "lead": "Escriba su origen, destino, y vehículo. Obtenga su estimado al instante y su precio fijo todo incluido dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. El precio queda fijado por 7 días, sin obligación hasta que reserve.",
+      "lead": "Escriba su origen, destino, y vehículo. Obtenga su estimado al instante y su cotización todo incluido dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
       "button": "Obtenga su cotización",
-      "trustLine": "Estimado al instante · Sin precios sorpresa · Sin depósito para cotizar"
+      "trustLine": "Estimado al instante · Sin cambios sin avisarle · Sin depósito para cotizar"
     },
     "heroRouteFinder": {
       "title": "Obtenga su cotización.",
@@ -747,7 +747,7 @@
   "pricePromise": {
     "hero": {
       "title": "Promesa de Precio",
-      "subtitle": "Usted elige la velocidad. Nosotros fijamos el precio. La cotización es el contrato."
+      "subtitle": "Usted elige la velocidad. Nosotros confirmamos el precio. Sin cambios sin avisarle."
     },
     "antiPattern": {
       "title": "El secreto a voces del transporte de autos",
@@ -828,8 +828,8 @@
       }
     },
     "cta": {
-      "title": "Solicite su precio fijo en 60 segundos.",
-      "description": "Ingrese su origen, destino y vehículo. Su coordinador fija su precio todo incluido por escrito dentro de 1 hora hábil. Elija su nivel, fíjelo, listo.",
+      "title": "Solicite su cotización en 60 segundos.",
+      "description": "Ingrese su origen, destino y vehículo. Su coordinador le envía su cotización todo incluido por escrito dentro de 1 hora hábil. Elija su nivel, reserve, listo.",
       "primary": "Obtenga su cotización",
       "secondary": "Vea cómo funciona la Promesa Personal →"
     },
@@ -965,7 +965,7 @@
     },
     "cta": {
       "title": "Envíe con el corredor que asume el reclamo.",
-      "description": "Precio fijo. $500K de cobertura de carga contingente. Meta de resolución de reclamos en 14 días. Coordinadores reales. Solicite su cotización en 60 segundos.",
+      "description": "Cotizaciones honestas. $500K de cobertura de carga contingente. Meta de resolución de reclamos en 14 días. Coordinadores reales. Solicite su cotización en 60 segundos.",
       "primary": "Obtenga su cotización",
       "secondary": "Lea la Promesa Personal →"
     }
@@ -1066,7 +1066,7 @@
     },
     "cta": {
       "title": "Una persona con nombre. Un número de teléfono. Un punto de contacto responsable.",
-      "description": "Solicite su precio fijo en 60 segundos. Luego conozca a su coordinador — por nombre, con su línea directa.",
+      "description": "Solicite su cotización en 60 segundos. Luego conozca a su coordinador, por nombre, con su línea directa.",
       "primary": "Obtenga su cotización",
       "secondary": "Conozca al equipo →"
     }
@@ -1115,7 +1115,7 @@
         "price": {
           "eyebrow": "Promesa de Precio",
           "headline": "Cotización = factura →",
-          "description": "Usted elige la velocidad, nosotros fijamos el precio. Sin recargos sorpresa."
+          "description": "Usted elige la velocidad, nosotros confirmamos el precio. Sin cambios sin avisarle."
         },
         "damage": {
           "eyebrow": "Promesa contra Daños",
@@ -1254,7 +1254,7 @@
     },
     "cta": {
       "title": "¿Listo para su cotización?",
-      "description": "Escriba su origen, destino y vehículo. Obtenga su estimado al instante y su precio fijo dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
+      "description": "Escriba su origen, destino y vehículo. Obtenga su estimado al instante y su cotización todo incluido dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
       "primary": "Obtenga su cotización",
       "secondary": "Hable con un coordinador"
     }
@@ -1263,7 +1263,7 @@
     "hero": {
       "eyebrow": "Obtenga una cotización",
       "titleDefault": "Cuéntenos a dónde, qué y cuándo.",
-      "description": "La cotización es el contrato. Cualquier número que le enviemos es el número en su factura. Sin trampa ni cambio."
+      "description": "Su cotización todo incluido viene de su coordinador, basada en lo que los transportistas aceptan hoy en su ruta. Sin trampa ni cambio."
     },
     "form": {
       "requiredMark": " *",
@@ -1360,7 +1360,7 @@
       },
       "submit": {
         "button": "Enviar solicitud de cotización",
-        "footnote": "Su coordinador fijará su precio dentro de 1 hora hábil. No se requiere depósito para recibir la cotización.",
+        "footnote": "Su coordinador le enviará su cotización dentro de 1 hora hábil. No se requiere depósito para recibir la cotización.",
         "pending": "Enviando..."
       },
       "verification": {
@@ -1370,7 +1370,7 @@
       "success": {
         "eyebrow": "Cotizacion solicitada",
         "title": "Gracias. Un coordinador le contactara dentro de 1 hora habil.",
-        "body": "Recibimos sus datos y los enrutamos a un coordinador disponible. Recibira un precio fijo todo incluido por correo o telefono. Sin compromiso hasta que reserve.",
+        "body": "Recibimos sus datos y los enrutamos a un coordinador disponible. Recibirá su cotización todo incluido por correo o teléfono. Sin compromiso hasta que reserve.",
         "refLabel": "Referencia"
       },
       "usOnly": "Transportamos a los 50 estados de EE. UU. — incluyendo Hawái y Alaska. Solo envíos dentro de Estados Unidos.",
@@ -1380,8 +1380,8 @@
       "backedBy": "Respaldado por",
       "cards": {
         "contract": {
-          "title": "Cotización = contrato",
-          "detail": "Cualquier número que reciba es el número en su factura. Sin recargos, sin llamadas de sobrecostos del transportista."
+          "title": "Precios reales de transportistas",
+          "detail": "Su cotización se basa en lo que los transportistas aceptan hoy en su ruta, no en promedios viejos."
         },
         "coverage": {
           "title": "Cobertura de $500K",
@@ -1434,7 +1434,7 @@
       },
       "priceDropAlerts": {
         "title": "Alertas de Baja de Precio",
-        "summary": "¿Mirando una ruta? Le enviaremos un correo cuando nuestro precio fijo baje del nivel que indique."
+        "summary": "¿Mirando una ruta? Le enviaremos un correo cuando nuestro precio baje del nivel que indique."
       },
       "shippingChecklist": {
         "title": "Lista de Preparación",
@@ -1445,7 +1445,7 @@
     "liveLabel": "Disponible",
     "finalCta": {
       "title": "¿Listo para su cotización?",
-      "description": "Las herramientas de arriba le ayudan a decidir. Cuando esté listo, fije su precio en segundos.",
+      "description": "Las herramientas de arriba le ayudan a decidir. Cuando esté listo, obtenga su cotización en segundos.",
       "primary": "Obtenga su cotización"
     }
   },
@@ -1511,7 +1511,7 @@
     },
     "ship": {
       "label": "Envíelo con Auto Line Logistics",
-      "title": "Puerta a puerta, precio fijo al reservar",
+      "title": "Puerta a puerta, un solo coordinador",
       "titleHawaii": "Continente → Long Beach → Honolulu",
       "titleAlaska": "Terrestre a Tacoma, RoRo a Anchorage",
       "tierPriority": "Nivel Prioritario · ventana de recogida 3–5 días",
@@ -1571,7 +1571,7 @@
     },
     "verdict": {
       "shipBig": "Enviar le ahorra ~${savings} en este viaje.",
-      "shipBigSub": "Se ahorra {hours} horas al volante. Obtenga el precio fijo abajo.",
+      "shipBigSub": "Se ahorra {hours} horas al volante. Obtenga su cotización abajo.",
       "shipClose": "Enviar sale adelante por ~${savings}.",
       "shipCloseSub": "Además se ahorra {hours} horas al volante. Vale la pena si su tiempo importa.",
       "wash": "Prácticamente un empate en dinero.",
@@ -1585,13 +1585,13 @@
       "alaska": "SE PUEDE manejar la Autopista de Alaska. La mayoría no lo hace.",
       "alaskaSub": "Una semana por Canadá en territorio de osos, dos cruces fronterizos, y usualmente paga más que la ruta de envío.",
       "invalid": "No reconocimos ese código postal — pero aún podemos darle un precio real.",
-      "invalidSub": "Envíe una cotización con su destino y le enviaremos un precio fijo junto con la comparación de manejar."
+      "invalidSub": "Envíe una cotización con su destino y le enviaremos su cotización junto con la comparación de manejar."
     },
     "ctas": {
       "primary": "Obtenga su cotización →",
       "secondary": "Active alerta de bajada de precio (próximamente)"
     },
-    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Solicite su precio fijo real en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS)."
+    "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su cotización. Solicite su cotización exacta en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS)."
   },
   "blog": {
     "hero": {
@@ -1612,7 +1612,7 @@
       },
       "understanding-industry": {
         "title": "Entendiendo la industria",
-        "lead": "Cómo funciona realmente el transporte de autos. Brokers, transportistas, tableros de carga, precios fijos. Por qué la empresa que contrata a menudo no es la que maneja, y qué significa eso para su envío."
+        "lead": "Cómo funciona realmente el transporte de autos. Brokers, transportistas, tableros de carga, cotizaciones honestas. Por qué la empresa que contrata a menudo no es la que maneja, y qué significa eso para su envío."
       },
       "planning-shipment": {
         "title": "Planificando su envío",
@@ -1620,9 +1620,9 @@
       },
       "popular-routes": {
         "title": "Rutas populares",
-        "lead": "Corredores con precio fijo y datos en vivo de nuestra red de transportistas. El rango de hoy, ventana de tránsito, y lo que debe saber antes de reservar.",
+        "lead": "Corredores con datos en vivo de nuestra red de transportistas. El rango de hoy, ventana de tránsito, y lo que debe saber antes de reservar.",
         "routeTag": "Ruta en vivo",
-        "routeBlurb": "Precio en vivo del transportista para sedán, SUV y pickup. Fijo al cotizar."
+        "routeBlurb": "Precio en vivo del transportista para sedán, SUV y pickup. Actualizado al cotizar."
       }
     },
     "minRead": "min de lectura",
@@ -1667,9 +1667,9 @@
       "anchorEyebrow": "Precio estimado ({vehicle})",
       "rangeLabel": "Rango del mercado ${low} a ${high}",
       "alsoConsider": "Otros vehículos en esta ruta",
-    "handoffTitle": "Convierta este rango en un precio exacto y fijo",
+    "handoffTitle": "Obtenga su cotización exacta para esta ruta",
     "handoffSub": "Toma alrededor de 60 segundos. Su ruta y vehículo se transfieren automáticamente, sin volver a escribir.",
-    "handoffButton": "Solicitar mi cotización fija",
+    "handoffButton": "Obtener mi cotización exacta",
     "callPrompt": "¿Prefiere hablarlo primero?"
     },
     "callouts": {
@@ -1685,7 +1685,7 @@
       },
       "3": {
         "eyebrow": "Fijo al reservar",
-        "title": "La cotización se vuelve un contrato",
+        "title": "Su coordinador toma el control",
         "body": "Cuando esté listo, presione 'Fijar este precio'. Cumplimos lo que le mostramos."
       }
     },
@@ -1699,7 +1699,7 @@
       "errorEmail": "Revisa el correo — parece incompleto.",
       "errorSend": "No se pudo enviar ahora — igual puedes obtener tu cotización exacta arriba.",
       "sentTitle": "Enviado a {email}",
-      "sentBody": "Tu cotización está en tu bandeja, con un enlace para asegurar tu precio exacto cuando quieras."
+      "sentBody": "Tu estimado está en tu bandeja, con un enlace para obtener tu cotización exacta cuando quieras."
     }
   },
   "corridorPricing": {
@@ -1721,8 +1721,8 @@
     "quietLink": "Obtener mi cotización",
     "fallback": {
       "eyebrow": "Precios en vivo",
-      "body": "El rango de hoy aún no se ha actualizado. Solicite su precio fijo real en menos de un minuto. Sin depósito para recibir la cotización.",
-      "cta": "Obtener el precio fijo de hoy"
+      "body": "El rango de hoy aún no se ha actualizado. Solicite su cotización exacta en menos de un minuto. Sin depósito para recibir la cotización.",
+      "cta": "Obtener la cotización de hoy"
     },
     "anchorCaption": "Sedán, transporte abierto. Otros vehículos abajo."
   },
@@ -1735,7 +1735,7 @@
       "hero": {
         "eyebrow": "Corredores",
         "title": "Cada corredor importante de EE. UU. La misma Promesa de Precio.",
-        "description": "Sea que su envío cruce un océano o tres husos horarios, la promesa es la misma: la cotización es el contrato.",
+        "description": "Sea que su envío cruce un océano o tres husos horarios, la promesa es la misma: sin cambios sin avisarle.",
         "cta": "¿No ve su ruta? Obtenga una cotización de todos modos →"
       },
       "live": {
@@ -1754,7 +1754,7 @@
         "cards": {
           "price": {
             "eyebrow": "Promesa de Precio",
-            "headline": "Sin precios sorpresa →"
+            "headline": "Sin cambios sin avisarle →"
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
@@ -1768,7 +1768,7 @@
       },
       "finalCta": {
         "title": "Encuentre su corredor.",
-        "descriptionTemplate": "{count} corredores en el mapa. Cientos más enviables a pedido. Solo necesitamos su código postal de origen y de destino para fijar un precio.",
+        "descriptionTemplate": "{count} corredores en el mapa. Cientos más enviables a pedido. Solo necesitamos su código postal de origen y de destino para cotizar.",
         "primary": "Obtenga su cotización"
       },
       "card": {
@@ -1779,7 +1779,7 @@
     },
     "catalog": {
       "californiaHawaii": {
-        "shortDesc": "Puerta a puerta a las cuatro islas principales. Logística portuaria, reserva oceánica, y transporte terrestre bajo un solo precio fijo.",
+        "shortDesc": "Puerta a puerta a las cuatro islas principales. Logística portuaria, reserva oceánica, y transporte terrestre bajo una sola cotización.",
         "subDestinations": {
           "oahu": {
             "name": "Oahu — Honolulu",
@@ -1845,7 +1845,7 @@
         }
       },
       "californiaTexas": {
-        "shortDesc": "Corredor de precio fijo, a menudo mas barato que manejar.",
+        "shortDesc": "A menudo más barato que manejar.",
         "subDestinations": {
           "dallasFortWorth": {
             "name": "CA a Dallas-Fort Worth",
@@ -2247,7 +2247,7 @@
         "cards": {
           "price": {
             "eyebrow": "Promesa de Precio",
-            "headline": "Sin precios sorpresa →"
+            "headline": "Sin cambios sin avisarle →"
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
@@ -2428,7 +2428,7 @@
         "cards": {
           "price": {
             "eyebrow": "Promesa de Precio",
-            "headline": "Sin precios sorpresa →"
+            "headline": "Sin cambios sin avisarle →"
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
@@ -2482,8 +2482,8 @@
     },
     "californiaTexas": {
       "hero": {
-        "eyebrow": "California a Texas . Precio fijo todo incluido",
-        "priceCallout": "California a Texas . Precio fijo todo incluido desde $1,150",
+        "eyebrow": "California a Texas . Estimado todo incluido",
+        "priceCallout": "California a Texas . Estimado todo incluido desde $1,150",
         "title": "Envie su auto de California a Texas por menos de lo que cuesta manejarlo usted mismo.",
         "description": "1,400 millas. 3 dias al volante. Gasolina, hoteles, comidas y desgaste en su auto. O un envio de precio fijo con su auto esperandolo al llegar.",
         "ctaPrimary": "Obtener mi cotización",
@@ -2496,7 +2496,7 @@
           "driveExtra": "Mas 25 horas al volante",
           "vsLabel": "frente a",
           "shipLabel": "Envielo con nosotros",
-          "shipCost": "Desde $1,140 fijo",
+          "shipCost": "Desde $1,140",
           "shipBreakdown": "Todo incluido. Su auto le espera al llegar.",
           "shipExtra": "Ahorra ~$510 + 25 horas. Pruebe la calculadora.",
           "fullCalcLink": "Pruebe la calculadora completa Enviar vs Manejar"
@@ -2577,7 +2577,7 @@
     },
     "californiaFlorida": {
       "hero": {
-        "eyebrow": "California a Florida . Precio fijo todo incluido",
+        "eyebrow": "California a Florida . Estimado todo incluido",
         "title": "Envíe su auto de California a Florida sin el viaje de 2,800 millas.",
         "description": "De costa a costa. 4-5 días al volante. Hoteles, gasolina, comida, desgaste. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Jacksonville.",
         "ctaPrimary": "Obtener mi cotización",
@@ -2649,7 +2649,7 @@
     },
     "californiaNewYork": {
       "hero": {
-        "eyebrow": "California a Nueva York . Precio fijo todo incluido",
+        "eyebrow": "California a Nueva York . Estimado todo incluido",
         "title": "Envíe su auto de California a Nueva York. Costa a costa. Precio fijo.",
         "description": "2,900 millas. 5 días al volante por pasos invernales. O un envío con precio fijo y su auto listo en Manhattan, Brooklyn, Long Island o el norte del estado.",
         "ctaPrimary": "Obtener mi cotización",
@@ -2721,7 +2721,7 @@
     },
     "newYorkFlorida": {
       "hero": {
-        "eyebrow": "Nueva York a Florida . Precio fijo todo incluido",
+        "eyebrow": "Nueva York a Florida . Estimado todo incluido",
         "title": "Envíe su auto de Nueva York a Florida. La carrera original de snowbirds.",
         "description": "1,200 millas. 2 días de tráfico en I-95. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Naples.",
         "ctaPrimary": "Obtener mi cotización",
@@ -2807,7 +2807,7 @@
     },
     "texasFlorida": {
       "hero": {
-        "eyebrow": "Texas a Florida . Precio fijo todo incluido",
+        "eyebrow": "Texas a Florida . Estimado todo incluido",
         "title": "Envíe su auto de Texas a Florida. Corredor I-10, precio fijo.",
         "description": "1,200 millas. 2 días manejando por la costa del Golfo. O un envío con precio fijo y su auto listo en Miami, Tampa, Orlando o Jacksonville.",
         "ctaPrimary": "Obtener mi cotización",
@@ -2879,7 +2879,7 @@
     },
     "californiaGeorgia": {
       "hero": {
-        "eyebrow": "California a Georgia . Precio fijo todo incluido",
+        "eyebrow": "California a Georgia . Estimado todo incluido",
         "title": "Envíe su auto de California a Georgia por menos de lo que cuesta conducirlo.",
         "description": "2,400 millas. 4 días al volante. O un envío con precio fijo y su auto listo en Atlanta, Savannah, Macon o Augusta.",
         "ctaPrimary": "Obtener mi cotización",
@@ -2951,7 +2951,7 @@
     },
     "californiaNorthCarolina": {
       "hero": {
-        "eyebrow": "California a Carolina del Norte . Precio fijo todo incluido",
+        "eyebrow": "California a Carolina del Norte . Estimado todo incluido",
         "title": "Envíe su auto de California a Carolina del Norte sin perder una semana en la carretera.",
         "description": "2,800 millas. 5 días al volante. O un envío con precio fijo y su auto listo en Charlotte, Raleigh, Durham o Asheville.",
         "ctaPrimary": "Obtener mi cotización",
@@ -3023,7 +3023,7 @@
     },
     "californiaIllinois": {
       "hero": {
-        "eyebrow": "California a Illinois . Precio fijo todo incluido",
+        "eyebrow": "California a Illinois . Estimado todo incluido",
         "title": "Envíe su auto de California a Illinois por menos del costo de conducir.",
         "description": "2,000 millas. 3-4 días al volante por las llanuras y el clima. O un envío con precio fijo y su auto listo en Chicago, Naperville, Aurora o Joliet.",
         "ctaPrimary": "Obtener mi cotización",

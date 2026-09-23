@@ -147,7 +147,7 @@ export function snapshotAgeMs(s: PricingSnapshot, now: Date = new Date()): numbe
 export const STALENESS = {
   FRESH_MAX_MS: 48 * 60 * 60 * 1000, // < 48h: render normally
   SOFTENED_MAX_MS: 72 * 60 * 60 * 1000, // 48-72h: render with softened copy
-  // > 72h: hide the card, replace with "Get today's locked price" CTA
+  // > 72h: hide the card, replace with "Get today's quote" CTA
 } as const;
 
 export type StalenessTier = "fresh" | "softened" | "hidden";

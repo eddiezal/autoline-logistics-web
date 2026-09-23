@@ -386,11 +386,11 @@
       "badge": "Licensed, Bonded & Insured",
       "title": "No surprises.",
       "titleAccent": "No bait and switch.",
-      "description": "Ship your car with a locked price, photo-documented pickup and delivery, vetted carriers, and one named, U.S.-based coordinator from quote to drop-off.",
-      "ctaPrimary": "Get My Locked Price",
+      "description": "Ship your car with an honest quote, photo-documented pickup and delivery, vetted carriers, and one named, U.S.-based coordinator from quote to drop-off.",
+      "ctaPrimary": "Get My Quote",
       "ctaSecondary": "See the Anti-Scam Checklist",
       "proofChips": {
-        "lockedPrice": "Locked Price",
+        "lockedPrice": "Honest Quote",
         "photos": "Pickup & Delivery Photos",
         "coordinator": "U.S.-Based Coordinator",
         "insured": "Bonded, Licensed & Insured"
@@ -412,9 +412,9 @@
         "etaValue": "Thu, May 22 · 3:30 PM"
       },
       "lockedPriceCard": {
-        "label": "Locked Price",
+        "label": "Honest Quote",
         "price": "$875",
-        "tagline": "No upcharges. No surprises."
+        "tagline": "No silent changes."
       }
     },
     "trustStrip": {
@@ -446,14 +446,14 @@
     },
     "triplePromise": {
       "eyebrow": "Our triple promise",
-      "title": "<line>Price locked.</line> <line>Car documented.</line> <line>One person accountable.</line>",
+      "title": "<line>Honest quote.</line> <line>Car documented.</line> <line>One person accountable.</line>",
       "lead": "We built our process around the three things customers worry about most: surprise pricing, vehicle condition, and getting someone on the phone.",
       "seeHowLink": "See how it works",
       "simpleCards": {
         "lockedPrice": {
           "num": "1",
-          "title": "Price locked after confirmation",
-          "description": "Bait-and-switch quotes usually change after the customer is already committed. We confirm your route, vehicle, access, and pickup window first, then lock the price.",
+          "title": "Confirmed before you book",
+          "description": "Bait-and-switch quotes usually change after the customer is already committed. We confirm your route, vehicle, access, and pickup window first. If anything needs to change after that, you hear it from us first and you decide.",
           "link": "See how pricing works"
         },
         "photoProof": {
@@ -472,12 +472,12 @@
       "cards": {
         "price": {
           "stat": "$0",
-          "statLabel": "Surprise upcharges, ever",
+          "statLabel": "Hidden fees, ever",
           "eyebrow": "Price Promise",
-          "headline": "You pick the speed. We lock the price.",
+          "headline": "You pick the speed. We confirm the price.",
           "conditionLine": "If our cost goes up after we quote you…",
           "consequenceLine": "That's our problem. No changes without telling you first.",
-          "clarifier": "Locked once your route, vehicle, pickup access, and timeline are confirmed.",
+          "clarifier": "Your coordinator confirms the exact price once your route, vehicle, pickup access, and timeline are set.",
           "cta": "See the Price Promise →"
         },
         "damage": {
@@ -515,9 +515,9 @@
           "whyMatters": "If they didn't generate your quote, you're not their customer — you're someone else's lead."
         },
         "2": {
-          "title": "Is this price locked after I confirm the details?",
+          "title": "Can my price change after I confirm the details?",
           "body": "Bait-and-switch quotes often rise once the broker has to find a real carrier for your route.",
-          "whyMatters": "A real company locks the price upfront so you're never hit with last-minute increases."
+          "whyMatters": "A real company prices from today's carrier market so you're not hit with last-minute increases."
         },
         "3": {
           "title": "Who owns my shipment from pickup to delivery?",
@@ -581,9 +581,9 @@
         "lock": {
           "label": "Step 1",
           "title": "Lock your price.",
-          "description": "Tell us where it's coming from, where it's going, and what you're shipping. Request your locked, all-in price in under a minute — no surprise upcharges later.",
+          "description": "Tell us where it's coming from, where it's going, and what you're shipping. Request your all-in quote in under a minute.",
           "proof1": "Instant estimate",
-          "proof2": "No surprise pricing"
+          "proof2": "No silent changes"
         },
         "pickup": {
           "label": "Step 2",
@@ -665,9 +665,9 @@
     "finalCta": {
       "eyebrow": "Ready to ship?",
       "title": "Lock your price today.",
-      "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then a locked all-in price within 1 business hour. Your named coordinator takes over from booking. The price stays locked for 7 days, no obligation until you book.",
+      "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then your all-in quote within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
       "button": "Get my quote",
-      "trustLine": "Instant estimate · No surprise pricing · No deposit to quote"
+      "trustLine": "Instant estimate · No silent changes · No deposit to quote"
     },
     "heroRouteFinder": {
       "title": "Get your quote.",
@@ -747,7 +747,7 @@
   "pricePromise": {
     "hero": {
       "title": "Price Promise",
-      "subtitle": "You pick the speed. We lock the price. The quote is the contract."
+      "subtitle": "You pick the speed. We confirm the price. No silent changes."
     },
     "antiPattern": {
       "title": "The dirty open secret of auto transport pricing",
@@ -828,8 +828,8 @@
       }
     },
     "cta": {
-      "title": "Request your locked price in 60 seconds.",
-      "description": "Enter your origin, destination, and vehicle. Your coordinator locks your all-in price in writing within 1 business hour. Pick your tier, lock it, done.",
+      "title": "Request your quote in 60 seconds.",
+      "description": "Enter your origin, destination, and vehicle. Your coordinator sends your all-in quote in writing within 1 business hour. Pick your tier, book, done.",
       "primary": "Get my quote",
       "secondary": "See how the People Promise works →"
     },
@@ -965,7 +965,7 @@
     },
     "cta": {
       "title": "Ship with the broker that owns the claim.",
-      "description": "Locked price. $500K of contingent cargo coverage. A 14-day claim resolution target. Real coordinators. Request your quote in 60 seconds.",
+      "description": "Honest quotes. $500K of contingent cargo coverage. A 14-day claim resolution target. Real coordinators. Request your quote in 60 seconds.",
       "primary": "Get my quote",
       "secondary": "Read the People Promise →"
     }
@@ -1066,7 +1066,7 @@
     },
     "cta": {
       "title": "One named person. One phone number. One accountable point of contact.",
-      "description": "Request your locked price in 60 seconds. Then meet your coordinator — by name, with their direct line.",
+      "description": "Request your quote in 60 seconds. Then meet your coordinator, by name, with their direct line.",
       "primary": "Get my quote",
       "secondary": "Meet the team →"
     }
@@ -1115,7 +1115,7 @@
         "price": {
           "eyebrow": "Price Promise",
           "headline": "Quote = invoice →",
-          "description": "You pick the speed, we lock the price. No surprise surcharges."
+          "description": "You pick the speed, we confirm the price. No silent changes."
         },
         "damage": {
           "eyebrow": "Damage Promise",
@@ -1254,7 +1254,7 @@
     },
     "cta": {
       "title": "Ready for your quote?",
-      "description": "Type your origin, destination, and vehicle. Get your instant estimate, then a locked price within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
+      "description": "Type your origin, destination, and vehicle. Get your instant estimate, then your all-in quote within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
       "primary": "Get my quote",
       "secondary": "Talk to a coordinator"
     }
@@ -1263,7 +1263,7 @@
     "hero": {
       "eyebrow": "Get a quote",
       "titleDefault": "Tell us where, what, and when.",
-      "description": "The quote is the contract. Whatever number we send back is the number on your invoice. No bait-and-switch."
+      "description": "Your all-in quote comes from your coordinator, based on what carriers are accepting on your route today. No bait-and-switch."
     },
     "form": {
       "requiredMark": " *",
@@ -1360,7 +1360,7 @@
       },
       "submit": {
         "button": "Submit quote request",
-        "footnote": "Your coordinator will lock in your price within 1 business hour. No deposit required to receive the quote.",
+        "footnote": "Your coordinator will send your quote within 1 business hour. No deposit required to receive the quote.",
         "pending": "Sending..."
       },
       "verification": {
@@ -1368,9 +1368,9 @@
         "testModeNote": "Test mode — using hCaptcha's public test key."
       },
       "success": {
-        "eyebrow": "Locked-price quote requested",
+        "eyebrow": "Quote request received",
         "title": "Thanks. A coordinator will reach out within 1 business hour.",
-        "body": "We received your details and routed them to an available coordinator. You will get a locked all-in price by email or phone. No obligation until you book.",
+        "body": "We received your details and routed them to an available coordinator. Your coordinator will send your all-in quote by email or phone. No obligation until you book.",
         "refLabel": "Reference"
       },
       "usOnly": "We ship to all 50 US states — including Hawaii and Alaska. Domestic US shipments only.",
@@ -1380,8 +1380,8 @@
       "backedBy": "Backed by",
       "cards": {
         "contract": {
-          "title": "Quote = contract",
-          "detail": "Whatever number you receive is the number on your invoice. No surcharges, no carrier-cost-overage calls."
+          "title": "Real carrier pricing",
+          "detail": "Your quote is built from what carriers are accepting on your route today, not old averages."
         },
         "coverage": {
           "title": "$500K coverage",
@@ -1434,7 +1434,7 @@
       },
       "priceDropAlerts": {
         "title": "Price Drop Alerts",
-        "summary": "Watching a route? We'll email you when our locked price drops below your target."
+        "summary": "Watching a route? We'll email you when our price drops below your target."
       },
       "shippingChecklist": {
         "title": "Shipping Checklist",
@@ -1445,7 +1445,7 @@
     "liveLabel": "Live",
     "finalCta": {
       "title": "Ready for your quote?",
-      "description": "Tools above help you decide. When you're ready, lock your price in seconds.",
+      "description": "Tools above help you decide. When you're ready, get your quote in seconds.",
       "primary": "Get my quote"
     }
   },
@@ -1511,7 +1511,7 @@
     },
     "ship": {
       "label": "Ship with Auto Line Logistics",
-      "title": "Door-to-door, locked when you book",
+      "title": "Door-to-door, one coordinator",
       "titleHawaii": "Mainland → Long Beach → Honolulu",
       "titleAlaska": "Inland to Tacoma, RoRo to Anchorage",
       "tierPriority": "Priority tier · 3–5 day pickup window",
@@ -1571,7 +1571,7 @@
     },
     "verdict": {
       "shipBig": "Shipping saves you ~${savings} on this trip.",
-      "shipBigSub": "You skip {hours} hours behind the wheel. Get the locked price below.",
+      "shipBigSub": "You skip {hours} hours behind the wheel. Get your quote below.",
       "shipClose": "Shipping comes out ahead by ~${savings}.",
       "shipCloseSub": "Plus you skip {hours} hours behind the wheel. Worth it if your time matters.",
       "wash": "Pretty much a tie on dollars.",
@@ -1585,13 +1585,13 @@
       "alaska": "You CAN drive the Alaska Highway. Most customers don't.",
       "alaskaSub": "A week through Canada in bear country, two border crossings, and you usually pay more than the ship route.",
       "invalid": "We couldn't recognize that ZIP — but we can still get you a real price.",
-      "invalidSub": "Submit a quote with your destination and we'll send a locked price plus the drive comparison."
+      "invalidSub": "Submit a quote with your destination and we'll send your quote plus the drive comparison."
     },
     "ctas": {
       "primary": "Get my quote →",
       "secondary": "Set a price-drop alert (coming soon)"
     },
-    "footnote": "The estimated ship price is our best guess, not your locked price. Request your real locked price at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
+    "footnote": "The estimated ship price is our best guess, not your quote. Request your exact quote at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
   },
   "blog": {
     "hero": {
@@ -1612,7 +1612,7 @@
       },
       "understanding-industry": {
         "title": "Understanding the industry",
-        "lead": "How auto transport actually works. Brokers, carriers, load boards, locked prices. Why the company you book is often not the company driving, and what that means for your shipment."
+        "lead": "How auto transport actually works. Brokers, carriers, load boards, honest quotes. Why the company you book is often not the company driving, and what that means for your shipment."
       },
       "planning-shipment": {
         "title": "Planning your shipment",
@@ -1620,9 +1620,9 @@
       },
       "popular-routes": {
         "title": "Popular routes",
-        "lead": "Locked-price corridors with live pricing pulled from our carrier network. Today's range, transit window, and the route-specific things to know before you book.",
+        "lead": "Corridors with live pricing pulled from our carrier network. Today's range, transit window, and the route-specific things to know before you book.",
         "routeTag": "Live route",
-        "routeBlurb": "Live carrier pricing for sedan, SUV, and pickup. Locked at quote time."
+        "routeBlurb": "Live carrier pricing for sedan, SUV, and pickup. Refreshed at quote time."
       }
     },
     "minRead": "min read",
@@ -1667,9 +1667,9 @@
       "anchorEyebrow": "Estimated price ({vehicle})",
       "rangeLabel": "Market range ${low} to ${high}",
       "alsoConsider": "Other vehicles on this route",
-    "handoffTitle": "Make this range an exact locked price",
+    "handoffTitle": "Get your exact quote for this route",
     "handoffSub": "Takes about 60 seconds. Your route and vehicle carry over automatically, no retyping.",
-    "handoffButton": "Request my locked quote",
+    "handoffButton": "Get my exact quote",
     "callPrompt": "Prefer to talk it through first?"
     },
     "callouts": {
@@ -1684,8 +1684,8 @@
         "body": "Browse as much as you want. The price you see is the price we work with."
       },
       "3": {
-        "eyebrow": "Locked when you book",
-        "title": "Quote turns into a contract",
+        "eyebrow": "When you book",
+        "title": "Your coordinator takes over",
         "body": "Click 'Lock this price' when you're ready. We honor what we showed you."
       }
     },
@@ -1699,7 +1699,7 @@
       "errorEmail": "Check the email — it looks incomplete.",
       "errorSend": "Couldn't send right now — you can still get your exact quote above.",
       "sentTitle": "Sent to {email}",
-      "sentBody": "Your estimate is in your inbox, with a link to lock in your exact quote whenever you're ready."
+      "sentBody": "Your estimate is in your inbox, with a link to get your exact quote whenever you're ready."
     }
   },
   "corridorPricing": {
@@ -1721,8 +1721,8 @@
     "quietLink": "Get my quote",
     "fallback": {
       "eyebrow": "Live pricing",
-      "body": "Today's range hasn't refreshed yet. Request your real locked price in under a minute. No deposit to receive the quote.",
-      "cta": "Get today's locked price"
+      "body": "Today's range hasn't refreshed yet. Request your exact quote in under a minute. No deposit to receive the quote.",
+      "cta": "Get today's quote"
     },
     "anchorCaption": "Sedan, open trailer. Other vehicles below."
   },
@@ -1735,7 +1735,7 @@
       "hero": {
         "eyebrow": "Corridors",
         "title": "Every major US corridor. The same Price Promise.",
-        "description": "Whether your shipment crosses an ocean or three time zones, the promise is the same: the quote is the contract.",
+        "description": "Whether your shipment crosses an ocean or three time zones, the promise is the same: no silent changes.",
         "cta": "Don't see your route? Get a quote anyway →"
       },
       "live": {
@@ -1754,7 +1754,7 @@
         "cards": {
           "price": {
             "eyebrow": "Price Promise",
-            "headline": "No surprise pricing →"
+            "headline": "No silent changes →"
           },
           "damage": {
             "eyebrow": "Damage Promise",
@@ -1768,7 +1768,7 @@
       },
       "finalCta": {
         "title": "Find your corridor.",
-        "descriptionTemplate": "{count} corridors mapped. Hundreds more shippable on request. Your origin ZIP and destination ZIP are all we need to lock a price.",
+        "descriptionTemplate": "{count} corridors mapped. Hundreds more shippable on request. Your origin ZIP and destination ZIP are all we need to quote a price.",
         "primary": "Get my quote"
       },
       "card": {
@@ -1779,7 +1779,7 @@
     },
     "catalog": {
       "californiaHawaii": {
-        "shortDesc": "Door-to-door to all four major islands. Port logistics, ocean booking, and inland trucking under one locked price.",
+        "shortDesc": "Door-to-door to all four major islands. Port logistics, ocean booking, and inland trucking under one quote.",
         "subDestinations": {
           "oahu": {
             "name": "Oahu — Honolulu",
@@ -1845,7 +1845,7 @@
         }
       },
       "californiaTexas": {
-        "shortDesc": "Locked-price corridor, often cheaper than driving.",
+        "shortDesc": "Often cheaper than driving.",
         "subDestinations": {
           "dallasFortWorth": {
             "name": "CA to Dallas-Fort Worth",
@@ -2247,7 +2247,7 @@
         "cards": {
           "price": {
             "eyebrow": "Price Promise",
-            "headline": "No surprise pricing →"
+            "headline": "No silent changes →"
           },
           "damage": {
             "eyebrow": "Damage Promise",
@@ -2428,7 +2428,7 @@
         "cards": {
           "price": {
             "eyebrow": "Price Promise",
-            "headline": "No surprise pricing →"
+            "headline": "No silent changes →"
           },
           "damage": {
             "eyebrow": "Damage Promise",
@@ -2482,8 +2482,8 @@
     },
     "californiaTexas": {
       "hero": {
-        "eyebrow": "California to Texas . Locked all-in price",
-        "priceCallout": "California to Texas . Locked all-in price from $1,150",
+        "eyebrow": "California to Texas . All-in estimate",
+        "priceCallout": "California to Texas . All-in estimate from $1,150",
         "title": "Ship your car from California to Texas for less than driving it yourself.",
         "description": "1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.",
         "ctaPrimary": "Get my quote",
@@ -2496,7 +2496,7 @@
           "driveExtra": "Plus 25 hours behind the wheel",
           "vsLabel": "vs",
           "shipLabel": "Ship with us",
-          "shipCost": "From $1,140 locked",
+          "shipCost": "From $1,140",
           "shipBreakdown": "All-in. Your car waits when you land.",
           "shipExtra": "Saves ~$510 + 25 hrs. Try the calculator yourself.",
           "fullCalcLink": "Try the full Ship vs Drive calculator"
@@ -2577,7 +2577,7 @@
     },
     "californiaFlorida": {
       "hero": {
-        "eyebrow": "California to Florida . Locked all-in price",
+        "eyebrow": "California to Florida . All-in estimate",
         "title": "Ship your car from California to Florida without the 2,800-mile road trip.",
         "description": "Coast to coast. 4-5 days behind the wheel. Hotels, gas, food, wear. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Jacksonville.",
         "ctaPrimary": "Get my quote",
@@ -2649,7 +2649,7 @@
     },
     "californiaNewYork": {
       "hero": {
-        "eyebrow": "California to New York . Locked all-in price",
+        "eyebrow": "California to New York . All-in estimate",
         "title": "Ship your car from California to New York. Coast to coast. Locked price.",
         "description": "2,900 miles. 5 days behind the wheel through winter passes. Or one locked-price shipment with your car ready in Manhattan, Brooklyn, Long Island, or Upstate.",
         "ctaPrimary": "Get my quote",
@@ -2721,7 +2721,7 @@
     },
     "newYorkFlorida": {
       "hero": {
-        "eyebrow": "New York to Florida . Locked all-in price",
+        "eyebrow": "New York to Florida . All-in estimate",
         "title": "Ship your car New York to Florida. The original snowbird run.",
         "description": "1,200 miles. 2 days of I-95 traffic. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Naples.",
         "ctaPrimary": "Get my quote",
@@ -2807,7 +2807,7 @@
     },
     "texasFlorida": {
       "hero": {
-        "eyebrow": "Texas to Florida . Locked all-in price",
+        "eyebrow": "Texas to Florida . All-in estimate",
         "title": "Ship your car from Texas to Florida. I-10 corridor, locked price.",
         "description": "1,200 miles. 2 days of Gulf-coast driving. Or one locked-price shipment with your car ready in Miami, Tampa, Orlando, or Jacksonville.",
         "ctaPrimary": "Get my quote",
@@ -2879,7 +2879,7 @@
     },
     "californiaGeorgia": {
       "hero": {
-        "eyebrow": "California to Georgia . Locked all-in price",
+        "eyebrow": "California to Georgia . All-in estimate",
         "title": "Ship your car from California to Georgia for less than driving it yourself.",
         "description": "2,400 miles. 4 days behind the wheel. Or one locked-price shipment with your car ready in Atlanta, Savannah, Macon, or Augusta.",
         "ctaPrimary": "Get my quote",
@@ -2951,7 +2951,7 @@
     },
     "californiaNorthCarolina": {
       "hero": {
-        "eyebrow": "California to North Carolina . Locked all-in price",
+        "eyebrow": "California to North Carolina . All-in estimate",
         "title": "Ship your car from California to North Carolina without burning a week on the road.",
         "description": "2,800 miles. 5 days behind the wheel. Or one locked-price shipment with your car ready in Charlotte, Raleigh, Durham, or Asheville.",
         "ctaPrimary": "Get my quote",
@@ -3023,7 +3023,7 @@
     },
     "californiaIllinois": {
       "hero": {
-        "eyebrow": "California to Illinois . Locked all-in price",
+        "eyebrow": "California to Illinois . All-in estimate",
         "title": "Ship your car from California to Illinois for less than the cost of driving.",
         "description": "2,000 miles. 3-4 days behind the wheel through plains and weather. Or one locked-price shipment with your car ready in Chicago, Naperville, Aurora, or Joliet.",
         "ctaPrimary": "Get my quote",
