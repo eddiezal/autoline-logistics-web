@@ -22,7 +22,7 @@ import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 export const metadata: Metadata = {
   title: "Customer Portal — Auto Line Logistics",
   description:
-    "Track your shipment, view inspection photos, and message your coordinator.",
+    "See your shipment status, inspection photos, and your coordinator's contact.",
   robots: {
     index: false,
     follow: false,

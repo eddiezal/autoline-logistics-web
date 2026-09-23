@@ -5,7 +5,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Container } from "@/components/Container";
 import { HeroRouteFinder } from "@/components/HeroRouteFinder";
-import { PortalPreviewCard } from "@/components/PortalPreviewCard";
 import { StructuredData } from "@/components/StructuredData";
 import { GbpRatingBadge } from "@/components/GbpRatingBadge";
 import { localBusinessSchema } from "@/lib/seo/schemas";
@@ -386,85 +385,7 @@ export default function Home() {
           </Container>
         </section>
 
-        {/* Portal Preview — "After you book" section.
-            Placement: directly between Anti-scam teaser and Services so that
-            the Black Hole question in the teaser ("what if I don't hear from
-            anyone for 3 days during transit?") gets its visual answer right
-            below ("you're never in the dark — here's the portal you'll see
-            after booking").
-            White background breaks the amber→gray rhythm between teaser
-            and services. Frame: anxiety relief, not feature list.
-            Mockup is currently stylized inline HTML/CSS — when the actual
-            portal UI is production-polished, swap to a real screenshot. */}
-        <section className="bg-white py-16 md:py-20">
-          <Container>
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <p className="text-orange text-xs font-bold uppercase tracking-[0.12em] mb-3">
-                {t("home.portalPreview.eyebrow")}
-              </p>
-              <h2 className="text-3xl md:text-4xl lg:text-[42px] font-extrabold text-charcoal leading-[1.1] tracking-tight mb-3">
-                {t("home.portalPreview.title")}
-              </h2>
-              <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-                {t("home.portalPreview.lead")}
-              </p>
-            </div>
-
-            {/* 2-col grid: laptop mockup left, 3 callouts right. Stacks at lg- */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 lg:gap-14 items-center">
-              <PortalPreviewCard
-                urlBar={t("home.portalPreview.mockup.urlBar")}
-                driverFirstName={t("home.portalPreview.mockup.driverFirstName")}
-                titlePrefix={t("home.portalPreview.mockup.titlePrefix")}
-                destCityHeadline={t("home.portalPreview.mockup.destCityHeadline")}
-                statusConfidence={t("home.portalPreview.mockup.statusConfidence")}
-                statusEta={t("home.portalPreview.mockup.statusEta")}
-                statusLocation={t("home.portalPreview.mockup.statusLocation")}
-                originEyebrow={t("home.portalPreview.mockup.originEyebrow")}
-                currentEyebrow={t("home.portalPreview.mockup.currentEyebrow")}
-                destEyebrow={t("home.portalPreview.mockup.destEyebrow")}
-                originCity={t("home.portalPreview.mockup.originCity")}
-                currentCity={t("home.portalPreview.mockup.currentCity")}
-                currentTime={t("home.portalPreview.mockup.currentTime")}
-                destCityFull={t("home.portalPreview.mockup.destCityFull")}
-                destEtaLabel={t("home.portalPreview.mockup.destEtaLabel")}
-              />
-
-              <div className="flex flex-col gap-7">
-                <PortalCallout
-                  num={1}
-                  title={t("home.portalPreview.callouts.1.title")}
-                  text={t("home.portalPreview.callouts.1.text")}
-                />
-                <PortalCallout
-                  num={2}
-                  title={t("home.portalPreview.callouts.2.title")}
-                  text={t("home.portalPreview.callouts.2.text")}
-                />
-                <PortalCallout
-                  num={3}
-                  title={t("home.portalPreview.callouts.3.title")}
-                  text={t("home.portalPreview.callouts.3.text")}
-                />
-              </div>
-            </div>
-
-            {/* Bottom CTA — sends visitor BACK into the quote flow.
-                Logic: they just saw what they get after booking → naturally
-                primed to start booking. Different intent from the anti-scam
-                teaser CTA above (which leads outward to /anti-scam). */}
-            <div className="text-center mt-12">
-              <Link
-                href="/quote"
-                className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink font-bold text-base px-7 py-3.5 rounded-xl transition shadow-md shadow-orange/20"
-              >
-                {t("home.portalPreview.cta")} →
-              </Link>
-            </div>
-          </Container>
-        </section>
-
-                        {/* Services — V1A (orange-tinted featured + 2 supporting). Answers
+        {/* Services — V1A (orange-tinted featured + 2 supporting). Answers
             "will you ship MY car?" between Triple Promise (what we promise)
             and How It Works (the process). Mirror page at /services with
             more depth. Featured = Open Transport, supporting = Enclosed +

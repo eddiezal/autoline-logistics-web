@@ -212,7 +212,7 @@ function TrackingMapModule({
         />
         <RouteEndItem
           label="CURRENT"
-          city={currentLocation ? `Near ${currentLocation.label}` : "Tracking soon"}
+          city={currentLocation ? `Near ${currentLocation.label}` : "In transit"}
           tone="current"
           showDivider
         />

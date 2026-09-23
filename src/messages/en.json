@@ -588,15 +588,15 @@
         "pickup": {
           "label": "Step 2",
           "title": "We pick it up.",
-          "description": "Your coordinator schedules pickup, sends a checklist, and assigns a vetted driver. Twelve inspection photos at pickup — automatically synced to your portal.",
+          "description": "Your coordinator schedules pickup, sends a checklist, and assigns a vetted driver. Twelve inspection photos at pickup.",
           "proof1": "Named coordinator",
           "proof2": "12 inspection photos"
         },
         "track": {
           "label": "Step 3",
-          "title": "Track it home.",
-          "description": "Live GPS, ETA, and milestone updates the whole way. When it arrives, twelve more photos document delivery. Then your coordinator follows up to make sure everything's good.",
-          "proof1": "Live GPS tracking",
+          "title": "Delivered to your door.",
+          "description": "Your coordinator is your contact through transit, and the carrier's contact is shared once your vehicle is dispatched. When it arrives, photos document delivery. Then your coordinator follows up to make sure everything's good.",
+          "proof1": "Coordinator updates",
           "proof2": "12 delivery photos"
         }
       }
@@ -658,7 +658,7 @@
         "transit": {
           "question": "\"What happens if I don't hear from anyone for 3 days during transit?\"",
           "whyAsk": "Many brokers vanish after booking. No proactive updates, no point of contact, no tracking. By the time you realize something's off, your car is somewhere in Texas and nobody knows where.",
-          "honestAnswer": "\"Your customer portal shows the truck on the map in real time. Milestone updates by text and email at pickup, en route, and pre-delivery. Your coordinator answers if you call between them.\""
+          "honestAnswer": "\"Your coordinator is your point of contact from booking to delivery, and the carrier's contact is shared once your vehicle is dispatched.\""
         }
       }
     },
@@ -803,7 +803,7 @@
         },
         "1": {
           "q": "What does the locked price include?",
-          "a": "Door-to-door transport from your origin to destination, standard loading and unloading, basic carrier insurance coverage during transit, real-time tracking access, photo evidence at pickup and delivery, and a named coordinator from quote through delivery. Taxes, where applicable, are included."
+          "a": "Door-to-door transport from your origin to destination, standard loading and unloading, basic carrier insurance coverage during transit, photo evidence at pickup and delivery, and a named coordinator from quote through delivery. Taxes, where applicable, are included."
         },
         "2": {
           "q": "What's NOT included in the price?",
@@ -1019,11 +1019,11 @@
         },
         "2": {
           "time": "Pickup day",
-          "description": "Driver arrives. Walks the vehicle with you. Photos go into your portal in real-time. BOL signed. You and your coordinator both have a copy. Truck rolls."
+          "description": "Driver arrives. Walks the vehicle with you. Inspection photos are taken. BOL signed. You and your coordinator both have a copy. Truck rolls."
         },
         "3": {
           "time": "In transit",
-          "description": "GPS tracking and milestone updates surface in your portal. If anything unusual comes up — weather delay, mechanical, route change — your coordinator calls you proactively."
+          "description": "Your coordinator and the carrier are your contacts in transit. If anything unusual comes up (weather delay, mechanical, route change), your coordinator calls you."
         },
         "4": {
           "time": "Delivery day",
@@ -2159,7 +2159,7 @@
           },
           "3": {
             "title": "Port booking + ocean carrier",
-            "detail": "Booking confirmed with the ocean carrier (Matson or Pasha typically). Sail date set. You get the vessel name, sail date, and ETA in your portal."
+            "detail": "Booking confirmed with the ocean carrier (Matson or Pasha typically). Sail date set. Your coordinator shares the vessel name and sail date."
           },
           "4": {
             "title": "Ocean voyage",
@@ -2570,7 +2570,7 @@
         "title": "Texas to California? Same corridor, same locked price.",
         "body": {
           "0": "Everything on this page works in reverse. Carriers run California–Texas as a loop, not a one-way trip — the truck that delivers in Dallas needs a load home to Los Angeles. That return-leg economics is why Texas-to-California pricing often comes in just as sharp, sometimes sharper.",
-          "1": "The process is identical: one locked all-in price before you commit, no deposit, door-to-door pickup in Dallas–Fort Worth, Houston, Austin, or San Antonio, and delivery anywhere in California with real-time tracking the whole way."
+          "1": "The process is identical: one all-in quote before you commit, no deposit to get a quote, door-to-door pickup in Dallas–Fort Worth, Houston, Austin, or San Antonio, and delivery anywhere in California."
         },
         "cta": "Get a Texas → California quote"
       }
@@ -3367,7 +3367,7 @@
       "title": "Your shipments",
       "subtitle": "Active and recent",
       "emptyTitle": "No active shipments yet",
-      "emptyDescription": "Once you book a shipment, you'll see status, photos, and live tracking here.",
+      "emptyDescription": "Once you book a shipment, you'll see status, photos, and your coordinator's contact here.",
       "emptyAction": "Get a quote →"
     },
     "shipment": {
@@ -3400,7 +3400,7 @@
         "cta": "Finish pickup prep →"
       },
       "trust": {
-        "priceLocked": "Price locked",
+        "priceLocked": "Your price",
         "priceLockedDetail": "{amount} · no changes",
         "namedDriver": "Named driver",
         "driverPending": "Assignment incoming",
@@ -3473,7 +3473,7 @@
         "titleNoDriver": "On the way to",
         "currentlyNear": "Currently near",
         "expectedToDeliver": "Expected to deliver",
-        "etaUpdating": "ETA updating",
+        "etaUpdating": "Delivery window",
         "confidenceChip": "{pct}%",
         "confidenceHigh": "On schedule",
         "confidenceMid": "Minor variability",
@@ -3482,7 +3482,7 @@
         "statusLastReported": "Last reported near {location}"
       },
       "trust": {
-        "priceLocked": "Price locked",
+        "priceLocked": "Your price",
         "priceLockedDetail": "{amount} · no changes",
         "namedDriver": "Named driver",
         "driverPending": "Assignment in progress",

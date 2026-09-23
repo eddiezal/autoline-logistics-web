@@ -588,15 +588,15 @@
         "pickup": {
           "label": "Paso 2",
           "title": "Lo recogemos.",
-          "description": "Su coordinador agenda la recogida, le envía una lista de preparación, y asigna un conductor verificado. Doce fotos de inspección al recoger — sincronizadas automáticamente con su portal.",
+          "description": "Su coordinador agenda la recogida, le envía una lista de preparación, y asigna un conductor verificado. Doce fotos de inspección al recoger.",
           "proof1": "Coordinador asignado",
           "proof2": "12 fotos de inspección"
         },
         "track": {
           "label": "Paso 3",
-          "title": "Sígalo a casa.",
-          "description": "GPS en vivo, ETA, y actualizaciones de hitos durante todo el camino. Al llegar, doce fotos más documentan la entrega. Luego su coordinador le da seguimiento para asegurarse de que todo esté bien.",
-          "proof1": "Seguimiento GPS en vivo",
+          "title": "Entregado en su puerta.",
+          "description": "Su coordinador es su contacto durante el tránsito, y el contacto del transportista se comparte una vez despachado su vehículo. Al llegar, las fotos documentan la entrega. Luego su coordinador le da seguimiento para asegurarse de que todo esté bien.",
+          "proof1": "Actualizaciones de su coordinador",
           "proof2": "12 fotos de entrega"
         }
       }
@@ -658,7 +658,7 @@
         "transit": {
           "question": "\"¿Qué pasa si no escucho de nadie durante 3 días en tránsito?\"",
           "whyAsk": "Muchos corredores desaparecen después de la reserva. Sin actualizaciones proactivas, sin punto de contacto, sin seguimiento. Para cuando se da cuenta de que algo anda mal, su auto está en algún lugar de Texas y nadie sabe dónde.",
-          "honestAnswer": "\"Su portal de cliente muestra el camion en el mapa en tiempo real. Notificaciones por texto y correo en la recogida, en transito y antes de la entrega. Su coordinador contesta si llama entre estas.\""
+          "honestAnswer": "\"Su coordinador es su punto de contacto desde la reserva hasta la entrega, y el contacto del transportista se comparte una vez despachado su vehículo.\""
         }
       }
     },
@@ -803,7 +803,7 @@
         },
         "1": {
           "q": "¿Qué incluye el precio fijo?",
-          "a": "Transporte puerta a puerta desde su origen hasta el destino, carga y descarga estándar, cobertura básica del seguro del transportista durante el tránsito, acceso a seguimiento en tiempo real, evidencia fotográfica en la recogida y entrega, y un coordinador con nombre desde la cotización hasta la entrega. Los impuestos, cuando aplican, están incluidos."
+          "a": "Transporte puerta a puerta desde su origen hasta el destino, carga y descarga estándar, cobertura básica del seguro del transportista durante el tránsito, evidencia fotográfica en la recogida y entrega, y un coordinador con nombre desde la cotización hasta la entrega. Los impuestos, cuando aplican, están incluidos."
         },
         "2": {
           "q": "¿Qué NO está incluido en el precio?",
@@ -1019,11 +1019,11 @@
         },
         "2": {
           "time": "Día de recogida",
-          "description": "El conductor llega. Hace una inspección del vehículo con usted. Las fotos van a su portal en tiempo real. Se firma el BOL. Usted y su coordinador tienen copia. El camión arranca."
+          "description": "El conductor llega. Hace una inspección del vehículo con usted. Se toman fotos de inspección. Se firma el BOL. Usted y su coordinador tienen copia. El camión arranca."
         },
         "3": {
           "time": "En tránsito",
-          "description": "El seguimiento por GPS y las actualizaciones por hitos aparecen en su portal. Si surge algo inusual — demora por clima, problema mecánico, cambio de ruta — su coordinador lo llama de manera proactiva."
+          "description": "Su coordinador y el transportista son sus contactos durante el tránsito. Si surge algo inusual (demora por clima, problema mecánico, cambio de ruta), su coordinador lo llama."
         },
         "4": {
           "time": "Día de entrega",
@@ -2159,7 +2159,7 @@
           },
           "3": {
             "title": "Reserva portuaria + transportista oceánico",
-            "detail": "Reserva confirmada con el transportista oceánico (típicamente Matson o Pasha). Fecha de zarpe establecida. Recibe el nombre del barco, fecha de zarpe, y hora estimada de llegada en su portal."
+            "detail": "Reserva confirmada con el transportista oceánico (típicamente Matson o Pasha). Fecha de zarpe establecida. Su coordinador le comparte el nombre del barco y la fecha de zarpe."
           },
           "4": {
             "title": "Travesía oceánica",
@@ -2570,7 +2570,7 @@
         "title": "¿De Texas a California? Mismo corredor, mismo precio bloqueado.",
         "body": {
           "0": "Todo lo que dice esta página funciona a la inversa. Los transportistas recorren California–Texas en circuito, no en un solo sentido: el camión que entrega en Dallas necesita carga de regreso a Los Ángeles. Por esa economía del viaje de retorno, el precio de Texas a California muchas veces sale igual de bueno, o mejor.",
-          "1": "El proceso es idéntico: un precio total bloqueado antes de comprometerte, sin depósito, recogida puerta a puerta en Dallas–Fort Worth, Houston, Austin o San Antonio, y entrega en cualquier parte de California con rastreo en tiempo real."
+          "1": "El proceso es idéntico: una cotización todo incluido antes de comprometerte, sin depósito para cotizar, recogida puerta a puerta en Dallas–Fort Worth, Houston, Austin o San Antonio, y entrega en cualquier parte de California."
         },
         "cta": "Cotiza Texas → California"
       }
@@ -3367,7 +3367,7 @@
       "title": "Sus envíos",
       "subtitle": "Activos y recientes",
       "emptyTitle": "No tiene envíos activos",
-      "emptyDescription": "Una vez que reserve un envío, verá aquí el estado, las fotos y el seguimiento en tiempo real.",
+      "emptyDescription": "Una vez que reserve un envío, verá aquí el estado, las fotos y el contacto de su coordinador.",
       "emptyAction": "Obtener cotización →"
     },
     "shipment": {
@@ -3400,7 +3400,7 @@
         "cta": "Terminar la preparación →"
       },
       "trust": {
-        "priceLocked": "Precio bloqueado",
+        "priceLocked": "Su precio",
         "priceLockedDetail": "{amount} · sin cambios",
         "namedDriver": "Conductor asignado",
         "driverPending": "Asignación próxima",
@@ -3482,7 +3482,7 @@
         "statusLastReported": "Último reporte cerca de {location}"
       },
       "trust": {
-        "priceLocked": "Precio bloqueado",
+        "priceLocked": "Su precio",
         "priceLockedDetail": "{amount} · sin cambios",
         "namedDriver": "Conductor asignado",
         "driverPending": "Asignación en proceso",
