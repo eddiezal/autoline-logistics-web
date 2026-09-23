@@ -323,11 +323,11 @@
       "2": "Promesa 2 de 3",
       "3": "Promesa 3 de 3"
     },
-    "ctaQuotePrimary": "Obtenga su precio fijo",
+    "ctaQuotePrimary": "Obtenga su cotización",
     "notFound": {
       "eyebrow": "404 — Página no encontrada",
       "title": "No encontramos esa ruta.",
-      "description": "La página que busca no existe o se movió. Pruebe con uno de los corredores abajo, u obtenga una cotización con precio fijo para cualquier ruta en EE. UU.",
+      "description": "La página que busca no existe o se movió. Pruebe con uno de los corredores abajo, u obtenga una cotización para cualquier ruta en EE. UU.",
       "ctaPrimary": "Obtenga una cotización",
       "ctaSecondary": "Vea todos los corredores",
       "ctaHome": "Ir al inicio"
@@ -346,7 +346,7 @@
   },
   "header": {
     "tagline": "Transporte confiable de autos, camionetas y SUVs — En todo el país",
-    "ctaQuote": "Obtenga su precio fijo",
+    "ctaQuote": "Obtenga su cotización",
     "nav": {
       "home": "Inicio",
       "services": "Servicios",
@@ -362,7 +362,7 @@
   },
   "footer": {
     "brandLine": "Auto Line Logistics",
-    "description": "Transporte de autos, empresa familiar. Precios fijos, seguimiento real, un coordinador que sí contesta.",
+    "description": "Transporte de autos, empresa familiar. Cotizaciones honestas y un coordinador que sí contesta.",
     "sectionTitles": {
       "promises": "Promesas",
       "contact": "Contacto"
@@ -387,7 +387,7 @@
       "title": "Sin sorpresas.",
       "titleAccent": "Sin trampas ni anzuelos.",
       "description": "Envíe su auto con precio fijo, fotos documentadas de recogida y entrega, transportistas verificados, y un coordinador con nombre, con sede en EE. UU., desde la cotización hasta la entrega.",
-      "ctaPrimary": "Obtenga su precio fijo",
+      "ctaPrimary": "Obtenga su cotización",
       "ctaSecondary": "Vea la lista anti-estafas",
       "proofChips": {
         "lockedPrice": "Precio fijo",
@@ -548,7 +548,7 @@
           "text": "Una persona en la línea, desde la reserva hasta la entrega. Con nombre y apellido. Inglés o español."
         }
       },
-      "cta": "Obtenga su precio fijo",
+      "cta": "Obtenga su cotización",
       "mockup": {
         "urlBar": "autolinelogistics.com/portal/ALL-2026-04831",
         "driverFirstName": "Marcus",
@@ -666,7 +666,7 @@
       "eyebrow": "¿Listo para enviar?",
       "title": "Fije su precio hoy.",
       "lead": "Escriba su origen, destino, y vehículo. Obtenga su estimado al instante y su precio fijo todo incluido dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. El precio queda fijado por 7 días, sin obligación hasta que reserve.",
-      "button": "Obtenga su precio fijo",
+      "button": "Obtenga su cotización",
       "trustLine": "Estimado al instante · Sin precios sorpresa · Sin depósito para cotizar"
     },
     "heroRouteFinder": {
@@ -830,7 +830,7 @@
     "cta": {
       "title": "Solicite su precio fijo en 60 segundos.",
       "description": "Ingrese su origen, destino y vehículo. Su coordinador fija su precio todo incluido por escrito dentro de 1 hora hábil. Elija su nivel, fíjelo, listo.",
-      "primary": "Obtenga su precio fijo",
+      "primary": "Obtenga su cotización",
       "secondary": "Vea cómo funciona la Promesa Personal →"
     },
     "whyHolds": {
@@ -966,7 +966,7 @@
     "cta": {
       "title": "Envíe con el corredor que asume el reclamo.",
       "description": "Precio fijo. $500K de cobertura de carga contingente. Meta de resolución de reclamos en 14 días. Coordinadores reales. Solicite su cotización en 60 segundos.",
-      "primary": "Obtenga su precio fijo",
+      "primary": "Obtenga su cotización",
       "secondary": "Lea la Promesa Personal →"
     }
   },
@@ -1067,7 +1067,7 @@
     "cta": {
       "title": "Una persona con nombre. Un número de teléfono. Un punto de contacto responsable.",
       "description": "Solicite su precio fijo en 60 segundos. Luego conozca a su coordinador — por nombre, con su línea directa.",
-      "primary": "Obtenga su precio fijo",
+      "primary": "Obtenga su cotización",
       "secondary": "Conozca al equipo →"
     }
   },
@@ -1076,7 +1076,7 @@
       "eyebrow": "Quiénes somos",
       "title": "Una empresa familiar de transporte de autos, hecha para personas reales.",
       "description": "Sin guiones de centro de llamadas, sin cotizaciones engañosas, sin recargos sorpresa en la entrega. Como el transporte de autos debió funcionar desde el principio.",
-      "ctaPrimary": "Obtenga su precio fijo",
+      "ctaPrimary": "Obtenga su cotización",
       "ctaSecondary": "Hable con un coordinador"
     },
     "buildStatus": "🚧 Estado de construcción: las credenciales, biografías del equipo, y reseñas de clientes en esta página muestran marcadores de posición mientras confirmamos el texto final y reunimos fotos. Operativamente, hemos estado moviendo autos durante años — el sitio web es la parte que aún se está construyendo.",
@@ -1253,15 +1253,15 @@
       }
     },
     "cta": {
-      "title": "¿Listo para fijar un precio?",
+      "title": "¿Listo para su cotización?",
       "description": "Escriba su origen, destino y vehículo. Obtenga su estimado al instante y su precio fijo dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
-      "primary": "Obtenga su precio fijo",
+      "primary": "Obtenga su cotización",
       "secondary": "Hable con un coordinador"
     }
   },
   "quote": {
     "hero": {
-      "eyebrow": "Obtenga un precio fijo",
+      "eyebrow": "Obtenga una cotización",
       "titleDefault": "Cuéntenos a dónde, qué y cuándo.",
       "description": "La cotización es el contrato. Cualquier número que le enviemos es el número en su factura. Sin trampa ni cambio."
     },
@@ -1444,9 +1444,9 @@
     "comingSoonLabel": "Próximamente",
     "liveLabel": "Disponible",
     "finalCta": {
-      "title": "¿Listo para fijar un precio?",
+      "title": "¿Listo para su cotización?",
       "description": "Las herramientas de arriba le ayudan a decidir. Cuando esté listo, fije su precio en segundos.",
-      "primary": "Obtenga su precio fijo"
+      "primary": "Obtenga su cotización"
     }
   },
   "helpfulTools": {
@@ -1588,7 +1588,7 @@
       "invalidSub": "Envíe una cotización con su destino y le enviaremos un precio fijo junto con la comparación de manejar."
     },
     "ctas": {
-      "primary": "Obtenga su precio fijo →",
+      "primary": "Obtenga su cotización →",
       "secondary": "Active alerta de bajada de precio (próximamente)"
     },
     "footnote": "El precio estimado de envío es nuestra mejor aproximación, no su precio fijo. Solicite su precio fijo real en /quote. Ahí corremos el precio real del transportista. Estimado de manejar basado en sus selecciones arriba. Comida asumida a $50/persona/día; desgaste del vehículo a $0.20/milla (costo marginal real, no la tarifa de depreciación del IRS)."
@@ -1769,7 +1769,7 @@
       "finalCta": {
         "title": "Encuentre su corredor.",
         "descriptionTemplate": "{count} corredores en el mapa. Cientos más enviables a pedido. Solo necesitamos su código postal de origen y de destino para fijar un precio.",
-        "primary": "Obtenga su precio fijo"
+        "primary": "Obtenga su cotización"
       },
       "card": {
         "soonBadge": "Pronto",
@@ -2486,7 +2486,7 @@
         "priceCallout": "California a Texas . Precio fijo todo incluido desde $1,150",
         "title": "Envie su auto de California a Texas por menos de lo que cuesta manejarlo usted mismo.",
         "description": "1,400 millas. 3 dias al volante. Gasolina, hoteles, comidas y desgaste en su auto. O un envio de precio fijo con su auto esperandolo al llegar.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver las cuentas",
         "compare": {
           "eyebrow": "Las cuentas, al frente",
@@ -2563,7 +2563,7 @@
       "finalCta": {
         "title": "Envio de CA a TX con precio fijo. Haga las cuentas.",
         "body": "Solicite su cotizacion real todo incluido en 60 segundos. La cotizacion es el contrato. Sin enganos. Luego decida si manejar todavia tiene sentido.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       },
       "reverse": {
         "eyebrow": "En ambas direcciones",
@@ -2580,7 +2580,7 @@
         "eyebrow": "California a Florida . Precio fijo todo incluido",
         "title": "Envíe su auto de California a Florida sin el viaje de 2,800 millas.",
         "description": "De costa a costa. 4-5 días al volante. Hoteles, gasolina, comida, desgaste. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Jacksonville.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
       "math": {
@@ -2644,7 +2644,7 @@
       "finalCta": {
         "title": "Envío con precio fijo de CA a FL. Haga las cuentas.",
         "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       }
     },
     "californiaNewYork": {
@@ -2652,7 +2652,7 @@
         "eyebrow": "California a Nueva York . Precio fijo todo incluido",
         "title": "Envíe su auto de California a Nueva York. Costa a costa. Precio fijo.",
         "description": "2,900 millas. 5 días al volante por pasos invernales. O un envío con precio fijo y su auto listo en Manhattan, Brooklyn, Long Island o el norte del estado.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
       "math": {
@@ -2716,7 +2716,7 @@
       "finalCta": {
         "title": "Envío con precio fijo de CA a NY. Haga las cuentas.",
         "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       }
     },
     "newYorkFlorida": {
@@ -2724,7 +2724,7 @@
         "eyebrow": "Nueva York a Florida . Precio fijo todo incluido",
         "title": "Envíe su auto de Nueva York a Florida. La carrera original de snowbirds.",
         "description": "1,200 millas. 2 días de tráfico en I-95. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Naples.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
       "math": {
@@ -2792,7 +2792,7 @@
       "finalCta": {
         "title": "Envío con precio fijo de NY a FL. Haga las cuentas.",
         "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       },
       "autoTrain": {
         "eyebrow": "La pregunta del Amtrak",
@@ -2810,7 +2810,7 @@
         "eyebrow": "Texas a Florida . Precio fijo todo incluido",
         "title": "Envíe su auto de Texas a Florida. Corredor I-10, precio fijo.",
         "description": "1,200 millas. 2 días manejando por la costa del Golfo. O un envío con precio fijo y su auto listo en Miami, Tampa, Orlando o Jacksonville.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
       "math": {
@@ -2874,7 +2874,7 @@
       "finalCta": {
         "title": "Envío con precio fijo de TX a FL. Haga las cuentas.",
         "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       }
     },
     "californiaGeorgia": {
@@ -2882,7 +2882,7 @@
         "eyebrow": "California a Georgia . Precio fijo todo incluido",
         "title": "Envíe su auto de California a Georgia por menos de lo que cuesta conducirlo.",
         "description": "2,400 millas. 4 días al volante. O un envío con precio fijo y su auto listo en Atlanta, Savannah, Macon o Augusta.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
       "math": {
@@ -2946,7 +2946,7 @@
       "finalCta": {
         "title": "Envío con precio fijo de CA a GA. Haga las cuentas.",
         "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       }
     },
     "californiaNorthCarolina": {
@@ -2954,7 +2954,7 @@
         "eyebrow": "California a Carolina del Norte . Precio fijo todo incluido",
         "title": "Envíe su auto de California a Carolina del Norte sin perder una semana en la carretera.",
         "description": "2,800 millas. 5 días al volante. O un envío con precio fijo y su auto listo en Charlotte, Raleigh, Durham o Asheville.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
       "math": {
@@ -3018,7 +3018,7 @@
       "finalCta": {
         "title": "Envío con precio fijo de CA a NC. Haga las cuentas.",
         "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       }
     },
     "californiaIllinois": {
@@ -3026,7 +3026,7 @@
         "eyebrow": "California a Illinois . Precio fijo todo incluido",
         "title": "Envíe su auto de California a Illinois por menos del costo de conducir.",
         "description": "2,000 millas. 3-4 días al volante por las llanuras y el clima. O un envío con precio fijo y su auto listo en Chicago, Naperville, Aurora o Joliet.",
-        "ctaPrimary": "Obtener mi precio fijo",
+        "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
       "math": {
@@ -3090,7 +3090,7 @@
       "finalCta": {
         "title": "Envío con precio fijo de CA a IL. Haga las cuentas.",
         "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
-        "cta": "Obtener mi precio fijo"
+        "cta": "Obtener mi cotización"
       }
     },
     "shared": {
@@ -3125,7 +3125,7 @@
       "eyebrow": "¿Listo para una cotización real?",
       "title": "Use la lista con nosotros primero.",
       "lead": "Respondemos las 3 preguntas honestamente. Si no, le damos nuestra palabra de que lo dirigiremos a alguien que sí.",
-      "button": "Obtenga su precio fijo"
+      "button": "Obtenga su cotización"
     }
   },
   "services": {
@@ -3299,7 +3299,7 @@
       "eyebrow": "¿Listo para enviar?",
       "title": "Obtenga su precio fijo hoy.",
       "lead": "Sin depósito para cotizar, sin tarifas ocultas y sin cambios silenciosos: la misma Promesa de Precio en los tres niveles.",
-      "button": "Obtenga su precio fijo"
+      "button": "Obtenga su cotización"
     },
     "tiers": {
       "open": {

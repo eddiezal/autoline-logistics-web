@@ -686,7 +686,7 @@ export default function Home() {
           </Container>
         </section>
 
-                {/* Final CTA — closes the page with a strong "Ready to lock a price?"
+                {/* Final CTA — closes the page with a strong "Ready for your quote?"
             beat. Charcoal hero card centered in a white section. The closer
             between Anti-Scam Educator (gray) and the Build banner (orange-tint).
             This fixes the "page ends with a construction notice and no closing

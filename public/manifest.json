@@ -1,7 +1,7 @@
 {
   "name": "Auto Line Logistics",
   "short_name": "Auto Line",
-  "description": "Locked-price auto transport with real-time tracking, photo evidence, and a coordinator who picks up the phone.",
+  "description": "Door-to-door auto transport with honest quotes, photo evidence, and a coordinator who picks up the phone.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

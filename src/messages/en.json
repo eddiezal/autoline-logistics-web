@@ -323,11 +323,11 @@
       "2": "Promise 2 of 3",
       "3": "Promise 3 of 3"
     },
-    "ctaQuotePrimary": "Get my locked price",
+    "ctaQuotePrimary": "Get my quote",
     "notFound": {
       "eyebrow": "404 — Page not found",
       "title": "We can't find that route.",
-      "description": "The page you're looking for doesn't exist, or moved. Try one of the corridors below, or get a locked price quote for any US route.",
+      "description": "The page you're looking for doesn't exist, or moved. Try one of the corridors below, or get a quote for any US route.",
       "ctaPrimary": "Get a quote",
       "ctaSecondary": "See all corridors",
       "ctaHome": "Go home"
@@ -346,7 +346,7 @@
   },
   "header": {
     "tagline": "Trusted Vehicle Shipping for Cars, Trucks & SUVs — Nationwide",
-    "ctaQuote": "Get Your Locked Price",
+    "ctaQuote": "Get My Quote",
     "nav": {
       "home": "Home",
       "services": "Services",
@@ -362,7 +362,7 @@
   },
   "footer": {
     "brandLine": "Auto Line Logistics",
-    "description": "Family-owned auto transport. Locked prices, real tracking, a coordinator who picks up.",
+    "description": "Family-owned auto transport. Honest quotes and a coordinator who picks up.",
     "sectionTitles": {
       "promises": "Promises",
       "contact": "Contact"
@@ -548,7 +548,7 @@
           "text": "One person on the line, from booking through delivery. By name. English or Spanish."
         }
       },
-      "cta": "Get my locked price",
+      "cta": "Get my quote",
       "mockup": {
         "urlBar": "autolinelogistics.com/portal/ALL-2026-04831",
         "driverFirstName": "Marcus",
@@ -666,7 +666,7 @@
       "eyebrow": "Ready to ship?",
       "title": "Lock your price today.",
       "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then a locked all-in price within 1 business hour. Your named coordinator takes over from booking. The price stays locked for 7 days, no obligation until you book.",
-      "button": "Get my locked price",
+      "button": "Get my quote",
       "trustLine": "Instant estimate · No surprise pricing · No deposit to quote"
     },
     "heroRouteFinder": {
@@ -830,7 +830,7 @@
     "cta": {
       "title": "Request your locked price in 60 seconds.",
       "description": "Enter your origin, destination, and vehicle. Your coordinator locks your all-in price in writing within 1 business hour. Pick your tier, lock it, done.",
-      "primary": "Get my locked price",
+      "primary": "Get my quote",
       "secondary": "See how the People Promise works →"
     },
     "whyHolds": {
@@ -966,7 +966,7 @@
     "cta": {
       "title": "Ship with the broker that owns the claim.",
       "description": "Locked price. $500K of contingent cargo coverage. A 14-day claim resolution target. Real coordinators. Request your quote in 60 seconds.",
-      "primary": "Get my locked price",
+      "primary": "Get my quote",
       "secondary": "Read the People Promise →"
     }
   },
@@ -1067,7 +1067,7 @@
     "cta": {
       "title": "One named person. One phone number. One accountable point of contact.",
       "description": "Request your locked price in 60 seconds. Then meet your coordinator — by name, with their direct line.",
-      "primary": "Get my locked price",
+      "primary": "Get my quote",
       "secondary": "Meet the team →"
     }
   },
@@ -1076,7 +1076,7 @@
       "eyebrow": "About us",
       "title": "A family-owned auto transport company built for real customers.",
       "description": "No call-center scripts, no bait-and-switch quotes, no surprise surcharges at delivery. The way auto transport should have worked from the start.",
-      "ctaPrimary": "Get my locked price",
+      "ctaPrimary": "Get my quote",
       "ctaSecondary": "Talk to a coordinator"
     },
     "buildStatus": "🚧 Build status: credentials, team bios, and customer reviews on this page show placeholders while we confirm final copy and gather photos. Operationally we've been moving cars for years — the website is the part that's still being built.",
@@ -1253,15 +1253,15 @@
       }
     },
     "cta": {
-      "title": "Ready to lock a price?",
+      "title": "Ready for your quote?",
       "description": "Type your origin, destination, and vehicle. Get your instant estimate, then a locked price within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
-      "primary": "Get my locked price",
+      "primary": "Get my quote",
       "secondary": "Talk to a coordinator"
     }
   },
   "quote": {
     "hero": {
-      "eyebrow": "Get a locked price",
+      "eyebrow": "Get a quote",
       "titleDefault": "Tell us where, what, and when.",
       "description": "The quote is the contract. Whatever number we send back is the number on your invoice. No bait-and-switch."
     },
@@ -1444,9 +1444,9 @@
     "comingSoonLabel": "Coming soon",
     "liveLabel": "Live",
     "finalCta": {
-      "title": "Ready to lock a price?",
+      "title": "Ready for your quote?",
       "description": "Tools above help you decide. When you're ready, lock your price in seconds.",
-      "primary": "Get my locked price"
+      "primary": "Get my quote"
     }
   },
   "helpfulTools": {
@@ -1769,7 +1769,7 @@
       "finalCta": {
         "title": "Find your corridor.",
         "descriptionTemplate": "{count} corridors mapped. Hundreds more shippable on request. Your origin ZIP and destination ZIP are all we need to lock a price.",
-        "primary": "Get my locked price"
+        "primary": "Get my quote"
       },
       "card": {
         "soonBadge": "Soon",
@@ -2486,7 +2486,7 @@
         "priceCallout": "California to Texas . Locked all-in price from $1,150",
         "title": "Ship your car from California to Texas for less than driving it yourself.",
         "description": "1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math",
         "compare": {
           "eyebrow": "The math, up front",
@@ -2563,7 +2563,7 @@
       "finalCta": {
         "title": "Locked-price CA to TX shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       },
       "reverse": {
         "eyebrow": "Runs both ways",
@@ -2580,7 +2580,7 @@
         "eyebrow": "California to Florida . Locked all-in price",
         "title": "Ship your car from California to Florida without the 2,800-mile road trip.",
         "description": "Coast to coast. 4-5 days behind the wheel. Hotels, gas, food, wear. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Jacksonville.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
       "math": {
@@ -2644,7 +2644,7 @@
       "finalCta": {
         "title": "Locked-price CA to FL shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       }
     },
     "californiaNewYork": {
@@ -2652,7 +2652,7 @@
         "eyebrow": "California to New York . Locked all-in price",
         "title": "Ship your car from California to New York. Coast to coast. Locked price.",
         "description": "2,900 miles. 5 days behind the wheel through winter passes. Or one locked-price shipment with your car ready in Manhattan, Brooklyn, Long Island, or Upstate.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
       "math": {
@@ -2716,7 +2716,7 @@
       "finalCta": {
         "title": "Locked-price CA to NY shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       }
     },
     "newYorkFlorida": {
@@ -2724,7 +2724,7 @@
         "eyebrow": "New York to Florida . Locked all-in price",
         "title": "Ship your car New York to Florida. The original snowbird run.",
         "description": "1,200 miles. 2 days of I-95 traffic. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Naples.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
       "math": {
@@ -2792,7 +2792,7 @@
       "finalCta": {
         "title": "Locked-price NY to FL shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       },
       "autoTrain": {
         "eyebrow": "The Amtrak question",
@@ -2810,7 +2810,7 @@
         "eyebrow": "Texas to Florida . Locked all-in price",
         "title": "Ship your car from Texas to Florida. I-10 corridor, locked price.",
         "description": "1,200 miles. 2 days of Gulf-coast driving. Or one locked-price shipment with your car ready in Miami, Tampa, Orlando, or Jacksonville.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
       "math": {
@@ -2874,7 +2874,7 @@
       "finalCta": {
         "title": "Locked-price TX to FL shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       }
     },
     "californiaGeorgia": {
@@ -2882,7 +2882,7 @@
         "eyebrow": "California to Georgia . Locked all-in price",
         "title": "Ship your car from California to Georgia for less than driving it yourself.",
         "description": "2,400 miles. 4 days behind the wheel. Or one locked-price shipment with your car ready in Atlanta, Savannah, Macon, or Augusta.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
       "math": {
@@ -2946,7 +2946,7 @@
       "finalCta": {
         "title": "Locked-price CA to GA shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       }
     },
     "californiaNorthCarolina": {
@@ -2954,7 +2954,7 @@
         "eyebrow": "California to North Carolina . Locked all-in price",
         "title": "Ship your car from California to North Carolina without burning a week on the road.",
         "description": "2,800 miles. 5 days behind the wheel. Or one locked-price shipment with your car ready in Charlotte, Raleigh, Durham, or Asheville.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
       "math": {
@@ -3018,7 +3018,7 @@
       "finalCta": {
         "title": "Locked-price CA to NC shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       }
     },
     "californiaIllinois": {
@@ -3026,7 +3026,7 @@
         "eyebrow": "California to Illinois . Locked all-in price",
         "title": "Ship your car from California to Illinois for less than the cost of driving.",
         "description": "2,000 miles. 3-4 days behind the wheel through plains and weather. Or one locked-price shipment with your car ready in Chicago, Naperville, Aurora, or Joliet.",
-        "ctaPrimary": "Get my locked price",
+        "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
       "math": {
@@ -3090,7 +3090,7 @@
       "finalCta": {
         "title": "Locked-price CA to IL shipment. Run the math.",
         "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
-        "cta": "Get my locked price"
+        "cta": "Get my quote"
       }
     },
     "shared": {
@@ -3125,7 +3125,7 @@
       "eyebrow": "Ready for a real quote?",
       "title": "Use the checklist on us first.",
       "lead": "We answer all 3 questions honestly. If we don't, you have our word that we'll point you to someone who will.",
-      "button": "Get my locked price"
+      "button": "Get my quote"
     }
   },
   "services": {
@@ -3299,7 +3299,7 @@
       "eyebrow": "Ready to ship?",
       "title": "Get your locked price today.",
       "lead": "No deposit to get a quote, no hidden fees, and no silent changes: the same Price Promise on all three tiers.",
-      "button": "Get my locked price"
+      "button": "Get my quote"
     },
     "tiers": {
       "open": {

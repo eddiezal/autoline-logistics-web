@@ -182,8 +182,8 @@ export function webSiteSchema(locale: "en" | "es" = "en") {
     name: BUSINESS.name,
     description:
       locale === "es"
-        ? "Transporte de autos a precio fijo con seguimiento en tiempo real."
-        : "Locked-price auto transport with real-time tracking.",
+        ? "Transporte de autos puerta a puerta con cotizaciones honestas y un coordinador que sí contesta."
+        : "Door-to-door auto transport with honest quotes and a coordinator who picks up the phone.",
     publisher: { "@id": ORG_ID },
     inLanguage: locale === "es" ? "es-US" : "en-US",
   };

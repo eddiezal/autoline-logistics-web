@@ -127,7 +127,7 @@ export const article: Article = {
     title: "Get a live carrier price for your route",
     body: "Send us your route and vehicle. We will show you what our carrier network is actually accepting today, so you can spot a bait quote before it costs you. No commitment, no signup.",
     href: "/tools/route-price-checker",
-    label: "Get my locked price",
+    label: "Get my quote",
   },
   faq: [
     {
