@@ -670,8 +670,8 @@
       "trustLine": "Estimado al instante · Sin precios sorpresa · Sin depósito para cotizar"
     },
     "heroRouteFinder": {
-      "title": "Obtenga su precio fijo.",
-      "subtitle": "Estimados al instante de nuestra red de transportistas. Su precio fijo se mantiene por 7 días, sin obligación.",
+      "title": "Obtenga su cotización.",
+      "subtitle": "Estimados al instante de nuestra red de transportistas. Su coordinador confirma su precio exacto, sin obligación.",
       "fromZip": {
         "label": "Código postal origen",
         "placeholder": "ej. 90210"
@@ -3297,7 +3297,7 @@
     },
     "cta": {
       "eyebrow": "¿Listo para enviar?",
-      "title": "Obtenga su precio fijo hoy.",
+      "title": "Obtenga su cotización hoy.",
       "lead": "Sin depósito para cotizar, sin tarifas ocultas y sin cambios silenciosos: la misma Promesa de Precio en los tres niveles.",
       "button": "Obtenga su cotización"
     },

@@ -670,8 +670,8 @@
       "trustLine": "Instant estimate · No surprise pricing · No deposit to quote"
     },
     "heroRouteFinder": {
-      "title": "Get your locked price.",
-      "subtitle": "Instant estimates from our carrier network. Your locked price holds for 7 days, no obligation.",
+      "title": "Get your quote.",
+      "subtitle": "Instant estimates from our carrier network. Your coordinator confirms your exact price, no obligation.",
       "fromZip": {
         "label": "From ZIP",
         "placeholder": "e.g. 90210"
@@ -1588,7 +1588,7 @@
       "invalidSub": "Submit a quote with your destination and we'll send a locked price plus the drive comparison."
     },
     "ctas": {
-      "primary": "Get my locked price →",
+      "primary": "Get my quote →",
       "secondary": "Set a price-drop alert (coming soon)"
     },
     "footnote": "The estimated ship price is our best guess, not your locked price. Request your real locked price at /quote. That's where we run actual carrier pricing. Drive-side estimate based on your inputs above. Food assumed at $50/person/day; vehicle wear at $0.20/mi (real marginal cost, not the IRS depreciation rate)."
@@ -3297,7 +3297,7 @@
     },
     "cta": {
       "eyebrow": "Ready to ship?",
-      "title": "Get your locked price today.",
+      "title": "Get your quote today.",
       "lead": "No deposit to get a quote, no hidden fees, and no silent changes: the same Price Promise on all three tiers.",
       "button": "Get my quote"
     },
