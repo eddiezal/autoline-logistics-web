@@ -66,21 +66,21 @@ const COPY: Record<"en" | "es", EmailCopy> = {
     title: "Your car shipping estimate",
     routeLine: (f, t, v) => `${f} → ${t} · ${v} · Open transport`,
     rangeLine: (l, h, d) => `Typical range ${l} – ${h} · checked ${d}`,
-    lockBold: "The price we email is the price we quote.",
-    lockRest: "Carrier supply moves prices week to week — lock yours in when you're ready.",
+    lockBold: "This is today's estimate for your route.",
+    lockRest: "Carrier prices move week to week. Your coordinator confirms your exact price before you book.",
     cta: "Get my exact quote",
     orCall: "or call us at (714) 660-7558",
     footerAsk:
       "You asked for this estimate on autolinelogistics.com. We won't email you again unless you ask.",
   },
   es: {
-    subject: "Tu cotización de transporte de auto",
-    title: "Tu cotización de transporte de auto",
+    subject: "Tu estimado de transporte de auto",
+    title: "Tu estimado de transporte de auto",
     routeLine: (f, t, v) => `${f} → ${t} · ${v} · Transporte abierto`,
     rangeLine: (l, h, d) => `Rango típico ${l} – ${h} · consultado ${d}`,
-    lockBold: "El precio que te enviamos es el precio que cotizamos.",
+    lockBold: "Este es el estimado de hoy para tu ruta.",
     lockRest:
-      "Los precios cambian semana a semana con la oferta de transportistas — asegura el tuyo cuando quieras.",
+      "Los precios de los transportistas cambian cada semana. Tu coordinador confirma tu precio exacto antes de reservar.",
     cta: "Obtener mi cotización exacta",
     orCall: "o llámanos al (714) 660-7558",
     footerAsk:

@@ -35,7 +35,6 @@ const STATIC_PATHS = [
   "/services",
   "/resources",
   "/resources/delivery-day",
-  "/resources/eta-changes",
   "/resources/inspection-photos",
   "/resources/reach-coordinator",
   "/privacy-policy",

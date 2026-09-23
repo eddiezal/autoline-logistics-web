@@ -457,12 +457,6 @@ const IN_TRANSIT_RESOURCES: ResourceLinkSpec[] = [
     sub: "Phone, email, hours, languages",
   },
   {
-    href: "/resources/eta-changes",
-    icon: <IconClock />,
-    title: "What if my ETA changes?",
-    sub: "Causes, notifications, your options",
-  },
-  {
     href: "/damage-promise#claim",
     icon: <IconShield />,
     title: "Damage claim process",
