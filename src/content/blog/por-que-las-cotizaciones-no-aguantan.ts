@@ -93,7 +93,7 @@ export const article: Article = {
         "¿Cómo llegan a su cotización? ¿Precios en vivo de transportistas, o promedios de envíos pasados? Respuesta honesta: datos del mercado en vivo refrescados al momento de la cotización. Respuesta riesgosa: un vago «usamos datos históricos» o «se basa en el mercado».",
         "¿Tienen un transportista confirmado para mi ruta a este precio, o lo están publicando para esperar ofertas? Respuesta honesta: un transportista confirmado dentro de horas de la reserva, o una explicación clara de cómo funciona el proceso de publicar-y-esperar. Respuesta riesgosa: «le encontraremos uno, no se preocupe».",
         "¿Qué pasa exactamente con mi depósito si ningún transportista acepta al precio cotizado? Respuesta honesta: un compromiso específico por escrito (retenido hasta que el transportista acepte, totalmente reembolsable, aplicado al precio más alto si usted está de acuerdo). Respuesta riesgosa: «es poco probable que pase».",
-        "¿Pondrán la promesa de estabilidad de cotización por escrito? Respuesta honesta: sí, en el contrato que firma antes de pagar. Respuesta riesgosa: cualquier versión de «no hacemos eso, pero prometemos».",
+        "¿Pondrán por escrito qué pasa si el precio necesita cambiar? Respuesta honesta: sí, antes de que pague. Respuesta riesgosa: cualquier versión de «no hacemos eso, pero prometemos».",
       ],
     },
 
@@ -101,9 +101,9 @@ export const article: Article = {
     {
       kind: "pp",
       texts: [
-        "Usamos datos del mercado de transportistas en vivo, refrescados al momento en que usted pide una cotización. Podemos ver lo que los transportistas en nuestra red están aceptando hoy, en su ruta específica, para su vehículo específico. Agregamos un margen justo encima para cubrir la coordinación de despacho, el manejo de reclamos, y el soporte de coordinador asignado que usted recibe desde la reserva hasta la entrega. El número que ve es el número que paga.",
-        "Como muchos brokers establecidos, cobramos un pequeño depósito de reserva cuando usted decide avanzar. El depósito va hacia su factura final. La diferencia es lo que pasa después. No usamos el depósito como apalancamiento para un cambio de precio, porque nuestro precio se basó en lo que los transportistas realmente estaban aceptando en primer lugar. El precio fijo aguanta.",
-        "Si un transportista no puede ser confirmado a su precio fijo (poco común en los corredores que operamos activamente), se lo decimos por adelantado. Usted decide qué pasa después: mantenerse y esperar que un transportista acepte, ajustar a un nuevo precio si está de acuerdo, o reembolsar su depósito. La decisión es suya.",
+        "Usamos datos del mercado de transportistas en vivo, refrescados al momento en que usted pide una cotización. Podemos ver lo que los transportistas en nuestra red están aceptando hoy, en su ruta específica, para su vehículo específico. Agregamos un margen justo encima para cubrir la coordinación de despacho, el manejo de reclamos, y el soporte de coordinador asignado que usted recibe desde la reserva hasta la entrega. Si algo cambia, se lo decimos primero.",
+        "Como muchos brokers establecidos, cobramos un pequeño depósito de reserva cuando usted decide avanzar. El depósito va hacia su factura final. La diferencia es lo que pasa después. No usamos el depósito como apalancamiento para un cambio de precio, porque nuestro precio se basó en lo que los transportistas realmente estaban aceptando en primer lugar. Si algo necesita cambiar, usted lo escucha primero y decide.",
+        "Si un transportista no puede ser confirmado a su precio cotizado (poco común en los corredores que operamos activamente), se lo decimos por adelantado. Usted decide qué pasa después: mantenerse y esperar que un transportista acepte, ajustar a un nuevo precio si está de acuerdo, o reembolsar su depósito. La decisión es suya.",
       ],
     },
   ],
@@ -119,7 +119,7 @@ export const article: Article = {
     title: "Obtenga un precio de transportista en vivo para su ruta",
     body: "Mándenos su ruta y vehículo. Le mostraremos lo que nuestra red de transportistas está aceptando hoy, para que pueda detectar una cotización cebo antes de que le cueste. Sin compromiso, sin registro.",
     href: "/tools/route-price-checker",
-    label: "Obtenga mi precio fijo",
+    label: "Obtenga mi cotización",
   },
   faq: [
     {

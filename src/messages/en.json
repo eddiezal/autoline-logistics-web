@@ -118,10 +118,10 @@
       "inspectionPhotos": {
         "metadata": {
           "title": "How inspection photos work — Auto Line Logistics",
-          "description": "We photograph your vehicle at every milestone. What we capture, when, why, and where to find them."
+          "description": "We photograph your vehicle at pickup and delivery. What we capture, when, why, and where to find them."
         },
         "title": "How inspection photos work",
-        "subtitle": "We photograph your vehicle at every milestone so you never have to prove anything happened.",
+        "subtitle": "We photograph your vehicle at pickup and delivery so you never have to prove anything happened.",
         "sections": {
           "standard": {
             "title": "The 12-photo standard",
@@ -134,13 +134,13 @@
             ]
           },
           "milestones": {
-            "title": "At every milestone",
-            "body": "Photos are taken at three checkpoints: pickup (full 12-photo set), each transit waypoint (driver's choice — typically 2–4 across the trip), and delivery (full 12-photo set). Every photo is timestamped and GPS-tagged automatically by the driver's app. The waypoint shots aren't legal records — they're \"your car is still where it should be\" peace-of-mind shots. Often it's a parking-lot photo, or your car on the trailer behind a rest stop sign.",
+            "title": "At pickup and delivery",
+            "body": "Photos are taken at two checkpoints: pickup (full 12-photo set) and delivery (full 12-photo set). Every photo is timestamped.",
             "bullets": [
               "Pickup: full 12-photo set",
               "Transit waypoints: 2–4 across the route",
               "Delivery: full 12-photo set",
-              "All photos timestamped + GPS-tagged automatically"
+              "All photos timestamped"
             ]
           },
           "where": {
@@ -580,7 +580,7 @@
       "steps": {
         "lock": {
           "label": "Step 1",
-          "title": "Lock your price.",
+          "title": "Get your quote.",
           "description": "Tell us where it's coming from, where it's going, and what you're shipping. Request your all-in quote in under a minute.",
           "proof1": "Instant estimate",
           "proof2": "No silent changes"
@@ -664,7 +664,7 @@
     },
     "finalCta": {
       "eyebrow": "Ready to ship?",
-      "title": "Lock your price today.",
+      "title": "Get your quote today.",
       "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then your all-in quote within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
       "button": "Get my quote",
       "trustLine": "Instant estimate · No silent changes · No deposit to quote"
@@ -787,10 +787,10 @@
       "eyebrow": "The promise itself",
       "headline": "The price on your booking confirmation is the price we work from, and it never changes without you hearing from us first.",
       "items": {
-        "0": "No post-assignment surcharges",
+        "0": "No silent price changes",
         "1": "No “the market shifted” calls",
         "2": "No carrier-cost-overage upcharges",
-        "3": "No fuel-surcharge add-ons",
+        "3": "No hidden fees",
         "4": "Any ancillary fee disclosed before you book"
       }
     },
@@ -802,7 +802,7 @@
           "a": "That's our problem to solve first. We go back to our network to find a carrier at your quoted rate. In the rare case we can't confirm one, we tell you before anything changes and you decide: keep the booking, adjust, or take a full refund of your deposit. No silent increases, ever."
         },
         "1": {
-          "q": "What does the locked price include?",
+          "q": "What does the quote include?",
           "a": "Door-to-door transport from your origin to destination, standard loading and unloading, basic carrier insurance coverage during transit, photo evidence at pickup and delivery, and a named coordinator from quote through delivery. Taxes, where applicable, are included."
         },
         "2": {
@@ -835,11 +835,11 @@
     },
     "whyHolds": {
       "eyebrow": "How our pricing works",
-      "title": "Why our locked price holds",
+      "title": "Why our quotes hold up",
       "body": {
-        "0": "Our quote is based on what carriers are actually accepting today on your route, not old averages or wishful thinking. We check the current market, add a fair margin, and give you a locked price before you book. The number you see is the number you pay.",
+        "0": "Our quote is based on what carriers are actually accepting today on your route, not old averages or wishful thinking. We check the current market, add a fair margin, and give you your all-in quote before you book. If anything needs to change, you hear it from us first.",
         "1": "Some brokers price your shipment using averages from past loads. Others post your car on a broker-only marketplace and wait to see what offers come in. Both can produce a number that looks good on the page but does not survive contact with reality. When the broker cannot get a carrier at that number, they call you for more money.",
-        "2": "We avoid that problem at the source. By using today's actual carrier prices, our locked price is built to hold."
+        "2": "We avoid that problem at the source. By using today's actual carrier prices, our quotes are built to hold up."
       }
     }
   },
@@ -1075,7 +1075,7 @@
     "hero": {
       "eyebrow": "About us",
       "title": "A family-owned auto transport company built for real customers.",
-      "description": "No call-center scripts, no bait-and-switch quotes, no surprise surcharges at delivery. The way auto transport should have worked from the start.",
+      "description": "No call-center scripts, no bait-and-switch quotes, no silent price changes. The way auto transport should have worked from the start.",
       "ctaPrimary": "Get my quote",
       "ctaSecondary": "Talk to a coordinator"
     },
@@ -1086,7 +1086,7 @@
       "body": {
         "0": "Many auto transport companies are middlemen. They quote you a price they hope a carrier will take, post your shipment to a broker-only marketplace, and wait for offers. When no carrier accepts at the quoted price, they call you to ask for more money. And if your car shows up damaged? You're on your own with the carrier's barebones insurance.",
         "1": "We do this differently. We're a family operation based in Southern California. Our sister carrier company, Auto Line Express, runs a 35-truck fleet that handles routes where it makes operational sense. For everywhere else, we contract with a vetted network of partner carriers — every one of them held to the same standards.",
-        "2": "The number on your quote is the number on your invoice. Your coordinator is a real person whose name you'll know. And your car is covered above and beyond the carrier's minimums — because cars get damaged, and pretending otherwise is how customers get burned."
+        "2": "Your quote comes from what carriers are accepting today, not a guess. Your coordinator is a real person whose name you'll know. And your car is covered above and beyond the carrier's minimums, because cars get damaged, and pretending otherwise is how customers get burned."
       },
       "sidebar": {
         "eyebrow": "By the numbers",
@@ -1146,9 +1146,9 @@
       "ours": {
         "title": "How we structure it",
         "items": {
-          "0": "Locked price at booking — written into the agreement",
+          "0": "Your quote in writing before you book",
           "1": "Vetted carrier network we've worked with for years, plus our own trucks",
-          "2": "No surcharge clause — if costs change, that's our problem, not yours",
+          "2": "No silent changes: if your price needs to change, you hear it first and you decide",
           "3": "Named coordinator from quote through delivery",
           "4": "Layered coverage and we file the damage claim if it happens"
         }
@@ -1240,7 +1240,7 @@
         },
         "3": {
           "q": "Why is the website still being built if you've been operating for years?",
-          "a": "Operationally we've always run on direct relationships — referrals, repeat customers, military families who pass our number around. The website is the new part: a place to lock a price without a phone call, see what we cover, and verify our credentials yourself. Customer coordination has always been the strength; we're catching the website up to it."
+          "a": "Operationally we've always run on direct relationships: referrals, repeat customers, military families who pass our number around. The website is the new part: a place to get a quote without a phone call, see what we cover, and verify our credentials yourself. Customer coordination has always been the strength; we're catching the website up to it."
         },
         "4": {
           "q": "How do I verify you're a legitimate carrier?",
@@ -1248,7 +1248,7 @@
         },
         "5": {
           "q": "Do you ship outside California?",
-          "a": "Yes. California is our home base, but we ship to every state. The most-requested corridors — Hawaii, Alaska, Texas, Florida, New York — each get their own dedicated page. Don't see your route? Get a quote and your coordinator will lock a price."
+          "a": "Yes. California is our home base, but we ship to every state. The most-requested corridors (Hawaii, Alaska, Texas, Florida, New York) each get their own dedicated page. Don't see your route? Get a quote and your coordinator will send your price."
         }
       }
     },
@@ -1686,7 +1686,7 @@
       "3": {
         "eyebrow": "When you book",
         "title": "Your coordinator takes over",
-        "body": "Click 'Lock this price' when you're ready. We honor what we showed you."
+        "body": "Click 'Get my quote' when you're ready."
       }
     },
     "capture": {
@@ -2132,7 +2132,7 @@
       "hero": {
         "eyebrow": "Corridor → California ↔ Hawaii",
         "title": "Ship a car to Hawaii, the right way.",
-        "description": "Door-to-door, mainland to all four major islands. Port logistics, ocean booking, and inland trucking — coordinated under one locked price.",
+        "description": "Door-to-door, mainland to all four major islands. Port logistics, ocean booking, and inland trucking, coordinated under one quote.",
         "ctaPrimary": "Get my CA → HI price",
         "ctaSecondary": "How it works ↓"
       },
@@ -2147,7 +2147,7 @@
       },
       "route": {
         "eyebrow": "The route",
-        "title": "Six legs. One coordinator. Locked price.",
+        "title": "Six legs. One coordinator. One quote.",
         "legs": {
           "1": {
             "title": "Mainland pickup",
@@ -2293,8 +2293,8 @@
         }
       },
       "finalCta": {
-        "title": "Request your locked Hawaii price in 60 seconds.",
-        "description": "Pickup ZIP, destination island, vehicle type. We'll show three tiered prices. Pick one, lock it, and your coordinator takes it from there.",
+        "title": "Request your Hawaii quote in 60 seconds.",
+        "description": "Pickup ZIP, destination island, vehicle type. We'll show three tiered prices. Pick one, book, and your coordinator takes it from there.",
         "primary": "Get my CA → HI price",
         "secondary": "See California ↔ Alaska →"
       },
@@ -2303,7 +2303,7 @@
         "title": "Shipping a car from Hawaii to California",
         "body": {
           "0": "This corridor runs both directions. Hawaii-to-California moves use the same ocean system in reverse: we coordinate drop-off at the Honolulu (or neighbor-island) port, the vessel crossing to Long Beach or Oakland, and trucking from the port to any California address — or onward to the rest of the mainland.",
-          "1": "It’s the same booking, the same locked price covering every leg, and the same coordinator watching the handoffs. PCS orders back to the mainland, families relocating home, a car that followed you to the islands and needs to follow you back — all routine moves for this lane."
+          "1": "It’s the same booking, one quote covering every leg, and the same coordinator watching the handoffs. PCS orders back to the mainland, families relocating home, a car that followed you to the islands and needs to follow you back: all routine moves for this lane."
         },
         "cta": "Get a Hawaii → California quote"
       }
@@ -2316,7 +2316,7 @@
       "hero": {
         "eyebrow": "Corridor → California ↔ Alaska",
         "title": "Ship a car to Alaska. Two routes. One coordinator.",
-        "description": "Overland via the Alaska Highway or ocean via Tacoma. Optimized for season, destination, and timeline. Locked price either way.",
+        "description": "Overland via the Alaska Highway or ocean via Tacoma. Optimized for season, destination, and timeline. One all-in quote either way.",
         "ctaPrimary": "Get my CA → AK price",
         "ctaSecondary": "Compare routes ↓"
       },
@@ -2327,7 +2327,7 @@
           "0": "Most California-to-Alaska shipping is for one of three customers: military PCS families heading to JBER, Eielson, or Fort Wainwright; oil and gas workers rotating through the North Slope; retirees moving permanently. Each group has different timeline tolerance, route preferences, and vehicle types — and the right answer for one isn't always the right answer for another.",
           "1": "Then there's the seasonality. Winter on the Alaska Highway means weather closures, frost heaves, and trucking premiums. Ocean from Tacoma stays reliable year-round. Summer flips the math — overland gets faster and cheaper for interior destinations."
         },
-        "punchline": "Your coordinator picks the route based on your specific origin, destination, season, and timeline. You see one locked price for whichever route they recommend."
+        "punchline": "Your coordinator picks the route based on your specific origin, destination, season, and timeline. You see one all-in quote for whichever route they recommend."
       },
       "routes": {
         "eyebrow": "The two routes",
@@ -2374,7 +2374,7 @@
           "oversizedSuv": {
             "title": "Oversized SUVs / dual-axle",
             "summary": "Standard for the AK customer base. Premium scales with dimensions.",
-            "detail": "Excursions, Suburbans, dually trucks all routine. Vehicles exceeding standard carrier slot (length, weight, or height) shift into the oversized pricing tier. Dimensions confirmed at booking; price stays locked once confirmed."
+            "detail": "Excursions, Suburbans, dually trucks all routine. Vehicles exceeding standard carrier slot (length, weight, or height) shift into the oversized pricing tier. Dimensions confirmed at booking."
           },
           "atv": {
             "title": "ATVs / snowmobiles paired",
@@ -2474,8 +2474,8 @@
         }
       },
       "finalCta": {
-        "title": "Request your locked Alaska price in 60 seconds.",
-        "description": "Pickup ZIP, destination, vehicle type. We'll quote both routes and recommend the right one. Pick a tier, lock the price, and your coordinator takes it from there.",
+        "title": "Request your Alaska quote in 60 seconds.",
+        "description": "Pickup ZIP, destination, vehicle type. We'll quote both routes and recommend the right one. Pick a tier, book, and your coordinator takes it from there.",
         "primary": "Get my CA → AK price",
         "secondary": "See California ↔ Hawaii →"
       }
@@ -2485,7 +2485,7 @@
         "eyebrow": "California to Texas . All-in estimate",
         "priceCallout": "California to Texas . All-in estimate from $1,150",
         "title": "Ship your car from California to Texas for less than driving it yourself.",
-        "description": "1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one locked-price shipment with your car waiting when you land.",
+        "description": "1,400 miles. 3 days behind the wheel. Gas, hotels, meals, and wear on your car. Or one all-in shipment with your car waiting when you land.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math",
         "compare": {
@@ -2507,7 +2507,7 @@
         "title": "Why shipping often costs less than driving",
         "body": {
           "0": "A one-way CA to TX trip costs $400-600 in gas, plus 2-3 hotel nights, food, and 1,400 hard freeway miles on your vehicle. Add the value of 3 days of your time.",
-          "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose 3 days. We run this corridor through our family fleet at Auto Line Express and our vetted partner network."
+          "1": "An all-in auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose 3 days. We run this corridor through our family fleet at Auto Line Express and our vetted partner network."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -2517,7 +2517,7 @@
         "items": {
           "jobRelocators": {
             "title": "Job relocators on a deadline",
-            "body": "Your start date is fixed. The 3 days you would lose driving cost more than shipping. Locked price plus 4-6 day delivery."
+            "body": "Your start date is fixed. The 3 days you would lose driving cost more than shipping. All-in quote plus 4-6 day delivery."
           },
           "multiVehicle": {
             "title": "Multi-vehicle households",
@@ -2547,7 +2547,7 @@
             "a": "CA to TX standard sedan on open transport runs $1,150-1,650 depending on origin/destination ZIP and timing. SUV $200-400 more. Truck $300-500 more. SD market estimate at quote time."
           },
           "2": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           },
           "3": {
@@ -2561,13 +2561,13 @@
         }
       },
       "finalCta": {
-        "title": "Locked-price CA to TX shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "CA to TX shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       },
       "reverse": {
         "eyebrow": "Runs both ways",
-        "title": "Texas to California? Same corridor, same locked price.",
+        "title": "Texas to California? Same corridor, same all-in quote.",
         "body": {
           "0": "Everything on this page works in reverse. Carriers run California–Texas as a loop, not a one-way trip — the truck that delivers in Dallas needs a load home to Los Angeles. That return-leg economics is why Texas-to-California pricing often comes in just as sharp, sometimes sharper.",
           "1": "The process is identical: one all-in quote before you commit, no deposit to get a quote, door-to-door pickup in Dallas–Fort Worth, Houston, Austin, or San Antonio, and delivery anywhere in California."
@@ -2579,7 +2579,7 @@
       "hero": {
         "eyebrow": "California to Florida . All-in estimate",
         "title": "Ship your car from California to Florida without the 2,800-mile road trip.",
-        "description": "Coast to coast. 4-5 days behind the wheel. Hotels, gas, food, wear. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Jacksonville.",
+        "description": "Coast to coast. 4-5 days behind the wheel. Hotels, gas, food, wear. Or one all-in shipment with your car waiting in Miami, Orlando, Tampa, or Jacksonville.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
@@ -2588,7 +2588,7 @@
         "title": "Why shipping California to Florida often costs less than driving",
         "body": {
           "0": "A one-way CA to FL drive runs $750-900 in gas, 4 hotel nights, food on the road, and 2,800 hard freeway miles on your vehicle. Add 40+ hours behind the wheel.",
-          "1": "A locked auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose almost a week. Snowbird and relocation traffic keeps this corridor moving year-round."
+          "1": "An all-in auto-transport quote often comes in BELOW the all-in cost of driving, and you don't lose almost a week. Snowbird and relocation traffic keeps this corridor moving year-round."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -2598,7 +2598,7 @@
         "items": {
           "jobRelocators": {
             "title": "Snowbirds on a calendar",
-            "body": "Florida is the #1 snowbird destination from California. Lock the price now, your car meets you in Miami or Naples. Skip the 5-day drive."
+            "body": "Florida is the #1 snowbird destination from California. Book now, your car meets you in Miami or Naples. Skip the 5-day drive."
           },
           "multiVehicle": {
             "title": "Multi-vehicle households",
@@ -2633,25 +2633,25 @@
           },
           "3": {
             "q": "Can I time the delivery around my snowbird arrival?",
-            "a": "Yes. Most snowbird shipments are timed to land 1-2 days before or after the customer's flight. Your coordinator can hold or expedite within reasonable windows. Locked-price either way."
+            "a": "Yes. Most snowbird shipments are timed to land 1-2 days before or after the customer's flight. Your coordinator can hold or expedite within reasonable windows. One all-in quote either way."
           },
           "4": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
       "finalCta": {
-        "title": "Locked-price CA to FL shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "CA to FL shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       }
     },
     "californiaNewYork": {
       "hero": {
         "eyebrow": "California to New York . All-in estimate",
-        "title": "Ship your car from California to New York. Coast to coast. Locked price.",
-        "description": "2,900 miles. 5 days behind the wheel through winter passes. Or one locked-price shipment with your car ready in Manhattan, Brooklyn, Long Island, or Upstate.",
+        "title": "Ship your car from California to New York. Coast to coast. One all-in quote.",
+        "description": "2,900 miles. 5 days behind the wheel through winter passes. Or one all-in shipment with your car ready in Manhattan, Brooklyn, Long Island, or Upstate.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
@@ -2660,7 +2660,7 @@
         "title": "Why shipping California to New York often costs less than driving",
         "body": {
           "0": "A one-way CA to NY drive runs $750-900 in gas, 4 hotel nights, food, and 2,900 miles of mostly interstate with weather risk through the Rockies and Midwest. Add 45+ hours of windshield time.",
-          "1": "A locked auto-transport quote regularly beats the all-in cost of driving once you count hotels, food, and time off work. East-coast finance and tech transfers run this corridor year-round."
+          "1": "An all-in auto-transport quote regularly beats the cost of driving once you count hotels, food, and time off work. East-coast finance and tech transfers run this corridor year-round."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -2670,7 +2670,7 @@
         "items": {
           "jobRelocators": {
             "title": "Finance and tech transfers",
-            "body": "Wall Street, fintech, big tech. Your start date is fixed. The 5 days lost driving cost more than shipping. Locked price plus 7-10 day delivery."
+            "body": "Wall Street, fintech, big tech. Your start date is fixed. The 5 days lost driving cost more than shipping. All-in quote plus 7-10 day delivery."
           },
           "multiVehicle": {
             "title": "Multi-vehicle households",
@@ -2705,17 +2705,17 @@
           },
           "3": {
             "q": "Should I ship in winter?",
-            "a": "Yes, the route stays reliable. Winter pricing is usually slightly lower (less competition). Carriers reroute around weather, transit can stretch 1-2 days. Locked price either way."
+            "a": "Yes, the route stays reliable. Winter pricing is usually slightly lower (less competition). Carriers reroute around weather, transit can stretch 1-2 days. One all-in quote either way."
           },
           "4": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
       "finalCta": {
-        "title": "Locked-price CA to NY shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "CA to NY shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       }
     },
@@ -2723,7 +2723,7 @@
       "hero": {
         "eyebrow": "New York to Florida . All-in estimate",
         "title": "Ship your car New York to Florida. The original snowbird run.",
-        "description": "1,200 miles. 2 days of I-95 traffic. Or one locked-price shipment with your car waiting in Miami, Orlando, Tampa, or Naples.",
+        "description": "1,200 miles. 2 days of I-95 traffic. Or one all-in shipment with your car waiting in Miami, Orlando, Tampa, or Naples.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
@@ -2732,7 +2732,7 @@
         "title": "Why shipping New York to Florida often costs less than driving",
         "body": {
           "0": "A one-way NY to FL drive runs $300-450 in gas, 1-2 hotel nights, food, tolls, and 1,200 miles of I-95 traffic. Add 18-20 hours behind the wheel.",
-          "1": "A locked auto-transport quote on this corridor often runs flat to slightly below the all-in cost of driving. The snowbird volume keeps prices competitive year-round, with peak demand October-December (southbound) and April-May (northbound)."
+          "1": "An all-in auto-transport quote on this corridor often runs flat to slightly below the cost of driving. The snowbird volume keeps prices competitive year-round, with peak demand October-December (southbound) and April-May (northbound)."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -2742,7 +2742,7 @@
         "items": {
           "jobRelocators": {
             "title": "Snowbirds, both directions",
-            "body": "The classic East Coast snowbird corridor. Southbound in October-December, northbound in April-May. Lock the price now, your car meets you in Florida or back home."
+            "body": "The classic East Coast snowbird corridor. Southbound in October-December, northbound in April-May. Book now, your car meets you in Florida or back home."
           },
           "multiVehicle": {
             "title": "Second-home owners",
@@ -2780,18 +2780,18 @@
             "a": "Yes. Most snowbird destinations are short-term rentals or seasonal homes. Your coordinator just needs the delivery address and contact info for the receiver."
           },
           "4": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           },
           "5": {
             "q": "Is the Auto Train cheaper than shipping a car from New York to Florida?",
-            "a": "Sometimes — a coach seat plus vehicle in the off-season can undercut a shipping quote. But the train runs Lorton, VA to Sanford, FL, so you drive to Virginia first and finish the trip on the other end, and sleeper cabins or peak dates close the gap fast. Compare its total against our locked all-in price for your exact addresses and dates."
+            "a": "Sometimes: a coach seat plus vehicle in the off-season can undercut a shipping quote. But the train runs Lorton, VA to Sanford, FL, so you drive to Virginia first and finish the trip on the other end, and sleeper cabins or peak dates close the gap fast. Compare its total against our all-in quote for your exact addresses and dates."
           }
         }
       },
       "finalCta": {
-        "title": "Locked-price NY to FL shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "NY to FL shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       },
       "autoTrain": {
@@ -2800,16 +2800,16 @@
         "body": {
           "0": "Every snowbird season, the same comparison: Amtrak’s Auto Train or a car shipper? The train has real appeal — you ride along with your car. But look at the map before you decide. The Auto Train doesn’t leave from New York; it departs from Lorton, Virginia, a 4–5 hour drive south. And it ends in Sanford, near Orlando — if you’re bound for Miami, Tampa, or Naples, you still have hours of driving on the far end.",
           "1": "On price, the honest answer is “it depends.” A coach seat plus vehicle in the off-season can beat a shipping quote. Add a sleeper cabin, peak-season dates, a night in a hotel near Lorton, fuel and tolls on both ends — and the totals usually converge, with the train demanding a day and a half of your time aboard and on the road.",
-          "2": "Our take: if you enjoy the ride, travel light, and you’re headed to the Orlando area anyway, the Auto Train is a fine product. If you’re going anywhere else in Florida — or you’d rather fly down and have the car appear at your door — a locked-price door-to-door shipment is less work and, once you count every cost, rarely more money."
+          "2": "Our take: if you enjoy the ride, travel light, and you’re headed to the Orlando area anyway, the Auto Train is a fine product. If you’re going anywhere else in Florida, or you’d rather fly down and have the car appear at your door, a door-to-door shipment is less work and, once you count every cost, rarely more money."
         },
-        "cta": "Compare with a locked quote"
+        "cta": "Compare with our quote"
       }
     },
     "texasFlorida": {
       "hero": {
         "eyebrow": "Texas to Florida . All-in estimate",
-        "title": "Ship your car from Texas to Florida. I-10 corridor, locked price.",
-        "description": "1,200 miles. 2 days of Gulf-coast driving. Or one locked-price shipment with your car ready in Miami, Tampa, Orlando, or Jacksonville.",
+        "title": "Ship your car from Texas to Florida. I-10 corridor, one all-in quote.",
+        "description": "1,200 miles. 2 days of Gulf-coast driving. Or one all-in shipment with your car ready in Miami, Tampa, Orlando, or Jacksonville.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
@@ -2818,7 +2818,7 @@
         "title": "Why shipping Texas to Florida often costs less than driving",
         "body": {
           "0": "A one-way TX to FL drive runs $300-450 in gas, 1-2 hotel nights, food, and 1,200 miles of I-10 freeway. Add 18-20 hours behind the wheel through Louisiana and Mississippi.",
-          "1": "A locked auto-transport quote on this corridor often runs flat to slightly under the all-in cost of driving. Houston and Dallas snowbird traffic, military relocations from Fort Hood and Lackland, and family relocations keep the corridor competitive."
+          "1": "An all-in auto-transport quote on this corridor often runs flat to slightly under the cost of driving. Houston and Dallas snowbird traffic, military relocations from Fort Hood and Lackland, and family relocations keep the corridor competitive."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -2828,7 +2828,7 @@
         "items": {
           "jobRelocators": {
             "title": "Military and snowbirds",
-            "body": "Houston and DFW snowbirds heading to Florida winter homes. Military PCS to or from Pensacola, Jacksonville, Tampa. Lock the price now, your car arrives in 3-5 days."
+            "body": "Houston and DFW snowbirds heading to Florida winter homes. Military PCS to or from Pensacola, Jacksonville, Tampa. Book now, your car arrives in 3-5 days."
           },
           "multiVehicle": {
             "title": "Multi-vehicle households",
@@ -2863,17 +2863,17 @@
           },
           "3": {
             "q": "What about hurricane season?",
-            "a": "June through November. Carriers reroute around active storms, transit can stretch 1-2 days during named-storm windows. Locked price either way. Your coordinator gives realistic transit windows during active weather."
+            "a": "June through November. Carriers reroute around active storms, transit can stretch 1-2 days during named-storm windows. One all-in quote either way. Your coordinator gives realistic transit windows during active weather."
           },
           "4": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
       "finalCta": {
-        "title": "Locked-price TX to FL shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "TX to FL shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       }
     },
@@ -2881,7 +2881,7 @@
       "hero": {
         "eyebrow": "California to Georgia . All-in estimate",
         "title": "Ship your car from California to Georgia for less than driving it yourself.",
-        "description": "2,400 miles. 4 days behind the wheel. Or one locked-price shipment with your car ready in Atlanta, Savannah, Macon, or Augusta.",
+        "description": "2,400 miles. 4 days behind the wheel. Or one all-in shipment with your car ready in Atlanta, Savannah, Macon, or Augusta.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
@@ -2890,7 +2890,7 @@
         "title": "Why shipping California to Georgia often costs less than driving",
         "body": {
           "0": "A one-way CA to GA drive runs $650-800 in gas, 3 hotel nights, food, and 2,400 miles of southern interstate. Add 35+ hours behind the wheel.",
-          "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Atlanta tech volume, southern relocations, and college runs keep the lane competitive."
+          "1": "An all-in auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Atlanta tech volume, southern relocations, and college runs keep the lane competitive."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -2900,7 +2900,7 @@
         "items": {
           "jobRelocators": {
             "title": "Atlanta tech and corporate transfers",
-            "body": "Tech, fintech, corporate HQ relocations to Atlanta. Your start date is fixed. The 4 days lost driving cost more than shipping. Locked price plus 6-8 day delivery."
+            "body": "Tech, fintech, corporate HQ relocations to Atlanta. Your start date is fixed. The 4 days lost driving cost more than shipping. All-in quote plus 6-8 day delivery."
           },
           "multiVehicle": {
             "title": "Multi-vehicle households",
@@ -2938,14 +2938,14 @@
             "a": "If your vehicle is over ~$60K, low-mile, or has custom paint, yes. The price difference is typically $300-600. Open is fine for daily drivers."
           },
           "4": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
       "finalCta": {
-        "title": "Locked-price CA to GA shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "CA to GA shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       }
     },
@@ -2953,7 +2953,7 @@
       "hero": {
         "eyebrow": "California to North Carolina . All-in estimate",
         "title": "Ship your car from California to North Carolina without burning a week on the road.",
-        "description": "2,800 miles. 5 days behind the wheel. Or one locked-price shipment with your car ready in Charlotte, Raleigh, Durham, or Asheville.",
+        "description": "2,800 miles. 5 days behind the wheel. Or one all-in shipment with your car ready in Charlotte, Raleigh, Durham, or Asheville.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
@@ -2962,7 +2962,7 @@
         "title": "Why shipping California to North Carolina often costs less than driving",
         "body": {
           "0": "A one-way CA to NC drive runs $750-900 in gas, 3-4 hotel nights, food, and 2,800 miles of mostly southern interstate. Add 40+ hours behind the wheel.",
-          "1": "A locked auto-transport quote on this corridor regularly beats the all-in cost of driving once you count hotels, food, and time off work. Charlotte banking and Research Triangle tech transfers run this lane weekly."
+          "1": "An all-in auto-transport quote on this corridor regularly beats the cost of driving once you count hotels, food, and time off work. Charlotte banking and Research Triangle tech transfers run this lane weekly."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -2972,7 +2972,7 @@
         "items": {
           "jobRelocators": {
             "title": "Charlotte banking and RTP tech transfers",
-            "body": "Bank of America, Truist, RTP tech, Duke, UNC. Your start date is fixed. The 5 days lost driving cost more than shipping. Locked price plus 6-9 day delivery."
+            "body": "Bank of America, Truist, RTP tech, Duke, UNC. Your start date is fixed. The 5 days lost driving cost more than shipping. All-in quote plus 6-9 day delivery."
           },
           "multiVehicle": {
             "title": "Multi-vehicle households",
@@ -3010,14 +3010,14 @@
             "a": "If your vehicle is over ~$60K, low-mile, or has custom paint, yes. The price difference is typically $400-700. Open is fine for daily drivers."
           },
           "4": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
       "finalCta": {
-        "title": "Locked-price CA to NC shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "CA to NC shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       }
     },
@@ -3025,7 +3025,7 @@
       "hero": {
         "eyebrow": "California to Illinois . All-in estimate",
         "title": "Ship your car from California to Illinois for less than the cost of driving.",
-        "description": "2,000 miles. 3-4 days behind the wheel through plains and weather. Or one locked-price shipment with your car ready in Chicago, Naperville, Aurora, or Joliet.",
+        "description": "2,000 miles. 3-4 days behind the wheel through plains and weather. Or one all-in shipment with your car ready in Chicago, Naperville, Aurora, or Joliet.",
         "ctaPrimary": "Get my quote",
         "ctaSecondary": "See the math"
       },
@@ -3034,7 +3034,7 @@
         "title": "Why shipping California to Illinois often costs less than driving",
         "body": {
           "0": "A one-way CA to IL drive runs $550-700 in gas, 2-3 hotel nights, food, and 2,000 miles of I-80 freeway with weather sensitivity through the Rockies. Add 30+ hours behind the wheel.",
-          "1": "A locked auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Chicago metro tech and finance transfers, plus Midwestern family relocations, keep the lane moving year-round."
+          "1": "An all-in auto-transport quote on this corridor often comes in BELOW the all-in cost of driving. Chicago metro tech and finance transfers, plus Midwestern family relocations, keep the lane moving year-round."
         },
         "punchline": "The quote you accept at booking is our baseline and it does not change without you hearing from us first. No fuel surcharge. No hidden door-to-door fees."
       },
@@ -3044,7 +3044,7 @@
         "items": {
           "jobRelocators": {
             "title": "Chicago tech and finance transfers",
-            "body": "Tech, fintech, Chicago Loop finance. Your start date is fixed. The 4 days lost driving cost more than shipping. Locked price plus 5-7 day delivery."
+            "body": "Tech, fintech, Chicago Loop finance. Your start date is fixed. The 4 days lost driving cost more than shipping. All-in quote plus 5-7 day delivery."
           },
           "multiVehicle": {
             "title": "Multi-vehicle households",
@@ -3079,17 +3079,17 @@
           },
           "3": {
             "q": "Should I ship in winter?",
-            "a": "Yes. The route stays reliable, but winter premium is small and transit may stretch 1-2 days through the Rockies during heavy weather. Locked price either way."
+            "a": "Yes. The route stays reliable, but winter premium is small and transit may stretch 1-2 days through the Rockies during heavy weather. One all-in quote either way."
           },
           "4": {
-            "q": "What does 'locked price' mean?",
+            "q": "What happens if my price needs to change?",
             "a": "No fuel surcharges, no hidden door-to-door fees, and no silent increases: if your price ever needs to change before dispatch, you hear it from us first and you decide. Our Price Promise."
           }
         }
       },
       "finalCta": {
-        "title": "Locked-price CA to IL shipment. Run the math.",
-        "body": "Request your real all-in quote in 60 seconds. The quote is the contract. No bait-and-switch. Then decide if driving still makes sense.",
+        "title": "CA to IL shipment. Run the math.",
+        "body": "Request your real all-in quote in 60 seconds. No bait-and-switch. Then decide if driving still makes sense.",
         "cta": "Get my quote"
       }
     },

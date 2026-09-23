@@ -175,7 +175,7 @@ export const article: Article = {
     { kind: "h3", text: "¿Qué hace Auto Line Logistics de manera diferente?" },
     {
       kind: "p",
-      text: "Verificamos lo que los transportistas realmente están aceptando hoy, en el momento en que pregunta. No promedios del año pasado, no una suposición publicada en un tablón. El número que ve es el precio que un transportista real está tomando en su ruta esta semana. Nuestro lado Logistics lo conecta con transportistas verificados a través de la red. Nuestro transportista hermano Auto Line Express posee 35 camiones que operamos en rutas seleccionadas. El número que ve al cotizar es el precio fijo, y cobramos un pequeño depósito de reserva solo cuando usted decide avanzar.",
+      text: "Verificamos lo que los transportistas realmente están aceptando hoy, en el momento en que pregunta. No promedios del año pasado, no una suposición publicada en un tablón. El número que ve es el precio que un transportista real está tomando en su ruta esta semana. Nuestro lado Logistics lo conecta con transportistas verificados a través de la red. Nuestro transportista hermano Auto Line Express posee 35 camiones que operamos en rutas seleccionadas. El número que ve al cotizar es la cotización con la que trabaja su coordinador, y cobramos un pequeño depósito de reserva solo cuando usted decide avanzar.",
     },
   ],
   faq: [

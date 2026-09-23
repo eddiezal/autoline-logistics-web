@@ -69,10 +69,10 @@ export const article: Article = {
       text: "Flexibility is a discount. A three-to-five-day pickup window lets a dispatcher slot you into a truck that is already coming; \"it must leave tomorrow\" means paying a premium for whoever is closest. If your dates are hard, say so and accept the premium as real. If they're soft, say that too — it is the cheapest lever you have.",
     },
 
-    { kind: "h3", text: "4. Ask the one clarifying question: \"Is this locked, or an estimate?\"" },
+    { kind: "h3", text: "4. Ask the one clarifying question: \"What is this quote based on?\"" },
     {
       kind: "p",
-      text: "This single question sorts the industry. An estimate can move; a locked price cannot. Make the company say which one you are holding, in writing. If the answer is hedged — \"it's usually accurate,\" \"prices rarely change\" — you have an estimate wearing a locked price's clothes.",
+      text: "This single question sorts the industry. A quote built from what carriers are accepting on your route this week is one kind of answer. A rate table, a national average, or silence is another. If the answer is hedged (\"it's usually accurate,\" \"prices rarely change\") you are holding a guess.",
     },
 
     { kind: "h3", text: "5. Compare three or more quotes — and read the outlier correctly" },
@@ -102,7 +102,7 @@ export const article: Article = {
     { kind: "h3", text: "9. Never pay a large deposit for an estimate" },
     {
       kind: "p",
-      text: "A deposit should buy you a committed, locked price — not a place in line for a renegotiation. If the number can still move, your money should not have moved yet. This one rule filters out most of the industry's worst actors by itself.",
+      text: "A deposit should buy you dispatch on the quote you accepted, not a place in line for a renegotiation. If the company will not tell you in writing what happens when a price needs to change, your money should not have moved yet. This one rule filters out most of the industry's worst actors by itself.",
     },
 
     { kind: "h2", text: "Mistakes that cost real money" },
@@ -114,7 +114,7 @@ export const article: Article = {
         { label: "Entering your phone number on a quote-comparison site that resells your info to a dozen brokers — the calls do not stop for weeks", tone: "warn" },
         { label: "Waiting until three days before you need the car moved, then negotiating from desperation", tone: "warn" },
         { label: "Treating a verbal number as a commitment — if it isn't written, it doesn't exist", tone: "warn" },
-        { label: "Getting the quote in writing with a locked price and a named pickup window", tone: "ok" },
+        { label: "Getting the quote in writing with a named pickup window", tone: "ok" },
       ],
     },
 
@@ -131,15 +131,15 @@ export const article: Article = {
       kind: "callout",
       tone: "brand",
       title: "How our quote works",
-      body: "The number our calculator shows is pulled from live carrier market data for your exact ZIPs and vehicle, at the moment you ask — then it locks. No deposit to see it, no renegotiation at pickup week, and a bilingual team (English/Español) on the other end. It takes about two minutes and doesn't put you on anyone's call list.",
+      body: "The number our calculator shows is pulled from live carrier market data for your exact ZIPs and vehicle, at the moment you ask. No deposit to see it, your coordinator confirms the exact quote before you book, and a bilingual team (English/Español) is on the other end. It takes about two minutes and doesn't put you on anyone's call list.",
     },
 
     {
       kind: "cta",
-      title: "Get a locked, all-in quote in two minutes",
+      title: "Get an all-in quote in two minutes",
       body: "Exact ZIPs in, real market price out. The number you see is the number you pay.",
       href: "/quote",
-      label: "Get my locked quote",
+      label: "Get my quote",
     },
   ],
   faq: [
@@ -178,9 +178,9 @@ export const article: Article = {
   ],
   primaryCta: {
     eyebrow: "Ready for a number you can plan around?",
-    title: "Get a locked, all-in price for your exact route",
-    body: "Two ZIPs and a vehicle. Live market pricing, locked when you see it, no deposit required. English y Español.",
+    title: "Get an all-in quote for your exact route",
+    body: "Two ZIPs and a vehicle. Live market pricing, no deposit required. English y Español.",
     href: "/quote",
-    label: "Get my locked quote",
+    label: "Get my quote",
   },
 };

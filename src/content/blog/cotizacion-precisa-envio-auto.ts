@@ -62,10 +62,10 @@ export const article: Article = {
       text: "La flexibilidad es un descuento. Una ventana de recogida de tres a cinco días le permite al despachador subirte a un camión que ya viene en camino; \"tiene que salir mañana\" significa pagar una prima por el que esté más cerca. Si tus fechas son fijas, dilo y acepta la prima como real. Si son flexibles, dilo también: es la palanca más barata que tienes.",
     },
 
-    { kind: "h3", text: "4. Haz la pregunta que aclara todo: \"¿Este precio está bloqueado o es un estimado?\"" },
+    { kind: "h3", text: "4. Haz la pregunta que aclara todo: \"¿En qué se basa esta cotización?\"" },
     {
       kind: "p",
-      text: "Esta sola pregunta clasifica a la industria. Un estimado puede moverse; un precio bloqueado no. Haz que la compañía te diga cuál de los dos tienes, por escrito. Si la respuesta es evasiva — \"suele ser exacto\", \"los precios casi nunca cambian\" — tienes un estimado disfrazado de precio bloqueado.",
+      text: "Esta sola pregunta clasifica a la industria. Una cotización basada en lo que los transportistas aceptan en tu ruta esta semana es un tipo de respuesta. Una tabla de tarifas, un promedio nacional o el silencio es otro. Si la respuesta es evasiva (\"suele ser exacto\", \"los precios casi nunca cambian\") tienes una suposición.",
     },
 
     { kind: "h3", text: "5. Compara tres o más cotizaciones — y lee bien la que se sale del grupo" },
@@ -95,7 +95,7 @@ export const article: Article = {
     { kind: "h3", text: "9. Nunca pagues un depósito grande por un estimado" },
     {
       kind: "p",
-      text: "Un depósito debe comprarte un precio comprometido y bloqueado — no un lugar en la fila para una renegociación. Si el número todavía puede moverse, tu dinero todavía no debería haberse movido. Esta sola regla filtra a la mayoría de los peores actores de la industria.",
+      text: "Un depósito debe comprarte el despacho con la cotización que aceptaste, no un lugar en la fila para una renegociación. Si la compañía no te dice por escrito qué pasa cuando un precio necesita cambiar, tu dinero todavía no debería haberse movido. Esta sola regla filtra a la mayoría de los peores actores de la industria.",
     },
 
     { kind: "h2", text: "Errores que cuestan dinero de verdad" },
@@ -107,7 +107,7 @@ export const article: Article = {
         { label: "Poner tu teléfono en un sitio comparador que revende tus datos a una docena de brokers — las llamadas no paran en semanas", tone: "warn" },
         { label: "Esperar hasta tres días antes de necesitar el envío y negociar desde la desesperación", tone: "warn" },
         { label: "Tratar un número verbal como un compromiso — si no está por escrito, no existe", tone: "warn" },
-        { label: "Pedir la cotización por escrito, con precio bloqueado y ventana de recogida definida", tone: "ok" },
+        { label: "Pedir la cotización por escrito, con ventana de recogida definida", tone: "ok" },
       ],
     },
 
@@ -124,12 +124,12 @@ export const article: Article = {
       kind: "callout",
       tone: "brand",
       title: "Cómo funciona nuestra cotización",
-      body: "El número que muestra nuestra calculadora sale de datos de mercado en vivo para tus códigos postales y tu vehículo exactos, en el momento en que preguntas — y ahí se bloquea. Sin depósito para verlo, sin renegociación en la semana de recogida, y con un equipo que te atiende en español. Toma unos dos minutos y no te pone en la lista de llamadas de nadie.",
+      body: "El número que muestra nuestra calculadora sale de datos de mercado en vivo para tus códigos postales y tu vehículo exactos, en el momento en que preguntas. Sin depósito para verlo, tu coordinador confirma la cotización exacta antes de reservar, y un equipo te atiende en español. Toma unos dos minutos y no te pone en la lista de llamadas de nadie.",
     },
 
     {
       kind: "cta",
-      title: "Obtén un precio bloqueado, todo incluido, en dos minutos",
+      title: "Obtén una cotización todo incluido en dos minutos",
       body: "Códigos postales exactos de entrada, precio real de mercado de salida. El número que ves es el número que pagas.",
       href: "/quote",
       label: "Cotizar ahora",
@@ -171,8 +171,8 @@ export const article: Article = {
   ],
   primaryCta: {
     eyebrow: "¿Listo para un número con el que puedas planear?",
-    title: "Obtén un precio bloqueado y todo incluido para tu ruta exacta",
-    body: "Dos códigos postales y un vehículo. Precio de mercado en vivo, bloqueado en cuanto lo ves, sin depósito. Te atendemos en español.",
+    title: "Obtén una cotización todo incluido para tu ruta exacta",
+    body: "Dos códigos postales y un vehículo. Precio de mercado en vivo, sin depósito. Te atendemos en español.",
     href: "/quote",
     label: "Cotizar ahora",
   },

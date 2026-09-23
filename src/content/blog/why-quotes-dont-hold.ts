@@ -96,7 +96,7 @@ export const article: Article = {
         "How do you come up with your quote? Live carrier prices, or averages from past shipments? Honest answer: live market data refreshed at the time of the quote. Risky answer: a vague \"we use historical data\" or \"it is based on the market.\"",
         "Do you have a confirmed carrier for my route at this price, or are you posting it to wait for offers? Honest answer: a confirmed carrier within hours of booking, or a clear explanation of how the posting-and-waiting process works. Risky answer: \"we will find one for you, do not worry.\"",
         "What exactly happens to my deposit if no carrier accepts at the quoted price? Honest answer: a specific written commitment (held until carrier accepts, fully refundable, applied to the higher price if you agree to it). Risky answer: \"that is unlikely to happen.\"",
-        "Will you put the quote-stability promise in writing? Honest answer: yes, in the contract you sign before paying. Risky answer: any version of \"we do not do that, but we promise.\"",
+        "Will you put in writing what happens if the price needs to change? Honest answer: yes, before you pay. Risky answer: any version of \"we do not do that, but we promise.\"",
       ],
     },
 
@@ -105,8 +105,8 @@ export const article: Article = {
       kind: "pp",
       texts: [
         "We use live carrier market data, refreshed the moment you request a quote. We can see what carriers in our network are actually accepting today, on your specific route, for your specific vehicle. We add a fair margin on top to cover dispatch coordination, claims handling, and the named-coordinator support you get from booking through delivery. The number you see is the number you pay.",
-        "Like many established brokers, we collect a small booking deposit when you choose to move forward. The deposit goes toward your final invoice. The difference is what happens next. We do not use the deposit as leverage for a price change, because our pricing was based on what carriers were actually accepting in the first place. The locked price holds.",
-        "If a carrier cannot be confirmed at your locked price (rare on the corridors we run actively), we tell you upfront. You decide what happens next: hold and wait for a carrier to accept, adjust to a new price if you agree, or refund your deposit. The choice is yours.",
+        "Like many established brokers, we collect a small booking deposit when you choose to move forward. The deposit goes toward your final invoice. The difference is what happens next. We do not use the deposit as leverage for a price change, because our pricing was based on what carriers were actually accepting in the first place. If anything needs to change, you hear it first and you decide.",
+        "If a carrier cannot be confirmed at your quoted price (rare on the corridors we run actively), we tell you upfront. You decide what happens next: hold and wait for a carrier to accept, adjust to a new price if you agree, or refund your deposit. The choice is yours.",
       ],
     },
   ],

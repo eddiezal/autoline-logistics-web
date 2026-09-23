@@ -118,10 +118,10 @@
       "inspectionPhotos": {
         "metadata": {
           "title": "Cómo funcionan las fotos de inspección — Auto Line Logistics",
-          "description": "Fotografiamos su vehículo en cada hito. Qué capturamos, cuándo, por qué, y dónde encontrarlas."
+          "description": "Fotografiamos su vehículo en la recogida y la entrega. Qué capturamos, cuándo, por qué, y dónde encontrarlas."
         },
         "title": "Cómo funcionan las fotos de inspección",
-        "subtitle": "Fotografiamos su vehículo en cada hito para que nunca tenga que demostrar que algo sucedió.",
+        "subtitle": "Fotografiamos su vehículo en la recogida y la entrega para que nunca tenga que demostrar que algo sucedió.",
         "sections": {
           "standard": {
             "title": "El estándar de 12 fotos",
@@ -134,13 +134,13 @@
             ]
           },
           "milestones": {
-            "title": "En cada hito",
-            "body": "Las fotos se toman en tres puntos de control: recogida (set completo de 12 fotos), cada punto de paso en tránsito (elección del conductor — típicamente 2–4 a lo largo del viaje), y entrega (set completo de 12 fotos). Cada foto tiene marca de tiempo y geoetiqueta automática mediante la app del conductor. Las fotos de paso no son registros legales — son fotos de tranquilidad «su auto sigue donde debería estar». A menudo es una foto de estacionamiento, o su auto en el remolque detrás del cartel de un descanso.",
+            "title": "En la recogida y la entrega",
+            "body": "Las fotos se toman en dos puntos de control: recogida (set completo de 12 fotos) y entrega (set completo de 12 fotos). Cada foto tiene marca de tiempo.",
             "bullets": [
               "Recogida: set completo de 12 fotos",
               "Puntos de paso en tránsito: 2–4 a lo largo de la ruta",
               "Entrega: set completo de 12 fotos",
-              "Todas con marca de tiempo + geoetiqueta automática"
+              "Todas con marca de tiempo"
             ]
           },
           "where": {
@@ -787,10 +787,10 @@
       "eyebrow": "La promesa en sí",
       "headline": "El precio en su confirmación de reserva es el precio con el que trabajamos, y nunca cambia sin que usted lo escuche de nosotros primero.",
       "items": {
-        "0": "Sin recargos después de la asignación",
+        "0": "Sin cambios de precio silenciosos",
         "1": "Sin llamadas de “el mercado cambió”",
-        "2": "Sin sobrecargos por costos del transportista",
-        "3": "Sin recargos por combustible",
+        "2": "Usted decide ante cualquier cambio",
+        "3": "Sin cargos ocultos",
         "4": "Cualquier cargo adicional se revela antes de reservar"
       }
     },
@@ -802,7 +802,7 @@
           "a": "Ese es nuestro problema a resolver primero. Volvemos a nuestra red para encontrar un transportista a su tarifa cotizada. En el caso poco común de que no podamos confirmarlo, se lo decimos antes de que algo cambie y usted decide: mantener la reserva, ajustar, o un reembolso completo de su depósito. Nunca un aumento sin avisar."
         },
         "1": {
-          "q": "¿Qué incluye el precio fijo?",
+          "q": "¿Qué incluye la cotización?",
           "a": "Transporte puerta a puerta desde su origen hasta el destino, carga y descarga estándar, cobertura básica del seguro del transportista durante el tránsito, evidencia fotográfica en la recogida y entrega, y un coordinador con nombre desde la cotización hasta la entrega. Los impuestos, cuando aplican, están incluidos."
         },
         "2": {
@@ -835,11 +835,11 @@
     },
     "whyHolds": {
       "eyebrow": "Cómo funciona nuestro precio",
-      "title": "Por qué nuestro precio fijo aguanta",
+      "title": "Por qué nuestras cotizaciones aguantan",
       "body": {
-        "0": "Nuestra cotización se basa en lo que los transportistas realmente están aceptando hoy en su ruta, no en promedios viejos ni suposiciones. Verificamos el mercado actual, agregamos un margen justo, y le damos un precio fijo antes de que reserve. El número que ve es el número que paga.",
+        "0": "Nuestra cotización se basa en lo que los transportistas realmente están aceptando hoy en su ruta, no en promedios viejos ni suposiciones. Verificamos el mercado actual, agregamos un margen justo, y le damos su cotización todo incluido antes de que reserve. Si algo necesita cambiar, usted lo escucha de nosotros primero.",
         "1": "Algunos brokers cotizan su envío usando promedios de cargas pasadas. Otros publican su auto en una plataforma exclusiva para brokers y esperan a ver qué ofertas llegan. Ambos pueden producir un número que se ve bien en la página pero que no sobrevive el contacto con la realidad. Cuando el broker no puede conseguir un transportista a ese número, le llaman para pedir más dinero.",
-        "2": "Evitamos ese problema desde el origen. Al usar los precios reales de transportistas de hoy, nuestro precio fijo está construido para aguantar."
+        "2": "Evitamos ese problema desde el origen. Al usar los precios reales de transportistas de hoy, nuestras cotizaciones están construidas para aguantar."
       }
     }
   },
@@ -1075,7 +1075,7 @@
     "hero": {
       "eyebrow": "Quiénes somos",
       "title": "Una empresa familiar de transporte de autos, hecha para personas reales.",
-      "description": "Sin guiones de centro de llamadas, sin cotizaciones engañosas, sin recargos sorpresa en la entrega. Como el transporte de autos debió funcionar desde el principio.",
+      "description": "Sin guiones de centro de llamadas, sin cotizaciones engañosas, sin cambios de precio silenciosos. Como el transporte de autos debió funcionar desde el principio.",
       "ctaPrimary": "Obtenga su cotización",
       "ctaSecondary": "Hable con un coordinador"
     },
@@ -1086,7 +1086,7 @@
       "body": {
         "0": "Muchas empresas de transporte de autos en este país son intermediarios. Le cotizan un precio que esperan que un transportista acepte, publican su envío en una plataforma exclusiva para brokers, y esperan ofertas. Cuando ningún transportista acepta al precio cotizado, le llaman para pedir más dinero. ¿Y si su auto llega dañado? Está solo con el seguro básico del transportista.",
         "1": "Nosotros lo hacemos diferente. Somos una operación familiar basada en el sur de California. Nuestra compañía hermana, Auto Line Express, opera una flota de 35 camiones que cubre las rutas donde tiene sentido operativo. Para el resto, trabajamos con una red verificada de transportistas asociados — cada uno de ellos sometido a los mismos estándares.",
-        "2": "El número en su cotización es el número en su factura. Su coordinador es una persona real cuyo nombre conocerá. Y su auto está cubierto más allá de los mínimos del transportista — porque los autos se dañan, y pretender lo contrario es como los clientes terminan estafados."
+        "2": "Su cotización se basa en lo que los transportistas aceptan hoy, no en una suposición. Su coordinador es una persona real cuyo nombre conocerá. Y su auto está cubierto más allá de los mínimos del transportista, porque los autos se dañan, y pretender lo contrario es como los clientes terminan estafados."
       },
       "sidebar": {
         "eyebrow": "En cifras",
@@ -1146,9 +1146,9 @@
       "ours": {
         "title": "Cómo lo estructuramos nosotros",
         "items": {
-          "0": "Precio fijo al reservar — escrito en el acuerdo",
+          "0": "Su cotización por escrito antes de reservar",
           "1": "Red verificada de transportistas con los que hemos trabajado durante años, más la flota familiar en Auto Line Express",
-          "2": "Sin cláusula de recargo — si los costos cambian, ese es nuestro problema, no el suyo",
+          "2": "Sin cambios silenciosos: si su precio necesita cambiar, usted lo escucha primero y decide",
           "3": "Coordinador con nombre desde la cotización hasta la entrega",
           "4": "Cobertura por capas y nosotros presentamos el reclamo de daños si sucede"
         }
@@ -2132,7 +2132,7 @@
       "hero": {
         "eyebrow": "Corredor → California ↔ Hawái",
         "title": "Envíe un auto a Hawái, de la forma correcta.",
-        "description": "Puerta a puerta, del continente a las cuatro islas principales. Logística portuaria, reserva oceánica, y transporte terrestre — coordinados bajo un solo precio fijo.",
+        "description": "Puerta a puerta, del continente a las cuatro islas principales. Logística portuaria, reserva oceánica, y transporte terrestre, coordinados bajo una sola cotización.",
         "ctaPrimary": "Obtenga mi precio CA → HI",
         "ctaSecondary": "Cómo funciona ↓"
       },
@@ -2147,7 +2147,7 @@
       },
       "route": {
         "eyebrow": "La ruta",
-        "title": "Seis tramos. Un coordinador. Precio fijo.",
+        "title": "Seis tramos. Un coordinador. Una cotización.",
         "legs": {
           "1": {
             "title": "Recogida en el continente",
@@ -2293,7 +2293,7 @@
         }
       },
       "finalCta": {
-        "title": "Solicite su precio fijo a Hawái en 60 segundos.",
+        "title": "Solicite su cotización a Hawái en 60 segundos.",
         "description": "Código postal de recogida, isla de destino, tipo de vehículo. Le mostraremos tres precios escalonados. Elija uno, fíjelo, y su coordinador toma el control desde ahí.",
         "primary": "Obtenga mi precio CA → HI",
         "secondary": "Vea California ↔ Alaska →"
@@ -2303,7 +2303,7 @@
         "title": "Enviar un auto de Hawái a California",
         "body": {
           "0": "Este corredor funciona en ambas direcciones. Los envíos de Hawái a California usan el mismo sistema marítimo a la inversa: coordinamos la entrega en el puerto de Honolulú (o de tu isla), el cruce a Long Beach u Oakland, y el transporte terrestre hasta cualquier dirección de California — o más allá, al resto del continente.",
-          "1": "Es la misma reserva, el mismo precio bloqueado que cubre cada tramo y el mismo coordinador vigilando cada entrega. Órdenes PCS de regreso, familias que vuelven a casa, un auto que te siguió a las islas y ahora debe regresar: movimientos de rutina en esta ruta."
+          "1": "Es la misma reserva, una sola cotización que cubre cada tramo y el mismo coordinador vigilando cada entrega. Órdenes PCS de regreso, familias que vuelven a casa, un auto que te siguió a las islas y ahora debe regresar: movimientos de rutina en esta ruta."
         },
         "cta": "Cotiza Hawái → California"
       }
@@ -2316,7 +2316,7 @@
       "hero": {
         "eyebrow": "Corredor → California ↔ Alaska",
         "title": "Envíe un auto a Alaska. Dos rutas. Un coordinador.",
-        "description": "Terrestre por la Autopista de Alaska o marítima por Tacoma. Optimizado por temporada, destino, y tiempo. Precio fijo en cualquier caso.",
+        "description": "Terrestre por la Autopista de Alaska o marítima por Tacoma. Optimizado por temporada, destino, y tiempo. Una sola cotización todo incluido en cualquier caso.",
         "ctaPrimary": "Obtenga mi precio CA → AK",
         "ctaSecondary": "Compare rutas ↓"
       },
@@ -2327,7 +2327,7 @@
           "0": "La mayoría de los envíos California-Alaska son para uno de tres tipos de clientes: familias militares PCS rumbo a JBER, Eielson, o Fort Wainwright; trabajadores de petróleo y gas que rotan por el North Slope; jubilados que se mudan permanentemente. Cada grupo tiene diferente tolerancia de tiempo, preferencias de ruta, y tipos de vehículos — y la respuesta correcta para uno no siempre es la respuesta correcta para otro.",
           "1": "Luego está la estacionalidad. Invierno en la Autopista de Alaska significa cierres por clima, deformaciones por helada, y recargos de transporte. La ruta marítima desde Tacoma se mantiene confiable durante todo el año. El verano voltea las cuentas — la terrestre se vuelve más rápida y barata para destinos del interior."
         },
-        "punchline": "Su coordinador elige la ruta según su origen, destino, temporada, y tiempo específicos. Usted ve un precio fijo para la ruta que recomienden."
+        "punchline": "Su coordinador elige la ruta según su origen, destino, temporada, y tiempo específicos. Usted ve una cotización todo incluido para la ruta que recomienden."
       },
       "routes": {
         "eyebrow": "Las dos rutas",
@@ -2474,7 +2474,7 @@
         }
       },
       "finalCta": {
-        "title": "Solicite su precio fijo a Alaska en 60 segundos.",
+        "title": "Solicite su cotización a Alaska en 60 segundos.",
         "description": "Código postal de recogida, destino, tipo de vehículo. Cotizaremos ambas rutas y recomendaremos la correcta. Elija un nivel, fije el precio, y su coordinador toma el control desde ahí.",
         "primary": "Obtenga mi precio CA → AK",
         "secondary": "Vea California ↔ Hawái →"
@@ -2485,7 +2485,7 @@
         "eyebrow": "California a Texas . Estimado todo incluido",
         "priceCallout": "California a Texas . Estimado todo incluido desde $1,150",
         "title": "Envie su auto de California a Texas por menos de lo que cuesta manejarlo usted mismo.",
-        "description": "1,400 millas. 3 dias al volante. Gasolina, hoteles, comidas y desgaste en su auto. O un envio de precio fijo con su auto esperandolo al llegar.",
+        "description": "1,400 millas. 3 dias al volante. Gasolina, hoteles, comidas y desgaste en su auto. O un envio todo incluido con su auto esperandolo al llegar.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver las cuentas",
         "compare": {
@@ -2517,7 +2517,7 @@
         "items": {
           "jobRelocators": {
             "title": "Reubicaciones laborales con fecha limite",
-            "body": "Su fecha de inicio esta fijada. Los 3 dias que perderia manejando cuestan mas que enviar. Precio fijo mas entrega en 4 a 6 dias."
+            "body": "Su fecha de inicio esta fijada. Los 3 dias que perderia manejando cuestan mas que enviar. Cotizacion todo incluido mas entrega en 4 a 6 dias."
           },
           "multiVehicle": {
             "title": "Hogares con varios vehiculos",
@@ -2547,7 +2547,7 @@
             "a": "Un sedan estandar de CA a TX en transporte abierto cuesta de $1,150 a $1,650 segun el ZIP de origen/destino y los tiempos. SUV $200 a $400 mas. Camioneta $300 a $500 mas. Estimacion de mercado SD al momento de cotizar."
           },
           "2": {
-            "q": "?Que significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           },
           "3": {
@@ -2561,13 +2561,13 @@
         }
       },
       "finalCta": {
-        "title": "Envio de CA a TX con precio fijo. Haga las cuentas.",
-        "body": "Solicite su cotizacion real todo incluido en 60 segundos. La cotizacion es el contrato. Sin enganos. Luego decida si manejar todavia tiene sentido.",
+        "title": "Envio de CA a TX. Haga las cuentas.",
+        "body": "Solicite su cotizacion real todo incluido en 60 segundos. Sin enganos. Luego decida si manejar todavia tiene sentido.",
         "cta": "Obtener mi cotización"
       },
       "reverse": {
         "eyebrow": "En ambas direcciones",
-        "title": "¿De Texas a California? Mismo corredor, mismo precio bloqueado.",
+        "title": "¿De Texas a California? Mismo corredor, misma cotización todo incluido.",
         "body": {
           "0": "Todo lo que dice esta página funciona a la inversa. Los transportistas recorren California–Texas en circuito, no en un solo sentido: el camión que entrega en Dallas necesita carga de regreso a Los Ángeles. Por esa economía del viaje de retorno, el precio de Texas a California muchas veces sale igual de bueno, o mejor.",
           "1": "El proceso es idéntico: una cotización todo incluido antes de comprometerte, sin depósito para cotizar, recogida puerta a puerta en Dallas–Fort Worth, Houston, Austin o San Antonio, y entrega en cualquier parte de California."
@@ -2579,7 +2579,7 @@
       "hero": {
         "eyebrow": "California a Florida . Estimado todo incluido",
         "title": "Envíe su auto de California a Florida sin el viaje de 2,800 millas.",
-        "description": "De costa a costa. 4-5 días al volante. Hoteles, gasolina, comida, desgaste. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Jacksonville.",
+        "description": "De costa a costa. 4-5 días al volante. Hoteles, gasolina, comida, desgaste. O un envío todo incluido y su auto esperándole en Miami, Orlando, Tampa o Jacksonville.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
@@ -2588,7 +2588,7 @@
         "title": "Por qué enviar de California a Florida a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de CA a FL cuesta $750-900 en gasolina, 4 noches de hotel, comida en el camino y 2,800 millas duras de autopista en su vehículo. Sume más de 40 horas al volante.",
-          "1": "Una cotización fija de transporte de autos a menudo termina POR DEBAJO del costo total de conducir, y no pierde casi una semana. El tráfico de snowbirds y reubicaciones mantiene este corredor activo todo el año."
+          "1": "Una cotización todo incluido de transporte de autos a menudo termina POR DEBAJO del costo total de conducir, y no pierde casi una semana. El tráfico de snowbirds y reubicaciones mantiene este corredor activo todo el año."
         },
         "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
@@ -2633,25 +2633,25 @@
           },
           "3": {
             "q": "¿Puedo programar la entrega cerca de mi llegada como snowbird?",
-            "a": "Sí. La mayoría de los envíos de snowbirds se programan para llegar 1-2 días antes o después del vuelo del cliente. Su coordinador puede retener o agilizar dentro de ventanas razonables. Precio fijo en cualquier caso."
+            "a": "Sí. La mayoría de los envíos de snowbirds se programan para llegar 1-2 días antes o después del vuelo del cliente. Su coordinador puede retener o agilizar dentro de ventanas razonables. Una sola cotización todo incluido en cualquier caso."
           },
           "4": {
-            "q": "¿Qué significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
       "finalCta": {
-        "title": "Envío con precio fijo de CA a FL. Haga las cuentas.",
-        "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
+        "title": "Envío de CA a FL. Haga las cuentas.",
+        "body": "Solicite su cotización real todo incluido en 60 segundos. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi cotización"
       }
     },
     "californiaNewYork": {
       "hero": {
         "eyebrow": "California a Nueva York . Estimado todo incluido",
-        "title": "Envíe su auto de California a Nueva York. Costa a costa. Precio fijo.",
-        "description": "2,900 millas. 5 días al volante por pasos invernales. O un envío con precio fijo y su auto listo en Manhattan, Brooklyn, Long Island o el norte del estado.",
+        "title": "Envíe su auto de California a Nueva York. Costa a costa. Una sola cotización.",
+        "description": "2,900 millas. 5 días al volante por pasos invernales. O un envío todo incluido y su auto listo en Manhattan, Brooklyn, Long Island o el norte del estado.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
@@ -2660,7 +2660,7 @@
         "title": "Por qué enviar de California a Nueva York a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de CA a NY cuesta $750-900 en gasolina, 4 noches de hotel, comida y 2,900 millas mayormente de interestatal con riesgo climático por las Rocosas y el Medio Oeste. Sume más de 45 horas detrás del parabrisas.",
-          "1": "Una cotización fija de transporte de autos regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias de finanzas y tecnología de la costa este corren este corredor todo el año."
+          "1": "Una cotización todo incluido de transporte de autos regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias de finanzas y tecnología de la costa este corren este corredor todo el año."
         },
         "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
@@ -2670,7 +2670,7 @@
         "items": {
           "jobRelocators": {
             "title": "Transferencias de finanzas y tecnología",
-            "body": "Wall Street, fintech, big tech. Su fecha de inicio está fija. Los 5 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 7-10 días."
+            "body": "Wall Street, fintech, big tech. Su fecha de inicio está fija. Los 5 días perdidos manejando cuestan más que enviar. Cotización todo incluido más entrega en 7-10 días."
           },
           "multiVehicle": {
             "title": "Hogares con múltiples vehículos",
@@ -2705,17 +2705,17 @@
           },
           "3": {
             "q": "¿Debería enviar en invierno?",
-            "a": "Sí, la ruta se mantiene confiable. Los precios de invierno suelen ser un poco más bajos (menos competencia). Los transportistas se desvían del clima, el tránsito puede extenderse 1-2 días. Precio fijo en cualquier caso."
+            "a": "Sí, la ruta se mantiene confiable. Los precios de invierno suelen ser un poco más bajos (menos competencia). Los transportistas se desvían del clima, el tránsito puede extenderse 1-2 días. Una sola cotización todo incluido en cualquier caso."
           },
           "4": {
-            "q": "¿Qué significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
       "finalCta": {
-        "title": "Envío con precio fijo de CA a NY. Haga las cuentas.",
-        "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
+        "title": "Envío de CA a NY. Haga las cuentas.",
+        "body": "Solicite su cotización real todo incluido en 60 segundos. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi cotización"
       }
     },
@@ -2723,7 +2723,7 @@
       "hero": {
         "eyebrow": "Nueva York a Florida . Estimado todo incluido",
         "title": "Envíe su auto de Nueva York a Florida. La carrera original de snowbirds.",
-        "description": "1,200 millas. 2 días de tráfico en I-95. O un envío con precio fijo y su auto esperándole en Miami, Orlando, Tampa o Naples.",
+        "description": "1,200 millas. 2 días de tráfico en I-95. O un envío todo incluido y su auto esperándole en Miami, Orlando, Tampa o Naples.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
@@ -2732,7 +2732,7 @@
         "title": "Por qué enviar de Nueva York a Florida a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de NY a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida, peajes y 1,200 millas de tráfico en I-95. Sume 18-20 horas al volante.",
-          "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El volumen de snowbirds mantiene los precios competitivos todo el año, con demanda máxima de octubre a diciembre (sur) y abril a mayo (norte)."
+          "1": "Una cotización todo incluido de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El volumen de snowbirds mantiene los precios competitivos todo el año, con demanda máxima de octubre a diciembre (sur) y abril a mayo (norte)."
         },
         "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
@@ -2780,18 +2780,18 @@
             "a": "Sí. La mayoría de destinos de snowbirds son alquileres de corto plazo o casas estacionales. Su coordinador solo necesita la dirección de entrega y la información de contacto del receptor."
           },
           "4": {
-            "q": "¿Qué significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           },
           "5": {
             "q": "¿Es más barato el Auto Train que enviar un auto de Nueva York a Florida?",
-            "a": "A veces: un asiento turista más el vehículo en temporada baja puede costar menos que una cotización de envío. Pero el tren va de Lorton, Virginia a Sanford, Florida: primero manejas hasta Virginia y al llegar te falta camino. Un camarote o fechas pico cierran la diferencia rápido. Compara su total contra nuestro precio bloqueado todo incluido para tus direcciones y fechas exactas."
+            "a": "A veces: un asiento turista más el vehículo en temporada baja puede costar menos que una cotización de envío. Pero el tren va de Lorton, Virginia a Sanford, Florida: primero manejas hasta Virginia y al llegar te falta camino. Un camarote o fechas pico cierran la diferencia rápido. Compara su total contra nuestra cotización todo incluido para tus direcciones y fechas exactas."
           }
         }
       },
       "finalCta": {
-        "title": "Envío con precio fijo de NY a FL. Haga las cuentas.",
-        "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
+        "title": "Envío de NY a FL. Haga las cuentas.",
+        "body": "Solicite su cotización real todo incluido en 60 segundos. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi cotización"
       },
       "autoTrain": {
@@ -2800,16 +2800,16 @@
         "body": {
           "0": "Cada temporada de snowbirds, la misma comparación: ¿el Auto Train de Amtrak o un transportista de autos? El tren tiene su atractivo: viajas junto con tu auto. Pero mira el mapa antes de decidir. El Auto Train no sale de Nueva York; parte de Lorton, Virginia, a 4–5 horas manejando hacia el sur. Y termina en Sanford, cerca de Orlando: si vas a Miami, Tampa o Naples, aún te quedan horas de carretera al llegar.",
           "1": "En precio, la respuesta honesta es “depende”. Un asiento de clase turista más el vehículo en temporada baja puede ganarle a una cotización de envío. Suma un camarote, fechas de temporada alta, una noche de hotel cerca de Lorton, gasolina y peajes en ambos extremos — y los totales suelen emparejarse, con el tren exigiéndote un día y medio entre carretera y vagón.",
-          "2": "Nuestra opinión: si disfrutas el viaje, vas ligero de equipaje y de todos modos te diriges a la zona de Orlando, el Auto Train es un buen producto. Si vas a cualquier otra parte de Florida — o prefieres volar y que el auto aparezca en tu puerta — un envío puerta a puerta con precio bloqueado es menos trabajo y, contando cada costo, rara vez más dinero."
+          "2": "Nuestra opinión: si disfrutas el viaje, vas ligero de equipaje y de todos modos te diriges a la zona de Orlando, el Auto Train es un buen producto. Si vas a cualquier otra parte de Florida, o prefieres volar y que el auto aparezca en tu puerta, un envío puerta a puerta es menos trabajo y, contando cada costo, rara vez más dinero."
         },
-        "cta": "Compara con un precio bloqueado"
+        "cta": "Compara con nuestra cotización"
       }
     },
     "texasFlorida": {
       "hero": {
         "eyebrow": "Texas a Florida . Estimado todo incluido",
-        "title": "Envíe su auto de Texas a Florida. Corredor I-10, precio fijo.",
-        "description": "1,200 millas. 2 días manejando por la costa del Golfo. O un envío con precio fijo y su auto listo en Miami, Tampa, Orlando o Jacksonville.",
+        "title": "Envíe su auto de Texas a Florida. Corredor I-10, una sola cotización.",
+        "description": "1,200 millas. 2 días manejando por la costa del Golfo. O un envío todo incluido y su auto listo en Miami, Tampa, Orlando o Jacksonville.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
@@ -2818,7 +2818,7 @@
         "title": "Por qué enviar de Texas a Florida a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de TX a FL cuesta $300-450 en gasolina, 1-2 noches de hotel, comida y 1,200 millas de autopista I-10. Sume 18-20 horas al volante por Luisiana y Misisipi.",
-          "1": "Una cotización fija de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El tráfico de snowbirds de Houston y Dallas, las reubicaciones militares desde Fort Hood y Lackland, y las mudanzas familiares mantienen el corredor competitivo."
+          "1": "Una cotización todo incluido de transporte de autos en este corredor a menudo está al mismo nivel o ligeramente por debajo del costo total de conducir. El tráfico de snowbirds de Houston y Dallas, las reubicaciones militares desde Fort Hood y Lackland, y las mudanzas familiares mantienen el corredor competitivo."
         },
         "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
@@ -2863,17 +2863,17 @@
           },
           "3": {
             "q": "¿Qué pasa con la temporada de huracanes?",
-            "a": "De junio a noviembre. Los transportistas se desvían de las tormentas activas, el tránsito puede extenderse 1-2 días durante ventanas de tormenta nombrada. Precio fijo en cualquier caso. Su coordinador da ventanas de tránsito realistas durante el clima activo."
+            "a": "De junio a noviembre. Los transportistas se desvían de las tormentas activas, el tránsito puede extenderse 1-2 días durante ventanas de tormenta nombrada. Una sola cotización todo incluido en cualquier caso. Su coordinador da ventanas de tránsito realistas durante el clima activo."
           },
           "4": {
-            "q": "¿Qué significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
       "finalCta": {
-        "title": "Envío con precio fijo de TX a FL. Haga las cuentas.",
-        "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
+        "title": "Envío de TX a FL. Haga las cuentas.",
+        "body": "Solicite su cotización real todo incluido en 60 segundos. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi cotización"
       }
     },
@@ -2881,7 +2881,7 @@
       "hero": {
         "eyebrow": "California a Georgia . Estimado todo incluido",
         "title": "Envíe su auto de California a Georgia por menos de lo que cuesta conducirlo.",
-        "description": "2,400 millas. 4 días al volante. O un envío con precio fijo y su auto listo en Atlanta, Savannah, Macon o Augusta.",
+        "description": "2,400 millas. 4 días al volante. O un envío todo incluido y su auto listo en Atlanta, Savannah, Macon o Augusta.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
@@ -2890,7 +2890,7 @@
         "title": "Por qué enviar de California a Georgia a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de CA a GA cuesta $650-800 en gasolina, 3 noches de hotel, comida y 2,400 millas de interestatal sureña. Sume más de 35 horas al volante.",
-          "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. El volumen tecnológico de Atlanta, las reubicaciones sureñas y los traslados universitarios mantienen el carril competitivo."
+          "1": "Una cotización todo incluido de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. El volumen tecnológico de Atlanta, las reubicaciones sureñas y los traslados universitarios mantienen el carril competitivo."
         },
         "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
@@ -2900,7 +2900,7 @@
         "items": {
           "jobRelocators": {
             "title": "Transferencias tecnológicas y corporativas a Atlanta",
-            "body": "Tecnología, fintech, reubicaciones a sedes corporativas en Atlanta. Su fecha de inicio está fija. Los 4 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 6-8 días."
+            "body": "Tecnología, fintech, reubicaciones a sedes corporativas en Atlanta. Su fecha de inicio está fija. Los 4 días perdidos manejando cuestan más que enviar. Cotización todo incluido más entrega en 6-8 días."
           },
           "multiVehicle": {
             "title": "Hogares con múltiples vehículos",
@@ -2938,14 +2938,14 @@
             "a": "Si su vehículo vale más de ~$60K, tiene poco millaje o tiene pintura personalizada, sí. La diferencia de precio suele ser de $300-600. El abierto es suficiente para autos diarios."
           },
           "4": {
-            "q": "¿Qué significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
       "finalCta": {
-        "title": "Envío con precio fijo de CA a GA. Haga las cuentas.",
-        "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
+        "title": "Envío de CA a GA. Haga las cuentas.",
+        "body": "Solicite su cotización real todo incluido en 60 segundos. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi cotización"
       }
     },
@@ -2953,7 +2953,7 @@
       "hero": {
         "eyebrow": "California a Carolina del Norte . Estimado todo incluido",
         "title": "Envíe su auto de California a Carolina del Norte sin perder una semana en la carretera.",
-        "description": "2,800 millas. 5 días al volante. O un envío con precio fijo y su auto listo en Charlotte, Raleigh, Durham o Asheville.",
+        "description": "2,800 millas. 5 días al volante. O un envío todo incluido y su auto listo en Charlotte, Raleigh, Durham o Asheville.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
@@ -2962,7 +2962,7 @@
         "title": "Por qué enviar de California a Carolina del Norte a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de CA a NC cuesta $750-900 en gasolina, 3-4 noches de hotel, comida y 2,800 millas mayormente de interestatal sureña. Sume más de 40 horas al volante.",
-          "1": "Una cotización fija de transporte de autos en este corredor regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias bancarias en Charlotte y tecnológicas en RTP corren este carril todo el año."
+          "1": "Una cotización todo incluido de transporte de autos en este corredor regularmente le gana al costo total de conducir cuando cuenta hoteles, comida y tiempo perdido del trabajo. Las transferencias bancarias en Charlotte y tecnológicas en RTP corren este carril todo el año."
         },
         "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
@@ -2972,7 +2972,7 @@
         "items": {
           "jobRelocators": {
             "title": "Transferencias bancarias en Charlotte y tecnológicas en RTP",
-            "body": "Bank of America, Truist, RTP tecnología, Duke, UNC. Su fecha de inicio está fija. Los 5 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 6-9 días."
+            "body": "Bank of America, Truist, RTP tecnología, Duke, UNC. Su fecha de inicio está fija. Los 5 días perdidos manejando cuestan más que enviar. Cotización todo incluido más entrega en 6-9 días."
           },
           "multiVehicle": {
             "title": "Hogares con múltiples vehículos",
@@ -3010,14 +3010,14 @@
             "a": "Si su vehículo vale más de ~$60K, tiene poco millaje o tiene pintura personalizada, sí. La diferencia de precio suele ser de $400-700. El abierto es suficiente para autos diarios."
           },
           "4": {
-            "q": "¿Qué significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
       "finalCta": {
-        "title": "Envío con precio fijo de CA a NC. Haga las cuentas.",
-        "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
+        "title": "Envío de CA a NC. Haga las cuentas.",
+        "body": "Solicite su cotización real todo incluido en 60 segundos. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi cotización"
       }
     },
@@ -3025,7 +3025,7 @@
       "hero": {
         "eyebrow": "California a Illinois . Estimado todo incluido",
         "title": "Envíe su auto de California a Illinois por menos del costo de conducir.",
-        "description": "2,000 millas. 3-4 días al volante por las llanuras y el clima. O un envío con precio fijo y su auto listo en Chicago, Naperville, Aurora o Joliet.",
+        "description": "2,000 millas. 3-4 días al volante por las llanuras y el clima. O un envío todo incluido y su auto listo en Chicago, Naperville, Aurora o Joliet.",
         "ctaPrimary": "Obtener mi cotización",
         "ctaSecondary": "Ver el cálculo"
       },
@@ -3034,7 +3034,7 @@
         "title": "Por qué enviar de California a Illinois a menudo cuesta menos que conducir",
         "body": {
           "0": "Un viaje de ida de CA a IL cuesta $550-700 en gasolina, 2-3 noches de hotel, comida y 2,000 millas de autopista I-80 con sensibilidad climática por las Rocosas. Sume más de 30 horas al volante.",
-          "1": "Una cotización fija de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. Las transferencias tecnológicas y financieras al área metropolitana de Chicago, más las reubicaciones familiares del Medio Oeste, mantienen el carril activo todo el año."
+          "1": "Una cotización todo incluido de transporte de autos en este corredor a menudo termina POR DEBAJO del costo total de conducir. Las transferencias tecnológicas y financieras al área metropolitana de Chicago, más las reubicaciones familiares del Medio Oeste, mantienen el carril activo todo el año."
         },
         "punchline": "La cotización que acepta al reservar es nuestra base y no cambia sin avisarle primero. Sin recargo por combustible. Sin tarifas ocultas de puerta a puerta."
       },
@@ -3044,7 +3044,7 @@
         "items": {
           "jobRelocators": {
             "title": "Transferencias tecnológicas y financieras a Chicago",
-            "body": "Tecnología, fintech, finanzas del Chicago Loop. Su fecha de inicio está fija. Los 4 días perdidos manejando cuestan más que enviar. Precio fijo más entrega en 5-7 días."
+            "body": "Tecnología, fintech, finanzas del Chicago Loop. Su fecha de inicio está fija. Los 4 días perdidos manejando cuestan más que enviar. Cotización todo incluido más entrega en 5-7 días."
           },
           "multiVehicle": {
             "title": "Hogares con múltiples vehículos",
@@ -3079,17 +3079,17 @@
           },
           "3": {
             "q": "¿Debería enviar en invierno?",
-            "a": "Sí. La ruta se mantiene confiable, pero el premium de invierno es pequeño y el tránsito puede extenderse 1-2 días por las Rocosas durante clima fuerte. Precio fijo en cualquier caso."
+            "a": "Sí. La ruta se mantiene confiable, pero el premium de invierno es pequeño y el tránsito puede extenderse 1-2 días por las Rocosas durante clima fuerte. Una sola cotización todo incluido en cualquier caso."
           },
           "4": {
-            "q": "¿Qué significa 'precio fijo'?",
+            "q": "¿Qué pasa si mi precio necesita cambiar?",
             "a": "Sin recargo por combustible, sin tarifas ocultas de puerta a puerta, y sin aumentos silenciosos: si su precio necesita cambiar antes del despacho, usted lo escucha de nosotros primero y usted decide. Nuestra Promesa de Precio."
           }
         }
       },
       "finalCta": {
-        "title": "Envío con precio fijo de CA a IL. Haga las cuentas.",
-        "body": "Solicite su cotización real todo incluido en 60 segundos. La cotización es el contrato. Sin engaños. Después decide si vale la pena conducir.",
+        "title": "Envío de CA a IL. Haga las cuentas.",
+        "body": "Solicite su cotización real todo incluido en 60 segundos. Sin engaños. Después decide si vale la pena conducir.",
         "cta": "Obtener mi cotización"
       }
     },
@@ -3489,7 +3489,7 @@
         "coordinator": "Coordinador dedicado",
         "coordinatorFallback": "EN · ES",
         "photosProtect": "Las fotos lo protegen",
-        "photosProtectDetail": "En cada hito"
+        "photosProtectDetail": "En la recogida y la entrega"
       },
       "team": {
         "title": "Su equipo",

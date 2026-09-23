@@ -173,7 +173,7 @@ export const article: Article = {
     { kind: "h3", text: "What does Auto Line Logistics do differently?" },
     {
       kind: "p",
-      text: "We check what carriers are actually accepting today, right when you ask. Not last year's averages, not a posted-and-hope guess. The number you see is the price a real carrier is taking on your route this week. Our Logistics side matches you to vetted carriers across the network. Our sister carrier Auto Line Express owns 35 trucks we run on select routes ourselves. The number you see at quote time is the locked price, and we collect a small booking deposit only when you choose to move forward.",
+      text: "We check what carriers are actually accepting today, right when you ask. Not last year's averages, not a posted-and-hope guess. The number you see is the price a real carrier is taking on your route this week. Our Logistics side matches you to vetted carriers across the network. Our sister carrier Auto Line Express owns 35 trucks we run on select routes ourselves. The number you see at quote time is the quote your coordinator works from, and we collect a small booking deposit only when you choose to move forward.",
     },
   ],
   faq: [
