@@ -38,8 +38,8 @@ export async function generateMetadata({
       ? "Costo de enviar un auto de Nueva York a Florida — precio bloqueado"
       : "Car Shipping New York to Florida — Cost & Locked Price";
   const description = es
-    ? `Transporte de autos de Nueva York a Florida${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Precio total bloqueado, sin depósito, rastreo en tiempo real. Miami, Orlando, Tampa, Naples. Compare con el Auto Train.`
-    : `Auto transport from New York to Florida${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week` : ""}. Locked all-in price, no deposit, real-time tracking. Miami, Orlando, Tampa, Naples. How it compares to Amtrak's Auto Train.`;
+    ? `Transporte de autos de Nueva York a Florida${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Cotización todo incluido, sin depósito para cotizar. Miami, Orlando, Tampa, Naples. Compare con el Auto Train.`
+    : `Auto transport from New York to Florida${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week` : ""}. All-in quote, no deposit to get a price. Miami, Orlando, Tampa, Naples. How it compares to Amtrak's Auto Train.`;
   return {
     title,
     description,
@@ -85,7 +85,7 @@ export default async function NewYorkFloridaCorridor({
       url: canonicalUrl,
       name: "Auto Transport from New York to Florida",
       description:
-        "Locked-price East Coast auto transport between New York and Florida. The classic snowbird corridor. Door-to-door pickup and delivery to Miami, Orlando, Tampa, and Naples.",
+        "East Coast auto transport between New York and Florida. The classic snowbird corridor. Door-to-door pickup and delivery to Miami, Orlando, Tampa, and Naples.",
       areaServed: { origin: "New York", destination: "Florida" },
     }),
     faqPageSchema(faqs),

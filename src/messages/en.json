@@ -1730,7 +1730,7 @@
     "index": {
       "metadata": {
         "title": "All corridors — Auto Line Logistics",
-        "description": "Locked-price auto transport on every major US corridor. California to Hawaii, Alaska, Texas, Florida, New York, and more. Door-to-door, named coordinator, no surprises."
+        "description": "Door-to-door auto transport on every major US corridor. California to Hawaii, Alaska, Texas, Florida, New York, and more. One named coordinator from quote to delivery."
       },
       "hero": {
         "eyebrow": "Corridors",
@@ -2311,7 +2311,7 @@
     "californiaAlaska": {
       "metadata": {
         "title": "Ship a car California to Alaska — PCS, oil/gas, retiree relocations",
-        "description": "California-to-Alaska vehicle transport via overland (Alaska Highway) or ocean (Tacoma to Anchorage). Locked-price quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright."
+        "description": "California-to-Alaska vehicle transport via overland (Alaska Highway) or ocean (Tacoma to Anchorage). All-in quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright."
       },
       "hero": {
         "eyebrow": "Corridor → California ↔ Alaska",

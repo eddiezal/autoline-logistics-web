@@ -40,8 +40,8 @@ export async function generateMetadata({
       ? "Costo de enviar un auto de California a Texas — precio bloqueado"
       : "Cost to Ship a Car from California to Texas — Locked Price";
   const description = es
-    ? `Transporte de autos de California a Texas${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Precio total bloqueado, sin depósito, rastreo en tiempo real. Dallas, Houston, Austin, San Antonio — y también de Texas a California.`
-    : `Auto transport from California to Texas${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week, not a teaser rate` : ""}. Locked all-in price, no deposit, real-time tracking. Dallas, Houston, Austin, San Antonio. Texas to California too.`;
+    ? `Transporte de autos de California a Texas${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Cotización todo incluido, sin depósito para cotizar. Dallas, Houston, Austin, San Antonio — y también de Texas a California.`
+    : `Auto transport from California to Texas${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week, not a teaser rate` : ""}. All-in quote, no deposit to get a price. Dallas, Houston, Austin, San Antonio. Texas to California too.`;
   return {
     title,
     description,
@@ -84,7 +84,7 @@ export default async function CaliforniaTexasCorridor({
       url: canonicalUrl,
       name: "Auto Transport from California to Texas",
       description:
-        "Locked-price auto transport between California and Texas. Door-to-door pickup and delivery to Dallas, Houston, Austin, and San Antonio. Open or enclosed trailers. No deposit to get a quote.",
+        "Auto transport between California and Texas. Door-to-door pickup and delivery to Dallas, Houston, Austin, and San Antonio. Open or enclosed trailers. No deposit to get a quote.",
       areaServed: { origin: "California", destination: "Texas" },
     }),
     faqPageSchema(faqs),

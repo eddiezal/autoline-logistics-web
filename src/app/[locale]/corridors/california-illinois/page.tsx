@@ -25,9 +25,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-  title: "Ship a car California to Illinois. Locked-price corridor.",
+  title: "Ship a car California to Illinois.",
   description:
-    "Auto transport from California to Illinois. Locked all-in price. No deposit. Real-time portal tracking. Chicago, Naperville, Aurora, Joliet.",
+    "Auto transport from California to Illinois. All-in quote, no deposit to get a price, one coordinator start to finish. Chicago, Naperville, Aurora, Joliet.",
     alternates: localeAlternates(locale, "/corridors/california-illinois"),
   };
 }
@@ -68,7 +68,7 @@ export default async function CaliforniaIllinoisCorridor({
       url: canonicalUrl,
       name: "Auto Transport from California to Illinois",
       description:
-        "Locked-price auto transport from California to Illinois. Door-to-door pickup and delivery to Chicago, Naperville, Aurora, and Joliet. Open or enclosed trailers.",
+        "Auto transport from California to Illinois. Door-to-door pickup and delivery to Chicago, Naperville, Aurora, and Joliet. Open or enclosed trailers.",
       areaServed: { origin: "California", destination: "Illinois" },
     }),
     faqPageSchema(faqs),

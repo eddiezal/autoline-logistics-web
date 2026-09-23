@@ -36,8 +36,8 @@ export async function generateMetadata({
       ? "Costo de enviar un auto de California a Florida — precio bloqueado"
       : "Cost to Ship a Car from California to Florida — Locked Price";
   const description = es
-    ? `Transporte de autos de California a Florida${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Precio total bloqueado, sin depósito, rastreo en tiempo real. Miami, Orlando, Tampa, Jacksonville.`
-    : `Auto transport from California to Florida${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week` : ""}. Locked all-in price, no deposit, real-time tracking. Miami, Orlando, Tampa, Jacksonville.`;
+    ? `Transporte de autos de California a Florida${price ? ` desde ${formatAnchor(price)} (precio real de esta semana)` : ""}. Cotización todo incluido, sin depósito para cotizar. Miami, Orlando, Tampa, Jacksonville.`
+    : `Auto transport from California to Florida${price ? ` from ${formatAnchor(price)} — a real quote refreshed this week` : ""}. All-in quote, no deposit to get a price. Miami, Orlando, Tampa, Jacksonville.`;
   return {
     title,
     description,
@@ -81,7 +81,7 @@ export default async function CaliforniaFloridaCorridor({
       url: canonicalUrl,
       name: "Auto Transport from California to Florida",
       description:
-        "Locked-price coast-to-coast auto transport between California and Florida. Door-to-door pickup and delivery to Miami, Orlando, Tampa, and Jacksonville. Open or enclosed trailers.",
+        "Coast-to-coast auto transport between California and Florida. Door-to-door pickup and delivery to Miami, Orlando, Tampa, and Jacksonville. Open or enclosed trailers.",
       areaServed: { origin: "California", destination: "Florida" },
     }),
     faqPageSchema(faqs),

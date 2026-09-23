@@ -22,7 +22,7 @@ export async function generateMetadata({
   return {
   title: "All corridors — Auto Line Logistics",
   description:
-    "Locked-price auto transport on every major US corridor. California to Hawaii, Alaska, Texas, Florida, New York, and more. Door-to-door, named coordinator, no surprises.",
+    "Door-to-door auto transport on every major US corridor. California to Hawaii, Alaska, Texas, Florida, New York, and more. One named coordinator from quote to delivery.",
     alternates: localeAlternates(locale, "/corridors"),
   };
 }

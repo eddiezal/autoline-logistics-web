@@ -33,8 +33,8 @@ export async function generateMetadata({
   return {
     title:
       locale === "es"
-        ? "Transporte de Autos con Precio Fijo"
-        : "Car Shipping With a Locked Price",
+        ? "Transporte de Autos Puerta a Puerta con Cotizaciones Honestas"
+        : "Door-to-Door Car Shipping With Honest Quotes",
     alternates: localeAlternates(locale, ""),
   };
 }

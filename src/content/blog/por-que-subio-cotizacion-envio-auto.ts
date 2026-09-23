@@ -15,7 +15,7 @@ export const article: Article = {
   subtitle:
     "Si un broker le cotizó $629 y después le pidió $900, no está solo. Aquí explicamos lo que realmente está pasando en la industria, y cómo asegurarse de que su cotización sea real antes de pagar.",
   metaDescription:
-    "Los aumentos de precio de último minuto en envío de autos son un patrón de la industria, no mala suerte. Cómo funciona el cebo y cambio, las señales de alarma, y cómo se ve una cotización honesta con precio fijo.",
+    "Los aumentos de precio de último minuto en envío de autos son un patrón de la industria, no mala suerte. Cómo funciona el cebo y cambio, las señales de alarma, y cómo se ve una cotización honesta.",
   publishedAt: "2026-06-15",
   updatedAt: "2026-06-15",
   author: "Auto Line Logistics",

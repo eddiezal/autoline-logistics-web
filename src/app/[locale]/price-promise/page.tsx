@@ -21,9 +21,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-  title: "Price Promise — Locked-price auto transport",
+  title: "Price Promise: No Silent Changes",
   description:
-    "Three service tiers. Whichever you pick, the price locks at booking. No post-assignment surcharges. No carrier-cost-overage calls. The quote is the contract.",
+    "Three service tiers, one pricing rule: your price never changes without you hearing from us first, and you decide what happens next.",
     alternates: localeAlternates(locale, "/price-promise"),
   };
 }

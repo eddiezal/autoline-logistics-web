@@ -19,9 +19,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: "Get a locked price — Auto Line Logistics",
+    title: "Get a Car Shipping Quote",
     description:
-      "Tell us your origin, destination, and vehicle. Your coordinator will lock in a price within 1 business hour. No bait-and-switch. The quote is the contract.",
+      "Tell us your origin, destination, and vehicle. Your coordinator will send your all-in quote within 1 business hour. No bait-and-switch.",
     alternates: localeAlternates(locale, "/quote"),
   };
 }

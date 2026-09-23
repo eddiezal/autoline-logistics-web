@@ -25,9 +25,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-  title: "Ship a car California to New York. Locked-price corridor.",
+  title: "Ship a car California to New York.",
   description:
-    "Auto transport from California to New York. Locked all-in price. No deposit. Real-time portal tracking. NYC, Brooklyn, Long Island, Upstate.",
+    "Auto transport from California to New York. All-in quote, no deposit to get a price, one coordinator start to finish. NYC, Brooklyn, Long Island, Upstate.",
     alternates: localeAlternates(locale, "/corridors/california-new-york"),
   };
 }
@@ -68,7 +68,7 @@ export default async function CaliforniaNewYorkCorridor({
       url: canonicalUrl,
       name: "Auto Transport from California to New York",
       description:
-        "Locked-price coast-to-coast auto transport between California and New York. Door-to-door pickup and delivery to Manhattan, Brooklyn, Long Island, and Upstate.",
+        "Coast-to-coast auto transport between California and New York. Door-to-door pickup and delivery to Manhattan, Brooklyn, Long Island, and Upstate.",
       areaServed: { origin: "California", destination: "New York" },
     }),
     faqPageSchema(faqs),

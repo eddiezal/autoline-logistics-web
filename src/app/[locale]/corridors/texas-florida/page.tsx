@@ -25,9 +25,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-  title: "Ship a car Texas to Florida. Locked-price corridor.",
+  title: "Ship a car Texas to Florida.",
   description:
-    "Auto transport from Texas to Florida. Locked all-in price. No deposit. Real-time portal tracking. Miami, Tampa, Orlando, Jacksonville.",
+    "Auto transport from Texas to Florida. All-in quote, no deposit to get a price, one coordinator start to finish. Miami, Tampa, Orlando, Jacksonville.",
     alternates: localeAlternates(locale, "/corridors/texas-florida"),
   };
 }
@@ -68,7 +68,7 @@ export default async function TexasFloridaCorridor({
       url: canonicalUrl,
       name: "Auto Transport from Texas to Florida",
       description:
-        "Locked-price auto transport from Texas to Florida via the I-10 corridor. Door-to-door pickup and delivery to Miami, Tampa, Orlando, and Jacksonville.",
+        "Auto transport from Texas to Florida via the I-10 corridor. Door-to-door pickup and delivery to Miami, Tampa, Orlando, and Jacksonville.",
       areaServed: { origin: "Texas", destination: "Florida" },
     }),
     faqPageSchema(faqs),

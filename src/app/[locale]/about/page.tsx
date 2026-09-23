@@ -46,7 +46,7 @@ export async function generateMetadata({
   return {
   title: "About Auto Line Logistics. Family-owned auto transport.",
   description:
-    "Family-owned auto transport based in Southern California. Locked-price quotes, named coordinators, and coverage beyond the carrier, built for the way real customers ship cars.",
+    "Family-owned auto transport based in Southern California. Honest quotes, named coordinators, and coverage beyond the carrier, built for the way real customers ship cars.",
     alternates: localeAlternates(locale, "/about"),
   };
 }

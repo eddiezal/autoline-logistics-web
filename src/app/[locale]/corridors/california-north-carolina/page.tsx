@@ -25,9 +25,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-  title: "Ship a car California to North Carolina. Locked-price corridor.",
+  title: "Ship a car California to North Carolina.",
   description:
-    "Auto transport from California to North Carolina. Locked all-in price. No deposit. Real-time portal tracking. Charlotte, Raleigh, Durham, Asheville.",
+    "Auto transport from California to North Carolina. All-in quote, no deposit to get a price, one coordinator start to finish. Charlotte, Raleigh, Durham, Asheville.",
     alternates: localeAlternates(locale, "/corridors/california-north-carolina"),
   };
 }
@@ -68,7 +68,7 @@ export default async function CaliforniaNorthCarolinaCorridor({
       url: canonicalUrl,
       name: "Auto Transport from California to North Carolina",
       description:
-        "Locked-price auto transport from California to North Carolina. Door-to-door pickup and delivery to Charlotte, Raleigh, Durham, and Asheville. Open or enclosed trailers.",
+        "Auto transport from California to North Carolina. Door-to-door pickup and delivery to Charlotte, Raleigh, Durham, and Asheville. Open or enclosed trailers.",
       areaServed: { origin: "California", destination: "North Carolina" },
     }),
     faqPageSchema(faqs),

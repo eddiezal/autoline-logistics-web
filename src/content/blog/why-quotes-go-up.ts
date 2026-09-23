@@ -13,7 +13,7 @@ export const article: Article = {
   subtitle:
     "If a broker quoted you $629 then asked for $900, you are not alone. Here is what is actually happening in the industry, and how to make sure your quote is real before you pay.",
   metaDescription:
-    "Last-minute car shipping price hikes are an industry pattern, not bad luck. How the bait-and-switch works, the warning signs, and what a real locked-price quote is supposed to look like.",
+    "Last-minute car shipping price hikes are an industry pattern, not bad luck. How the bait-and-switch works, the warning signs, and what an honest quote is supposed to look like.",
   publishedAt: "2026-06-15",
   updatedAt: "2026-06-15",
   author: "Auto Line Logistics",

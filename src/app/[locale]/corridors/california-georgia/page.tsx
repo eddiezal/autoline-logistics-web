@@ -25,9 +25,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-  title: "Ship a car California to Georgia. Locked-price corridor.",
+  title: "Ship a car California to Georgia.",
   description:
-    "Auto transport from California to Georgia. Locked all-in price. No deposit. Real-time portal tracking. Atlanta, Savannah, Macon, Augusta.",
+    "Auto transport from California to Georgia. All-in quote, no deposit to get a price, one coordinator start to finish. Atlanta, Savannah, Macon, Augusta.",
     alternates: localeAlternates(locale, "/corridors/california-georgia"),
   };
 }
@@ -68,7 +68,7 @@ export default async function CaliforniaGeorgiaCorridor({
       url: canonicalUrl,
       name: "Auto Transport from California to Georgia",
       description:
-        "Locked-price auto transport from California to Georgia. Door-to-door pickup and delivery to Atlanta, Savannah, Macon, and Augusta. Open or enclosed trailers.",
+        "Auto transport from California to Georgia. Door-to-door pickup and delivery to Atlanta, Savannah, Macon, and Augusta. Open or enclosed trailers.",
       areaServed: { origin: "California", destination: "Georgia" },
     }),
     faqPageSchema(faqs),

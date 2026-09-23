@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     template: "%s | Auto Line Logistics",
   },
   description:
-    "Locked-price auto transport with real-time tracking, photo evidence, and a coordinator who picks up the phone. Built for individual customers who deserve more than a quote and a hope.",
+    "Door-to-door auto transport with honest quotes, photo evidence, and a coordinator who picks up the phone. Built for individual customers who deserve more than a quote and a hope.",
   metadataBase: new URL("https://www.autolinelogistics.com"),
   // DO NOT add `alternates` here. A hardcoded layout-level canonical ("/")
   // shipped Jun 21 -> Aug 6 and made every page declare itself a duplicate of

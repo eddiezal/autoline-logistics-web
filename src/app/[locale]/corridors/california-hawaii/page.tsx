@@ -32,15 +32,15 @@ export async function generateMetadata({
   return es
     ? {
         alternates,
-        title: "Costo de enviar un auto entre California y Hawái — precio bloqueado",
+        title: "Costo de enviar un auto entre California y Hawái",
         description:
-          "Transporte de vehículos de California a Hawái y de Hawái a California, vía puertos de Long Beach u Oakland. Coordinación puerta-puerto-puerta, todas las islas. Precio bloqueado. Familias militares (PCS) confían en nosotros.",
+          "Transporte de vehículos de California a Hawái y de Hawái a California, vía puertos de Long Beach u Oakland. Coordinación puerta-puerto-puerta, todas las islas. Cotización todo incluido. Familias militares (PCS) confían en nosotros.",
       }
     : {
         alternates,
-        title: "Cost to Ship a Car from California to Hawaii (and Back) — Locked Price",
+        title: "Cost to Ship a Car from California to Hawaii (and Back)",
         description:
-          "Vehicle shipping California to Hawaii AND Hawaii to California via Long Beach or Oakland ports. Door-to-port-to-door, all islands, locked-price quotes. Trusted by military PCS families and relocations.",
+          "Vehicle shipping California to Hawaii AND Hawaii to California via Long Beach or Oakland ports. Door-to-port-to-door, all islands, all-in quotes. Trusted by military PCS families and relocations.",
       };
 }
 
@@ -72,7 +72,7 @@ export default function CaliforniaHawaiiCorridor() {
       url: canonicalUrl,
       name: "Auto Transport from California to Hawaii",
       description:
-        "Mainland-to-Hawaii vehicle transport via Long Beach or Oakland ports, with door-to-door coordination to Oahu, Maui, Big Island, and Kauai. Locked-price quotes. Trusted by military PCS families and snowbird relocations.",
+        "Mainland-to-Hawaii vehicle transport via Long Beach or Oakland ports, with door-to-door coordination to Oahu, Maui, Big Island, and Kauai. All-in quotes. Trusted by military PCS families and snowbird relocations.",
       areaServed: { origin: "California", destination: "Hawaii" },
     }),
     faqPageSchema(faqs),

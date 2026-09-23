@@ -26,7 +26,7 @@ export async function generateMetadata({
   return {
   title: "Ship a car California to Alaska — PCS, oil/gas, retiree relocations",
   description:
-    "California-to-Alaska vehicle transport via overland (Alaska Highway) or ocean (Tacoma to Anchorage). Locked-price quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright.",
+    "California-to-Alaska vehicle transport via overland (Alaska Highway) or ocean (Tacoma to Anchorage). All-in quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright.",
     alternates: localeAlternates(locale, "/corridors/california-alaska"),
   };
 }
@@ -65,7 +65,7 @@ export default function CaliforniaAlaskaCorridor() {
       url: canonicalUrl,
       name: "Auto Transport from California to Alaska",
       description:
-        "California-to-Alaska vehicle transport via overland Alaska Highway or ocean from Tacoma to Anchorage. Door-to-door coordination, locked-price quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright.",
+        "California-to-Alaska vehicle transport via overland Alaska Highway or ocean from Tacoma to Anchorage. Door-to-door coordination, all-in quotes. Trusted by military PCS to JBER, Eielson, and Fort Wainwright.",
       areaServed: { origin: "California", destination: "Alaska" },
     }),
     faqPageSchema(faqs),
