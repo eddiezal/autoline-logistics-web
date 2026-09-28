@@ -507,7 +507,7 @@ export const STUDIES: Study[] = [
           count: 661,
           share: "72% of arrivals",
           note: "Largest conversion opportunity on the site: 72% of addressable quote-page traffic never reaches the form Release 1 is optimizing. The Release-2 quote-path redesign aims here.",
-          registrySlug: "quote-path-r2",
+          registrySlug: "quote-path-r2a",
         },
         {
           code: "LEAK 2 — FORM ABANDONMENT",

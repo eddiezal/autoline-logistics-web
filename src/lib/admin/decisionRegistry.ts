@@ -143,6 +143,8 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
       evidence:
         "R1-stamped 289 starts, 70 completed = 24.2% (CI 19.6-29.5) vs concurrent pre-R1 unstamped 225/55 = 24.4% (CI 19.3-30.5). Version-stamp comparison, window-independent; internal tests excluded; POST-window reconciliation clean. Run: behavior-journey-early-read.mjs 2026-09-01 15:48 PT, fv=quote-r1-20260812. R1 delivered honest copy + instrumentation, not completion lift — completion is R2's job.",
     },
+    notes:
+      "NOTE 2026-09-28: a re-read at 750 R1 starts shows 33.1% completion, but the first 289 completed at 24.2% and the next 461 at 38.6% (p about 0.00005). That jump coincides with the Sep 14 and Sep 21 moves of S5, S3 and Brand to lead-based bidding, which optimizes for form completers. The 9/1 verdict (iterated) stands. The late increase coincides with those changes and cannot be attributed to R1; traffic-mix change is the leading explanation, not an established cause. Do not read the later figure as R1 working late. This is the reason R2 is randomized.",
     studySlug: "behavioral-journey",
     primary: true,
     meter: {
@@ -251,18 +253,39 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
       "Honest framing: the audit proves S1 was worse than it needed to be, not that it works when fixed — its /quote-pointed keywords also converted ~nothing on modest spend, and research-intent queries stay cold regardless of landing page.",
   },
   {
-    slug: "quote-path-r2",
-    title: "Quote path, Release 2",
+    slug: "quote-path-r2a",
+    title: "Quote path, Release 2A: form simplification",
     change:
-      "Redesigned quote flow: ZIP-first steps, delivery timing asked before a price is shown, tiers presented as priced output.",
+      "Forgiving route entry (city or state accepted, resolved server-side), vehicle type derived from make and model instead of asked, notes field removed. Price display excluded (that is R2B).",
     type: "experiment",
     owner: "Zaldivar Labs",
-    metric: "Reach × Completion (arrivals who start × starters who finish)",
-    baseline: "28.1% reach × 24.0% completion = 6.7% end-to-end",
+    metric:
+      "Completed quote leads per eligible quote-page exposure, computed directly. Exposure unit: ONE eligible quote-page exposure per first-party session; reloads, repeat views and back-navigation within a session do not add exposures. Internal, QA and bot sessions excluded. Assignment happens before the first eligible render and is stable for the experiment.",
+    baseline:
+      "Concurrent control arm. Historical R1-era figure of 10.7% (241 of 2,258 arrivals, Aug 14 to Sep 28) is descriptive only and is NOT the experimental control.",
     decisionRule:
-      "Five-week A/B once the Release-1 baseline settles. SHIP if Reach × Completion improves ≥ 15% relative, with a lead-quality guardrail: ProABD acceptance rate holds and no rise in junk or duplicate submissions. Otherwise iterate or revert — a pretty flow that doesn't move the compound rate does not ship.",
+      "Persistent 50/50 random assignment (first-party cookie, assigned before render, variant stamped on every session, form, and lead event, with campaign, language, device, source, landing route and assignment date). Sample-ratio-mismatch check runs before any rate is read; a split materially off 50/50 (chi-square p < 0.001) blocks the read until explained. Review gate: at least 300 starts per variant AND at least 28 calendar days; hard maximum 42 days. Beta-binomial on each arm, prior Beta(1, 1), frozen here. SHIP if the posterior median relative lift is at least +10% AND P(R2A > control) >= 0.90 AND the immediate quality guardrail passes. REVERT if the posterior median relative lift is at most -10% AND P(R2A < control) >= 0.90, or on an immediate guardrail failure. Otherwise HOLD to the maximum gate, then record INCONCLUSIVE. Power statement: at about 1,000 exposures per arm over 42 days this test resolves roughly a 40% relative lift at 80% power. It is NOT powered for 10% or 15%; a HOLD is not a near miss. Subgroups (campaign, language, device) are for balance checks and spotting large heterogeneity only; no subgroup is required to reach significance. IMMEDIATE quality guardrail (decides with the primary): quoteable-at-submit rate, a deterministic flag at /api/lead (required fields present and valid, route resolvable, vehicle resolvable), must not fall more than 5 percentage points below control. DELAYED business read (reported, does not decide): matured priced share and priced leads per exposure, read only on leads past the frozen maturation window (historical 95th percentile of submit-to-priced latency, measured before launch), with treatment and control matured counts printed explicitly. At roughly 110 completions per arm in 42 days the priced-share difference has a standard error near 6.6 points, so this read can only show large quality damage; it is a harm signal, not evidence of noninferiority.",
     status: "specified",
     studySlug: "behavioral-journey",
+    notes:
+      "REDESIGNED 2026-09-28 after two rounds of external review of the original quote-path-r2 entry. Original was before/after with a 300-start gate and a 15% ship bar against the pre-R1 6.7% baseline: underpowered (about 25% power), used a stale baseline, and repeated R1's identification problem. R1's own data showed why: first 289 R1 starts completed at 24.2%, the next 461 at 38.6% (p about 0.00005). The late increase coincides with the Sep 14 and Sep 21 moves to lead-based bidding and cannot be attributed to R1; traffic-mix change is the leading explanation. A version stamp records what someone saw; it does not create a counterfactual. Randomization is the fix, and it also absorbs the Oct 3 S5 switch to Target CPA, which hits both arms concurrently. Second-round fixes: exposure unit defined, SRM check added, Bayesian rule made explicit (posterior median AND probability), prior frozen, and the matured-completion guardrail replaced because 150 matured completions per arm is unreachable inside 42 days at current traffic. Pre-launch build: cookie assignment in middleware; quoteable-at-submit flag; route resolution success/ambiguity/correction/latency; vehicle-type inference confidence and later agent disagreement; field dwell and refocus counts; unpriceable reason codes; exposure unit, prior, SRM test and decision formulas frozen in code with tests.",
+  },
+  {
+    slug: "quote-path-r2b",
+    title: "Quote path, Release 2B: in-form price moment",
+    change:
+      "After route and vehicle are known, show an estimate inside the quote form with a lock-this-price step, carrying the pattern validated on the price checker into the main form.",
+    type: "experiment",
+    owner: "Zaldivar Labs",
+    metric:
+      "Three levels, all per price-eligible exposure (one per session, same exclusions and stability rules as R2A). Behavioral diagnostic: continued past the price moment. Quality outcome: quoteable-at-submit leads (immediate) and matured priced leads (delayed). Business outcome: matured bookings, later contribution margin. The lock-this-price click is behavior, not success.",
+    baseline: "Concurrent control arm: price-eligible starters who continue through the ordinary form with no price shown.",
+    decisionRule:
+      "Randomize at price eligibility (the moment route and vehicle are known), 50/50, persistent per visitor, SRM-checked. Runs only after R2A is decided, on the stabilized form. Review gate: at least 150 price-eligible exposures per arm and at least 28 days; maximum 42 days. The deciding metric is the QUALITY outcome, quoteable-at-submit leads per eligible exposure, not form completion: a shown price may lower completion while raising the share worth an agent's time, and judging on completion would kill the better treatment. Same Bayesian structure as R2A (Beta(1, 1); SHIP at posterior median >= +10% with P >= 0.90; REVERT symmetric; INCONCLUSIVE at the maximum gate). Continuation past the price and abandonment immediately before vs after the price are reported as diagnostics. Matured priced leads and bookings per eligible exposure are reported with explicit matured counts and can veto a SHIP on clear harm; they cannot prove noninferiority at this sample size. Funnel instrumented end to end: price shown, lock click, submit, quoteable, priced, booked.",
+    status: "specified",
+    studySlug: "behavioral-journey",
+    notes:
+      "ADDED 2026-09-28, revised same day after second review. The price checker experiment (pc-estimate-moment, validated 9/28 at 8.7% vs 6.2% bar, CI 5.5 to 13.5) proved something narrower than this: fixing the handoff after an estimate on a side tool moved continuation. It did not establish that a price in the middle of the main conversion form helps; 87% of estimate viewers still stopped at the price. In-form pricing is a new hypothesis with its own gate, not an inherited win. Blocked by: quote-path-r2a verdict.",
   },
   {
     slug: "pricing-phase0-observation",
