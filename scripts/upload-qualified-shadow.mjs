@@ -237,14 +237,19 @@ const qualified = [...rec.values()].filter((r) =>
 // Lead-doc join for GCLIDs.
 const leadSnap = await db.collection("leads").get();
 const byAbd = new Map();
-let cpcNoGclid = 0;
+let cpcNoGclid = 0, callCpcNoGclid = 0;
 for (const doc of leadSnap.docs) {
   const d = doc.data();
   const abd = str(d.proabdAbdId);
   if (TEST_RE.test(str(d.email)) || TEST_RE.test(str(d.attribution?.utmSource ?? ""))) continue;
   const gclid = str(d.attribution?.gclid ?? d.gclid);
   if (abd) byAbd.set(abd, { gclid, cpc: d.attribution?.utmMedium === "cpc" });
-  if (d.attribution?.utmMedium === "cpc" && !gclid) cpcNoGclid++;
+  // Call leads never carry an ABD id (agents create those ProABD records by
+  // hand), so they cannot join this upload regardless of gclid. Counted
+  // separately (2026-09-28) so the form-path gap is not overstated.
+  if (d.attribution?.utmMedium === "cpc" && !gclid) {
+    if (d.source === "call") callCpcNoGclid++; else cpcNoGclid++;
+  }
 }
 
 let linked = 0, withGclid = 0, organic = 0, unlinked = 0;
@@ -266,7 +271,8 @@ console.log(`  qualified (Q1 priced):        ${qualified.length}`);
 console.log(`  linked to a lead doc:         ${linked}   (unlinked — pre-integration or handoff gap: ${unlinked})`);
 console.log(`  with GCLID (uploadable):      ${withGclid}`);
 console.log(`  organic/direct (no click):    ${organic}   ← not a gap; nothing to credit`);
-console.log(`  ⚠ cpc-but-no-gclid, ALL leads: ${cpcNoGclid}   ← the true coverage gap for the spec's ≥95% check`);
+console.log(`  ⚠ cpc-but-no-gclid, FORM leads: ${cpcNoGclid}   ← the coverage gap for the spec's ≥95% check`);
+console.log(`    cpc-but-no-gclid, CALL leads: ${callCpcNoGclid}   (not joinable here: no ABD id; see ticket-gclid-capture-gap-2026-09-28)`);
 
 console.log(`\n[1] UPLOAD PLAN — action "${ACTION_NAME}" (SECONDARY / shadow):`);
 if (!plan.length) console.log("  (nothing to upload in this window)");

@@ -84,6 +84,8 @@ interface CallRailPayload {
   utm_content?: string;
   utm_term?: string;
   gclid?: string;
+  gbraid?: string;
+  wbraid?: string;
   fbclid?: string;
   msclkid?: string;
   /** CallRail AI analysis (Conversation Intelligence tier). */
@@ -353,6 +355,15 @@ export async function POST(req: Request) {
       utmContent: payload.utm_content ?? null,
       utmTerm: payload.utm_term ?? null,
       referrer: payload.referrer ?? payload.referring_url ?? null,
+      // Google click ids (2026-09-28). CallRail DNI passes the session's
+      // gclid through on every keyword-pool call, but this block never
+      // stored it: 38 of 38 paid calls in the 30 days to 9/28 had a gclid
+      // in the raw payload and null here. Same shape as the form lead doc
+      // so the qualified-shadow upload can read either source.
+      // gbraid/wbraid are the iOS equivalents; captured for completeness.
+      gclid: payload.gclid?.trim() || null,
+      gbraid: payload.gbraid?.trim() || null,
+      wbraid: payload.wbraid?.trim() || null,
     },
     // Status starts as "completed" (the call ended). Agents update with
     // outcome (quoted / booked / lost / unfit) via the Phase 2 dashboard.
