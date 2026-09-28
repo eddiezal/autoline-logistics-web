@@ -164,16 +164,24 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
     owner: "Zaldivar Labs",
     metric: "Estimate-viewing visits that continue to the quote page",
     baseline: "3.1% (5 of 162 — measured WITH the broken handoff)",
-    current: "6.0% (6 of 100 post-fix estimate visits)",
+    current: "8.7% (17 of 195 post-fix estimate visits)",
     exposure: {
-      current: 100,
+      current: 195,
       gate: 150,
       unit: "estimate visits",
-      asOf: "2026-09-01",
+      asOf: "2026-09-28",
     },
     decisionRule:
       "Review at 150 post-fix estimate visits (~mid-September at current volume). ≥ 6.2% (2× baseline) VALIDATES the estimate moment and greenlights the same pattern on the quote form's own price moment in Release 2. Between 3.1% and 6.2%: HOLD further estimate-moment work until the call-landing reading arrives. Below 3.1%: reopen the plumbing investigation.",
-    status: "accruing",
+    status: "decided",
+    verdict: {
+      outcome: "kept",
+      date: "2026-09-28",
+      decision:
+        "VALIDATED. 8.7% clears the 6.2% bar (2.8x the 3.1% baseline). The estimate-moment pattern (price shown, lock-this-price block with route and vehicle carried over) is greenlit for the quote form's own price moment in Release 2. Caveat carried into R2: the Wilson CI (5.5-13.5%) is wide and its lower bound sits inside the hold band, so R2's price-moment entry gets its own gate rather than inheriting this one as settled.",
+      evidence:
+        "POST window 2026-08-14 to 2026-09-28 (45.4d): 195 estimate sessions, 17 continued to the quote page = 8.7% (CI 5.5-13.5), 11 started the form = 5.6%. PRE window 2026-07-14 to 2026-08-14: 162 sessions, 5 continued = 3.1% (CI 1.3-7.0). Aug 18 internal verification session excluded mechanically (1 of 1 listed). Run: behavior-journey-early-read.mjs --split 2026-08-14, 2026-09-28 10:07 PT. Sessions still ending on the estimate: 87.2% vs ~87.0% baseline, i.e. the fix moved the handoff, not the share who stop at the estimate.",
+    },
     studySlug: "behavioral-journey",
     notes:
       "AMENDED 2026-08-19: the Aug 18 internal verification visit (Claude browser walk of the prefill, 08:47 PT, session 640dd30b…|751954f9…) is now EXCLUDED MECHANICALLY from both the live meter (activeDecisions.ts) and the early-read script — no mental discounting needed. Fingerprint audit of all handoff sessions (5 pre, 1 post) found no other internal traffic. ADDED CHECKPOINT: at 50 estimate-sessions, if handoffs remain ~0, run an early instrumentation/UX review (does not change the 150-session decision gate).",
