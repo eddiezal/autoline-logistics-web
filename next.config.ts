@@ -169,6 +169,14 @@ const nextConfig: NextConfig = {
       // after GSC flagged /es/contact as 404.
       { source: "/es/contact", destination: "/es/quote", permanent: true },
       { source: "/es/contact-us", destination: "/es/quote", permanent: true },
+      // Dead Ads landing paths flagged by the Google Ads destination check
+      // 2026-09-29. Old landing slugs (EN + ES) never existed on the Next
+      // build; route them + any sub-paths to the live quote pages. Query
+      // strings (gclid etc.) are preserved by Next.js redirects.
+      { source: "/quote-landing", destination: "/quote", permanent: true },
+      { source: "/quote-landing/:path*", destination: "/quote", permanent: true },
+      { source: "/es/cotizacion", destination: "/es/quote", permanent: true },
+      { source: "/es/cotizacion/:path*", destination: "/es/quote", permanent: true },
       // Legacy services tier deep-links (external referrals discovered via GSC
       // 2026-07-06). Tier is now selected inside the quote form via ?tier= param.
       { source: "/services/standby", destination: "/quote?tier=standby", permanent: true },
