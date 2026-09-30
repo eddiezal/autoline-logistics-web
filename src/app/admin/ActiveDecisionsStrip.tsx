@@ -268,7 +268,11 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
               </>
             ) : c.crossed ? (
               <>
-                <div style={{ fontSize: 13, fontWeight: 800, color: RED, marginTop: 3 }}>REVIEW DUE</div>
+                {/* Name the entry in the red line itself: with three gated cards side by
+                    side, "REVIEW DUE" alone read as one unresolved item (2026-09-30: the
+                    estimate-moment verdict cleared its card while call-page capture stayed
+                    red, and the two looked the same at a glance). */}
+                <div style={{ fontSize: 13, fontWeight: 800, color: RED, marginTop: 3 }}>REVIEW DUE · {c.display}</div>
                 <div style={{ fontSize: 10.5, color: MUTED, marginTop: 5 }}>
                   gate crossed · see <b>Needs a decision</b>
                 </div>
