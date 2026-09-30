@@ -208,14 +208,22 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
     metric:
       "Do estimate-viewers call instead of exiting? (does the price cliff survive phone calls)",
     exposure: {
-      current: 1,
+      current: 7,
       gate: 5,
       unit: "weeks of call-page data",
-      asOf: "2026-08-18",
+      asOf: "2026-09-30",
     },
     decisionRule:
       "Read after 4–6 weeks of call-page data (~mid-September). If estimate-viewers turn out to be heavy callers, the price cliff shrinks and estimate-moment priority shifts from rescuing those visits to easing the call path. Either answer redirects the roadmap; neither is a failure.",
-    status: "accruing",
+    status: "decided",
+    verdict: {
+      outcome: "kept",
+      date: "2026-09-30",
+      decision:
+        "CLIFF STANDS. Estimate viewers are not calling instead of exiting: the route-price-checker page accounts for 3.5% of calls against ~28% of sessions. Calls skew home and quote pages like general traffic. The 87% stop-at-estimate share in behavior-journey is real, not a phone artifact. R2B's price-moment priority holds; no call-path work is pulled forward on this evidence.",
+      evidence:
+        "call-landing.mjs --days 45, run 2026-09-30 ~3:40 PM PT: 113 call leads (Aug 16 to Sep 30). Page when dialed: home 41 (36%), /es/quote 25 (22%), /quote 9 (8%), /es/people-promise 9 (8%), /es/price-promise 7 (6%), /tools/route-price-checker 4 (4%), /price-promise 4 (4%), everything else 13, one unrecorded. Quote pages together 30%, price checker 3.5%. 75 of 113 calls were 60s+. Spanish pages produced 37% of calls. Read is 7 weeks past the Aug 10 ship, gate was 5. Cosmetic: the script labels every row OTHER because stored landing pages now carry the host; the per-page tally is unaffected.",
+    },
     studySlug: "behavioral-journey",
   },
   {
