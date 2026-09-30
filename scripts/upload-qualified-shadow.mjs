@@ -368,7 +368,7 @@ if (DATAMANAGER) {
     }],
     events: plan.sort((a, b) => a.at - b.at).map((p) => ({
       adIdentifiers: { gclid: p.gclid },
-      conversionTime: p.at.toISOString(),
+      eventTimestamp: p.at.toISOString(),   // Data Manager field name (not conversionTime)
       conversionValue: p.value,
       currency: "USD",
       eventSource: "WEB",
