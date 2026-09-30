@@ -1,0 +1,82 @@
+# Daily "Qualified lead (priced)" upload to Google Ads via the Data Manager API.
+#
+# Replaces the Monday-by-hand CSV upload (2026-08 → 2026-09). Runs every day
+# at 02:00 UTC (7 PM PDT / 6 PM PST), after the day's pricing, with a 3-day
+# window; ONE_PER_CLICK on the action dedups the overlap.
+#
+# Secrets (repo → Settings → Secrets and variables → Actions):
+#   FIREBASE_SERVICE_ACCOUNT_JSON  full service-account JSON for the Firebase
+#                                  project (Firestore read). Written to a temp
+#                                  file and passed as GOOGLE_APPLICATION_CREDENTIALS
+#                                  so the PEM-newline problem in .env.vercel
+#                                  never applies here.
+#   FIREBASE_PROJECT_ID
+#   GOOGLE_ADS_DEVELOPER_TOKEN
+#   GOOGLE_ADS_CLIENT_ID
+#   GOOGLE_ADS_CLIENT_SECRET
+#   GOOGLE_ADS_REFRESH_TOKEN       must be minted WITH the datamanager scope
+#                                  (scripts/mint-ads-refresh-token.mjs, 2026-09-30+)
+# Variables:
+#   QUALIFIED_PRIMARY_OK           set to "true" only after the action is
+#                                  deliberately promoted to S5's bidding goal.
+#                                  Until then the script's safety rail aborts
+#                                  if someone promotes it by accident.
+#
+# Manual run: Actions → this workflow → Run workflow (choose days / validate-only).
+name: qualified-lead-upload
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Window in days (default 3)"
+        default: "3"
+      validate_only:
+        description: "Validate payload without ingesting"
+        type: boolean
+        default: false
+
+concurrency:
+  group: qualified-lead-upload
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: Write Firebase credentials
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-sa.json" >> "$GITHUB_ENV"
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+
+      - name: Upload qualified leads (Data Manager API)
+        run: |
+          DAYS="${{ github.event.inputs.days || '3' }}"
+          MODE="--apply"
+          if [ "${{ github.event.inputs.validate_only }}" = "true" ]; then MODE="--validate-only"; fi
+          node scripts/upload-qualified-shadow.mjs --datamanager --days "$DAYS" $MODE --env /dev/null
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          GOOGLE_ADS_DEVELOPER_TOKEN: ${{ secrets.GOOGLE_ADS_DEVELOPER_TOKEN }}
+          GOOGLE_ADS_CLIENT_ID: ${{ secrets.GOOGLE_ADS_CLIENT_ID }}
+          GOOGLE_ADS_CLIENT_SECRET: ${{ secrets.GOOGLE_ADS_CLIENT_SECRET }}
+          GOOGLE_ADS_REFRESH_TOKEN: ${{ secrets.GOOGLE_ADS_REFRESH_TOKEN }}
+          QUALIFIED_PRIMARY_OK: ${{ vars.QUALIFIED_PRIMARY_OK }}
+
+      - name: Scrub credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-sa.json"

@@ -53,10 +53,17 @@
  *   node scripts/upload-qualified-shadow.mjs --setup --apply # create the action
  *   node scripts/upload-qualified-shadow.mjs --csv           # ← THE WORKING PATH:
  *       writes ../qualified-shadow-YYYYMMDD.csv for UI upload (Data manager).
- *   node scripts/upload-qualified-shadow.mjs --apply         # direct API upload —
+ *   node scripts/upload-qualified-shadow.mjs --apply         # direct Ads-API upload —
  *       BLOCKED for this account since 2026-06-15 (Ads-API OCI cutover to the
- *       Data Manager API; see the --csv block below). Kept for when a Data
- *       Manager API integration lands or legacy access is granted.
+ *       Data Manager API; see the --csv block below). Kept for reference.
+ *   node scripts/upload-qualified-shadow.mjs --datamanager --validate-only
+ *       # ← THE AUTOMATED PATH (2026-09-30): Data Manager API events:ingest.
+ *       validate-only checks the payload without writing. Needs a refresh
+ *       token minted with the datamanager scope (mint-ads-refresh-token.mjs).
+ *   node scripts/upload-qualified-shadow.mjs --datamanager --apply
+ *       # real ingest. Run daily from CI (.github/workflows/qualified-lead-upload.yml).
+ *   --primary-ok   # lift the SECONDARY safety rail. Only once the qualified
+ *       definition is frozen and the action is deliberately the S5 bidding goal.
  */
 
 import { config as loadEnv } from "dotenv";
@@ -100,6 +107,9 @@ const CUSTOMER_ID = (process.env.GOOGLE_ADS_CUSTOMER_ID ?? "8519808841").replace
 const APPLY = argv.includes("--apply");
 const SETUP = argv.includes("--setup");
 const CSV = argv.includes("--csv");
+const DATAMANAGER = argv.includes("--datamanager");
+const VALIDATE_ONLY = argv.includes("--validate-only");
+const PRIMARY_OK = argv.includes("--primary-ok") || process.env.QUALIFIED_PRIMARY_OK === "true";
 const dIdx = argv.indexOf("--days");
 const WINDOW_DAYS = dIdx >= 0 ? Number(argv[dIdx + 1]) || 3 : 3;
 
@@ -330,11 +340,60 @@ if (!action) {
   console.log(`\nAction "${ACTION_NAME}" does not exist yet — run with --setup --apply first. Stopping.`);
   process.exit(plan.length ? 1 : 0);
 }
-if (action.primaryForGoal !== false) {
+if (action.primaryForGoal !== false && PRIMARY_OK) {
+  console.log(`\n(action is PRIMARY; --primary-ok / QUALIFIED_PRIMARY_OK set, so this upload feeds bidding. Intended post-switch.)`);
+} else if (action.primaryForGoal !== false) {
   console.error(`\n⛔ SAFETY RAIL: "${ACTION_NAME}" is PRIMARY (primary_for_goal=${action.primaryForGoal}).`);
   console.error(`Shadow uploads feed bidding only if the action is primary — and the qualified definition`);
   console.error(`is NOT frozen (Gate 1/5 pending). Demote it to secondary before uploading. ABORTING.`);
   process.exit(1);
+}
+
+/* ---------------- --datamanager: Data Manager API ingest (2026-09-30) ----------------
+ * Google's replacement for Ads-API offline conversion uploads. Same OAuth
+ * client; the refresh token must carry the datamanager scope. The conversion
+ * action is addressed by its numeric id (productDestinationId) under the
+ * operating (client) account, logged in through the manager account.
+ * Ingest is asynchronous: the response carries a requestId; acceptance shows
+ * up in check-oci-status [2] as a DATA_MANAGER client within hours.
+ * Ref: developers.google.com/data-manager/api */
+if (DATAMANAGER) {
+  if (!plan.length) { console.log(`\n--datamanager: nothing to upload in this window.`); process.exit(0); }
+  const actionId = String(action.resourceName).split("/").pop();
+  const body = {
+    destinations: [{
+      operatingAccount: { accountType: "GOOGLE_ADS", accountId: CUSTOMER_ID },
+      loginAccount: { accountType: "GOOGLE_ADS", accountId: LOGIN_CUSTOMER_ID },
+      productDestinationId: actionId,
+    }],
+    events: plan.sort((a, b) => a.at - b.at).map((p) => ({
+      adIdentifiers: { gclid: p.gclid },
+      conversionTime: p.at.toISOString(),
+      conversionValue: p.value,
+      currency: "USD",
+      eventSource: "WEB",
+    })),
+    validateOnly: VALIDATE_ONLY || !APPLY,
+  };
+  const mode = body.validateOnly ? "VALIDATE-ONLY" : "APPLY";
+  console.log(`\n--datamanager ${mode}: ${body.events.length} event(s) → action ${actionId}`);
+  const r = await fetch("https://datamanager.googleapis.com/v1/events:ingest", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const text = await r.text();
+  let dmData; try { dmData = JSON.parse(text); } catch { dmData = { raw: text }; }
+  if (!r.ok) {
+    const reason = dmData?.error?.details?.[0]?.reason ?? dmData?.error?.status ?? r.status;
+    console.error(`\n⛔ Data Manager ${r.status} ${reason}: ${dmData?.error?.message ?? text.slice(0, 400)}`);
+    if (reason === "ACCESS_TOKEN_SCOPE_INSUFFICIENT") console.error(`Refresh token lacks the datamanager scope. Re-mint: node scripts/mint-ads-refresh-token.mjs`);
+    process.exit(1);
+  }
+  console.log(`Data Manager ${mode} OK. requestId=${dmData.requestId ?? "(none)"}`);
+  if (dmData.eventErrors || dmData.warnings) console.log(JSON.stringify(dmData, null, 2).slice(0, 2000));
+  if (!body.validateOnly) console.log(`Verify in 24h: node scripts/check-oci-status.mjs → [2] should show a DATA_MANAGER client with ok=${body.events.length} (minus ONE_PER_CLICK dedups).`);
+  process.exit(0);
 }
 
 if (!APPLY) { console.log(`\nDry run only. Re-run with --apply to upload ${plan.length} conversion(s).`); process.exit(0); }
