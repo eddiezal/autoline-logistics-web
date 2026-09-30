@@ -4,12 +4,16 @@
 # at 02:00 UTC (7 PM PDT / 6 PM PST), after the day's pricing, with a 3-day
 # window; ONE_PER_CLICK on the action dedups the overlap.
 #
+# Google auth: keyless via Workload Identity Federation. The auto-line-logistics
+# org policy blocks service-account key creation (confirmed 2026-09-30), so the
+# job exchanges GitHub's OIDC token for a short-lived Google credential and
+# impersonates qualified-upload@auto-line-logistics.iam.gserviceaccount.com
+# (roles/datastore.viewer). google-github-actions/auth writes a credential
+# config file and exports GOOGLE_APPLICATION_CREDENTIALS; firebase-admin's
+# applicationDefault() picks it up. One-time GCP setup is in the ledger:
+# claude/qualified-shadow-upload-2026-09-30.md.
+#
 # Secrets (repo → Settings → Secrets and variables → Actions):
-#   FIREBASE_SERVICE_ACCOUNT_JSON  full service-account JSON for the Firebase
-#                                  project (Firestore read). Written to a temp
-#                                  file and passed as GOOGLE_APPLICATION_CREDENTIALS
-#                                  so the PEM-newline problem in .env.vercel
-#                                  never applies here.
 #   FIREBASE_PROJECT_ID
 #   GOOGLE_ADS_DEVELOPER_TOKEN
 #   GOOGLE_ADS_CLIENT_ID
@@ -42,6 +46,10 @@ concurrency:
   group: qualified-lead-upload
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  id-token: write   # required for Workload Identity Federation
+
 jobs:
   upload:
     runs-on: ubuntu-latest
@@ -49,19 +57,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Google auth (keyless)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/184060108234/locations/global/workloadIdentityPools/github/providers/github-oidc
+          service_account: qualified-upload@auto-line-logistics.iam.gserviceaccount.com
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - run: npm ci --ignore-scripts
-
-      - name: Write Firebase credentials
-        run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-sa.json"
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-sa.json" >> "$GITHUB_ENV"
-        env:
-          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
 
       - name: Upload qualified leads (Data Manager API)
         run: |
@@ -77,6 +84,3 @@ jobs:
           GOOGLE_ADS_REFRESH_TOKEN: ${{ secrets.GOOGLE_ADS_REFRESH_TOKEN }}
           QUALIFIED_PRIMARY_OK: ${{ vars.QUALIFIED_PRIMARY_OK }}
 
-      - name: Scrub credentials
-        if: always()
-        run: rm -f "$RUNNER_TEMP/firebase-sa.json"
