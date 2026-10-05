@@ -87,16 +87,11 @@ export function agentEmailForUserName(userName: string): Agent | null {
 }
 
 /**
- * After-hours window (2026-08-11, per Eddie): Renee + Ginger stop at
- * 5 PM Eastern; Nelson keeps working. Used in TWO places that must agree:
- *  - /api/lead: after-hours leads are created in ProABD under the
- *    Nelson-routed referrer (PROABD_REFERRER_ID_AFTERHOURS) so ProABD
- *    itself assigns Nelson — the single-brain rule holds because WE only
- *    choose the referrer; ProABD's rules do the assigning (same mechanism
- *    as ES referrer 18493 → Nelson, proven live 7/24).
- *  - /api/webhooks/proabd: fallback coverage copy to Nelson when an
- *    after-hours lead was assigned to someone else anyway (referrer env
- *    unset, or ProABD rules change).
+ * After-hours window. Nelson coverage RETIRED 2026-10-05 (per Renee:
+ * her team handles its own leads after hours). The webhook banner/copy
+ * is gone; the only remaining consumer is /api/lead's afterHours flag,
+ * which is informational unless PROABD_REFERRER_ID_AFTERHOURS is set
+ * (it never has been — leave it unset).
  * Config: AGENT_EVENING_START_HOUR_ET (default 17),
  * AGENT_MORNING_START_HOUR_ET (default 8),
  * AGENT_COVERAGE_WEEKENDS=false to exclude weekends (default covered).
