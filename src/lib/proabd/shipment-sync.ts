@@ -143,7 +143,7 @@ function zoneShiftMs(instant: Date, timeZone: string): number {
  *
  * Mirror of scripts/lib/proabd-time.mjs — keep the two in step.
  */
-function ptToIso(s: string | undefined): ISODate | undefined {
+export function ptToIso(s: string | undefined): ISODate | undefined {
   if (!s) return undefined;
   const v = s.trim();
   if (!v) return undefined;
