@@ -26,6 +26,7 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import { verifyHcaptcha } from "@/lib/hcaptcha";
 import { checkRateLimit, getClientIp, tooManyRequestsResponse } from "@/lib/ratelimit";
 import { OWNER_EMAIL, QA_BCC_EMAIL, isAfterHoursET } from "@/lib/leads/agents";
+import { nextLeadRef } from "@/lib/leads/leadRef";
 import { buildLeadEmail, buildCustomerEmail } from "@/lib/leads/emailTemplate";
 import { applyCustomerMarkup, PRICING_MODEL } from "@/lib/pricing/markup";
 import {
@@ -120,15 +121,6 @@ function requireStr(v: unknown, max = 200): string | null {
   return s;
 }
 
-function generateLeadRef(): string {
-  const now = new Date();
-  const ymd =
-    String(now.getUTCFullYear()).slice(2) +
-    String(now.getUTCMonth() + 1).padStart(2, "0") +
-    String(now.getUTCDate()).padStart(2, "0");
-  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return "AL-" + ymd + "-" + rand;
-}
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
@@ -297,7 +289,6 @@ export async function POST(req: Request) {
     estimate = { source: "unavailable", sdVehicleType };
   }
 
-  const leadRef = generateLeadRef();
   const submittedAt = new Date().toISOString();
   // Pricing input-integrity gate (spec v3.4) — INSTRUMENTATION ONLY for now:
   // evaluate eligibility on truthful inputs and record the snapshot. Does NOT
@@ -343,6 +334,8 @@ export async function POST(req: Request) {
 
 
   const db = DEV_SKIP_FIRESTORE ? null : getAdminDb();
+  // Short sequential ref (AL-10482), 2026-10-07. See src/lib/leads/leadRef.ts.
+  const leadRef = await nextLeadRef(db);
   const leadDoc = {
     leadRef,
     submittedAt,
