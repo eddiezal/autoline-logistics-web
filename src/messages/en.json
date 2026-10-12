@@ -723,6 +723,8 @@
       "howPricingWorks": "How pricing works →",
       "statePrompt": "Type both ZIPs to start.",
       "stateInvalid": "We don't recognize one of those ZIPs. Submit a quote and your coordinator will check it.",
+      "stateLoading": "Checking current carrier prices for this route…",
+      "stateNoPrice": "We couldn't pull a live price for this route right now. Get your quote and a coordinator will price it.",
       "stateUnknown": "We don't have those ZIPs in our quick-lookup. Submit a full quote with your pickup and delivery addresses.",
       "stateOk": {
         "milesLabel": "mi",

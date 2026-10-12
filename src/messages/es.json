@@ -723,6 +723,8 @@
       "howPricingWorks": "Cómo funciona el precio →",
       "statePrompt": "Escriba ambos códigos postales para empezar.",
       "stateInvalid": "No reconocemos uno de esos códigos postales. Envíe una cotización y su coordinador lo verificará.",
+      "stateLoading": "Consultando precios actuales de transportistas para esta ruta…",
+      "stateNoPrice": "No pudimos obtener un precio en vivo para esta ruta en este momento. Solicite su cotización y un coordinador le dará el precio.",
       "stateUnknown": "No tenemos esos códigos postales en nuestra búsqueda rápida. Envíe una cotización con sus direcciones completas.",
       "stateOk": {
         "milesLabel": "mi",

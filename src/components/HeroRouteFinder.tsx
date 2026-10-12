@@ -144,8 +144,17 @@ type RouteState =
       to: MetroZip | null;
       price: number;
     }
+  // Release A (2026-10-12): both ZIPs are real mainland ZIPs but at least
+  // one isn't near our 87-metro table. No local distance, so no local
+  // estimate; the price comes from Super Dispatch (which prices any
+  // continental ZIP pair). Before this, these routes (94% of real booked
+  // orders) never asked SD and showed "We don't have those ZIPs".
+  | { kind: "zipOnly"; fromState: string; toState: string }
   | { kind: "unknown" }
   | { kind: "invalid" };
+
+// SD Pricing Insights covers the continental US only.
+const NON_CONTINENTAL = new Set(["HI", "AK", "PR"]);
 
 function computeRoute(
   fromZip: string,
@@ -207,7 +216,17 @@ function computeRoute(
       ),
     };
   }
-  if (!fromMatch || !toMatch) return { kind: "unknown" };
+  if (!fromMatch || !toMatch) {
+    if (
+      fromPrefix &&
+      toPrefix &&
+      !NON_CONTINENTAL.has(fromPrefix) &&
+      !NON_CONTINENTAL.has(toPrefix)
+    ) {
+      return { kind: "zipOnly", fromState: fromPrefix, toState: toPrefix };
+    }
+    return { kind: "unknown" };
+  }
 
   const distance = Math.round(
     roadDistanceMiles(fromMatch.entry, toMatch.entry),
@@ -270,11 +289,17 @@ export function HeroRouteFinder() {
     low?: number;
     high?: number;
   } | null>(null);
+  // Only meaningful for zipOnly routes, which have no local fallback:
+  // "loading" while SD answers, "failed" if it can't price the route.
+  const [liveStatus, setLiveStatus] = useState<"idle" | "loading" | "done" | "failed">("idle");
   useEffect(() => {
     setLiveEstimate(null);
-    // SD Pricing Insights covers the continental US only — HI/AK (and every
-    // non-"ok" state) keep the local estimate, so only mainland routes hit SD.
-    if (route.kind !== "ok") return;
+    setLiveStatus("idle");
+    // SD Pricing Insights covers the continental US only — HI/AK keep the
+    // local estimate. "ok" (metro) and "zipOnly" (any other mainland ZIP)
+    // routes both ask SD.
+    if (route.kind !== "ok" && route.kind !== "zipOnly") return;
+    setLiveStatus("loading");
     const controller = new AbortController();
     const timer = setTimeout(() => {
       fetch("/api/pricing", {
@@ -283,10 +308,10 @@ export function HeroRouteFinder() {
         body: JSON.stringify({
           fromZip,
           toZip,
-          fromCity: route.from.city,
-          fromState: route.from.state,
-          toCity: route.to.city,
-          toState: route.to.state,
+          fromCity: route.kind === "ok" ? route.from.city : undefined,
+          fromState: route.kind === "ok" ? route.from.state : route.fromState,
+          toCity: route.kind === "ok" ? route.to.city : undefined,
+          toState: route.kind === "ok" ? route.to.state : route.toState,
           vehicleType: vehicleKey,
           isInoperable: conditionKey === "nonDrivable",
           transportType: transportKey,
@@ -308,9 +333,16 @@ export function HeroRouteFinder() {
                 ? Math.round((d.high * mult) / 25) * 25
                 : undefined;
             setLiveEstimate({ price: adjusted, low: adjLow, high: adjHigh });
+            setLiveStatus("done");
+          } else {
+            setLiveStatus("failed");
           }
         })
-        .catch(() => {});
+        .catch((err: unknown) => {
+          // An abort just means the inputs changed; the next run owns status.
+          if (err instanceof DOMException && err.name === "AbortError") return;
+          setLiveStatus("failed");
+        });
     }, 350);
     return () => {
       controller.abort();
@@ -324,8 +356,14 @@ export function HeroRouteFinder() {
   // element with zero instrumentation.
   const firedEstimates = useRef(new Set<string>());
   useEffect(() => {
-    if (route.kind !== "ok" && route.kind !== "hawaii" && route.kind !== "alaska") return;
-    const shown = liveEstimate?.price ?? route.price;
+    if (
+      route.kind !== "ok" &&
+      route.kind !== "hawaii" &&
+      route.kind !== "alaska" &&
+      route.kind !== "zipOnly"
+    ) return;
+    const shown =
+      route.kind === "zipOnly" ? liveEstimate?.price : (liveEstimate?.price ?? route.price);
     if (typeof shown !== "number" || shown <= 0) return;
     const key = fromZip + "|" + toZip + "|" + shown;
     if (firedEstimates.current.has(key)) return;
@@ -450,7 +488,14 @@ export function HeroRouteFinder() {
       </div>
 
       {/* Result panel — only renders when there's a real route. */}
-      <ResultPanel state={route} quoteHref={quoteHref} liveEstimate={liveEstimate} />
+      <ResultPanel
+        state={route}
+        quoteHref={quoteHref}
+        liveEstimate={liveEstimate}
+        liveStatus={liveStatus}
+        fromZip={fromZip}
+        toZip={toZip}
+      />
     </div>
   );
 }
@@ -562,10 +607,16 @@ function ResultPanel({
   state,
   quoteHref,
   liveEstimate,
+  liveStatus,
+  fromZip,
+  toZip,
 }: {
   state: RouteState;
   quoteHref: { pathname: "/quote"; query: Record<string, string> };
   liveEstimate: { price: number; low?: number; high?: number } | null;
+  liveStatus: "idle" | "loading" | "done" | "failed";
+  fromZip: string;
+  toZip: string;
 }) {
   const t = useTranslations();
 
@@ -599,6 +650,56 @@ function ResultPanel({
           </Link>
         </div>
       );
+
+    case "zipOnly": {
+      const routeLabel = (
+        <span className="text-base md:text-lg font-bold text-charcoal">
+          {state.fromState} {fromZip} <span className="text-orange">→</span>{" "}
+          {state.toState} {toZip}
+        </span>
+      );
+      if (liveEstimate) {
+        return (
+          <div className="mt-5 bg-orange-tint/40 border border-orange-tint rounded-xl px-4 py-4">
+            <div className="flex items-center gap-2.5 mb-3 flex-wrap">{routeLabel}</div>
+            <PriceDisplay
+              price={liveEstimate.price}
+              label={t("home.heroRouteFinder.lockedLabel")}
+              range={rangeLabel}
+            />
+          </div>
+        );
+      }
+      if (liveStatus === "failed") {
+        return (
+          <div className="mt-5 bg-gray-50 border border-gray-200 rounded-xl px-4 py-4">
+            <p className="text-sm text-gray-700 leading-relaxed mb-3">
+              {t("home.heroRouteFinder.stateNoPrice")}
+            </p>
+            <Link
+              href={quoteHref}
+              className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-sm font-bold px-5 py-2.5 rounded-full transition"
+            >
+              {t("home.heroRouteFinder.ctaLock")} →
+            </Link>
+          </div>
+        );
+      }
+      // idle / loading: hold the space so the card doesn't jump when the
+      // price lands. role=status lets screen readers hear the result.
+      return (
+        <div
+          className="mt-5 bg-orange-tint/40 border border-orange-tint rounded-xl px-4 py-4"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2.5 mb-3 flex-wrap">{routeLabel}</div>
+          <p className="text-sm text-gray-600 leading-relaxed animate-pulse">
+            {t("home.heroRouteFinder.stateLoading")}
+          </p>
+        </div>
+      );
+    }
 
     case "unknown":
       return (
@@ -655,7 +756,11 @@ function ResultPanel({
 
     case "ok": {
       return (
-        <div className="mt-5 bg-orange-tint/40 border border-orange-tint rounded-xl px-4 py-4">
+        <div
+          className="mt-5 bg-orange-tint/40 border border-orange-tint rounded-xl px-4 py-4"
+          role="status"
+          aria-live="polite"
+        >
           <div className="flex items-center gap-2.5 mb-2 flex-wrap">
             <span className="text-base md:text-lg font-bold text-charcoal">
               {state.from.city}, {state.from.state}{" "}
