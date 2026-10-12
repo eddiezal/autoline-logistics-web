@@ -1313,6 +1313,7 @@
             "van": "Van / minivan",
             "motorcycle": "Motorcycle",
             "classic": "Classic / collector vehicle",
+            "exotic": "Exotic / luxury",
             "other": "Other"
           }
         }

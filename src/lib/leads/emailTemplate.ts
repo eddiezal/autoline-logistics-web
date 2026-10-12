@@ -22,6 +22,13 @@ export interface BuildLeadEmailInput {
   destination: { city: string; state: string; zip: string };
   vehicle: { year: string; make: string; model: string; type: string };
   tier: "standby" | "priority" | "expedited";
+  /** False when the customer was never asked timing (direct /quote visit):
+   *  the tier above is then only the server default. Release A, 2026-10-12. */
+  timingProvided?: boolean;
+  /** "operable" | "inoperable" | null (not asked). */
+  condition?: string | null;
+  /** "open" | "enclosed" | null (not asked). */
+  transport?: string | null;
   estimate: {
     source: "sd" | "unavailable";
     price?: number;
@@ -55,6 +62,26 @@ function tierLabel(tier: "standby" | "priority" | "expedited"): string {
   if (tier === "standby") return "Standby";
   if (tier === "expedited") return "Expedited";
   return "Priority";
+}
+
+/** Agent-facing timing: what the customer picked, or "Not asked". */
+function timingLabel(input: BuildLeadEmailInput): string {
+  if (input.timingProvided === false) return "Not asked";
+  if (input.tier === "standby") return "Flexible (standby)";
+  if (input.tier === "expedited") return "ASAP (expedited)";
+  return "Within a week (priority)";
+}
+
+function conditionLabel(c: string | null | undefined): string {
+  if (c === "inoperable") return "NOT RUNNING (inoperable)";
+  if (c === "operable") return "Runs (operable)";
+  return "Not asked";
+}
+
+function transportLabel(t: string | null | undefined): string {
+  if (t === "enclosed") return "Enclosed";
+  if (t === "open") return "Open";
+  return "Not asked";
 }
 
 function priceLabel(estimate: BuildLeadEmailInput["estimate"]): string {
@@ -103,13 +130,13 @@ const ADS_CAMPAIGN_NAMES: Record<string, string> = {
   "24034601751": "S3 State + Corridors",
   "24034601754": "S4 Segments",
   "24034601757": "Brand Defense",
-  "24034984545": "S5 Espa├▒ol",
+  "24034984545": "S5 Español",
 };
 
 /**
  * One-line, plain-English lead source for agents.
  *
- *   "Google Ads - S5 Espa├▒ol"   paid click (utm_source=google&utm_medium=cpc
+ *   "Google Ads - S5 Español"   paid click (utm_source=google&utm_medium=cpc
  *                                from the account tracking suffix)
  *   "Google (organic)"          google referrer, no utm tags
  *   "Bing (organic)"            etc.
@@ -153,7 +180,7 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
   const d = locLabel(input.destination);
   const vehicle = input.vehicle.year + " " + input.vehicle.make + " " + input.vehicle.model;
   const price = priceLabel(input.estimate);
-  const tier = tierLabel(input.tier);
+  const tier = timingLabel(input);
 
   const subject = "[Lead] " + o + " -> " + d + " . " + vehicle + " . " + price;
 
@@ -167,7 +194,9 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
     "Customer: " + fullName + " . " + input.customer.email + " . " + input.customer.phone,
     "Route: " + o + " -> " + d,
     "Vehicle: " + vehicle + " (" + input.vehicle.type + ")",
-    "Tier: " + tier,
+    "Condition: " + conditionLabel(input.condition),
+    "Transport: " + transportLabel(input.transport),
+    "Timing: " + tier,
     "Source: " + deriveLeadSource(input.attribution),
     "Estimate: " + price,
   ];
@@ -229,15 +258,17 @@ function renderHtml(
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;width:90px;">Origin</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.origin.state) + ' ' + escapeHtml(input.origin.zip) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Destination</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.destination.state) + ' ' + escapeHtml(input.destination.zip) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Vehicle</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(vehicle) + ' . ' + escapeHtml(input.vehicle.type) + '</td></tr>'
-    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Tier</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(tier) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Condition</td><td style="padding:6px 0;color:' + (input.condition === "inoperable" ? "#b91c1c;font-weight:700" : "#111") + ';font-size:14px;">' + escapeHtml(conditionLabel(input.condition)) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Transport</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(transportLabel(input.transport)) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Timing</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(tier) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Source</td><td style="padding:6px 0;color:' + PINE + ';font-size:14px;font-weight:700;">' + escapeHtml(deriveLeadSource(input.attribution)) + '</td></tr>'
     + '</table>'
     + attribution
     // Cutover 2026-07-20: ProABD is the only assignment brain. This email
-    // is Ben's visibility copy ΓÇö the agent was already routed + notified
+    // is Ben's visibility copy; the agent was already routed + notified
     // inside ProABD.
     + '<div style="margin-top:20px;padding:12px 14px;border-radius:8px;background:#f0f9ff;border:1px solid #bae6fd;font-size:12px;color:#075985;">'
-    + '<strong>Assigned in ProABD.</strong> The agent was routed and notified there automatically ΓÇö no action needed on this email.'
+    + '<strong>Assigned in ProABD.</strong> The agent was routed and notified there automatically, so no action is needed on this email.'
     + '</div>'
     + '<div style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:' + GRAY + ';">'
     + 'Ref: ' + escapeHtml(input.leadRef) + ' . Submitted ' + escapeHtml(input.submittedAt) + '<br>'

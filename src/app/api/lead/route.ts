@@ -40,11 +40,16 @@ import { roadMilesBetweenZips } from "@/lib/geo/zip3";
 import { sendLeadEmail } from "@/lib/email/resend";
 import { createLead as proabdCreateLead } from "@/lib/proabd/client";
 import { zipPrefixToState, lookupZipApprox } from "@/data/zip-metros";
+import {
+  normalizeCondition,
+  normalizeTiming,
+  normalizeTransport,
+  type CanonicalTier,
+} from "@/lib/hero-handoff";
 
 export const runtime = "nodejs";
 
-const TIERS = ["standby", "priority", "expedited"] as const;
-type Tier = (typeof TIERS)[number];
+type Tier = CanonicalTier;
 
 const DEV_SKIP_FIRESTORE =
   process.env.NODE_ENV !== "production" &&
@@ -182,16 +187,20 @@ export async function POST(req: Request) {
   // Hero-handoff fields (2026-07-22 review: these arrived via hidden
   // inputs but were never read — inoperable vehicles reached ProABD as
   // operable).
-  const rawCondition = str(body.condition);
-  const vehicleCondition =
-    rawCondition === "inoperable" ? "inoperable" : rawCondition === "operable" ? "operable" : null;
-  const transportPref = str(body.transport)?.slice(0, 30) ?? null;
+  // Release A (2026-10-12): accept BOTH vocabularies. The hero sent
+  // drivable / nonDrivable and flexible / withinWeek / asap, which this
+  // route never recognized, so non-running cars went to ProABD as running
+  // and every hero lead was stored as "priority". The normalizers live in
+  // hero-handoff.ts and are shared with the /quote parser.
+  const vehicleCondition = normalizeCondition(body.condition) ?? null;
+  const transportPref = normalizeTransport(body.transport) ?? null;
 
-  const rawTier = str(body.tier);
-  const tier: Tier =
-    rawTier && (TIERS as ReadonlyArray<string>).includes(rawTier)
-      ? (rawTier as Tier)
-      : "priority";
+  const normalizedTier = normalizeTiming(body.tier);
+  // Direct /quote visitors are never asked timing. Keep the stored default
+  // ("priority") for downstream readers, but record that nobody chose it so
+  // agents and reports don't mistake the default for a customer answer.
+  const timingProvided = normalizedTier !== undefined;
+  const tier: Tier = normalizedTier ?? "priority";
 
   const missing: string[] = [];
   if (!originZip) missing.push("origin_zip");
@@ -344,6 +353,7 @@ export async function POST(req: Request) {
     destination: { zip: destinationZip, state: destinationState },
     vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType, condition: vehicleCondition, transportPref },
     tier,
+    timingProvided,
     contact: { firstName: firstName!, lastName: lastName ?? "", email, phone, notes: notes ?? null },
     // Retired 2026-07-20: round-robin assignment. ProABD routes the lead;
     // the webhook receiver stamps proabdAssignedAgent when the event lands.
@@ -463,6 +473,9 @@ export async function POST(req: Request) {
     destination: { city: "", state: destinationState!, zip: destinationZip! },
     vehicle: { year: vehicleYear!, make: vehicleMake!, model: vehicleModel!, type: vehicleType! },
     tier,
+    timingProvided,
+    condition: vehicleCondition,
+    transport: transportPref,
     estimate,
     attribution: {
       utmSource: str(body.utm_source),
@@ -675,7 +688,8 @@ export async function POST(req: Request) {
           "Customer: " + firstName + (lastName ? " " + lastName : "") + " . " + email + " . " + phone,
           "Route: " + originState + " " + originZip + " -> " + destinationState + " " + destinationZip,
           "Vehicle: " + vehicleYear + " " + vehicleMake + " " + vehicleModel + " (" + vehicleType + ")",
-          "Tier: " + tier,
+          "Condition: " + (vehicleCondition ?? "not asked") + " . Transport: " + (transportPref ?? "not asked"),
+          "Timing: " + (timingProvided ? tier : "not asked"),
           ...(notes ? ["Notes: " + notes] : []),
           "",
           "Submitted: " + submittedAt,

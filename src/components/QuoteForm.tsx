@@ -13,17 +13,12 @@ import {
 } from "@/lib/analytics/events";
 import { sendEvent, getVisitorId } from "@/lib/analytics/behavior";
 import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
-import type { HeroHandoff } from "@/lib/hero-handoff";
+import { QUOTE_VEHICLE_TYPES, type HeroHandoff } from "@/lib/hero-handoff";
 
-const VEHICLE_TYPE_KEYS = [
-  "sedan",
-  "suv",
-  "truckStandard",
-  "truckLifted",
-  "van",
-  "classic",
-  "other",
-] as const;
+// Shared with the hero handoff (Release A, 2026-10-12): the hero offered
+// "Exotic / luxury" but this list didn't, so the select silently fell back
+// to Sedan. One list in hero-handoff.ts keeps them aligned.
+const VEHICLE_TYPE_KEYS = QUOTE_VEHICLE_TYPES;
 
 // hCaptcha test site key. Always passes. Replace via NEXT_PUBLIC_HCAPTCHA_SITE_KEY
 // once a real hCaptcha account is provisioned at https://hcaptcha.com.

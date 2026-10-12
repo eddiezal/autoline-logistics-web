@@ -66,9 +66,91 @@ export function buildQuoteHref(handoff: HeroHandoff): QuoteHref {
   return { pathname: "/quote", query };
 }
 
+// ── Value vocabularies (Release A, 2026-10-12) ─────────────────────────
+// The hero speaks UI words (drivable / nonDrivable, flexible / withinWeek /
+// asap); the server and ProABD speak operable / inoperable and standby /
+// priority / expedited. Until this release nothing translated between them,
+// so every non-running car reached ProABD as running and every hero lead was
+// stored as "priority". These normalizers accept BOTH vocabularies (old
+// links in the wild keep working) and return the canonical server value, or
+// undefined for anything unrecognized. Used by the /quote parser AND by
+// /api/lead, so the two sides can't drift again.
+
+export const CANONICAL_CONDITIONS = ["operable", "inoperable"] as const;
+export type CanonicalCondition = (typeof CANONICAL_CONDITIONS)[number];
+
+export const CANONICAL_TIERS = ["standby", "priority", "expedited"] as const;
+export type CanonicalTier = (typeof CANONICAL_TIERS)[number];
+
+export const CANONICAL_TRANSPORTS = ["open", "enclosed"] as const;
+export type CanonicalTransport = (typeof CANONICAL_TRANSPORTS)[number];
+
+/** Vehicle keys the quote form offers. Superset of the hero's options. */
+export const QUOTE_VEHICLE_TYPES = [
+  "sedan",
+  "suv",
+  "truckStandard",
+  "truckLifted",
+  "van",
+  "classic",
+  "exotic",
+  "other",
+] as const;
+export type QuoteVehicleType = (typeof QUOTE_VEHICLE_TYPES)[number];
+
+const CONDITION_ALIASES: Record<string, CanonicalCondition> = {
+  operable: "operable",
+  drivable: "operable",
+  running: "operable",
+  inoperable: "inoperable",
+  nondrivable: "inoperable",
+  "non-drivable": "inoperable",
+  notrunning: "inoperable",
+};
+
+const TIER_ALIASES: Record<string, CanonicalTier> = {
+  standby: "standby",
+  flexible: "standby",
+  priority: "priority",
+  withinweek: "priority",
+  expedited: "expedited",
+  asap: "expedited",
+};
+
+function key(v: unknown): string | null {
+  return typeof v === "string" && v.trim() ? v.trim().toLowerCase() : null;
+}
+
+export function normalizeCondition(v: unknown): CanonicalCondition | undefined {
+  const k = key(v);
+  return k ? CONDITION_ALIASES[k] : undefined;
+}
+
+export function normalizeTiming(v: unknown): CanonicalTier | undefined {
+  const k = key(v);
+  return k ? TIER_ALIASES[k] : undefined;
+}
+
+export function normalizeTransport(v: unknown): CanonicalTransport | undefined {
+  const k = key(v);
+  if (!k) return undefined;
+  if (k.includes("enclos")) return "enclosed";
+  if (k.includes("open")) return "open";
+  return undefined;
+}
+
+/** Returns the form's vehicle key (case-insensitive match), else undefined. */
+export function normalizeVehicleType(v: unknown): QuoteVehicleType | undefined {
+  const k = key(v);
+  if (!k) return undefined;
+  return QUOTE_VEHICLE_TYPES.find((t) => t.toLowerCase() === k);
+}
+
 /**
  * Parse the /quote page's searchParams back into a HeroHandoff. Accepts
  * the raw Record<string, string | undefined> shape Next.js provides.
+ * Condition, timing, transport and vehicle type come back in canonical
+ * form (see normalizers above); unrecognized values are dropped.
  */
 export function parseQuoteSearchParams(
   params: Partial<Record<string, string>>,
@@ -76,10 +158,10 @@ export function parseQuoteSearchParams(
   return {
     originZip: params.from,
     destinationZip: params.to,
-    vehicleType: params.vehicle_type,
-    condition: params.condition,
-    transportType: params.transport,
-    timing: params.timing,
+    vehicleType: normalizeVehicleType(params.vehicle_type),
+    condition: normalizeCondition(params.condition),
+    transportType: normalizeTransport(params.transport),
+    timing: normalizeTiming(params.timing),
   };
 }
 
