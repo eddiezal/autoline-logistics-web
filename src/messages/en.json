@@ -398,23 +398,6 @@
       "stats": {
         "shipments": "45,000+ vehicles across our family operation last year",
         "coverage": "Door-to-door across the U.S., plus HI + AK"
-      },
-      "shipmentCard": {
-        "status": "In transit",
-        "shipmentId": "ALL-2026-04831",
-        "pickupCity": "Los Angeles, CA",
-        "destCity": "Austin, TX",
-        "pickupPhotos": "12 pickup photos uploaded",
-        "deliveryPhotos": "8 delivery photos uploaded",
-        "coordLabel": "Coordinator",
-        "coordName": "Danielle Martinez",
-        "etaLabel": "ETA",
-        "etaValue": "Thu, May 22 · 3:30 PM"
-      },
-      "lockedPriceCard": {
-        "label": "Honest Quote",
-        "price": "$875",
-        "tagline": "No silent changes."
       }
     },
     "trustStrip": {

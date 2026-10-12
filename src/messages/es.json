@@ -398,23 +398,6 @@
       "stats": {
         "shipments": "Mas de 45,000 vehiculos a traves de nuestra operacion familiar el ano pasado",
         "coverage": "Puerta a puerta en EE.UU., más HI + AK"
-      },
-      "shipmentCard": {
-        "status": "En tránsito",
-        "shipmentId": "ALL-2026-04831",
-        "pickupCity": "Los Angeles, CA",
-        "destCity": "Austin, TX",
-        "pickupPhotos": "12 fotos de recogida subidas",
-        "deliveryPhotos": "8 fotos de entrega subidas",
-        "coordLabel": "Coordinadora",
-        "coordName": "Danielle Martinez",
-        "etaLabel": "Llegada estimada",
-        "etaValue": "Jue, 22 may · 3:30 PM"
-      },
-      "lockedPriceCard": {
-        "label": "Cotización honesta",
-        "price": "$875",
-        "tagline": "Sin cambios sin avisarle."
       }
     },
     "trustStrip": {
