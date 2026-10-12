@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useId } from "react";
+import { useEffect, useRef, useState, useId } from "react";
 import { useTranslations } from "next-intl";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import {
@@ -49,7 +49,40 @@ const HCAPTCHA_TEST_KEY = "10000000-ffff-ffff-ffff-000000000001";
  *    release without deploy-timestamp archaeology.
  *  - Autofill/inputmode hints on every field (free completion-rate).
  */
+// Release A (2026-10-12) left the fields as-is (only an Exotic option and the
+// confirmation changed), so the R1 stamp stays: activeDecisions.ts and the
+// early-read scripts key on it.
 const FORM_VERSION = "quote-r1-20260812";
+
+interface SubmittedSummary {
+  leadRef: string;
+  originZip: string;
+  destinationZip: string;
+  originState: string;
+  destinationState: string;
+  vehicle: string;
+  vehicleType: string;
+  condition?: string;
+  transport?: string;
+  timing?: string;
+}
+
+/** Maps an /api/lead failure to a localized message key. */
+function submitErrorKey(status: number, code: string | undefined): string {
+  if (status === 429) return "quote.form.errors.rateLimit";
+  switch (code) {
+    case "captcha":
+      return "quote.form.errors.captcha";
+    case "missing":
+      return "quote.form.errors.missing";
+    case "zip":
+      return "quote.form.zipInvalid";
+    case "email":
+      return "quote.form.errors.email";
+    default:
+      return "quote.form.errors.generic";
+  }
+}
 
 export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   const t = useTranslations();
@@ -118,7 +151,22 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     sendEvent("form_field", { field: name, action: "complete", fv: FORM_VERSION });
   }
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<SubmittedSummary | null>(null);
+  // Release A (2026-10-12): move focus (and the viewport) to the outcome.
+  // Before, the success card replaced a tall form, so on a phone it often
+  // rendered above the viewport, and screen readers heard nothing.
+  const successRef = useRef<HTMLHeadingElement>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!success) return;
+    successRef.current?.focus({ preventScroll: true });
+    successRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [success]);
+  useEffect(() => {
+    if (!error) return;
+    errorRef.current?.focus({ preventScroll: true });
+    errorRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [error]);
   const captchaRef = useRef<HCaptcha>(null);
   const captchaId = useId();
 
@@ -206,10 +254,16 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = (await res.json()) as { ok?: boolean; leadRef?: string; error?: string };
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        leadRef?: string;
+        code?: string;
+      };
 
       if (!res.ok || !data.ok) {
-        setError(data.error ?? "Something went wrong. Please try again.");
+        // Localized by error code (Release A). The server's English
+        // `error` string is for logs only; Spanish visitors used to see it.
+        setError(t(submitErrorKey(res.status, data.code)));
         // Technical friction, not voluntary abandonment — the visitor DID
         // submit. The 8/6–8/11 incidents taught us to tell these apart.
         sendEvent("form_friction", {
@@ -223,7 +277,26 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
         return;
       }
 
-      setSuccess(data.leadRef ?? "");
+      setSuccess({
+        leadRef: data.leadRef ?? "",
+        originZip: originZip.trim(),
+        destinationZip: destinationZip.trim(),
+        originState:
+          lookupZipApprox(originZip.trim())?.entry.state ??
+          zipPrefixToState(originZip.trim()) ??
+          "",
+        destinationState:
+          lookupZipApprox(destinationZip.trim())?.entry.state ??
+          zipPrefixToState(destinationZip.trim()) ??
+          "",
+        vehicle: [payload.vehicle_year, payload.vehicle_make, payload.vehicle_model]
+          .filter(Boolean)
+          .join(" "),
+        vehicleType: payload.vehicle_type ?? "",
+        condition: handoff.condition,
+        transport: handoff.transportType,
+        timing: handoff.timing,
+      });
       sendEvent("lead_persisted", { fv: FORM_VERSION });
 
       // Track the conversion. Two events fire: the funnel event
@@ -262,7 +335,7 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
       });
     } catch (err) {
       console.error("[QuoteForm] submit failed", err);
-      setError("Network error. Please check your connection and try again.");
+      setError(t("quote.form.errors.network"));
       sendEvent("form_friction", { kind: "network_error", fv: FORM_VERSION });
       setPending(false);
       captchaRef.current?.resetCaptcha();
@@ -271,22 +344,80 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   }
 
   if (success !== null) {
+    const phone = t("common.phone");
+    const rows: Array<[string, string]> = [
+      [
+        t("quote.form.success.summary.route"),
+        `${success.originState} ${success.originZip} → ${success.destinationState} ${success.destinationZip}`,
+      ],
+      [
+        t("quote.form.success.summary.vehicle"),
+        success.vehicle +
+          ((VEHICLE_TYPE_KEYS as ReadonlyArray<string>).includes(success.vehicleType)
+            ? ` · ${t("quote.form.vehicle.type.options." + success.vehicleType)}`
+            : ""),
+      ],
+    ];
+    if (success.condition === "operable" || success.condition === "inoperable") {
+      rows.push([
+        t("quote.form.success.summary.condition"),
+        t("quote.form.success.summary.conditionOptions." + success.condition),
+      ]);
+    }
+    if (success.transport === "open" || success.transport === "enclosed") {
+      rows.push([
+        t("quote.form.success.summary.transport"),
+        t("quote.form.success.summary.transportOptions." + success.transport),
+      ]);
+    }
+    if (
+      success.timing === "standby" ||
+      success.timing === "priority" ||
+      success.timing === "expedited"
+    ) {
+      rows.push([
+        t("quote.form.success.summary.timing"),
+        t("quote.form.success.summary.timingOptions." + success.timing),
+      ]);
+    }
     return (
       <div className="rounded-2xl border border-green-200 bg-green-50 p-6 sm:p-8">
         <p className="text-green-700 text-sm font-semibold uppercase tracking-wider">
           {t("quote.form.success.eyebrow")}
         </p>
-        <h2 className="text-2xl font-bold text-charcoal mt-2">
+        <h2
+          ref={successRef}
+          tabIndex={-1}
+          className="text-2xl font-bold text-charcoal mt-2 focus:outline-none"
+        >
           {t("quote.form.success.title")}
         </h2>
         <p className="text-gray-700 mt-3 leading-relaxed">
           {t("quote.form.success.body")}
         </p>
-        {success && (
-          <p className="text-gray-600 text-sm mt-4">
-            <span className="font-semibold">{t("quote.form.success.refLabel")}:</span> {success}
-          </p>
-        )}
+        <dl className="mt-5 rounded-xl border border-green-200 bg-white px-4 py-3 text-sm">
+          {success.leadRef && (
+            <div className="flex gap-3 py-1.5">
+              <dt className="w-28 shrink-0 text-gray-500">{t("quote.form.success.refLabel")}</dt>
+              <dd className="font-semibold text-charcoal">{success.leadRef}</dd>
+            </div>
+          )}
+          {rows.map(([label, value]) => (
+            <div key={label} className="flex gap-3 py-1.5">
+              <dt className="w-28 shrink-0 text-gray-500">{label}</dt>
+              <dd className="text-charcoal">{value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="text-gray-700 text-sm mt-4">
+          {t("quote.form.success.callPrompt")}{" "}
+          <a
+            href={`tel:${phone.replace(/[^0-9+]/g, "")}`}
+            className="font-semibold text-charcoal underline underline-offset-2"
+          >
+            {phone}
+          </a>
+        </p>
       </div>
     );
   }
@@ -477,7 +608,12 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
       </fieldset>
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div
+          ref={errorRef}
+          tabIndex={-1}
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 focus:outline-none"
+        >
           {error}
         </div>
       )}

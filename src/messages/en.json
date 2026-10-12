@@ -1363,7 +1363,7 @@
       },
       "submit": {
         "button": "Submit quote request",
-        "footnote": "Your coordinator will send your quote within 1 business hour. No deposit required to receive the quote.",
+        "footnote": "A coordinator sends your quote during business hours (Mon to Fri, 8 AM to 5 PM ET). No deposit required to receive the quote.",
         "pending": "Sending..."
       },
       "verification": {
@@ -1372,12 +1372,41 @@
       },
       "success": {
         "eyebrow": "Quote request received",
-        "title": "Thanks. A coordinator will reach out within 1 business hour.",
-        "body": "We received your details and routed them to an available coordinator. Your coordinator will send your all-in quote by email or phone. No obligation until you book.",
-        "refLabel": "Reference"
+        "title": "Thanks, we have your request.",
+        "body": "A coordinator will contact you by phone or email during business hours (Mon to Fri, 8 AM to 5 PM ET). Requests after hours are handled the next business morning. Your coordinator sends your all-in quote. No obligation until you book.",
+        "refLabel": "Reference",
+        "callPrompt": "Prefer to talk now? Call",
+        "summary": {
+          "route": "Route",
+          "vehicle": "Vehicle",
+          "condition": "Condition",
+          "transport": "Transport",
+          "timing": "Pickup",
+          "conditionOptions": {
+            "operable": "Runs",
+            "inoperable": "Doesn't run"
+          },
+          "transportOptions": {
+            "open": "Open carrier",
+            "enclosed": "Enclosed carrier"
+          },
+          "timingOptions": {
+            "standby": "Flexible",
+            "priority": "Within a week",
+            "expedited": "As soon as possible"
+          }
+        }
       },
       "usOnly": "We ship to all 50 US states — including Hawaii and Alaska. Domestic US shipments only.",
-      "zipInvalid": "Please enter valid 5-digit US ZIP codes for origin and destination. We ship within the United States only."
+      "zipInvalid": "Please enter valid 5-digit US ZIP codes for origin and destination. We ship within the United States only.",
+      "errors": {
+        "captcha": "The verification check didn't go through. Please complete it again and resubmit.",
+        "missing": "Please fill in every required field and try again.",
+        "email": "That email address doesn't look right. Please check it and try again.",
+        "rateLimit": "Too many tries in a short time. Please wait a minute and try again.",
+        "network": "We couldn't reach our server. Please check your connection and try again.",
+        "generic": "Something went wrong on our end. Please try again, or call us and we'll take your request by phone."
+      }
     },
     "reassurance": {
       "backedBy": "Backed by",

@@ -140,7 +140,7 @@ export async function POST(req: Request) {
   try {
     body = (await req.json()) as IncomingPayload;
   } catch {
-    return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
+    return NextResponse.json({ ok: false, code: "invalid", error: "Invalid JSON" }, { status: 400 });
   }
 
   // INCIDENT FIX (2026-07-24): the captcha token must NOT go through str()
@@ -156,7 +156,7 @@ export async function POST(req: Request) {
   const captchaOk = await verifyHcaptcha(captchaToken);
   if (!captchaOk) {
     return NextResponse.json(
-      { ok: false, error: "Captcha verification failed. Please try again." },
+      { ok: false, code: "captcha", error: "Captcha verification failed. Please try again." },
       { status: 400 },
     );
   }
@@ -214,7 +214,7 @@ export async function POST(req: Request) {
   if (!phone) missing.push("phone");
   if (missing.length) {
     return NextResponse.json(
-      { ok: false, error: "Missing required fields", fields: missing },
+      { ok: false, code: "missing", error: "Missing required fields", fields: missing },
       { status: 400 },
     );
   }
@@ -228,6 +228,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         ok: false,
+        code: "zip",
         error:
           "Origin and destination must be valid US ZIP codes. We ship within the United States only.",
       },
@@ -237,7 +238,7 @@ export async function POST(req: Request) {
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email!)) {
     return NextResponse.json(
-      { ok: false, error: "Email format is invalid." },
+      { ok: false, code: "email", error: "Email format is invalid." },
       { status: 400 },
     );
   }
@@ -414,7 +415,7 @@ export async function POST(req: Request) {
     } catch (err) {
       console.error("[/api/lead] failed to save lead", err);
       return NextResponse.json(
-        { ok: false, error: "Internal error saving lead. Please retry." },
+        { ok: false, code: "server", error: "Internal error saving lead. Please retry." },
         { status: 500 },
       );
     }

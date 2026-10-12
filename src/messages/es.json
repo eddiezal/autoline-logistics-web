@@ -1363,7 +1363,7 @@
       },
       "submit": {
         "button": "Enviar solicitud de cotización",
-        "footnote": "Su coordinador le enviará su cotización dentro de 1 hora hábil. No se requiere depósito para recibir la cotización.",
+        "footnote": "Un coordinador le envía su cotización en horario laboral (lunes a viernes, 8 AM a 5 PM hora del Este). No se requiere depósito para recibir la cotización.",
         "pending": "Enviando..."
       },
       "verification": {
@@ -1371,13 +1371,42 @@
         "testModeNote": "Modo de prueba — usando la clave pública de hCaptcha."
       },
       "success": {
-        "eyebrow": "Cotizacion solicitada",
-        "title": "Gracias. Un coordinador le contactara dentro de 1 hora habil.",
-        "body": "Recibimos sus datos y los enrutamos a un coordinador disponible. Recibirá su cotización todo incluido por correo o teléfono. Sin compromiso hasta que reserve.",
-        "refLabel": "Referencia"
+        "eyebrow": "Cotización solicitada",
+        "title": "Gracias, recibimos su solicitud.",
+        "body": "Un coordinador le contactará por teléfono o correo en horario laboral (lunes a viernes, 8 AM a 5 PM hora del Este). Las solicitudes recibidas fuera de horario se atienden la mañana del siguiente día hábil. Su coordinador le enviará su cotización todo incluido. Sin compromiso hasta que reserve.",
+        "refLabel": "Referencia",
+        "callPrompt": "¿Prefiere hablar ahora? Llame al",
+        "summary": {
+          "route": "Ruta",
+          "vehicle": "Vehículo",
+          "condition": "Condición",
+          "transport": "Transporte",
+          "timing": "Recogida",
+          "conditionOptions": {
+            "operable": "Funciona",
+            "inoperable": "No funciona"
+          },
+          "transportOptions": {
+            "open": "Transporte abierto",
+            "enclosed": "Transporte cerrado"
+          },
+          "timingOptions": {
+            "standby": "Flexible",
+            "priority": "Dentro de una semana",
+            "expedited": "Lo antes posible"
+          }
+        }
       },
       "usOnly": "Transportamos a los 50 estados de EE. UU. — incluyendo Hawái y Alaska. Solo envíos dentro de Estados Unidos.",
-      "zipInvalid": "Ingrese códigos postales válidos de EE. UU. (5 dígitos) para origen y destino. Transportamos únicamente dentro de Estados Unidos."
+      "zipInvalid": "Ingrese códigos postales válidos de EE. UU. (5 dígitos) para origen y destino. Transportamos únicamente dentro de Estados Unidos.",
+      "errors": {
+        "captcha": "La verificación no se completó. Complétela de nuevo y vuelva a enviar.",
+        "missing": "Complete todos los campos obligatorios e intente de nuevo.",
+        "email": "Ese correo electrónico no parece correcto. Revíselo e intente de nuevo.",
+        "rateLimit": "Demasiados intentos en poco tiempo. Espere un minuto e intente de nuevo.",
+        "network": "No pudimos conectar con nuestro servidor. Revise su conexión e intente de nuevo.",
+        "generic": "Algo salió mal de nuestro lado. Intente de nuevo, o llámenos y tomamos su solicitud por teléfono."
+      }
     },
     "reassurance": {
       "backedBy": "Respaldado por",
