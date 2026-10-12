@@ -164,8 +164,13 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   }, [success]);
   useEffect(() => {
     if (!error) return;
-    errorRef.current?.focus({ preventScroll: true });
-    errorRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+    // Deferred: the captcha reset that follows a failed submit re-renders
+    // the hCaptcha iframe and can grab focus back on narrow screens.
+    const id = window.setTimeout(() => {
+      errorRef.current?.focus({ preventScroll: true });
+      errorRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }, 150);
+    return () => window.clearTimeout(id);
   }, [error]);
   const captchaRef = useRef<HCaptcha>(null);
   const captchaId = useId();

@@ -339,7 +339,7 @@ export function buildCustomerEmail(
   const text = [
     "Hi there,",
     "",
-    "Got your shipping request. A coordinator will call you within 1 business hour from a " +
+    "Got your shipping request. A coordinator will call you during business hours (Mon to Fri, 8 AM to 5 PM ET; after hours, the next business morning) from a " +
       CUSTOMER_CALL_AREA_CODE +
       " area code.",
     "",
@@ -395,7 +395,7 @@ function renderCustomerHtml(
     // Body
     '<tr><td style="padding:24px;color:#111;">' +
     '<p style="margin:0 0 14px;font-size:15px;line-height:1.5;">Hi there,</p>' +
-    '<p style="margin:0 0 16px;font-size:15px;line-height:1.55;">Got your shipping request. A coordinator will call you within <strong>1 business hour</strong> from a <strong>' +
+    '<p style="margin:0 0 16px;font-size:15px;line-height:1.55;">Got your shipping request. A coordinator will call you during <strong>business hours</strong> (Mon to Fri, 8 AM to 5 PM ET; after hours, the next business morning) from a <strong>' +
     escapeHtml(CUSTOMER_CALL_AREA_CODE) +
     "</strong> area code.</p>" +
     // Confirmation box

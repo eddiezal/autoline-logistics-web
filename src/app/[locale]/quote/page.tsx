@@ -21,7 +21,7 @@ export async function generateMetadata({
   return {
     title: "Get a Car Shipping Quote",
     description:
-      "Tell us your origin, destination, and vehicle. Your coordinator will send your all-in quote within 1 business hour. No bait-and-switch.",
+      "Tell us your origin, destination, and vehicle. A coordinator sends your all-in quote during business hours. No obligation until you book.",
     alternates: localeAlternates(locale, "/quote"),
   };
 }
@@ -47,8 +47,13 @@ export default async function QuotePage({
   // Headline still uses fromCode/toCode for the "CA → FL" render when
   // legacy callers pass state codes. ZIP-only callers fall back to the
   // default headline. The form gets the full handoff either way.
-  const fromCode = (sp.from ?? "").toUpperCase();
-  const toCode = (sp.to ?? "").toUpperCase();
+  // Only 2-letter state codes. Every current producer sends ZIPs here, and
+  // looking a ZIP up as quote.states.<ZIP> logged a MISSING_MESSAGE error
+  // on every hero handoff.
+  const asStateCode = (v: string | undefined) =>
+    /^[A-Za-z]{2}$/.test(v ?? "") ? (v as string).toUpperCase() : "";
+  const fromCode = asStateCode(sp.from);
+  const toCode = asStateCode(sp.to);
   return <QuoteContent fromCode={fromCode} toCode={toCode} handoff={handoff} />;
 }
 
