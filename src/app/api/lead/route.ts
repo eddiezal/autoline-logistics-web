@@ -40,6 +40,7 @@ import { roadMilesBetweenZips } from "@/lib/geo/zip3";
 import { sendLeadEmail } from "@/lib/email/resend";
 import { createLead as proabdCreateLead } from "@/lib/proabd/client";
 import { zipPrefixToState, lookupZipApprox } from "@/data/zip-metros";
+import { lookupZipLocation, stateFromZip } from "@/lib/leads/zipLocation";
 import {
   normalizeCondition,
   normalizeTiming,
@@ -163,14 +164,23 @@ export async function POST(req: Request) {
 
   const originZip = requireStr(body.origin_zip, 10);
   const destinationZip = requireStr(body.destination_zip, 10);
-  // State is derived from ZIP server-side (USPS prefix mapping).
+  // City + state derived from ZIP server-side (full 42k-ZIP dataset,
+  // 2026-10-14 — see src/lib/leads/zipLocation.ts). Website leads used to
+  // reach ProABD with City = "" and agents couldn't see the route in the
+  // lead list / Central Dispatch sync (Renee, 7/30 + 10/13). The dataset
+  // also closes zipPrefixToState gaps (723xx AR, 340xx FL blank states)
+  // and handles ZIP+4 input. Old prefix mapping kept as last resort.
   // No longer trust user-supplied state — see 2026-06-22 form refactor.
+  const originLoc = originZip ? lookupZipLocation(originZip) : null;
+  const destinationLoc = destinationZip ? lookupZipLocation(destinationZip) : null;
   const originState = originZip
-    ? (lookupZipApprox(originZip)?.entry.state ?? zipPrefixToState(originZip) ?? "")
+    ? (originLoc?.state ?? stateFromZip(originZip) ?? lookupZipApprox(originZip)?.entry.state ?? zipPrefixToState(originZip) ?? "")
     : "";
   const destinationState = destinationZip
-    ? (lookupZipApprox(destinationZip)?.entry.state ?? zipPrefixToState(destinationZip) ?? "")
+    ? (destinationLoc?.state ?? stateFromZip(destinationZip) ?? lookupZipApprox(destinationZip)?.entry.state ?? zipPrefixToState(destinationZip) ?? "")
     : "";
+  const originCity = originLoc?.city ?? "";
+  const destinationCity = destinationLoc?.city ?? "";
   const vehicleYear = requireStr(body.vehicle_year, 4);
   const vehicleMake = requireStr(body.vehicle_make, 60);
   const vehicleModel = requireStr(body.vehicle_model, 60);
@@ -350,8 +360,8 @@ export async function POST(req: Request) {
     leadRef,
     submittedAt,
     createdAt: FieldValue.serverTimestamp(),
-    origin: { zip: originZip, state: originState },
-    destination: { zip: destinationZip, state: destinationState },
+    origin: { zip: originZip, state: originState, city: originCity },
+    destination: { zip: destinationZip, state: destinationState, city: destinationCity },
     vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType, condition: vehicleCondition, transportPref },
     tier,
     timingProvided,
@@ -438,8 +448,8 @@ export async function POST(req: Request) {
     lastName: lastName ?? "",
     email: email!,
     phone: phone!,
-    origin: { state: originState!, zip: originZip! },
-    destination: { state: destinationState!, zip: destinationZip! },
+    origin: { city: originCity, state: originState!, zip: originZip! },
+    destination: { city: destinationCity, state: destinationState!, zip: destinationZip! },
     vehicle: {
       year: vehicleYear!,
       make: vehicleMake!,
@@ -470,8 +480,8 @@ export async function POST(req: Request) {
   const { subject, text, html } = buildLeadEmail({
     leadRef,
     customer: { firstName: firstName!, lastName: lastName ?? "", email: email!, phone: phone!, notes },
-    origin: { city: "", state: originState!, zip: originZip! },
-    destination: { city: "", state: destinationState!, zip: destinationZip! },
+    origin: { city: originCity, state: originState!, zip: originZip! },
+    destination: { city: destinationCity, state: destinationState!, zip: destinationZip! },
     vehicle: { year: vehicleYear!, make: vehicleMake!, model: vehicleModel!, type: vehicleType! },
     tier,
     timingProvided,
@@ -580,8 +590,8 @@ export async function POST(req: Request) {
   try {
     const customerEmail = buildCustomerEmail({
       leadRef,
-      origin: { city: "", state: originState!, zip: originZip! },
-      destination: { city: "", state: destinationState!, zip: destinationZip! },
+      origin: { city: originCity, state: originState!, zip: originZip! },
+      destination: { city: destinationCity, state: destinationState!, zip: destinationZip! },
       vehicle: {
         year: vehicleYear!,
         make: vehicleMake!,

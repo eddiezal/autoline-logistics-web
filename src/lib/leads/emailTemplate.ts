@@ -58,6 +58,12 @@ function locLabel(loc: { city: string; state: string; zip: string }): string {
   return loc.state + " " + loc.zip;
 }
 
+/** Full label for detail rows: "Forrest City, AR 72335" (or "AR 72335"). */
+function locLabelFull(loc: { city: string; state: string; zip: string }): string {
+  if (loc.city.trim().length > 0) return loc.city + ", " + loc.state + " " + loc.zip;
+  return loc.state + " " + loc.zip;
+}
+
 function tierLabel(tier: "standby" | "priority" | "expedited"): string {
   if (tier === "standby") return "Standby";
   if (tier === "expedited") return "Expedited";
@@ -255,8 +261,8 @@ function renderHtml(
     + '</table>'
     + '<h3 style="margin:24px 0 8px;font-size:14px;color:' + PINE + ';text-transform:uppercase;letter-spacing:0.05em;">Shipment</h3>'
     + '<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">'
-    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;width:90px;">Origin</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.origin.state) + ' ' + escapeHtml(input.origin.zip) + '</td></tr>'
-    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Destination</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.destination.state) + ' ' + escapeHtml(input.destination.zip) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;width:90px;">Origin</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(locLabelFull(input.origin)) + '</td></tr>'
+    + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Destination</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(locLabelFull(input.destination)) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Vehicle</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(vehicle) + ' . ' + escapeHtml(input.vehicle.type) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Condition</td><td style="padding:6px 0;color:' + (input.condition === "inoperable" ? "#b91c1c;font-weight:700" : "#111") + ';font-size:14px;">' + escapeHtml(conditionLabel(input.condition)) + '</td></tr>'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;">Transport</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(transportLabel(input.transport)) + '</td></tr>'
