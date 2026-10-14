@@ -124,8 +124,8 @@
         "subtitle": "Fotografiamos su vehículo en la recogida y la entrega para que nunca tenga que demostrar que algo sucedió.",
         "sections": {
           "standard": {
-            "title": "El estándar de 12 fotos",
-            "body": "En la recogida y en la entrega, el conductor captura 12 fotos de referencia: frente, parte trasera, ambos lados, cuatro ángulos del tablero (millaje, combustible, luces, posición de cambio), y primeros planos de cualquier daño preexistente. Doce es el estándar de la industria para reclamaciones de carga — lo que los investigadores de seguros buscan al evaluar «¿este daño era preexistente o ocurrió en tránsito?». Cualquier cosa que NO esté en nuestras fotos de recogida pero SÍ esté en las de entrega ocurrió durante el tránsito. Esa es la matemática protectora.",
+            "title": "El estándar de fotos de inspección",
+            "body": "En la recogida y en la entrega, el conductor captura un set completo de fotos de referencia: frente, parte trasera, ambos lados, tablero (millaje, combustible, luces, posición de cambio), y primeros planos de cualquier daño preexistente. Ese registro es lo que los investigadores de seguros buscan al evaluar «¿este daño era preexistente o ocurrió en tránsito?». Cualquier cosa que NO esté en nuestras fotos de recogida pero SÍ esté en las de entrega ocurrió durante el tránsito. Esa es la matemática protectora.",
             "bullets": [
               "Frente, trasera, lado conductor, lado pasajero (4)",
               "Ángulos de tablero — millaje, combustible, luces, cambio (4)",
@@ -135,11 +135,11 @@
           },
           "milestones": {
             "title": "En la recogida y la entrega",
-            "body": "Las fotos se toman en dos puntos de control: recogida (set completo de 12 fotos) y entrega (set completo de 12 fotos). Cada foto tiene marca de tiempo.",
+            "body": "Las fotos se toman en dos puntos de control: recogida (set completo de fotos) y entrega (set completo de fotos). Cada foto tiene marca de tiempo.",
             "bullets": [
-              "Recogida: set completo de 12 fotos",
+              "Recogida: set completo de fotos",
               "Puntos de paso en tránsito: 2–4 a lo largo de la ruta",
-              "Entrega: set completo de 12 fotos",
+              "Entrega: set completo de fotos",
               "Todas con marca de tiempo"
             ]
           },
@@ -459,13 +459,13 @@
           "eyebrow": "Promesa de Precio",
           "headline": "Usted elige la velocidad. Nosotros confirmamos el precio.",
           "conditionLine": "Si nuestro costo sube después de cotizarle…",
-          "consequenceLine": "Ese es nuestro problema. Ningún cambio sin avisarle primero.",
+          "consequenceLine": "Lo llamamos primero. Usted aprueba el nuevo precio, o recibe su depósito de vuelta.",
           "clarifier": "Su coordinador confirma el precio exacto una vez definidos ruta, vehículo, acceso de recogida y fechas.",
           "cta": "Ver la Promesa de Precio →"
         },
         "damage": {
           "stat": "$500K",
-          "statLabel": "Protección por capas",
+          "statLabel": "Carga contingente",
           "eyebrow": "Promesa contra Daños",
           "headline": "Si la póliza del transportista se queda corta, <nobreak>la nuestra no</nobreak>.",
           "conditionLine": "Si el seguro del transportista no lo cubre…",
@@ -476,9 +476,9 @@
           "stat": "UNO",
           "statLabel": "Coordinador, con nombre",
           "eyebrow": "Promesa Personal",
-          "headline": "El mismo coordinador. De la cotización a la entrega. Con nombre y apellido.",
+          "headline": "Un coordinador con nombre y apellido. De la cotización a la entrega.",
           "conditionLine": "Cuando llame…",
-          "consequenceLine": "El mismo coordinador que lo reservó responde. Cada vez.",
+          "consequenceLine": "Responde su coordinador — o un respaldo informado que ya conoce su envío.",
           "cta": "Vea la Promesa Personal →"
         }
       }
@@ -571,16 +571,16 @@
         "pickup": {
           "label": "Paso 2",
           "title": "Lo recogemos.",
-          "description": "Su coordinador agenda la recogida, le envía una lista de preparación, y asigna un conductor verificado. Doce fotos de inspección al recoger.",
+          "description": "Su coordinador agenda la recogida, le envía una lista de preparación, y asigna un conductor verificado. Inspección documentada con fotos al recoger.",
           "proof1": "Coordinador asignado",
-          "proof2": "12 fotos de inspección"
+          "proof2": "Recogida documentada con fotos"
         },
         "track": {
           "label": "Paso 3",
           "title": "Entregado en su puerta.",
           "description": "Su coordinador es su contacto durante el tránsito, y el contacto del transportista se comparte una vez despachado su vehículo. Al llegar, las fotos documentan la entrega. Luego su coordinador le da seguimiento para asegurarse de que todo esté bien.",
           "proof1": "Actualizaciones de su coordinador",
-          "proof2": "12 fotos de entrega"
+          "proof2": "Entrega documentada con fotos"
         }
       }
     },
@@ -648,7 +648,7 @@
     "finalCta": {
       "eyebrow": "¿Listo para enviar?",
       "title": "Fije su precio hoy.",
-      "lead": "Escriba su origen, destino, y vehículo. Obtenga su estimado al instante y su cotización todo incluido dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
+      "lead": "Escriba su origen, destino, y vehículo. Obtenga su estimado al instante y su cotización todo incluido por escrito en horario hábil (lunes a viernes, 8 AM a 5 PM hora del Este). Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
       "button": "Obtenga su cotización",
       "trustLine": "Estimado al instante · Sin cambios sin avisarle · Sin depósito para cotizar"
     },
@@ -814,7 +814,7 @@
     },
     "cta": {
       "title": "Solicite su cotización en 60 segundos.",
-      "description": "Ingrese su origen, destino y vehículo. Su coordinador le envía su cotización todo incluido por escrito dentro de 1 hora hábil. Elija su nivel, reserve, listo.",
+      "description": "Ingrese su origen, destino y vehículo. Su coordinador le envía su cotización todo incluido por escrito en horario hábil (lunes a viernes, 8 AM a 5 PM hora del Este). Elija su nivel, reserve, listo.",
       "primary": "Obtenga su cotización",
       "secondary": "Vea cómo funciona la Promesa Personal →"
     },
@@ -1016,7 +1016,7 @@
         },
         "5": {
           "time": "Después de la entrega",
-          "description": "El mismo coordinador sigue siendo su punto de contacto para cualquier reclamo, seguimiento, o reservas futuras. No lo reciclamos de vuelta al embudo de entrada."
+          "description": "Su coordinador sigue siendo su punto de contacto para cualquier reclamo o seguimiento. No lo reciclamos de vuelta al embudo de entrada."
         }
       }
     },
@@ -1239,7 +1239,7 @@
     },
     "cta": {
       "title": "¿Listo para su cotización?",
-      "description": "Escriba su origen, destino y vehículo. Obtenga su estimado al instante y su cotización todo incluido dentro de 1 hora hábil. Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
+      "description": "Escriba su origen, destino y vehículo. Obtenga su estimado al instante y su cotización todo incluido por escrito en horario hábil (lunes a viernes, 8 AM a 5 PM hora del Este). Su coordinador asignado toma el control desde la reserva. Sin obligación hasta que reserve.",
       "primary": "Obtenga su cotización",
       "secondary": "Hable con un coordinador"
     }
@@ -1773,7 +1773,7 @@
           },
           "damage": {
             "eyebrow": "Promesa contra Daños",
-            "headline": "Cobertura de carga de $500K →"
+            "headline": "Cobertura contingente de carga de $500K →"
           },
           "people": {
             "eyebrow": "Promesa Personal",
@@ -2761,7 +2761,7 @@
           },
           "multiVehicle": {
             "title": "Propietarios de segunda residencia",
-            "body": "Familias con dos casas y autos en ambas direcciones. Descuento por múltiples autos disponible. Programe corridas recurrentes con el mismo coordinador."
+            "body": "Familias con dos casas y autos en ambas direcciones. Descuento por múltiples autos disponible. Guardamos sus rutas y detalles en archivo para corridas recurrentes."
           },
           "highValue": {
             "title": "Vehículos de colección y clásicos",

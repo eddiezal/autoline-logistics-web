@@ -540,11 +540,11 @@ export default function Home() {
 
                 {/* Behind the Promise — operational proof. Stat-led cards, each
             wholly clickable, linked to the relevant Promise page.
-            TODO (before production cutover): verify stat claims with Ben:
-              - "35-truck family fleet" — confirm number + add vetted-partner caveat
-              - "45,000 vehicles in 2025" — confirm number
-              - "$500K cargo coverage" — duplicate of Triple Promise, must match
-              - "Native bilingual" — confirm + decide whether to name Renee */}
+            Claims status (Release B pass, 2026-10-14): "45,000 vehicles" and
+            "$75K bond + $500K contingent cargo" were confirmed by Ben/Renee/Ginger
+            at the Apr 30 2026 kickoff (transcript on file); 45,000+ is attributed
+            to the family operation (ALE), labels say "contingent cargo".
+            Still open: bond/insurance certificate from Kacy for the file. */}
         <section className="py-20 bg-white">
           <Container>
             <p className="text-orange text-sm font-semibold uppercase tracking-wider mb-3">

@@ -124,8 +124,8 @@
         "subtitle": "We photograph your vehicle at pickup and delivery so you never have to prove anything happened.",
         "sections": {
           "standard": {
-            "title": "The 12-photo standard",
-            "body": "At pickup and at delivery, the driver captures 12 reference photos: front, rear, both sides, four dashboard angles (mileage, fuel, dash lights, gear position), and close-ups of any pre-existing damage. Twelve is the cargo-claim industry standard — what insurance investigators look for when they assess \"was this damage pre-existing or did it happen in transit?\" Anything that's NOT in our pickup photos but IS in our delivery photos happened during transit. That's the protective math.",
+            "title": "The inspection photo standard",
+            "body": "At pickup and at delivery, the driver captures a full set of reference photos: front, rear, both sides, dashboard (mileage, fuel, dash lights, gear position), and close-ups of any pre-existing damage. That record is what insurance investigators look for when they assess \"was this damage pre-existing or did it happen in transit?\" Anything that's NOT in our pickup photos but IS in our delivery photos happened during transit. That's the protective math.",
             "bullets": [
               "Front, rear, driver side, passenger side (4)",
               "Dashboard angles — mileage, fuel, lights, gear (4)",
@@ -135,11 +135,11 @@
           },
           "milestones": {
             "title": "At pickup and delivery",
-            "body": "Photos are taken at two checkpoints: pickup (full 12-photo set) and delivery (full 12-photo set). Every photo is timestamped.",
+            "body": "Photos are taken at two checkpoints: pickup (full photo set) and delivery (full photo set). Every photo is timestamped.",
             "bullets": [
-              "Pickup: full 12-photo set",
+              "Pickup: full photo set",
               "Transit waypoints: 2–4 across the route",
-              "Delivery: full 12-photo set",
+              "Delivery: full photo set",
               "All photos timestamped"
             ]
           },
@@ -459,13 +459,13 @@
           "eyebrow": "Price Promise",
           "headline": "You pick the speed. We confirm the price.",
           "conditionLine": "If our cost goes up after we quote you…",
-          "consequenceLine": "That's our problem. No changes without telling you first.",
+          "consequenceLine": "We call you first. You approve the new price, or you get your deposit back.",
           "clarifier": "Your coordinator confirms the exact price once your route, vehicle, pickup access, and timeline are set.",
           "cta": "See the Price Promise →"
         },
         "damage": {
           "stat": "$500K",
-          "statLabel": "Cargo coverage",
+          "statLabel": "Contingent cargo",
           "eyebrow": "Damage Promise",
           "headline": "If the carrier's policy runs out, <nobreak>we don't</nobreak>.",
           "conditionLine": "If the carrier's insurance doesn't cover it…",
@@ -476,9 +476,9 @@
           "stat": "ONE",
           "statLabel": "Coordinator, by name",
           "eyebrow": "People Promise",
-          "headline": "Same coordinator. Quote to delivery. By name.",
+          "headline": "One named coordinator. Quote to delivery.",
           "conditionLine": "When you call…",
-          "consequenceLine": "The same coordinator who booked you picks up. Every time.",
+          "consequenceLine": "Your coordinator picks up — or a briefed backup who already knows your file.",
           "cta": "See the People Promise →"
         }
       }
@@ -571,16 +571,16 @@
         "pickup": {
           "label": "Step 2",
           "title": "We pick it up.",
-          "description": "Your coordinator schedules pickup, sends a checklist, and assigns a vetted driver. Twelve inspection photos at pickup.",
+          "description": "Your coordinator schedules pickup, sends a checklist, and assigns a vetted driver. Photo-documented inspection at pickup.",
           "proof1": "Named coordinator",
-          "proof2": "12 inspection photos"
+          "proof2": "Photo-documented pickup"
         },
         "track": {
           "label": "Step 3",
           "title": "Delivered to your door.",
           "description": "Your coordinator is your contact through transit, and the carrier's contact is shared once your vehicle is dispatched. When it arrives, photos document delivery. Then your coordinator follows up to make sure everything's good.",
           "proof1": "Coordinator updates",
-          "proof2": "12 delivery photos"
+          "proof2": "Photo-documented delivery"
         }
       }
     },
@@ -648,7 +648,7 @@
     "finalCta": {
       "eyebrow": "Ready to ship?",
       "title": "Get your quote today.",
-      "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then your all-in quote within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
+      "lead": "Type your origin, destination, and vehicle. Get your instant estimate, then your written all-in quote during business hours (Mon to Fri, 8 AM to 5 PM ET). Your named coordinator takes over from booking. No obligation until you book.",
       "button": "Get my quote",
       "trustLine": "Instant estimate · No silent changes · No deposit to quote"
     },
@@ -814,7 +814,7 @@
     },
     "cta": {
       "title": "Request your quote in 60 seconds.",
-      "description": "Enter your origin, destination, and vehicle. Your coordinator sends your all-in quote in writing within 1 business hour. Pick your tier, book, done.",
+      "description": "Enter your origin, destination, and vehicle. Your coordinator sends your all-in quote in writing during business hours (Mon to Fri, 8 AM to 5 PM ET). Pick your tier, book, done.",
       "primary": "Get my quote",
       "secondary": "See how the People Promise works →"
     },
@@ -1016,7 +1016,7 @@
         },
         "5": {
           "time": "Post-delivery",
-          "description": "Same coordinator stays your point of contact for any claim, follow-up, or future bookings. We don't recycle you back into the inbound funnel."
+          "description": "Your coordinator stays your point of contact for any claim or follow-up. We don't recycle you back into the inbound funnel."
         }
       }
     },
@@ -1239,7 +1239,7 @@
     },
     "cta": {
       "title": "Ready for your quote?",
-      "description": "Type your origin, destination, and vehicle. Get your instant estimate, then your all-in quote within 1 business hour. Your named coordinator takes over from booking. No obligation until you book.",
+      "description": "Type your origin, destination, and vehicle. Get your instant estimate, then your written all-in quote during business hours (Mon to Fri, 8 AM to 5 PM ET). Your named coordinator takes over from booking. No obligation until you book.",
       "primary": "Get my quote",
       "secondary": "Talk to a coordinator"
     }
@@ -1773,7 +1773,7 @@
           },
           "damage": {
             "eyebrow": "Damage Promise",
-            "headline": "$500K cargo coverage →"
+            "headline": "$500K contingent cargo →"
           },
           "people": {
             "eyebrow": "People Promise",
@@ -2761,7 +2761,7 @@
           },
           "multiVehicle": {
             "title": "Second-home owners",
-            "body": "Two-home families with cars at both addresses. Multi-car discount available. Schedule recurring runs with the same coordinator."
+            "body": "Two-home families with cars at both addresses. Multi-car discount available. We keep your routes and details on file for recurring runs."
           },
           "highValue": {
             "title": "Collector and classic vehicles",
