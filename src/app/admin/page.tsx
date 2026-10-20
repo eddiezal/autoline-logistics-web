@@ -47,8 +47,8 @@ import { DECISION_REGISTRY } from "@/lib/admin/decisionRegistry";
 import { ActiveDecisionsStrip } from "./ActiveDecisionsStrip";
 import { computeRevenueLive } from "@/lib/admin/revenueLive";
 import { RevenueSection } from "./RevenueSection";
-import { computeQualifiedLive } from "@/lib/admin/qualifiedLive";
-import { QualifiedSection } from "./QualifiedSection";
+import { computeLeadSourcesLive } from "@/lib/admin/leadSourcesLive";
+import { OperatorView as LeadSourcesOperator, OwnerView as LeadSourcesOwner } from "./LeadSources";
 import { computeCallsLive } from "@/lib/admin/callsLive";
 import { UnloggedCallsQueue } from "./UnloggedCallsQueue";
 import { computeOpsLive } from "@/lib/admin/opsLive";
@@ -484,6 +484,7 @@ const ALERT: React.CSSProperties = {
 // Overview decision queue (parity confirmed at removal).
 const VIEWS = [
   { id: "overview", label: "Overview", group: "" },
+  { id: "legacy", label: "Overview (legacy)", group: "" },
   { id: "acquisition", label: "Acquisition", group: "Growth" },
   { id: "behavior", label: "Behavior", group: "Growth" },
   { id: "sales", label: "Sales workload", group: "Operations" },
@@ -520,7 +521,7 @@ const BIZ_TABS: { id: BusinessTab; label: string }[] = [
 export default async function AdminReportPage({
   searchParams,
 }: {
-  searchParams: Promise<{ view?: string; tab?: string }>;
+  searchParams: Promise<{ view?: string; tab?: string; month?: string; who?: string }>;
 }) {
   const sp = await searchParams;
   const view: ViewId = (VIEWS.find((v) => v.id === sp.view)?.id ?? "overview") as ViewId;
@@ -857,8 +858,9 @@ export default async function AdminReportPage({
     console.error("[admin] computeRevenueLive failed", err);
     return null;
   });
-  // Agent-priced census (what S5 bids on since Oct 19): Acquisition view only.
-  const qualifiedLive = view === "acquisition" ? await computeQualifiedLive() : null;
+  // Lead Sources (the Overview since 2026-10-20): every source on one row.
+  const leadSourcesLive = view === "overview" ? await computeLeadSourcesLive() : null;
+  const who = sp.who === "owner" ? "owner" : "operator";
   const callsLive = await computeCallsLive().catch((err) => {
     console.error("[admin] computeCallsLive failed", err);
     return null;
@@ -3672,8 +3674,9 @@ export default async function AdminReportPage({
         </div>
       ) : (
         <>
-          {view === "overview" && <Overview />}
-          {view === "acquisition" && (<><QualifiedSection data={qualifiedLive} /><Acquisition /><RevenueSection data={revenueLive} /></>)}
+          {view === "overview" && (who === "owner" ? <LeadSourcesOwner data={leadSourcesLive} /> : <LeadSourcesOperator data={leadSourcesLive} month={sp.month} />)}
+          {view === "legacy" && <Overview />}
+          {view === "acquisition" && (<><Acquisition /><RevenueSection data={revenueLive} /></>)}
           {view === "sales" && (<><Sales /><UnloggedCallsQueue data={callsLive} /><OpsBlocks data={opsLive} /></>)}
           {view === "lanes" && <Lanes />}
           {view === "behavior" && <Behavior />}
