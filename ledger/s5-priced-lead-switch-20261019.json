@@ -1,0 +1,57 @@
+{
+  "id": "s5-priced-lead-switch-20261019",
+  "executed_at": "2026-10-19T19:07:48-07:00",
+  "effective_date": "2026-10-20",
+  "entity": "campaign:ALL - S5 Espanol",
+  "lever": "bidding goal + target CPA + budget",
+  "from": "S5 campaign-specific goal: Submit lead forms; Target CPA $40.00; budget $270.00/day. Conversion action \"Qualified lead (priced)\" (id 7736301731) SECONDARY.",
+  "to": "S5 campaign-specific goal: Qualified leads only (action \"Qualified lead (priced)\" now PRIMARY, Include in Conversions = Yes); Target CPA $36.00; budget $225.00/day.",
+  "executed_by": "Claude in Eddie's Chrome, at Eddie's direction (manual UI edits). Times: conversion action to Primary 7:07:48 PM PT (change history); S5 goals, Target CPA and budget saved about 7:10 to 7:15 PM PT (change history had not posted them at 7:18 PM; values verified by fresh page reload: $225.00/day, Target CPA $36.00, Campaign-specific: Qualified leads).",
+  "registration_type": "prospective",
+  "snapshot_quality": "partial",
+  "evidence_source": "claude/s5-cohort-read-2026-10-16.md (S5 booking read); claude/october-pacing-10k-2026-10-16.md (October pacing vs Ben's $10K cap); decision recorded Fri 2026-10-16 1:52 PM PT.",
+  "hypothesis": "Bidding S5 on agent-priced leads instead of raw form fills shifts spend toward leads that book. S5 booking read: 19% of priced leads book, worth about $46 to $51 each; profit peaks at about $33 to $36 per priced lead. $36 is about $33.50 per form, about 17% below the current actual. Expected: about 25% fewer S5 leads (about 7 to 8 a day vs 9 to 10), higher booking share. Budget $270 to $225 is the backstop for Ben's mandatory $10K October cap (October was pacing about $10.5K).",
+  "max_exposure_usd": null,
+  "snapshot": {
+    "window": "2026-10-01..2026-10-18 (October month-to-date; weekends dark)",
+    "spend_usd": 5950.12,
+    "serving_days": 12,
+    "clicks": 667,
+    "conversions": 136,
+    "conversion_action_set": "Submit lead forms (pre-switch S5 goal)",
+    "attribution_basis": "Ads UI, campaign view, Oct 1 to 19",
+    "data_source": "Google Ads UI, viewed 2026-10-19 about 6:45 PM PT",
+    "settlement_status": "Oct 16 to 18 conversions may still restate",
+    "notes": "Pre-switch S5 cost per conversion $43.75 MTD. Upload pipeline health before the switch: qualified-lead-upload run #21 (Sun 2026-10-18, 7:24 PM PT) green, 10 priced leads in the 3-day window, all 10 with GCLID, Data Manager APPLY OK (requestId 25c222ed-c6c4-4810-a337-a9ac6ba5cc7d); runs #1 to #21 all green. Coverage gap in the same window: 15 cpc FORM leads and 15 cpc CALL leads without a GCLID (ticket-gclid-capture-gap-2026-09-28). Repo variable QUALIFIED_PRIMARY_OK=true set by Eddie before the action was promoted."
+  },
+  "review_gates": {
+    "earliest_review_date": "2026-11-02",
+    "minimum_serving_days": 10,
+    "minimum_post_change_spend_usd": 0,
+    "settlement_lag_days": 3,
+    "note": "Smart bidding relearns after a goal change; expect 1 to 2 weeks of volatility. Daily checks below are guardrails, not the evaluation."
+  },
+  "decision_rule": {
+    "prose": "Nov 2 review: if priced-lead volume held and cost per priced lead is at or under $36, step the target to $33. If priced leads are under about 5 per serving day for 3 serving days in a row at any point before then, raise the target to $40.",
+    "primary_metric": "cost_per_priced_lead_blended_and_s5",
+    "continue_if": {
+      "cost_per_priced_lead_usd_lte": 36
+    },
+    "revert_if": {
+      "priced_leads_per_serving_day_lt": 5,
+      "consecutive_serving_days": 3,
+      "action": "raise S5 target CPA to $40"
+    },
+    "guardrails": {
+      "october_cap": "All-in spend at or under about $390 a day keeps October under Ben's $10K cap; midweek check Wed 2026-10-21.",
+      "upload_health": "Morning of 2026-10-20: confirm the 2026-10-19 nightly qualified-lead-upload ran green with the action PRIMARY (safety rail would abort if QUALIFIED_PRIMARY_OK were missing).",
+      "brand_untouched": "Brand keeps its own goals; the Qualified lead goal's account-default campaigns are S1, S2, S3 and one more, all paused at switch time."
+    }
+  },
+  "confounders": [
+    "GCLID coverage gap on paid form and call leads: priced leads without a GCLID cannot be credited, so Google's reported cost per conversion will read higher than the true cost per priced lead.",
+    "Budget cut and goal change land the same evening; volume changes in the first week cannot be cleanly split between them.",
+    "Qualified lead goal is account-default; re-enabling S1 to S4 would put them on qualified-lead optimization too."
+  ],
+  "amendments": []
+}
