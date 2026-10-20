@@ -24,15 +24,18 @@ import {
   FIRST_PRICED_LOOKBACK_DAYS,
   PRICE_PATHS,
   DEPOSIT_PATHS,
+  TREND_WEEKS,
   reducePricedRecords,
   toLeadLite,
   buildQualifiedPanel,
   ptDay,
+  weekStart,
 } from "@/lib/admin/qualifiedCensus.mjs";
+// @ts-ignore — plain-JS shared module.
+import { reduceWebhookState } from "@/lib/admin/revenueByCampaign.mjs";
 
 const DAY = 864e5;
 const CACHE_TTL_MS = 10 * 60 * 1000;
-export const QUALIFIED_WINDOW_DAYS = 14;
 const UPLOAD_REPO = "eddiezal/autoline-logistics-web";
 const UPLOAD_WORKFLOW = "qualified-lead-upload.yml";
 
@@ -53,6 +56,13 @@ export interface QualifiedTotals {
   blendedCpq: number | null; s5Cpq: number | null; s5GoogleCpa: number | null;
   rate: number | null; s5Rate: number | null;
 }
+export interface QualifiedWeekRow extends QualifiedTotals {
+  week: string; partial: boolean; daysIn: number;
+}
+export interface QualifiedSourceRow {
+  key: string; leads: number; qualified: number; booked: number; canceled: number;
+  feeGross: number; feeNet: number; spend: number | null;
+}
 export interface QualifiedCampaignRow {
   key: string; qualified: number; uploadable: number; spend: number | null; google: number | null;
 }
@@ -62,6 +72,9 @@ export interface UploadRun {
 }
 export interface QualifiedLive {
   rows: QualifiedDayRow[];
+  weeks: QualifiedWeekRow[];
+  sources: QualifiedSourceRow[];
+  matureCutoffDay: string;
   window: QualifiedTotals;
   sinceSwitch: QualifiedTotals | null;
   campaigns: QualifiedCampaignRow[];
@@ -89,14 +102,16 @@ export async function computeQualifiedLive(): Promise<QualifiedLive | null> {
 async function compute(): Promise<QualifiedLive> {
   const now = new Date();
   const todayKey: string = ptDay(now);
-  const fromDay: string = ptDay(new Date(now.getTime() - (QUALIFIED_WINDOW_DAYS - 1) * DAY));
-  const readFrom = new Date(now.getTime() - (QUALIFIED_WINDOW_DAYS + FIRST_PRICED_LOOKBACK_DAYS) * DAY);
+  // Window: TREND_WEEKS Mon-Sun weeks ending this (partial) week.
+  const fromDay: string = new Date(new Date(`${weekStart(todayKey)}T12:00:00Z`).getTime() - (TREND_WEEKS - 1) * 7 * DAY).toISOString().slice(0, 10);
+  const readFrom = new Date(new Date(`${fromDay}T00:00:00-07:00`).getTime() - FIRST_PRICED_LOOKBACK_DAYS * DAY);
   const notes: string[] = [];
   const db = getAdminDb();
 
   /* ── Firestore census (required: without it there is no panel) ── */
   const fields = [
     "entity_id", "received_at", "raw_item.ABD_Id", "raw_item.Referrer_Id",
+    "raw_item.Custom_Id", "raw_item.Status_Id", "raw_item.Item_Type", "raw_item.Booked_Date",
     ...[...PRICE_PATHS, ...DEPOSIT_PATHS].map((p: string) => `raw_item.${p}`),
   ];
   const [evSnap, leadSnap] = await Promise.all([
@@ -110,6 +125,19 @@ async function compute(): Promise<QualifiedLive> {
     }),
   );
   const leads = leadSnap.docs.map((doc) => toLeadLite(doc.data())).filter(Boolean);
+  // Latest booking state per record (ascending received order) for the fee join.
+  const { state } = reduceWebhookState(
+    evSnap.docs
+      .map((doc) => doc.data())
+      .sort((a, b) => (a.received_at?.toMillis?.() ?? 0) - (b.received_at?.toMillis?.() ?? 0))
+      .map((d) => {
+        const item = d.raw_item ?? {};
+        return {
+          abdId: item.ABD_Id ?? d.entity_id, customId: item.Custom_Id, statusId: item.Status_Id,
+          itemType: item.Item_Type, bookedDate: item.Booked_Date, deposit: item.Transport?.Deposit,
+        };
+      }),
+  );
 
   /* ── Google Ads (optional) ── */
   let spend: { byDay: Map<string, number>; byDayCampaign: Map<string, number> } | null = null;
@@ -180,8 +208,8 @@ async function compute(): Promise<QualifiedLive> {
   }
 
   // JS module: its inferred row type is loose (Map.get → possibly undefined); the shape is pinned by qualifiedCensus.test.mjs.
-  const panel = buildQualifiedPanel({ records, leads, spend, google, fromDay, toDay: todayKey, todayKey }) as unknown as Pick<
-    QualifiedLive, "rows" | "window" | "sinceSwitch" | "campaigns" | "guardrail" | "uploadCheck"
+  const panel = buildQualifiedPanel({ records, leads, spend, google, state, fromDay, toDay: todayKey, todayKey }) as unknown as Pick<
+    QualifiedLive, "rows" | "weeks" | "sources" | "matureCutoffDay" | "window" | "sinceSwitch" | "campaigns" | "guardrail" | "uploadCheck"
   >;
   return { ...panel, campaignNames, runs, action, notes, fetchedAt: now };
 }

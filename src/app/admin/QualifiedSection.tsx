@@ -15,8 +15,8 @@
  *    per the reporting rule; S5 = S5 spend ÷ S5-attributed qualified leads.
  */
 // @ts-ignore — plain-JS shared module (see revenueLive.ts note).
-import { S5_TARGET_CPA, ASSUMED_QUALIFIED_RATE, SWITCH_DAY, GUARDRAIL_MIN_PRICED_PER_DAY, GUARDRAIL_RUN_DAYS } from "@/lib/admin/qualifiedCensus.mjs";
-import type { QualifiedLive, QualifiedTotals } from "@/lib/admin/qualifiedLive";
+import { S5_TARGET_CPA, ASSUMED_QUALIFIED_RATE, SWITCH_DAY, GUARDRAIL_MIN_PRICED_PER_DAY, GUARDRAIL_RUN_DAYS, MATURITY_DAYS } from "@/lib/admin/qualifiedCensus.mjs";
+import type { QualifiedLive, QualifiedTotals, QualifiedWeekRow } from "@/lib/admin/qualifiedLive";
 
 const GREEN = "#128A3A";
 const INK = "#1a1a1a";
@@ -27,6 +27,7 @@ const AMBER = "#B7791F";
 const money = (v: number | null | undefined) => (v == null ? "—" : "$" + Math.round(v).toLocaleString());
 const money2 = (v: number | null | undefined) => (v == null ? "—" : "$" + v.toFixed(2));
 const pct = (v: number | null | undefined) => (v == null ? "—" : Math.round(v * 100) + "%");
+const addDays = (k: string, n: number) => new Date(new Date(`${k}T12:00:00Z`).getTime() + n * 864e5).toISOString().slice(0, 10);
 const fmtDayKey = (k: string) =>
   new Date(`${k}T12:00:00Z`).toLocaleDateString("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "numeric" });
 const fmtTime = (d: Date) =>
@@ -34,7 +35,9 @@ const fmtTime = (d: Date) =>
 
 function label(key: string, names: Map<string, string>): string {
   if (key === "unlinked") return "No lead doc (handoff gap)";
-  if (key === "organic") return "Organic / direct (no click)";
+  if (key === "organic") return "Organic search";
+  if (key === "direct") return "Direct";
+  if (key === "referral") return "Referral";
   if (key === "ads-incomplete") return "Ads (attribution incomplete)";
   if (key.startsWith("ads:")) {
     const id = key.slice(4);
@@ -51,6 +54,22 @@ function Tile({ title, value, sub, tone }: { title: string; value: string; sub: 
       <div style={{ fontSize: 22, fontWeight: 800, color, fontVariantNumeric: "tabular-nums", margin: "2px 0" }}>{value}</div>
       <div style={{ fontSize: 11.5, color: MUTED, lineHeight: 1.45 }}>{sub}</div>
     </div>
+  );
+}
+
+/** Inline rate bar: width = rate, color by distance from the assumed rate. */
+function RateBar({ rate, n }: { rate: number | null; n: number }) {
+  if (rate == null) return <span style={{ color: MUTED }}>—</span>;
+  const tone = rate >= ASSUMED_QUALIFIED_RATE - 0.03 ? GREEN : rate >= ASSUMED_QUALIFIED_RATE - 0.1 ? AMBER : RED;
+  const thin = n < 10;
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, justifyContent: "flex-end" }}>
+      <span style={{ position: "relative", height: 9, width: 72, background: "var(--color-gray-100)", borderRadius: 2, display: "inline-block", overflow: "hidden" }}>
+        <span style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${Math.round(rate * 100)}%`, background: thin ? "#9ca3af" : tone }} />
+        <span style={{ position: "absolute", left: `${Math.round(ASSUMED_QUALIFIED_RATE * 100)}%`, top: 0, bottom: 0, width: 1, background: INK, opacity: 0.5 }} />
+      </span>
+      <span style={{ minWidth: 34, fontWeight: 700, color: thin ? MUTED : INK }}>{pct(rate)}</span>
+    </span>
   );
 }
 
@@ -85,6 +104,7 @@ export function QualifiedSection({ data }: { data: QualifiedLive | null }) {
   const tot: React.CSSProperties = { ...td, fontWeight: 700, color: INK, borderTop: "2px solid var(--color-gray-200)", borderBottom: "none" };
 
   const rowsDesc = [...data.rows].reverse();
+  const weeksDesc = [...data.weeks].reverse();
 
   return (
     <section style={box}>
@@ -92,7 +112,7 @@ export function QualifiedSection({ data }: { data: QualifiedLive | null }) {
       <p style={{ margin: "3px 0 12px", fontSize: 12, color: MUTED, lineHeight: 1.5 }}>
         Qualified = an <strong style={{ color: "#3f3f3f" }}>agent price</strong> on a website record (first priced CRM event), not the instant estimate.
         S5 bids on this since {fmtDayKey(SWITCH_DAY)} at a <strong style={{ color: "#3f3f3f" }}>${S5_TARGET_CPA}</strong> target.
-        Last {data.rows.length} days · today is partial and left out of totals.
+        Headline numbers are the last {w.days} complete days; today is partial and left out of totals.
       </p>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 12 }}>
@@ -143,88 +163,179 @@ export function QualifiedSection({ data }: { data: QualifiedLive | null }) {
         </div>
       )}
 
+      <h3 style={{ fontSize: 12.5, fontWeight: 700, margin: "4px 0 4px", color: INK }}>Form fills → priced, by week · Mon–Sun, PT</h3>
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
-              <th style={{ ...th, textAlign: "left" }}>day</th>
+              <th style={{ ...th, textAlign: "left" }}>week of</th>
               <th style={th}>forms</th>
-              <th style={th}>qualified</th>
-              <th style={th}>rate</th>
-              <th style={th}>S5 qual.</th>
-              <th style={th} title="Qualified lead (priced) conversions Google has recorded for S5, by conversion date">S5 in Google</th>
-              <th style={th}>spend</th>
+              <th style={th}>priced</th>
+              <th style={th} title="Priced ÷ forms for forms created that week (cohort). Line = the 92% the target math assumes">rate</th>
+              <th style={th}>S5 forms</th>
+              <th style={th}>S5 priced</th>
+              <th style={th}>S5 rate</th>
               <th style={th}>S5 spend</th>
-              <th style={th}>blended $/qual.</th>
-              <th style={th}>S5 $/qual.</th>
+              <th style={th} title="S5 spend ÷ S5 priced leads (by priced day)">S5 $/priced</th>
+              <th style={th}>blended $/priced</th>
             </tr>
           </thead>
           <tbody>
-            {rowsDesc.map((r) => {
-              const muted = r.weekend || r.partial;
+            {weeksDesc.map((wk: QualifiedWeekRow) => {
+              const muted = wk.partial;
               const cell: React.CSSProperties = muted ? { ...td, color: MUTED } : td;
-              const s5c = !r.partial && r.s5Spend != null && r.s5 > 0 ? r.s5Spend / r.s5 : null;
-              const short = r.googleS5 != null && !r.partial && r.googleS5 < r.s5;
+              const isSwitch = wk.week <= SWITCH_DAY && SWITCH_DAY < addDays(wk.week, 7);
               return (
-                <tr key={r.day} style={r.day === SWITCH_DAY ? { boxShadow: `inset 3px 0 0 ${GREEN}` } : undefined}>
+                <tr key={wk.week} style={isSwitch ? { boxShadow: `inset 3px 0 0 ${GREEN}` } : undefined}>
                   <td style={{ ...cell, textAlign: "left", fontWeight: 600, color: muted ? MUTED : INK }}>
-                    {fmtDayKey(r.day)}{r.partial ? " · partial" : r.weekend ? " · off" : ""}
+                    {fmtDayKey(wk.week).replace(/^\w+, /, "")}{wk.partial ? ` · ${wk.days} of 7 days` : ""}{isSwitch ? " · switch" : ""}
                   </td>
-                  <td style={cell}>{r.forms}</td>
-                  <td style={{ ...cell, fontWeight: 700 }}>{r.qualified}</td>
-                  <td style={cell}>{r.forms ? pct(r.formsPriced / r.forms) : "—"}</td>
-                  <td style={{ ...cell, fontWeight: 700, color: !muted && r.s5 < GUARDRAIL_MIN_PRICED_PER_DAY && r.day >= SWITCH_DAY ? AMBER : cell.color }}>{r.s5}</td>
-                  <td style={{ ...cell, color: short ? AMBER : cell.color }}>{r.googleS5 ?? "—"}</td>
-                  <td style={cell}>{money(r.spend)}</td>
-                  <td style={cell}>{money(r.s5Spend)}</td>
-                  <td style={cell}>{!r.partial && r.spend != null && r.qualified > 0 ? money2(r.spend / r.qualified) : "—"}</td>
-                  <td style={{ ...cell, color: s5c != null && !muted ? (s5c <= S5_TARGET_CPA ? GREEN : cell.color) : cell.color }}>{money2(s5c)}</td>
+                  <td style={cell}>{wk.forms}</td>
+                  <td style={{ ...cell, fontWeight: 700 }}>{wk.formsPriced}</td>
+                  <td style={cell}><RateBar rate={wk.rate} n={wk.forms} /></td>
+                  <td style={cell}>{wk.s5Forms}</td>
+                  <td style={{ ...cell, fontWeight: 700 }}>{wk.s5FormsPriced}</td>
+                  <td style={cell}><RateBar rate={wk.s5Rate} n={wk.s5Forms} /></td>
+                  <td style={cell}>{money(wk.s5Spend)}</td>
+                  <td style={{ ...cell, fontWeight: 700, color: wk.s5Cpq != null && !muted ? (wk.s5Cpq <= S5_TARGET_CPA ? GREEN : wk.s5Cpq > S5_TARGET_CPA * 1.15 ? RED : cell.color) : cell.color }}>{money2(wk.s5Cpq)}</td>
+                  <td style={cell}>{money2(wk.blendedCpq)}</td>
                 </tr>
               );
             })}
-            <tr>
-              <td style={{ ...tot, textAlign: "left" }}>{w.days} complete days</td>
-              <td style={tot}>{w.forms}</td>
-              <td style={tot}>{w.qualified}</td>
-              <td style={tot}>{pct(w.rate)}</td>
-              <td style={tot}>{w.s5}</td>
-              <td style={tot}>{w.googleS5 ?? "—"}</td>
-              <td style={tot}>{money(w.spend)}</td>
-              <td style={tot}>{money(w.s5Spend)}</td>
-              <td style={tot}>{money2(w.blendedCpq)}</td>
-              <td style={tot}>{money2(w.s5Cpq)}</td>
-            </tr>
           </tbody>
         </table>
       </div>
 
-      <h3 style={{ fontSize: 12.5, fontWeight: 700, margin: "16px 0 4px", color: INK }}>By campaign · {w.days} complete days + today</h3>
+      <h3 style={{ fontSize: 12.5, fontWeight: 700, margin: "16px 0 2px", color: INK }}>Revenue per lead, by source</h3>
+      <p style={{ margin: "0 0 6px", fontSize: 11.5, color: MUTED, lineHeight: 1.5 }}>
+        Website leads created {fmtDayKey(data.weeks[0]?.week ?? data.matureCutoffDay).replace(/^\w+, /, "")} – {fmtDayKey(data.matureCutoffDay).replace(/^\w+, /, "")}: every lead is ≥{MATURITY_DAYS} days old, so booking has had time to happen.
+        Fees are booking deposits (our broker fee), net of currently-canceled records.
+      </p>
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
               <th style={{ ...th, textAlign: "left" }}>source</th>
-              <th style={th}>qualified</th>
-              <th style={th} title="Has a gclid, so the nightly upload can send it">uploadable</th>
-              <th style={th}>in Google</th>
+              <th style={th}>leads</th>
+              <th style={th}>priced</th>
+              <th style={th}>rate</th>
+              <th style={th}>booked</th>
+              <th style={th}>fees net</th>
+              <th style={th} title="Fees net ÷ leads: what an average form fill from this source is worth">fee / lead</th>
+              <th style={th} title="Fees net ÷ priced leads: what an average priced lead is worth. Compare to S5's $36 target">fee / priced</th>
               <th style={th}>spend</th>
-              <th style={th}>$/qualified</th>
+              <th style={th}>$ / priced</th>
             </tr>
           </thead>
           <tbody>
-            {data.campaigns.map((c) => (
-              <tr key={c.key}>
-                <td style={{ ...td, textAlign: "left", fontWeight: 600, color: INK }}>{label(c.key, data.campaignNames)}</td>
-                <td style={td}>{c.qualified}</td>
-                <td style={td}>{c.uploadable}</td>
-                <td style={td}>{c.google != null ? Math.round(c.google * 10) / 10 : "—"}</td>
-                <td style={td}>{money(c.spend)}</td>
-                <td style={td}>{c.spend != null && c.qualified > 0 ? money2(c.spend / c.qualified) : "—"}</td>
-              </tr>
-            ))}
+            {data.sources.map((r) => {
+              const thin = r.booked < 5;
+              const perPriced = r.qualified > 0 ? r.feeNet / r.qualified : null;
+              const cpq = r.spend != null && r.qualified > 0 ? r.spend / r.qualified : null;
+              const margin = perPriced != null && cpq != null ? perPriced - cpq : null;
+              return (
+                <tr key={r.key}>
+                  <td style={{ ...td, textAlign: "left", fontWeight: 600, color: INK }}>{label(r.key, data.campaignNames)}</td>
+                  <td style={td}>{r.leads}</td>
+                  <td style={td}>{r.qualified}</td>
+                  <td style={td}>{r.leads ? pct(r.qualified / r.leads) : "—"}</td>
+                  <td style={td}>{r.booked}{r.canceled ? <span style={{ color: RED }}> ({r.canceled} cxl)</span> : null}</td>
+                  <td style={td}>{money(r.feeNet)}{r.feeGross > r.feeNet ? <span style={{ color: MUTED }}> ({money(r.feeGross)} gross)</span> : null}</td>
+                  <td style={{ ...td, fontWeight: 700, color: thin ? MUTED : INK }}>{r.leads ? money2(r.feeNet / r.leads) : "—"}</td>
+                  <td style={{ ...td, fontWeight: 700, color: thin ? MUTED : INK }}>
+                    {money2(perPriced)}
+                    {thin && r.leads > 0 ? <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.4, color: MUTED, background: "var(--color-gray-100)", borderRadius: 999, padding: "1px 6px", marginLeft: 6 }}>n&lt;5</span> : null}
+                  </td>
+                  <td style={td}>{money(r.spend)}</td>
+                  <td style={{ ...td, color: margin != null && !thin ? (margin >= 0 ? GREEN : RED) : td.color, fontWeight: margin != null ? 700 : 400 }}>{money2(cpq)}</td>
+                </tr>
+              );
+            })}
+            {(() => {
+              const paid = data.sources.filter((r) => r.key.startsWith("ads"));
+              const t = paid.reduce((a, r) => ({ leads: a.leads + r.leads, qualified: a.qualified + r.qualified, booked: a.booked + r.booked, canceled: a.canceled + r.canceled, feeNet: a.feeNet + r.feeNet, spend: a.spend == null && r.spend == null ? null : (a.spend ?? 0) + (r.spend ?? 0) }), { leads: 0, qualified: 0, booked: 0, canceled: 0, feeNet: 0, spend: null as number | null });
+              if (!t.leads) return null;
+              return (
+                <tr>
+                  <td style={{ ...tot, textAlign: "left" }}>ALL PAID</td>
+                  <td style={tot}>{t.leads}</td>
+                  <td style={tot}>{t.qualified}</td>
+                  <td style={tot}>{pct(t.qualified / t.leads)}</td>
+                  <td style={tot}>{t.booked}</td>
+                  <td style={tot}>{money(t.feeNet)}</td>
+                  <td style={tot}>{money2(t.feeNet / t.leads)}</td>
+                  <td style={tot}>{t.qualified ? money2(t.feeNet / t.qualified) : "—"}</td>
+                  <td style={tot}>{money(t.spend)}</td>
+                  <td style={tot}>{t.spend != null && t.qualified ? money2(t.spend / t.qualified) : "—"}</td>
+                </tr>
+              );
+            })()}
           </tbody>
         </table>
       </div>
+
+      <details style={{ marginTop: 16 }}>
+        <summary style={{ cursor: "pointer", fontSize: 12.5, fontWeight: 700, color: INK, listStyle: "none", display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: 10, color: MUTED }}>▶</span> Day by day · last {data.rows.length} days
+        </summary>
+        <div style={{ marginTop: 6 }}>
+      <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr>
+                  <th style={{ ...th, textAlign: "left" }}>day</th>
+                  <th style={th}>forms</th>
+                  <th style={th}>qualified</th>
+                  <th style={th}>rate</th>
+                  <th style={th}>S5 qual.</th>
+                  <th style={th} title="Qualified lead (priced) conversions Google has recorded for S5, by conversion date">S5 in Google</th>
+                  <th style={th}>spend</th>
+                  <th style={th}>S5 spend</th>
+                  <th style={th}>blended $/qual.</th>
+                  <th style={th}>S5 $/qual.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rowsDesc.map((r) => {
+                  const muted = r.weekend || r.partial;
+                  const cell: React.CSSProperties = muted ? { ...td, color: MUTED } : td;
+                  const s5c = !r.partial && r.s5Spend != null && r.s5 > 0 ? r.s5Spend / r.s5 : null;
+                  const short = r.googleS5 != null && !r.partial && r.googleS5 < r.s5;
+                  return (
+                    <tr key={r.day} style={r.day === SWITCH_DAY ? { boxShadow: `inset 3px 0 0 ${GREEN}` } : undefined}>
+                      <td style={{ ...cell, textAlign: "left", fontWeight: 600, color: muted ? MUTED : INK }}>
+                        {fmtDayKey(r.day)}{r.partial ? " · partial" : r.weekend ? " · off" : ""}
+                      </td>
+                      <td style={cell}>{r.forms}</td>
+                      <td style={{ ...cell, fontWeight: 700 }}>{r.qualified}</td>
+                      <td style={cell}>{r.forms ? pct(r.formsPriced / r.forms) : "—"}</td>
+                      <td style={{ ...cell, fontWeight: 700, color: !muted && r.s5 < GUARDRAIL_MIN_PRICED_PER_DAY && r.day >= SWITCH_DAY ? AMBER : cell.color }}>{r.s5}</td>
+                      <td style={{ ...cell, color: short ? AMBER : cell.color }}>{r.googleS5 ?? "—"}</td>
+                      <td style={cell}>{money(r.spend)}</td>
+                      <td style={cell}>{money(r.s5Spend)}</td>
+                      <td style={cell}>{!r.partial && r.spend != null && r.spend > 0 && r.qualified > 0 ? money2(r.spend / r.qualified) : "—"}</td>
+                      <td style={{ ...cell, color: s5c != null && !muted ? (s5c <= S5_TARGET_CPA ? GREEN : cell.color) : cell.color }}>{money2(s5c)}</td>
+                    </tr>
+                  );
+                })}
+                <tr>
+                  <td style={{ ...tot, textAlign: "left" }}>{w.days} complete days</td>
+                  <td style={tot}>{w.forms}</td>
+                  <td style={tot}>{w.qualified}</td>
+                  <td style={tot}>{pct(w.rate)}</td>
+                  <td style={tot}>{w.s5}</td>
+                  <td style={tot}>{w.googleS5 ?? "—"}</td>
+                  <td style={tot}>{money(w.spend)}</td>
+                  <td style={tot}>{money(w.s5Spend)}</td>
+                  <td style={tot}>{money2(w.blendedCpq)}</td>
+                  <td style={tot}>{money2(w.s5Cpq)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </details>
 
       {data.runs && data.runs.length > 0 && (
         <p style={{ margin: "12px 0 0", fontSize: 11.5, color: MUTED, lineHeight: 1.7 }}>

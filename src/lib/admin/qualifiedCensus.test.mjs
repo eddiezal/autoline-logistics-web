@@ -52,7 +52,7 @@ const spend = {
 };
 const google = new Map([[`2026-10-19|${S5_CAMPAIGN_ID}`, 1]]);
 
-const p = buildQualifiedPanel({ records, leads, spend, google, fromDay: "2026-10-18", toDay: "2026-10-20", todayKey: "2026-10-20" });
+const p = buildQualifiedPanel({ records, leads, spend, google, state: new Map([["1001", { statusId: "5", isOrder: true, booked: true, deposit: 240 }]]), fromDay: "2026-10-18", toDay: "2026-10-20", todayKey: "2026-10-20" });
 const [sun, mon, tue] = p.rows;
 assert.equal(sun.weekend, true);
 assert.equal(mon.qualified, 2, "A + B (late-night PT) on Monday");
@@ -99,3 +99,15 @@ assert.equal(isWeekend("2026-10-24"), true);
 assert.equal(isWeekend("2026-10-23"), false);
 
 console.log("qualifiedCensus: all checks passed");
+
+// Weeks + sources (mature cohort = created ≥14d before todayKey; here nothing is mature).
+assert.equal(p.weeks.length, 2, "Sun Oct 18 belongs to the Oct 12 week");
+assert.equal(p.weeks[1].week, "2026-10-19");
+assert.equal(p.weeks[1].forms, 3);
+assert.equal(p.weeks[1].partial, true);
+assert.equal(p.sources.length, 0, "no lead is 14 days old relative to todayKey");
+const m = buildQualifiedPanel({ records, leads, spend, google, state: new Map([["1001", { statusId: "5", isOrder: true, booked: true, deposit: 240 }]]), fromDay: "2026-10-18", toDay: "2026-11-05", todayKey: "2026-11-05" });
+const s5src = m.sources.find((r) => r.key === `ads:${S5_CAMPAIGN_ID}`);
+assert.equal(s5src.leads, 2); assert.equal(s5src.qualified, 1); assert.equal(s5src.booked, 1); assert.equal(s5src.feeNet, 240);
+assert.equal(m.sources.find((r) => r.key === "organic").qualified, 1);
+console.log("qualifiedCensus: weeks + sources ok");

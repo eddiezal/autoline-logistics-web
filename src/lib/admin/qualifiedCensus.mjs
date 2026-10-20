@@ -17,7 +17,14 @@
  * Pure: no I/O, no env. Importable from Next (allowJs) and plain node.
  */
 
+import { bucketLead, CANCELED_STATUS_ID, MATURITY_DAYS } from "./revenueByCampaign.mjs";
+
 export const QUALIFIED_ACTION_NAME = "Qualified lead (priced)";
+/** Weekly trend depth (Mon-Sun weeks, PT). */
+export const TREND_WEEKS = 8;
+/** Daily table depth (expanded view). */
+export const DAILY_DAYS = 14;
+export { MATURITY_DAYS };
 export const S5_CAMPAIGN_ID = "24034984545";
 /** S5 switched to bidding on priced leads (ledger 2026-10-16, $36 target). */
 export const SWITCH_DAY = "2026-10-19";
@@ -68,6 +75,13 @@ export function dayKeys(fromKey, toKey) {
   return out;
 }
 
+/** Monday (PT week start) for a YYYY-MM-DD key. */
+export function weekStart(dayKey) {
+  const t = new Date(`${dayKey}T12:00:00Z`);
+  const w = (t.getUTCDay() + 6) % 7; // Mon=0
+  return new Date(t.getTime() - w * DAY).toISOString().slice(0, 10);
+}
+
 export const shadowValue = (deposit, price) =>
   deposit != null ? Math.round(deposit) : Math.round(Math.min(400, 150 + 0.09 * (price ?? 0)));
 
@@ -110,8 +124,10 @@ export function toLeadLite(d) {
   const gclid = str(a.gclid ?? d.gclid);
   const hay = [d.contact?.email, `${d.contact?.firstName ?? ""} ${d.contact?.lastName ?? ""}`, d.contact?.notes]
     .filter(Boolean).join(" | ");
+  const { bucket } = bucketLead(a);
   return {
     at,
+    bucket,
     abd: d.proabdAbdId != null ? str(d.proabdAbdId) : "",
     isCall: str(d.leadRef).startsWith("CALL") || d.source === "call",
     campaignId: paid ? (str(a.utmCampaign) || null) : null,
@@ -131,9 +147,10 @@ export function toLeadLite(d) {
  *   fromDay / toDay: inclusive PT day keys for the table window
  *   todayKey:  PT today (partial day)
  */
-export function buildQualifiedPanel({ records, leads, spend, google, fromDay, toDay, todayKey }) {
+export function buildQualifiedPanel({ records, leads, spend, google, state, fromDay, toDay, todayKey, tableDays = DAILY_DAYS }) {
   const days = dayKeys(fromDay, toDay);
   const inWindow = (k) => k >= fromDay && k <= toDay;
+  const matureCutoffDay = ptDay(new Date(new Date(`${todayKey}T12:00:00Z`).getTime() - MATURITY_DAYS * DAY));
 
   // Lead join for gclid + campaign — script semantics (scriptTest drops the join).
   const byAbd = new Map();
@@ -211,7 +228,8 @@ export function buildQualifiedPanel({ records, leads, spend, google, fromDay, to
     }
   }
 
-  const rows = days.map((d) => dayMap.get(d));
+  const allRows = days.map((d) => dayMap.get(d));
+  const rows = allRows.slice(-tableDays);
   const sum = (arr, f) => arr.reduce((s, r) => s + (f(r) ?? 0), 0);
   const totals = (arr) => ({
     days: arr.length,
@@ -256,8 +274,64 @@ export function buildQualifiedPanel({ records, leads, spend, google, fromDay, to
     counted: google ? sum(uploadDays, (r) => r.googleAll) : null,
   };
 
+  // [4] Weekly trend (Mon-Sun, PT) over the whole window: form fills → priced.
+  const weekMap = new Map();
+  for (const r of allRows) {
+    const wk = weekStart(r.day);
+    let w = weekMap.get(wk);
+    if (!w) weekMap.set(wk, (w = { week: wk, partial: false, days: [] }));
+    w.days.push(r);
+    if (r.partial) w.partial = true;
+  }
+  const weeks = [...weekMap.values()].map((w) => ({
+    week: w.week, partial: w.partial, daysIn: w.days.length,
+    ...withCost(totals(w.days.filter((r) => !r.partial))),
+  }));
+
+  // [5] Revenue per lead by source — MATURE cohort (created ≥14d ago, Clock B),
+  // same rule as revenueByCampaign.mjs so the two sections can't disagree.
+  // Fees are booking deposits; net excludes currently-canceled records.
+  const src = new Map();
+  const srcRow = (key) => {
+    let g = src.get(key);
+    if (!g) src.set(key, (g = { key, leads: 0, qualified: 0, booked: 0, canceled: 0, feeGross: 0, feeNet: 0, spend: null }));
+    return g;
+  };
+  for (const l of leads) {
+    if (l.isCall || l.dashTest) continue;
+    const k = ptDay(l.at);
+    if (k < fromDay || k > matureCutoffDay) continue;
+    const key = l.bucket === "ads" ? `ads:${l.campaignId ?? "?"}` : l.bucket;
+    const g = srcRow(key);
+    g.leads++;
+    const r = l.abd ? records.get(l.abd) : null;
+    if (r && r.pricedAt && WEBSITE_REFS.has(r.ref)) g.qualified++;
+    const st = state && l.abd ? state.get(l.abd) : null;
+    if (st && st.booked) {
+      g.booked++;
+      const canceled = st.statusId === CANCELED_STATUS_ID;
+      if (canceled) g.canceled++;
+      g.feeGross += st.deposit;
+      if (!canceled) g.feeNet += st.deposit;
+    }
+  }
+  if (spend) {
+    for (const [k, v] of spend.byDayCampaign) {
+      const [day, id] = k.split("|");
+      if (day < fromDay || day > matureCutoffDay) continue;
+      const key = `ads:${id}`;
+      if (!src.has(key)) continue; // spend with zero leads: shown in the Ads account, not here
+      const g = srcRow(key);
+      g.spend = (g.spend ?? 0) + v;
+    }
+  }
+  const sources = [...src.values()].sort((a, b) => b.feeNet - a.feeNet || b.leads - a.leads);
+
   return {
     rows,
+    weeks,
+    sources,
+    matureCutoffDay,
     window: withCost(totals(complete)),
     sinceSwitch: sinceSwitch.length ? withCost(totals(sinceSwitch)) : null,
     campaigns: [...camp.values()].sort((a, b) => b.qualified - a.qualified || (b.spend ?? 0) - (a.spend ?? 0)),
