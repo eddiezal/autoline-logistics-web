@@ -6,7 +6,7 @@
   "lever": "bidding goal + target CPA + budget",
   "from": "S5 campaign-specific goal: Submit lead forms; Target CPA $40.00; budget $270.00/day. Conversion action \"Qualified lead (priced)\" (id 7736301731) SECONDARY.",
   "to": "S5 campaign-specific goal: Qualified leads only (action \"Qualified lead (priced)\" now PRIMARY, Include in Conversions = Yes); Target CPA $36.00; budget $225.00/day.",
-  "executed_by": "Claude in Eddie's Chrome, at Eddie's direction (manual UI edits). Times: conversion action to Primary 7:07:48 PM PT (change history); S5 goals, Target CPA and budget saved about 7:10 to 7:15 PM PT (change history had not posted them at 7:18 PM; values verified by fresh page reload: $225.00/day, Target CPA $36.00, Campaign-specific: Qualified leads).",
+  "executed_by": "Claude in Eddie's Chrome, at Eddie's direction (manual UI edits). Times from Ads change history (PT): conversion action to Primary 7:07:48 PM; S5 goals to Qualified leads only 7:12:09 PM; Target CPA $36 7:13:58 PM; budget $225 7:16:47 PM (logged by Google as \"Applied recommendation: Budget raising\" because it was entered in the recommendation dialog's custom field; the change itself is \"1 budget amount decreased\"). Values verified by fresh page reload.",
   "registration_type": "prospective",
   "snapshot_quality": "partial",
   "evidence_source": "claude/s5-cohort-read-2026-10-16.md (S5 booking read); claude/october-pacing-10k-2026-10-16.md (October pacing vs Ben's $10K cap); decision recorded Fri 2026-10-16 1:52 PM PT.",
@@ -44,14 +44,14 @@
     },
     "guardrails": {
       "october_cap": "All-in spend at or under about $390 a day keeps October under Ben's $10K cap; midweek check Wed 2026-10-21.",
-      "upload_health": "Morning of 2026-10-20: confirm the 2026-10-19 nightly qualified-lead-upload ran green with the action PRIMARY (safety rail would abort if QUALIFIED_PRIMARY_OK were missing).",
+      "upload_health": "Confirmed 2026-10-19 ~7:30 PM: run #22 green, script reported the action PRIMARY with QUALIFIED_PRIMARY_OK set, 11 events applied (requestId 34303262-baf1-4a4c-ae31-740db0a60cda). Keep checking each morning this week.",
       "brand_untouched": "Brand keeps its own goals; the Qualified lead goal's account-default campaigns are S1, S2, S3 and one more, all paused at switch time."
     }
   },
   "confounders": [
     "GCLID coverage gap on paid form and call leads: priced leads without a GCLID cannot be credited, so Google's reported cost per conversion will read higher than the true cost per priced lead.",
     "Budget cut and goal change land the same evening; volume changes in the first week cannot be cleanly split between them.",
-    "Qualified lead goal is account-default; re-enabling S1 to S4 would put them on qualified-lead optimization too."
+    "Qualified lead goal is account-default; re-enabling S1 to S4 would put them on qualified-lead optimization too.", "S5 Conversions column changes meaning on 2026-10-19: it now counts priced leads, not form fills, so S5 cost per conversion will read higher than before the switch without any change in performance."
   ],
   "amendments": []
 }
