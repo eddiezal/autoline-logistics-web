@@ -1,0 +1,12 @@
+{
+  "measuredAt": "2026-10-20",
+  "seasonDays": 45,
+  "note": "Share of a source's eventual bookings reported within N days of the lead. From scripts/booking-delay-curve.mjs (45-day seasoning). Re-measure monthly. See claude/booking-delay-curve-2026-10-20.md.",
+  "buckets": [0, 1, 2, 3, 5, 7, 10, 14, 21, 28, 35],
+  "sources": {
+    "Website":      { "booked": 21,  "leads": 215,  "cum": [0.76, 0.86, 0.86, 0.86, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00] },
+    "iRelocation":  { "booked": 108, "leads": 2907, "cum": [0.46, 0.54, 0.56, 0.62, 0.70, 0.75, 0.77, 0.84, 0.91, 0.94, 0.97] },
+    "Hand-keyed":   { "booked": 17,  "leads": 83,   "cum": [0.71, 0.76, 0.76, 0.82, 0.82, 0.82, 0.82, 0.82, 0.88, 0.88, 0.88] }
+  },
+  "uses": { "Google Ads": "Website", "Free": "Website", "Hand-keyed": "Website", "iRelocation": "iRelocation", "LiveTransport": "iRelocation", "Taylor": "iRelocation" }
+}
