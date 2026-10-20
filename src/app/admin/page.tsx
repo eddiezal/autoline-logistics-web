@@ -47,6 +47,8 @@ import { DECISION_REGISTRY } from "@/lib/admin/decisionRegistry";
 import { ActiveDecisionsStrip } from "./ActiveDecisionsStrip";
 import { computeRevenueLive } from "@/lib/admin/revenueLive";
 import { RevenueSection } from "./RevenueSection";
+import { computeQualifiedLive } from "@/lib/admin/qualifiedLive";
+import { QualifiedSection } from "./QualifiedSection";
 import { computeCallsLive } from "@/lib/admin/callsLive";
 import { UnloggedCallsQueue } from "./UnloggedCallsQueue";
 import { computeOpsLive } from "@/lib/admin/opsLive";
@@ -855,6 +857,8 @@ export default async function AdminReportPage({
     console.error("[admin] computeRevenueLive failed", err);
     return null;
   });
+  // Agent-priced census (what S5 bids on since Oct 19): Acquisition view only.
+  const qualifiedLive = view === "acquisition" ? await computeQualifiedLive() : null;
   const callsLive = await computeCallsLive().catch((err) => {
     console.error("[admin] computeCallsLive failed", err);
     return null;
@@ -3669,7 +3673,7 @@ export default async function AdminReportPage({
       ) : (
         <>
           {view === "overview" && <Overview />}
-          {view === "acquisition" && (<><Acquisition /><RevenueSection data={revenueLive} /></>)}
+          {view === "acquisition" && (<><QualifiedSection data={qualifiedLive} /><Acquisition /><RevenueSection data={revenueLive} /></>)}
           {view === "sales" && (<><Sales /><UnloggedCallsQueue data={callsLive} /><OpsBlocks data={opsLive} /></>)}
           {view === "lanes" && <Lanes />}
           {view === "behavior" && <Behavior />}

@@ -317,3 +317,21 @@ export async function fetchAdsCostByDay(since: Date): Promise<AdsCostByDayResult
   costCache = { at: Date.now(), sinceKey, result };
   return result;
 }
+
+/* ── Raw GAQL (qualified-lead panel) ───────────────────────────────── */
+
+/**
+ * One-off GAQL query for callers that need fields fetchAdsStats doesn't
+ * shape (e.g. conversions by conversion date per action). Throws on error;
+ * callers own their failure posture. No caching here: wrap at the call site.
+ */
+export async function runGaql(query: string): Promise<GaqlRawRow[]> {
+  const missing = adsMissingEnv();
+  if (missing.length > 0) throw new Error(`unconfigured: ${missing.join(", ")}`);
+  const token = await accessToken();
+  return (await gaqlSearch(token, query)) as GaqlRawRow[];
+}
+
+/** Loose row type for runGaql: the REST API returns camelCase nested objects. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type GaqlRawRow = Record<string, any>;
