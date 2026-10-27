@@ -708,6 +708,8 @@
       "stateInvalid": "We don't recognize one of those ZIPs. Submit a quote and your coordinator will check it.",
       "stateLoading": "Checking current carrier prices for this route…",
       "stateNoPrice": "We couldn't pull a live price for this route right now. Get your quote and a coordinator will price it.",
+      "stateAgentQuote": "Classic and non-running vehicles need special loading, so we price them by hand instead of online. Send us the details and an agent will quote it.",
+      "ctaAgentQuote": "Get my quote",
       "stateUnknown": "We don't have those ZIPs in our quick-lookup. Submit a full quote with your pickup and delivery addresses.",
       "stateOk": {
         "milesLabel": "mi",
@@ -1287,6 +1289,13 @@
         "model": {
           "label": "Model",
           "placeholder": "e.g. Camry"
+        },
+        "condition": {
+          "label": "Does it run?",
+          "options": {
+            "operable": "Yes, it runs",
+            "inoperable": "No, it doesn't run"
+          }
         },
         "type": {
           "label": "Vehicle type",

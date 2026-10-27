@@ -11,6 +11,7 @@ import {
   roadDistanceMiles,
   type MetroZip,
 } from "@/data/zip-metros";
+import { decideInstantPrice } from "@/lib/pricing/instant-price-gate";
 
 /**
  * Hero Route Finder — Progressive Disclosure (V2, May 17 2026).
@@ -280,6 +281,18 @@ export function HeroRouteFinder() {
     [fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey],
   );
 
+  // Instant-price gate (2026-10-26, Oct 26 quote study): classic and
+  // non-running vehicles get no instant price; the card asks them to send
+  // details so an agent quotes by hand. Same rule as the agent email.
+  const agentQuote = useMemo(
+    () =>
+      decideInstantPrice({
+        type: vehicleKey,
+        condition: conditionKey === "nonDrivable" ? "inoperable" : "operable",
+      }).withhold,
+    [vehicleKey, conditionKey],
+  );
+
   // Live SD pricing override. POSTs to our /api/pricing route (token stays
   // server-side). Replaces the local estimate with SD's market price when
   // available; otherwise the local computeLockedPrice estimate stands. Dormant
@@ -299,6 +312,7 @@ export function HeroRouteFinder() {
     // local estimate. "ok" (metro) and "zipOnly" (any other mainland ZIP)
     // routes both ask SD.
     if (route.kind !== "ok" && route.kind !== "zipOnly") return;
+    if (agentQuote) return; // no price for this vehicle; skip the SD call
     setLiveStatus("loading");
     const controller = new AbortController();
     const timer = setTimeout(() => {
@@ -348,7 +362,7 @@ export function HeroRouteFinder() {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [route.kind, fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey]);
+  }, [route.kind, fromZip, toZip, vehicleKey, conditionKey, transportKey, timingKey, agentQuote]);
 
   // First-party analytics (2026-07-22): record that the hero showed a
   // price — once per unique route+price per mount, debounced so mid-ZIP
@@ -356,6 +370,7 @@ export function HeroRouteFinder() {
   // element with zero instrumentation.
   const firedEstimates = useRef(new Set<string>());
   useEffect(() => {
+    if (agentQuote) return; // nothing priced was shown
     if (
       route.kind !== "ok" &&
       route.kind !== "hawaii" &&
@@ -373,7 +388,7 @@ export function HeroRouteFinder() {
       sendEvent("estimate_shown", { price: shown, tool: "hero" });
     }, 1200);
     return () => clearTimeout(timer);
-  }, [route, liveEstimate, fromZip, toZip]);
+  }, [route, liveEstimate, fromZip, toZip, agentQuote]);
 
   // Pre-fill /quote with all six inputs via the shared handoff
   // contract (src/lib/hero-handoff.ts). Adding a new param is a
@@ -495,6 +510,7 @@ export function HeroRouteFinder() {
         liveStatus={liveStatus}
         fromZip={fromZip}
         toZip={toZip}
+        agentQuote={agentQuote}
       />
     </div>
   );
@@ -610,6 +626,7 @@ function ResultPanel({
   liveStatus,
   fromZip,
   toZip,
+  agentQuote,
 }: {
   state: RouteState;
   quoteHref: { pathname: "/quote"; query: Record<string, string> };
@@ -617,8 +634,29 @@ function ResultPanel({
   liveStatus: "idle" | "loading" | "done" | "failed";
   fromZip: string;
   toZip: string;
+  agentQuote: boolean;
 }) {
   const t = useTranslations();
+
+  // Instant-price gate: a real route but a vehicle we don't instant-price.
+  if (
+    agentQuote &&
+    (state.kind === "ok" || state.kind === "zipOnly" || state.kind === "hawaii" || state.kind === "alaska")
+  ) {
+    return (
+      <div className="mt-5 bg-gray-50 border border-gray-200 rounded-xl px-4 py-4" role="status" aria-live="polite">
+        <p className="text-sm text-gray-700 leading-relaxed mb-3">
+          {t("home.heroRouteFinder.stateAgentQuote")}
+        </p>
+        <Link
+          href={quoteHref}
+          className="inline-flex items-center bg-brand-accent hover:bg-brand-accent-hover text-brand-accent-ink text-sm font-bold px-5 py-2.5 rounded-full transition"
+        >
+          {t("home.heroRouteFinder.ctaAgentQuote")} →
+        </Link>
+      </div>
+    );
+  }
 
   // Option A range subtitle. Only renders when SD returned a real bracket.
   const rangeLabel =

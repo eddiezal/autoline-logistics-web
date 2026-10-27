@@ -35,6 +35,7 @@ import {
   type SdVehicleType,
 } from "@/lib/superdispatch/pricing";
 import { evaluateEligibility } from "@/lib/pricing/eligibility";
+import { decideInstantPrice, withholdReasonLabel } from "@/lib/pricing/instant-price-gate";
 import { roadMilesBetweenZips } from "@/lib/geo/zip3";
 
 import { sendLeadEmail } from "@/lib/email/resend";
@@ -310,6 +311,21 @@ export async function POST(req: Request) {
   }
 
   const submittedAt = new Date().toISOString();
+
+  // Instant-price gate (2026-10-26, from the Oct 26 quote study): RVs,
+  // trailers, commercial trucks, classics / pre-1981 and non-running
+  // vehicles get NO site price in the agent email, so the agent quotes them
+  // by hand. The SD estimate is still computed and stored on the lead
+  // (estimate.*) so the nightly priced-lead upload and the quote-study
+  // scripts are unchanged; only what the agent is told changes.
+  const instantPrice = decideInstantPrice({
+    year: vehicleYear,
+    make: vehicleMake,
+    model: vehicleModel,
+    type: vehicleType,
+    condition: vehicleCondition,
+  });
+
   // Pricing input-integrity gate (spec v3.4) — INSTRUMENTATION ONLY for now:
   // evaluate eligibility on truthful inputs and record the snapshot. Does NOT
   // change the SD call, the agent email, or the customer price. Never throws.
@@ -372,6 +388,11 @@ export async function POST(req: Request) {
     proabdAssignedAgent: null,
     estimate: pricingShadow ? { ...estimate, ...pricingShadow } : estimate,
     pricingEligibility,
+    instantPrice: {
+      withheld: instantPrice.withhold,
+      reasons: instantPrice.reasons,
+      version: instantPrice.version,
+    },
     attribution: {
       utmSource: str(body.utm_source) ?? null,
       utmMedium: str(body.utm_medium) ?? null,
@@ -488,6 +509,9 @@ export async function POST(req: Request) {
     condition: vehicleCondition,
     transport: transportPref,
     estimate,
+    priceWithheld: instantPrice.withhold
+      ? { labels: instantPrice.reasons.map((r) => withholdReasonLabel(r, "en")) }
+      : null,
     attribution: {
       utmSource: str(body.utm_source),
       utmMedium: str(body.utm_medium),

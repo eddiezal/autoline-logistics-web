@@ -708,6 +708,8 @@
       "stateInvalid": "No reconocemos uno de esos códigos postales. Envíe una cotización y su coordinador lo verificará.",
       "stateLoading": "Consultando precios actuales de transportistas para esta ruta…",
       "stateNoPrice": "No pudimos obtener un precio en vivo para esta ruta en este momento. Solicite su cotización y un coordinador le dará el precio.",
+      "stateAgentQuote": "Los vehículos clásicos o que no funcionan necesitan carga especial, así que los cotizamos a mano en lugar de en línea. Envíenos los datos y un agente le dará el precio.",
+      "ctaAgentQuote": "Obtener mi cotización",
       "stateUnknown": "No tenemos esos códigos postales en nuestra búsqueda rápida. Envíe una cotización con sus direcciones completas.",
       "stateOk": {
         "milesLabel": "mi",
@@ -1287,6 +1289,13 @@
         "model": {
           "label": "Modelo",
           "placeholder": "ej. Camry"
+        },
+        "condition": {
+          "label": "¿El vehículo funciona?",
+          "options": {
+            "operable": "Sí, funciona",
+            "inoperable": "No, no funciona"
+          }
         },
         "type": {
           "label": "Tipo de vehículo",

@@ -4,6 +4,7 @@
  */
 import { NextResponse } from "next/server";
 import { getSdPriceEstimate } from "@/lib/superdispatch/pricing";
+import { decideInstantPrice } from "@/lib/pricing/instant-price-gate";
 
 export const runtime = "nodejs";
 
@@ -48,6 +49,16 @@ export async function POST(req: Request) {
   const trailer: "open" | "enclosed" =
     body.transportType === "enclosed" ? "enclosed" : "open";
   const isInoperable = Boolean(body.isInoperable);
+
+  // Instant-price gate (2026-10-26): same rule as the hero card and the agent
+  // email. Classic and non-running vehicles get no instant price.
+  const gate = decideInstantPrice({
+    type: str(body.vehicleType),
+    condition: isInoperable ? "inoperable" : "operable",
+  });
+  if (gate.withhold) {
+    return NextResponse.json({ source: "agent_quote", reasons: gate.reasons });
+  }
 
   const key = `${fromZip}|${toZip}|${sdVehicle}|${trailer}|${isInoperable ? 1 : 0}`;
   const hit = cache.get(key);

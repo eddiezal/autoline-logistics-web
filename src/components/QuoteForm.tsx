@@ -52,7 +52,7 @@ const HCAPTCHA_TEST_KEY = "10000000-ffff-ffff-ffff-000000000001";
 // Release A (2026-10-12) left the fields as-is (only an Exotic option and the
 // confirmation changed), so the R1 stamp stays: activeDecisions.ts and the
 // early-read scripts key on it.
-const FORM_VERSION = "quote-r1-20260812";
+const FORM_VERSION = "quote-r2-20261026"; // r2: "Does it run?" asked on every path
 
 interface SubmittedSummary {
   leadRef: string;
@@ -298,7 +298,7 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
           .filter(Boolean)
           .join(" "),
         vehicleType: payload.vehicle_type ?? "",
-        condition: handoff.condition,
+        condition: payload.condition ?? handoff.condition,
         transport: handoff.transportType,
         timing: handoff.timing,
       });
@@ -529,6 +529,29 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
             label: t("quote.form.vehicle.type.options." + k),
           }))}
         />
+        {/* "Does it run?" (2026-10-26). Asked on every path unless the hero
+            already captured it (hidden input above). Non-running cars were
+            the strongest underpricing signal in the Oct 26 quote study, and
+            direct /quote visitors were never asked. Required, two taps. */}
+        {!handoff.condition && (
+          <fieldset>
+            <legend className="block text-sm font-medium text-gray-700 mb-1.5">
+              {t("quote.form.vehicle.condition.label")}
+              <span className="text-orange">{required}</span>
+            </legend>
+            <div className="grid grid-cols-2 gap-3">
+              {(["operable", "inoperable"] as const).map((c) => (
+                <label
+                  key={c}
+                  className="flex items-center gap-2 px-4 py-3 border border-gray-300 rounded-lg cursor-pointer has-[:checked]:border-orange has-[:checked]:bg-orange-tint/40 text-charcoal"
+                >
+                  <input type="radio" name="condition" value={c} required className="accent-orange" />
+                  <span className="text-sm">{t("quote.form.vehicle.condition.options." + c)}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
       </fieldset>
 
       {/* Tier radios REMOVED (Release 1, 2026-08-12): asking customers to

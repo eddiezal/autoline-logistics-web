@@ -45,6 +45,9 @@ export interface BuildLeadEmailInput {
     referrer?: string;
   };
   submittedAt: string;
+  /** Instant-price gate (2026-10-26): when set, the site showed NO price and
+   *  the agent must quote by hand. Labels are plain-English reasons. */
+  priceWithheld?: { labels: string[] } | null;
 }
 
 export interface BuiltLeadEmail {
@@ -185,7 +188,8 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
   const o = locLabel(input.origin);
   const d = locLabel(input.destination);
   const vehicle = input.vehicle.year + " " + input.vehicle.make + " " + input.vehicle.model;
-  const price = priceLabel(input.estimate);
+  const withheld = !!input.priceWithheld;
+  const price = withheld ? "Agent quote needed" : priceLabel(input.estimate);
   const tier = timingLabel(input);
 
   const subject = "[Lead] " + o + " -> " + d + " . " + vehicle + " . " + price;
@@ -204,9 +208,11 @@ export function buildLeadEmail(input: BuildLeadEmailInput): BuiltLeadEmail {
     "Transport: " + transportLabel(input.transport),
     "Timing: " + tier,
     "Source: " + deriveLeadSource(input.attribution),
-    "Estimate: " + price,
+    withheld
+      ? "Estimate: none shown. Quote this one by hand (" + (input.priceWithheld?.labels ?? []).join("; ") + ")."
+      : "Estimate: " + price,
   ];
-  const range = rangeLabel(input.estimate);
+  const range = withheld ? null : rangeLabel(input.estimate);
   if (range) textLines.push(range);
   if (input.customer.notes) textLines.push("Notes: " + input.customer.notes);
   textLines.push("");
@@ -245,13 +251,19 @@ function renderHtml(
     + '<div style="font-size:22px;font-weight:700;margin-top:6px;">' + escapeHtml(o) + ' -> ' + escapeHtml(d) + '</div>'
     + '<div style="font-size:14px;opacity:0.85;margin-top:4px;">' + escapeHtml(vehicle) + ' . ' + escapeHtml(input.vehicle.type) + '</div>'
     + '</td></tr><tr><td style="padding:24px;">'
-    + '<div style="background:#f0faf3;border-left:3px solid ' + ACCENT + ';padding:16px 18px;border-radius:0 8px 8px 0;margin-bottom:20px;">'
-    + '<div style="font-size:11px;color:' + ACCENT + ';font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Estimated quote shown to customer</div>'
-    + '<div style="font-size:28px;font-weight:800;color:#052e1a;margin-top:4px;">' + escapeHtml(price) + '</div>'
-    + (rangeLabel(input.estimate)
-        ? '<div style="font-size:13px;color:' + GRAY + ';margin-top:6px;">' + escapeHtml(rangeLabel(input.estimate) ?? "") + '</div>'
-        : "")
-    + '</div>'
+    + (input.priceWithheld
+        ? '<div style="background:#fff7ed;border-left:3px solid #c2410c;padding:16px 18px;border-radius:0 8px 8px 0;margin-bottom:20px;">'
+          + '<div style="font-size:11px;color:#c2410c;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">No instant price. Quote this one by hand</div>'
+          + '<div style="font-size:15px;color:#111;margin-top:6px;">' + escapeHtml(input.priceWithheld.labels.join("; ")) + '</div>'
+          + '<div style="font-size:13px;color:' + GRAY + ';margin-top:6px;">The site did not show this customer a price. Check the vehicle and carrier rates before quoting.</div>'
+          + '</div>'
+        : '<div style="background:#f0faf3;border-left:3px solid ' + ACCENT + ';padding:16px 18px;border-radius:0 8px 8px 0;margin-bottom:20px;">'
+          + '<div style="font-size:11px;color:' + ACCENT + ';font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Estimated quote shown to customer</div>'
+          + '<div style="font-size:28px;font-weight:800;color:#052e1a;margin-top:4px;">' + escapeHtml(price) + '</div>'
+          + (rangeLabel(input.estimate)
+              ? '<div style="font-size:13px;color:' + GRAY + ';margin-top:6px;">' + escapeHtml(rangeLabel(input.estimate) ?? "") + '</div>'
+              : "")
+          + '</div>')
     + '<h3 style="margin:0 0 8px;font-size:14px;color:' + PINE + ';text-transform:uppercase;letter-spacing:0.05em;">Customer</h3>'
     + '<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">'
     + '<tr><td style="padding:6px 0;color:' + GRAY + ';font-size:13px;width:90px;">Name</td><td style="padding:6px 0;color:#111;font-size:14px;">' + escapeHtml(input.customer.firstName + (input.customer.lastName ? " " + input.customer.lastName : "")) + '</td></tr>'
