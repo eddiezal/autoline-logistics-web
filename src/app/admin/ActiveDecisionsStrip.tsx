@@ -39,6 +39,9 @@ const GOOD_TEXT = "#006300";
 
 const R1_SHIP = new Date("2026-08-12T00:00:00-07:00");
 const PC_POST = new Date("2026-08-14T00:00:00-07:00");
+const R2_SHIP = new Date("2026-10-26T22:00:00-07:00");
+const R2_READ_EARLIEST = new Date("2026-11-09T00:00:00-08:00");
+const STEP_DECISION = new Date("2026-11-09T00:00:00-08:00");
 const CALL_READ = new Date("2026-09-14T00:00:00-07:00"); // Aug 10 + 5 weeks
 
 interface CardModel {
@@ -133,6 +136,80 @@ export function ActiveDecisionsStrip({ live }: { live: DecisionsLive | null }) {
         hover: verdict && reg.verdict
           ? `Decided ${reg.verdict.date}: ${reg.verdict.decision}`
           : `Quote form Release 1 — completion (client-confirmed lead_persisted ÷ stamped starts). Rule: keep ≥24.4%, revert <20%, review at 200 starts. Full rule in the Decision Registry.`,
+      });
+    }
+  }
+
+  /* ── Form R2: required "Does it run?" (before/after, live baseline) ── */
+  {
+    const reg = bySlug.get("quote-r2-operability");
+    if (reg?.exposure) {
+      const starts = live?.r2?.starts ?? reg.exposure.current;
+      const pct = live?.r2?.completionPct ?? null;
+      const pre = live?.r2?.prePct ?? null;
+      const liveOk = !!live?.r2;
+      const e = eta(nowMs, R2_SHIP.getTime(), starts, reg.exposure.gate);
+      // Gate is starts AND 14 days; the later of the two is the ETA.
+      const etaMs = Math.max(e.ms, R2_READ_EARLIEST.getTime());
+      const etaLabel = e.label === "gate crossed" && nowMs >= R2_READ_EARLIEST.getTime()
+        ? "gate crossed"
+        : "~" + new Date(etaMs).toLocaleDateString("en-US", { timeZone: "America/Los_Angeles", month: "short", day: "numeric" });
+      const crossed = starts >= reg.exposure.gate && nowMs >= R2_READ_EARLIEST.getTime();
+      // Marks come from the live pre-change rate; registry marks are the fallback.
+      const keepMark = pre ?? reg.meter?.marks.find((m) => m.kind === "keep")?.value ?? 0;
+      const moveMark = Math.max(0, keepMark - 5);
+      const scaleMax = reg.meter?.scaleMax ?? 50;
+      const spec = reg.meter
+        ? { ...reg.meter, marks: [
+            { value: moveMark, label: "move after save", kind: "revert" as const },
+            { value: keepMark, label: "pre-change", kind: "keep" as const },
+          ] }
+        : null;
+      cards.push({
+        slug: reg.slug,
+        name: "FORM R2 · RUNS?", display: "Form R2 (runs?)",
+        etaMs, etaLabel,
+        numMain: pct !== null ? `${pct.toFixed(1)}%` : "—",
+        numSub: pre !== null ? `vs ${pre.toFixed(1)}% before` : "pre-change rate pending",
+        up: pct !== null && pre !== null && pct >= pre - 5,
+        early: starts < (reg.meter?.unlockN ?? 50), crossed, decided: null,
+        meter: spec && pct !== null
+          ? {
+              valuePct: Math.min(100, (pct / scaleMax) * 100),
+              scaleMax,
+              color: meterColor(pct, spec, starts),
+              marks: spec.marks.map((m) => ({ left: (m.value / scaleMax) * 100 })),
+            }
+          : null,
+        progress: null,
+        gateLine: (
+          <>
+            <b style={{ color: INK }}>{starts} / {reg.exposure.gate}</b> starts · 14 d
+            {!liveOk && <> · as of {reg.exposure.asOf.slice(5)}</>}
+          </>
+        ),
+        hover: `Required "Does it run?" on /quote since Oct 26. Completion on R2-stamped sessions vs the 14 days of R1 before the change${pre !== null && live?.r2 ? ` (${live.r2.preCompleted} of ${live.r2.preStarts})` : ""}. Rule: keep pre-submit if within 5 points of the pre-change rate; more than 5 below, move it after the save. Read at 200 starts and 14 days. Full rule in the Decision Registry.`,
+      });
+    }
+  }
+
+  /* ── After-save step (Release C): waiting on the ProABD path ── */
+  {
+    const reg = bySlug.get("quote-step-after-save");
+    if (reg) {
+      const total = STEP_DECISION.getTime() - new Date("2026-10-15T00:00:00-07:00").getTime();
+      cards.push({
+        slug: reg.slug,
+        name: "AFTER-SAVE STEP", display: "After-save step",
+        etaMs: STEP_DECISION.getTime(),
+        etaLabel: "~Nov 9",
+        numMain: "not built",
+        numSub: "waiting on ProABD path",
+        up: false, early: false, crossed: false, decided: null,
+        meter: null,
+        progress: Math.min(1, Math.max(0, (nowMs - (STEP_DECISION.getTime() - total)) / total)),
+        gateLine: <>decision <b style={{ color: INK }}>Nov 9</b> · R2A paused to Nov 8</>,
+        hover: "Four qualifying questions after the lead saves (runs is already live pre-submit). Blocked on how the answers reach ProABD: Superflo update endpoint, a short hold on the push, or email-only. Asked Nov 2. Nov 9: retain, or move operability and availability before submit and test that as R2A on the revised metric.",
       });
     }
   }

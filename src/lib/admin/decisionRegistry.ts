@@ -111,7 +111,7 @@ export interface RegistryEntry {
  */
 export const FOCUS = {
   title: "Quote-path conversion",
-  line: "72% of quote-page visitors never start the form · R1 decided (iterate via R2) · PC handoff 100/150 · R2 build authorized",
+  line: "Required \"Does it run?\" live on /quote since Oct 26 (completion read at 200 starts, ~Nov 9) · after-save step (Release C) waiting on the ProABD path · R2A paused through Nov 8, resumes on the revised metric",
 } as const;
 
 export const DECISION_REGISTRY: RegistryEntry[] = [
@@ -296,6 +296,40 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
       "ADDED 2026-09-28, revised same day after second review. The price checker experiment (pc-estimate-moment, validated 9/28 at 8.7% vs 6.2% bar, CI 5.5 to 13.5) proved something narrower than this: fixing the handoff after an estimate on a side tool moved continuation. It did not establish that a price in the middle of the main conversion form helps; 87% of estimate viewers still stopped at the price. In-form pricing is a new hypothesis with its own gate, not an inherited win. Blocked by: quote-path-r2a verdict.",
   },
   {
+    slug: "quote-r2-operability",
+    title: "Quote form, Release 2: required \"Does it run?\"",
+    change:
+      "/quote asks \"Does it run?\" (EN and ES) as a required question on every path where the homepage did not already ask it. Shipped with the instant-price gate: no site price for RVs, trailers, commercial trucks, classics and non-running vehicles; those leads go to an agent with \"Quote this one by hand\". FORM_VERSION quote-r2-20261026. Form version is stamped on every form event and lead.",
+    type: "measurement",
+    shipped: "2026-10-26",
+    owner: "Zaldivar Labs",
+    metric:
+      "Form completion (client-confirmed lead_persisted ÷ stamped form_started) on quote-r2-20261026 sessions, against the same form's completion in the 14 days before the change (quote-r1-20260812 sessions, Oct 12 to Oct 25). Also watched: website lead volume per serving day before and after.",
+    baseline:
+      "Pre-change completion, computed live from the Oct 12 to Oct 25 R1-stamped sessions (the band shows it). Not a randomized control: S5 traffic mix is the known confounder, same as the R1 note.",
+    exposure: {
+      current: 0,
+      gate: 200,
+      unit: "R2 form starts",
+      asOf: "2026-11-02",
+    },
+    decisionRule:
+      "Pricing-integrity fix, so the question stays in some form; the read decides WHERE it is asked. Review at 200 R2-stamped starts AND at least 14 calendar days after Oct 26 (about Nov 9). Color unlocks at 50 starts. KEEP as a required pre-submit question if completion is within 5 points of the pre-change rate. MOVE the question after the save (the quote-step-after-save design) if completion is more than 5 points below the pre-change rate; do not remove it. Either way, record the share of leads answering \"no\" and the share routed to an agent by the instant-price gate, so the after-save step and R2A start from measured numbers. Thresholds proposed 2026-11-02; Eddie ratifies.",
+    status: "accruing",
+    studySlug: "behavioral-journey",
+    notes:
+      "Shipped Oct 26 about 10 PM PT (commit d5ddaa8), from the Oct 26 quote-vs-recommended study: the site price covered the carrier on 84% of booked orders and the misses were non-standard and non-running vehicles. This is one of the four qualifying questions from the Oct 15 reconciliation, shipped early and pre-submit because the pricing gate needed it. Before/after only; the Oct 15 rule that unknowns are never defaulted applies (no preselected answer).",
+    primary: true,
+    meter: {
+      scaleMax: 50,
+      unlockN: 50,
+      marks: [
+        { value: 25, label: "move after save (pre minus 5)", kind: "revert" },
+        { value: 30, label: "pre-change rate", kind: "keep" },
+      ],
+    },
+  },
+  {
     slug: "quote-step-after-save",
     title: "Quote path, after-save step: four qualifying questions (Release C)",
     change:
@@ -311,7 +345,7 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
     status: "specified",
     studySlug: "behavioral-journey",
     notes:
-      "ADOPTED 2026-10-15 from the second-opinion reconciliation of the four qualifying questions (Kacy's Q7: runs, first available date, open or enclosed, plus her empty-or-loaded add). Planned release Oct 26; NOT BUILT as of Nov 2 (that week went to the S5 priced-lead switch and review). Open dependency: ProABD has no lead-update endpoint, so the after-save answers need one of (a) a Superflo-provided update endpoint or createLead fields for carrier type and belongings, (b) a short server-side hold on the ProABD push (lead saved and conversion fired immediately; createLead sent when the customer finishes or skips, or after about 3 minutes; needs Renee's OK and a sweep for unpushed leads), or (c) answers in the agent lead email only. Belongings has no ProABD field under any path except (a). Asks to Superflo and Renee sent Nov 2. Build cannot start until the path is chosen.",
+      "ADOPTED 2026-10-15 from the second-opinion reconciliation of the four qualifying questions (Kacy's Q7: runs, first available date, open or enclosed, plus her empty-or-loaded add). Planned release Oct 26. PARTLY SHIPPED: operability went live Oct 26 as a required pre-submit question on /quote (see quote-r2-operability), not as an after-save step. The other three questions (earliest available date, open or enclosed, belongings) and the after-save step itself are NOT BUILT as of Nov 2. Open dependency: ProABD has no lead-update endpoint, so the after-save answers need one of (a) a Superflo-provided update endpoint or createLead fields for carrier type and belongings, (b) a short server-side hold on the ProABD push (lead saved and conversion fired immediately; createLead sent when the customer finishes or skips, or after about 3 minutes; needs Renee's OK and a sweep for unpushed leads), or (c) answers in the agent lead email only. Belongings has no ProABD field under any path except (a). Asks to Superflo and Renee sent Nov 2. Build cannot start until the path is chosen.",
   },
   {
     slug: "pricing-phase0-observation",

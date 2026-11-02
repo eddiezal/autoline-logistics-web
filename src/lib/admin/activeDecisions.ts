@@ -29,6 +29,11 @@ import "server-only";
 import { getAdminDb } from "@/lib/firebase/admin";
 
 const R1_FV = "quote-r1-20260812";
+/** R2: required "Does it run?" on /quote. Shipped 2026-10-26 ~10 PM PT (d5ddaa8). */
+const R2_FV = "quote-r2-20261026";
+const R2_SHIP = new Date("2026-10-26T22:00:00-07:00");
+/** Pre-change comparison window: the 14 days of R1 before R2 shipped. */
+const R2_PRE_START = new Date("2026-10-12T00:00:00-07:00");
 /** R1 shipped 2026-08-12; exposure counts from ship. */
 const R1_SHIP = new Date("2026-08-12T00:00:00-07:00");
 /** First full PT day with the PC handoff fix + lock-price block live. */
@@ -48,8 +53,20 @@ export interface PcLive {
   /** 0–100, null until there is at least one estimate session. */
   handoffPct: number | null;
 }
+export interface R2Live {
+  starts: number;
+  completed: number;
+  completionPct: number | null;
+  /** R1-stamped sessions in the 14 days before the change. */
+  preStarts: number;
+  preCompleted: number;
+  prePct: number | null;
+  /** Calendar days since R2 shipped. */
+  days: number;
+}
 export interface DecisionsLive {
   r1: R1Live | null;
+  r2: R2Live | null;
   pc: PcLive | null;
   callWeeks: number;
   computedAt: Date;
@@ -63,6 +80,7 @@ export async function computeDecisionsLive(): Promise<DecisionsLive> {
   const callWeeks = Math.min(6, (now.getTime() - CALL_START.getTime()) / (7 * 864e5));
 
   let r1: R1Live | null = null;
+  let r2: R2Live | null = null;
   let pc: PcLive | null = null;
 
   try {
@@ -107,10 +125,19 @@ export async function computeDecisionsLive(): Promise<DecisionsLive> {
     ]) sessions.delete(k);
 
     let starts = 0, completed = 0, pcSessions = 0, pcToQuote = 0;
+    let r2Starts = 0, r2Completed = 0, preStarts = 0, preCompleted = 0;
     for (const evs of sessions.values()) {
       if (evs.some((e) => e.type === "form_started" && e.fv === R1_FV)) {
         starts++;
         if (evs.some((e) => e.type === "lead_persisted")) completed++;
+      }
+      // R2 before/after: a session belongs to one side by the version it started on.
+      if (evs.some((e) => e.type === "form_started" && e.fv === R2_FV)) {
+        r2Starts++;
+        if (evs.some((e) => e.type === "lead_persisted")) r2Completed++;
+      } else if (evs.some((e) => e.type === "form_started" && e.fv === R1_FV && e.at >= R2_PRE_START && e.at < R2_SHIP)) {
+        preStarts++;
+        if (evs.some((e) => e.type === "lead_persisted")) preCompleted++;
       }
       const firstEst = evs.find(
         (e) => e.type === "estimate_shown" && e.tool === "route-checker" && e.at >= PC_POST,
@@ -124,13 +151,19 @@ export async function computeDecisionsLive(): Promise<DecisionsLive> {
     }
 
     r1 = { starts, completed, completionPct: starts ? (100 * completed) / starts : null };
+    r2 = {
+      starts: r2Starts, completed: r2Completed,
+      completionPct: r2Starts ? (100 * r2Completed) / r2Starts : null,
+      preStarts, preCompleted, prePct: preStarts ? (100 * preCompleted) / preStarts : null,
+      days: (now.getTime() - R2_SHIP.getTime()) / 864e5,
+    };
     pc = { estimateSessions: pcSessions, toQuote: pcToQuote, handoffPct: pcSessions ? (100 * pcToQuote) / pcSessions : null };
   } catch (err) {
     console.error("[activeDecisions] site_events computation failed", err);
     // r1/pc stay null — the band falls back to hand-stamped registry values.
   }
 
-  return { r1, pc, callWeeks, computedAt: now };
+  return { r1, r2, pc, callWeeks, computedAt: now };
 }
 
 /* ── Review-due detection for the "Needs a decision" queue ──────────────────
@@ -158,6 +191,7 @@ export function reviewDueEntries(
     let current = e.exposure.current;
     if (live) {
       if (e.slug === "quote-form-r1" && live.r1) current = live.r1.starts;
+      if (e.slug === "quote-r2-operability" && live.r2) current = live.r2.starts;
       if (e.slug === "pc-estimate-moment" && live.pc) current = live.pc.estimateSessions;
       if (e.slug === "call-landing-read") current = live.callWeeks;
     }
