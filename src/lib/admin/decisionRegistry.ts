@@ -407,6 +407,43 @@ export const DECISION_REGISTRY: RegistryEntry[] = [
     notes:
       "Phase it for a 3-agent shop: start with a senior-estimator glance that logs a pre-settlement number; add the evidence/SLA requirement only once volume and tooling justify it.",
   },
+  {
+    slug: "s5-keyword-batch-nov5",
+    title: "Spanish campaign: small keyword batch after the priced-lead switch",
+    change:
+      "Applied 2026-11-05 7:07 PM PT via the Ads API (scripts/_tmp-s5-keyword-batch-nov5.mjs). Added three exact keywords that were already converting as search terms: [compañia de transporte de vehiculos] to Empresas y Servicio, [transporte de autos en usa] to Transporte de Vehículos, [transporte de carro para outro estado] (Portuguese) to Envío y Traslado. Paused four keywords: the accented duplicates 'transporte de autos en camión' and 'traslado de vehículos precio', 'traslado de vehiculos precio', and 'flete de carros' (QS 3). Added two campaign negatives: [auto transport] exact and \"como\" phrase (how-to queries). Target, budget, ad groups and ads unchanged.",
+    type: "observational",
+    owner: "Zaldivar Labs",
+    metric:
+      "S5 cost per priced lead and priced-lead count, Nov 6 to Nov 22, vs Oct 19 to Nov 4 ($33.50, 124 priced on $4,152). Secondary: whether the three added terms now land in their intended ad group, and spend on 'como' queries (was about $55 for 0.5 conv in 17 days).",
+    baseline:
+      "Oct 19 to Nov 4: $4,152, 124 priced leads, $33.50 each; visible search terms 16% of spend. The four paused keywords spent $108 for 0 priced leads; the three added terms spent $108 for 6 priced leads.",
+    decisionRule:
+      "Written 2026-11-05 before applying. This is hygiene, not a lever: every item is under $60 of spend over 17 days, so no item is a performance verdict on its own; the pauses are justified as duplicates, the adds as routing. Read on Nov 23 with the target review. KEEP if cost per priced lead stays within 10% of $33.50 and the 'como' negative shows no converting query blocked (search terms report). REVERT the 'como' negative alone if a how-to query with a conversion appears excluded. Nothing here changes the Nov 23 question, which is now 'did hold rate and value per priced lead move', not 'raise the target'.",
+    shipped: "2026-11-05",
+    status: "accruing",
+    notes:
+      "Recon: claude/ledger-2026-11-05-scorecard-correction-ads-schedule.md and scripts/_tmp-s5-keyword-recon.mjs. Same day: ad schedule extended to Mon to Fri 5 AM to 7 PM PT and Saturday 6 AM to 2 PM PT (separate entries). Bigger levers identified and parked: price-intent landing page for the Precio group (CVR 19% vs 22 to 28%), held-order count as a secondary Google conversion, Portuguese micro test, 'en usa' copy test. Value-based bidding stays off until the fee varies with the move (fee study, Nov 13 block).",
+  },
+  {
+    slug: "evening-coverage-trial",
+    title: "Evening and Saturday coverage: one agent on every ad hour",
+    change:
+      "Approved by Ben on the Nov 2 call, revised Nov 3 to Nelson Mon to Thu 3 to 11 PM Eastern plus Saturday 9 to 5 Eastern (40 hours, Friday off), then put ON HOLD by Ben on Nov 5 (text, 9:24 AM PT): Renee and Ginger say they are answering after hours; no schedule change. What did ship Nov 5: the Spanish campaign ad schedule extended to Mon to Fri 5 AM to 7 PM PT (8 AM to 10 PM Eastern) and Saturday 6 AM to 2 PM PT (9 AM to 5 PM Eastern), target $36 and November ceiling $10,000 unchanged; Nelson covers Saturday 9 to 5 Eastern; weekday evenings stay informal (Renee, Ginger). A weekly evening-response report goes to Ben Mondays Nov 9 to Dec 7 (leads 5 to 10 PM Eastern and Saturday: median minutes to first price, share inside 15 minutes, share next morning, held orders, by agent).",
+    type: "experiment",
+    owner: "Auto Line (staffing) / Zaldivar Labs (ads and read)",
+    metric:
+      "Hold rate (order still an order today, the commission definition adopted Nov 5) of Spanish-campaign leads submitted 5 to 10 PM Eastern on weekdays and Saturday 9 to 5 Eastern, matured 7 days. Secondary: first-price wait for the same cohort by agent; cost per priced lead in the new hours (9 to 10 PM Eastern weekdays, Saturday) vs the existing weekday hours; deposits per $100 of spend for the month.",
+    baseline:
+      "October, before the change, on the old booking definition: leads arriving after 5 PM Eastern were 35% of Spanish-campaign leads and booked 11% of priced vs 25% for leads arriving while the team was on; first price took 35 to 85 minutes vs 7 to 13. On the held-order definition, October Spanish website leads held at 14% overall (31 of 221). Saturday, ads off, 120 days: 31 organic leads over 17 Saturdays, 0 held.",
+    exposure: { current: 0, gate: 60, unit: "priced leads 5 to 10 PM ET weekdays + Saturday", asOf: "2026-11-05" },
+    decisionRule:
+      "Written 2026-11-02, revised 2026-11-05 after the hold. Read on Dec 7 on leads submitted Nov 6 to Dec 4, matured 7 days, at least 60 priced after-hours leads. The question is no longer whether Nelson takes the evening shift; it is whether informal coverage holds. KEEP the extended ad hours if the after-hours hold rate is at least 12% (within 2 points of daytime on the held definition) AND median first-price wait after 5 PM Eastern is under 20 minutes AND cost per priced lead in the new hours is no more than 1.5 times the existing weekday hours. ITERATE (reopen the dedicated-owner schedule with Ben, with the weekly reports as the record) if the hold rate is between 8% and 12% or the median wait is over 30 minutes. REVERT the 9 to 10 PM Eastern hour and Saturday if the hold rate is under 8% at 60 or more priced leads, or if either block misses the cost bar for three consecutive weeks. Interim Nov 23: target review only. Power: at 60 to 80 priced leads the standard error on the hold rate is about 4 points.",
+    shipped: "2026-11-05",
+    status: "accruing",
+    notes:
+      "Shipped Nov 5 as the ads-schedule half only; the staffing half is on hold. Two decisions that only work together: the hours Google has never served are bought only because a person is on them, and the evening leads already being bought are only worth more if someone prices them inside the hour. Confounders to discount at the read: Thanksgiving week (Nov 23 to 27) runs soft; the Nov 9 schedule change restarts Google's learning on the campaign, so week one cost per priced lead is a read, not a forecast; Saturday has no history at all. Pay for the evening shift and Saturdays is Ben's decision and is not part of this read. Fee split and pricing pilot are a separate decision (not in this registry until the mechanics are settled).",
+  },
 ];
 
 /** True once exposure has crossed its precommitted gate — the review is due. */
