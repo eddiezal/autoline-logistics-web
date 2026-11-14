@@ -35,6 +35,8 @@ const EVENT_TYPES = new Set([
   // Nov 13 2026: did they see the form, did they stay 15 s.
   "form_in_view",
   "engaged",
+  // R2B (2026-11-13): price-moment exposure, both arms.
+  "ab_exposure",
 ]);
 
 const BOT_UA =
@@ -145,6 +147,12 @@ export async function POST(req: NextRequest) {
       // Nov 13 2026: API rejection code on api_error friction; seconds on engaged.
       const code = str(b.meta.code, 20);
       if (code) meta.code = code;
+      // R2B experiment meta.
+      const exp = str(b.meta.exp, 12);
+      if (exp) meta.exp = exp;
+      if (b.meta.variant === "c" || b.meta.variant === "t") meta.variant = b.meta.variant;
+      if (b.meta.priced === 0 || b.meta.priced === 1) meta.priced = b.meta.priced;
+      if (b.meta.forced === 1) meta.forced = 1;
       const secs = Number(b.meta.s);
       if (Number.isInteger(secs) && secs > 0 && secs <= 600) meta.s = secs;
       if (Object.keys(meta).length === 0) meta = null;
@@ -163,6 +171,12 @@ export async function POST(req: NextRequest) {
         attr,
         meta,
         device: deviceClass(ua),
+        ab:
+          b.ab === "c" || b.ab === "t"
+            ? b.ab_forced === true
+              ? { r2b: b.ab, forced: true }
+              : { r2b: b.ab }
+            : null,
         // PT calendar day for cheap daily grouping without tz math on read.
         day: now.toLocaleDateString("en-CA", { timeZone: "America/Los_Angeles" }),
         ts: FieldValue.serverTimestamp(),

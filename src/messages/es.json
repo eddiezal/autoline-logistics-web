@@ -1330,6 +1330,10 @@
           }
         }
       },
+      "estimate": {
+        "legend": "Su estimado",
+        "note": "Es un estimado para esta ruta y este vehículo. Su coordinador confirma el precio final antes de que usted se comprometa a nada."
+      },
       "contact": {
         "legend": "Cómo nos comunicamos con usted",
         "firstName": {

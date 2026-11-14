@@ -14,6 +14,7 @@ import {
 import { sendEvent, getVisitorId } from "@/lib/analytics/behavior";
 import { lookupZipApprox, zipPrefixToState } from "@/data/zip-metros";
 import { QUOTE_VEHICLE_TYPES, type HeroHandoff } from "@/lib/hero-handoff";
+import { getR2bAssignment, type R2bAssignment } from "@/lib/experiments/r2b";
 
 // Shared with the hero handoff (Release A, 2026-10-12): the hero offered
 // "Exotic / luxury" but this list didn't, so the select silently fell back
@@ -143,6 +144,7 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   function onBlurInstrument(e: React.FocusEvent<HTMLFormElement>) {
     const el = asFormControl(e.target);
     if (!el) return;
+    schedulePriceCheck();
     const name = el.name;
     if (!name || !el.value.trim()) return;
     const key = "complete:" + name;
@@ -158,6 +160,7 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   function onChangeInstrument(e: React.FormEvent<HTMLFormElement>) {
     const el = asFormControl(e.target);
     if (!el || !el.name) return;
+    schedulePriceCheck();
     const isChoice =
       el instanceof HTMLSelectElement ||
       (el instanceof HTMLInputElement && (el.type === "radio" || el.type === "checkbox"));
@@ -211,6 +214,91 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     }, 1000);
     return () => window.clearInterval(tick);
   }, []);
+  // R2B (2026-11-13): in-form price moment, randomized 50/50 per visitor
+  // (src/lib/experiments/r2b.ts; registry quote-path-r2b). Both arms ask
+  // /api/pricing once route and vehicle are known and record ab_exposure at
+  // that moment; only the treatment arm displays the number. With the split
+  // closed and no ?r2b= override, none of this runs.
+  const abRef = useRef<R2bAssignment | null>(null);
+  useEffect(() => {
+    abRef.current = getR2bAssignment();
+  }, []);
+  const [shownPrice, setShownPrice] = useState<number | null>(null);
+  const shownPriceRef = useRef<number | null>(null);
+  const priceKeyRef = useRef("");
+  const priceTimerRef = useRef<number | null>(null);
+  const exposureSentRef = useRef(false);
+  function schedulePriceCheck() {
+    if (!abRef.current) return;
+    if (priceTimerRef.current !== null) window.clearTimeout(priceTimerRef.current);
+    priceTimerRef.current = window.setTimeout(() => {
+      void runPriceCheck();
+    }, 400);
+  }
+  async function runPriceCheck() {
+    const a = abRef.current;
+    const form = formRef.current;
+    if (!a || !form) return;
+    const fd = new FormData(form);
+    const g = (k: string) => {
+      const v = fd.get(k);
+      return typeof v === "string" ? v.trim() : "";
+    };
+    const from = g("origin_zip").slice(0, 5);
+    const to = g("destination_zip").slice(0, 5);
+    const condition = g("condition");
+    // The price moment: both ZIPs, a model, and "Does it run?" answered.
+    if (!/^\d{5}$/.test(from) || !/^\d{5}$/.test(to) || !g("vehicle_model") || !condition) return;
+    const vehicleType = g("vehicle_type") || "sedan";
+    const transport = g("transport") === "enclosed" ? "enclosed" : "open";
+    const key = [from, to, vehicleType, condition, transport].join("|");
+    if (key === priceKeyRef.current) return;
+    priceKeyRef.current = key;
+    let price: number | null = null;
+    try {
+      const res = await fetch("/api/pricing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fromZip: from,
+          toZip: to,
+          fromState: zipPrefixToState(from) ?? undefined,
+          toState: zipPrefixToState(to) ?? undefined,
+          vehicleType,
+          isInoperable: condition === "inoperable",
+          transportType: transport,
+        }),
+      });
+      const d: unknown = res.ok ? await res.json() : null;
+      if (d && typeof d === "object") {
+        const o = d as { source?: unknown; price?: unknown };
+        if (o.source === "sd" && typeof o.price === "number" && o.price > 0) price = o.price;
+      }
+    } catch {
+      price = null; // engine unreachable: this visitor continues on the plain form
+    }
+    if (priceKeyRef.current !== key) return; // a newer check superseded this one
+    if (!exposureSentRef.current) {
+      exposureSentRef.current = true;
+      const meta: Record<string, string | number> = {
+        exp: "r2b",
+        variant: a.variant,
+        priced: price !== null ? 1 : 0,
+        fv: FORM_VERSION,
+      };
+      if (price !== null) meta.price = price;
+      if (a.forced) meta.forced = 1;
+      sendEvent("ab_exposure", meta);
+    }
+    if (a.variant === "t") {
+      const changed = shownPriceRef.current !== price;
+      shownPriceRef.current = price;
+      setShownPrice(price);
+      if (price !== null && changed) {
+        sendEvent("estimate_shown", { tool: "quote-form", price, fv: FORM_VERSION });
+      }
+    }
+  }
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<SubmittedSummary | null>(null);
   // Release A (2026-10-12): move focus (and the viewport) to the outcome.
@@ -311,6 +399,12 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     // time-to-convert per lead.
     const vid = getVisitorId();
     if (vid) payload.visitor_id = vid;
+    // R2B: arm and the estimate this visitor saw, onto the lead doc.
+    if (abRef.current) {
+      payload.ab_r2b = abRef.current.variant;
+      if (abRef.current.forced) payload.ab_forced = "1";
+      if (shownPriceRef.current !== null) payload.shown_price = String(shownPriceRef.current);
+    }
     const ftAt = getFirstTouchAt();
     if (ftAt) payload.first_touch_at = String(ftAt);
 
@@ -627,6 +721,24 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
           preference still flows through so agents see it. */}
       {handoff.timing && (
         <input type="hidden" name="tier" value={handoff.timing} />
+      )}
+
+      {/* R2B treatment arm only: the site's estimate, shown once route and
+          vehicle are known, before the contact fields. */}
+      {shownPrice !== null && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded-lg border border-orange/40 bg-orange-tint/40 px-4 py-4"
+        >
+          <p className="text-orange text-sm font-semibold uppercase tracking-wider">
+            {t("quote.form.estimate.legend")}
+          </p>
+          <p className="mt-1 text-3xl font-bold text-charcoal">
+            ${shownPrice.toLocaleString("en-US")}
+          </p>
+          <p className="mt-1 text-sm text-gray-600">{t("quote.form.estimate.note")}</p>
+        </div>
       )}
 
       {/* Contact */}

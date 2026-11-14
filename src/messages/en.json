@@ -1330,6 +1330,10 @@
           }
         }
       },
+      "estimate": {
+        "legend": "Your estimate",
+        "note": "This is an estimate for this route and vehicle. Your coordinator confirms the final price before you commit to anything."
+      },
       "contact": {
         "legend": "How we reach you",
         "firstName": {

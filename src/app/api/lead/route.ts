@@ -98,6 +98,11 @@ interface IncomingPayload {
   transport?: unknown;
   /** Anonymous behavior visitor ID (alv_vid cookie). Added 2026-07-22. */
   visitor_id?: unknown;
+  /** R2B experiment arm ("c" | "t"), forced-test marker, and the estimate
+   *  the visitor was shown in the form, if any. Added 2026-11-13. */
+  ab_r2b?: unknown;
+  ab_forced?: unknown;
+  shown_price?: unknown;
   /** First-touch epoch millis (30-day cookie). Added 2026-07-22. */
   first_touch_at?: unknown;
   /** Last-touch keyword ({keyword} via account URL suffix). Added 2026-08-10. */
@@ -381,6 +386,18 @@ export async function POST(req: Request) {
     vehicle: { year: vehicleYear, make: vehicleMake, model: vehicleModel, type: vehicleType, condition: vehicleCondition, transportPref },
     tier,
     timingProvided,
+    // R2B (2026-11-13): which arm this lead came from and the estimate the
+    // form displayed (treatment only). null when the split is closed.
+    experiment: (() => {
+      const v = str(body.ab_r2b);
+      if (v !== "c" && v !== "t") return null;
+      const sp = Number(str(body.shown_price));
+      return {
+        r2b: v,
+        forced: str(body.ab_forced) === "1",
+        shownPrice: Number.isFinite(sp) && sp > 0 && sp < 100000 ? Math.round(sp) : null,
+      };
+    })(),
     contact: { firstName: firstName!, lastName: lastName ?? "", email, phone, notes: notes ?? null },
     // Retired 2026-07-20: round-robin assignment. ProABD routes the lead;
     // the webhook receiver stamps proabdAssignedAgent when the event lands.

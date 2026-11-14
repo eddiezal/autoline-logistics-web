@@ -35,9 +35,19 @@
  *   device           NOT sent by the client: the collector derives
  *                    phone|tablet|desktop from the User-Agent header
  *   form_friction    api_error now carries meta.code (the API's code)
+ * R2B experiment (2026-11-13, see src/lib/experiments/r2b.ts):
+ *   ab_exposure      meta {exp: "r2b", variant: c|t, priced: 0|1, price?,
+ *                    forced?, fv} once per form mount, in BOTH arms, at the
+ *                    moment route and vehicle are known and the price call
+ *                    returns. priced = 1 is a price-eligible exposure.
+ *   estimate_shown   from the quote form carries meta.tool = "quote-form"
+ *                    (the price checker uses "route-checker").
+ *   every event      top-level ab {r2b: c|t, forced?} once assigned
  * fv = form version tag (release stamp) so every funnel read can split
  * by form release without correlating deploy timestamps by hand.
  */
+
+import { readR2b } from "@/lib/experiments/r2b";
 
 const VID_COOKIE = "alv_vid";
 const VID_MAX_AGE = 400 * 24 * 60 * 60; // ~13 months, first-party
@@ -151,7 +161,8 @@ export type BehaviorEventType =
   | "submit_attempted"
   | "lead_persisted"
   | "form_in_view"
-  | "engaged";
+  | "engaged"
+  | "ab_exposure";
 
 /**
  * Send a behavioral event to our first-party collector. Fire-and-forget:
@@ -164,6 +175,7 @@ export function sendEvent(
 ): void {
   if (typeof window === "undefined") return;
   try {
+    const ab = readR2b();
     const body = JSON.stringify({
       vid: getVisitorId(),
       // Order matters: getSessionId() clears stale attribution on session
@@ -175,6 +187,9 @@ export function sendEvent(
       locale: /^\/es(\/|$)/.test(window.location.pathname) ? "es" : "en",
       ref: document.referrer ? document.referrer.slice(0, 300) : null,
       meta: meta ?? null,
+      // R2B (2026-11-13): experiment arm, when this visitor has one.
+      ab: ab ? ab.variant : null,
+      ab_forced: ab ? ab.forced : false,
     });
     if (navigator.sendBeacon) {
       navigator.sendBeacon("/api/events", new Blob([body], { type: "application/json" }));
