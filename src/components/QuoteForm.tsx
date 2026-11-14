@@ -150,6 +150,67 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     fieldEventsSent.current.add(key);
     sendEvent("form_field", { field: name, action: "complete", fv: FORM_VERSION });
   }
+  // Nov 13 2026: radios and selects. A tap on a radio label does not move
+  // focus on most phones, so "Does it run?" was nearly invisible to the
+  // focus-based events (108 focuses in 484 starts) and the last-field read
+  // lagged the real stopping point. A change IS the answer, so record
+  // focus + complete on change for these controls.
+  function onChangeInstrument(e: React.FormEvent<HTMLFormElement>) {
+    const el = asFormControl(e.target);
+    if (!el || !el.name) return;
+    const isChoice =
+      el instanceof HTMLSelectElement ||
+      (el instanceof HTMLInputElement && (el.type === "radio" || el.type === "checkbox"));
+    if (!isChoice) return;
+    if (!formStartedSent.current) {
+      formStartedSent.current = true;
+      sendEvent("form_started", { fv: FORM_VERSION });
+      track({ name: "quote_started", props: {} });
+    }
+    for (const action of ["focus", "complete"] as const) {
+      const key = action + ":" + el.name;
+      if (fieldEventsSent.current.has(key)) continue;
+      fieldEventsSent.current.add(key);
+      sendEvent("form_field", { field: el.name, action, fv: FORM_VERSION });
+    }
+  }
+  // Nov 13 2026: did the visitor ever see the form, and did they stay?
+  // 617 of 702 never-started sessions were a single page_view with nothing
+  // after it, so a two-second bounce and a two-minute read looked the same.
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    const el = formRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((en) => en.isIntersecting)) {
+          sendEvent("form_in_view", { fv: FORM_VERSION });
+          io.disconnect();
+        }
+      },
+      { threshold: 0, rootMargin: "0px 0px -80px 0px" },
+    );
+    const firstField = el.querySelector("input:not([type=hidden]), select, textarea") ?? el;
+    io.observe(firstField);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    // 15 visible seconds, counted only while the tab is in the foreground.
+    let visibleMs = 0;
+    let last = Date.now();
+    let sent = false;
+    const tick = window.setInterval(() => {
+      const now = Date.now();
+      if (document.visibilityState === "visible") visibleMs += now - last;
+      last = now;
+      if (!sent && visibleMs >= 15_000) {
+        sent = true;
+        sendEvent("engaged", { fv: FORM_VERSION, s: 15 });
+        window.clearInterval(tick);
+      }
+    }, 1000);
+    return () => window.clearInterval(tick);
+  }, []);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<SubmittedSummary | null>(null);
   // Release A (2026-10-12): move focus (and the viewport) to the outcome.
@@ -271,11 +332,14 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
         setError(t(submitErrorKey(res.status, data.code)));
         // Technical friction, not voluntary abandonment — the visitor DID
         // submit. The 8/6–8/11 incidents taught us to tell these apart.
-        sendEvent("form_friction", {
+        const frictionMeta: Record<string, string | number> = {
           kind: "api_error",
           status: res.status,
           fv: FORM_VERSION,
-        });
+        };
+        // Nov 13 2026: which rule rejected it (missing, zip, email, captcha).
+        if (data.code) frictionMeta.code = data.code;
+        sendEvent("form_friction", frictionMeta);
         setPending(false);
         captchaRef.current?.resetCaptcha();
         setCaptchaToken(null);
@@ -430,8 +494,10 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
   return (
     <form
       onSubmit={handleSubmit}
+      ref={formRef}
       onFocusCapture={onFocusInstrument}
       onBlurCapture={onBlurInstrument}
+      onChangeCapture={onChangeInstrument}
       className="space-y-6"
     >
       {/* Hidden handoff fields — pre-quote selections the hero captured

@@ -25,6 +25,16 @@
  *   submit_attempted meta {fv}
  *   lead_persisted   meta {fv} — client-side confirmation the API
  *                    accepted; joins against the lead doc via vid
+ * Nov 13 2026 additions (quote-form diagnosis): the Oct 15 to Nov 13 read
+ * could not say whether the 59% who never start the form ever saw it, or
+ * how long they stayed, or which device they were on.
+ *   form_in_view     meta {fv} once, when the form's first field enters
+ *                    the viewport
+ *   engaged          meta {fv, s: 15} once, after 15 visible seconds on
+ *                    the quote page
+ *   device           NOT sent by the client: the collector derives
+ *                    phone|tablet|desktop from the User-Agent header
+ *   form_friction    api_error now carries meta.code (the API's code)
  * fv = form version tag (release stamp) so every funnel read can split
  * by form release without correlating deploy timestamps by hand.
  */
@@ -139,7 +149,9 @@ export type BehaviorEventType =
   | "form_field"
   | "form_friction"
   | "submit_attempted"
-  | "lead_persisted";
+  | "lead_persisted"
+  | "form_in_view"
+  | "engaged";
 
 /**
  * Send a behavioral event to our first-party collector. Fire-and-forget:

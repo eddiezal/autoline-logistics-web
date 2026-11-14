@@ -32,10 +32,21 @@ const EVENT_TYPES = new Set([
   "form_friction",
   "submit_attempted",
   "lead_persisted",
+  // Nov 13 2026: did they see the form, did they stay 15 s.
+  "form_in_view",
+  "engaged",
 ]);
 
 const BOT_UA =
   /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|headless|lighthouse|pingdom|uptime|monitor|python-requests|curl\/|wget\//i;
+
+/** Coarse device class from the User-Agent. Stored as a label only; the
+ *  UA string itself is never written. */
+function deviceClass(ua: string): "phone" | "tablet" | "desktop" {
+  if (/ipad|tablet|kindle|silk|playbook/i.test(ua) || (/android/i.test(ua) && !/mobile/i.test(ua))) return "tablet";
+  if (/mobi|iphone|ipod|android/i.test(ua)) return "phone";
+  return "desktop";
+}
 
 const str = (v: unknown, max: number): string | null =>
   typeof v === "string" && v.trim() ? v.trim().slice(0, max) : null;
@@ -131,6 +142,11 @@ export async function POST(req: NextRequest) {
       if (Number.isInteger(status) && status >= 100 && status <= 599) meta.status = status;
       const fv = str(b.meta.fv, 24);
       if (fv) meta.fv = fv;
+      // Nov 13 2026: API rejection code on api_error friction; seconds on engaged.
+      const code = str(b.meta.code, 20);
+      if (code) meta.code = code;
+      const secs = Number(b.meta.s);
+      if (Number.isInteger(secs) && secs > 0 && secs <= 600) meta.s = secs;
       if (Object.keys(meta).length === 0) meta = null;
     }
 
@@ -146,6 +162,7 @@ export async function POST(req: NextRequest) {
         referrerHost,
         attr,
         meta,
+        device: deviceClass(ua),
         // PT calendar day for cheap daily grouping without tz math on read.
         day: now.toLocaleDateString("en-CA", { timeZone: "America/Los_Angeles" }),
         ts: FieldValue.serverTimestamp(),
