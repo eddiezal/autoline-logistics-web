@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useId } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import {
   track,
@@ -322,6 +322,7 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
     return () => window.clearTimeout(id);
   }, [error]);
   const captchaRef = useRef<HCaptcha>(null);
+  const captchaLocale = useLocale() === "es" ? "es" : "en";
   const captchaId = useId();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -794,7 +795,24 @@ export function QuoteForm({ handoff }: { handoff: HeroHandoff }) {
         <HCaptcha
           ref={captchaRef}
           sitekey={siteKey}
-          onVerify={(token) => setCaptchaToken(token)}
+          // Nov 13 2026: puzzle text follows the page language. It was
+          // rendering in English on /es, where ~95% of quote traffic lands.
+          languageOverride={captchaLocale}
+          onVerify={(token) => {
+            setCaptchaToken(token);
+            sendEvent("form_friction", { kind: "captcha_verified", fv: FORM_VERSION });
+          }}
+          // Nov 13 2026: a visual puzzle was shown (not the one-click pass).
+          // open without a later captcha_verified = walked away at the puzzle.
+          onOpen={() => {
+            sendEvent("form_friction", { kind: "captcha_challenge_open", fv: FORM_VERSION });
+          }}
+          onClose={() => {
+            sendEvent("form_friction", { kind: "captcha_challenge_closed", fv: FORM_VERSION });
+          }}
+          onChalExpired={() => {
+            sendEvent("form_friction", { kind: "captcha_challenge_expired", fv: FORM_VERSION });
+          }}
           onExpire={() => {
             setCaptchaToken(null);
             sendEvent("form_friction", { kind: "captcha_expired", fv: FORM_VERSION });
